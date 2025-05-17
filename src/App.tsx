@@ -13,6 +13,7 @@ import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
+import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 
 // Service pages
 import ProductDiscovery from "./pages/services/ProductDiscovery";
@@ -27,6 +28,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <HelmetProvider>
+        <SiteSchemaMarkup />
         <Toaster />
         <Sonner />
         <BrowserRouter>
