@@ -14,8 +14,8 @@ import { toast } from "@/hooks/use-toast";
 
 // Stats data
 const stats = [
-  { value: "18%", label: "Average conversion increase" },
-  { value: "10+", label: "E-commerce clients" },
+  { value: "18%", label: "reduction in Zero Search Results" },
+  { value: "2.4x", label: "Grew organic traffic in 6 months through performance-driven SEO" },
   { value: "100k+", label: "Products optimized" },
   { value: "99%", label: "Client retention rate" }
 ];
