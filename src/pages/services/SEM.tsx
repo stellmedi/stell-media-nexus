@@ -4,9 +4,23 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const SEM = () => {
+  // Function to handle chatbot click
+  const handleChatbotClick = () => {
+    toast({
+      title: "Chat with us",
+      description: "Our team will be with you shortly. How can we help?",
+      action: (
+        <Button size="sm" variant="secondary" onClick={() => console.log("Starting chat...")}>
+          Start Chat
+        </Button>
+      ),
+    });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -127,6 +141,18 @@ const SEM = () => {
             </div>
           </div>
         </section>
+        
+        {/* Chatbot */}
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button 
+            variant="default" 
+            size="icon" 
+            className="h-14 w-14 rounded-full shadow-lg"
+            onClick={handleChatbotClick}
+          >
+            <MessageCircle size={24} />
+          </Button>
+        </div>
       </main>
       <Footer />
     </div>
