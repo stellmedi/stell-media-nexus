@@ -2,139 +2,166 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
 
-const SEO = () => {
+const SEOServices = () => {
+  const { toast } = useToast();
+  
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toast({
+      title: "Subscription successful!",
+      description: "Thank you for subscribing to our newsletter.",
+    });
+  };
+  
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-indigo-50">
       <Navbar />
       <main>
         {/* Hero Section */}
         <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
-            <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Strategic SEO Services
-              </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Improve organic visibility with data-driven SEO strategies tailored specifically for e-commerce sites with large product catalogs.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Main Content */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+            <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-gray-900">Drive Qualified Organic Traffic at Scale</h2>
-                <div className="space-y-4 text-gray-600">
-                  <p>
-                    Our e-commerce SEO specialists use data-driven strategies and automation to optimize even the largest product catalogs for maximum organic visibility.
-                  </p>
-                  <p>
-                    We focus on creating systematic approaches that scale with your business, ensuring consistent visibility improvements for your entire product range.
-                  </p>
-                </div>
-                <div className="mt-8">
-                  <Button asChild>
-                    <Link to="/contact">
-                      Request an SEO Audit <ArrowRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Strategic SEO Services
+                </h1>
+                <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+                  Improve organic visibility with data-driven, technology-enhanced SEO strategies tailored for e-commerce sites with large product catalogs.
+                </p>
+                <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
+                  <Link to="/contact">
+                    Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
               <div>
                 <img 
-                  src="https://images.unsplash.com/photo-1562577309-4932fdd64cd1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8c2VvfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" 
+                  src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2VvfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" 
                   alt="SEO Services" 
-                  className="rounded-lg shadow-lg w-full h-auto"
+                  className="rounded-lg shadow-lg w-full"
                 />
-              </div>
-            </div>
-
-            {/* Features */}
-            <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Our SEO Approach</h3>
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="text-xl font-bold mb-4 text-gray-900">Technical SEO Excellence</h4>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Comprehensive technical SEO audits</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Site structure optimization for e-commerce</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Page speed enhancement</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Mobile optimization strategies</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Schema markup implementation</span>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="text-xl font-bold mb-4 text-gray-900">Content & On-Page Optimization</h4>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Automated product page optimization</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Category structure enhancement</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Keyword research and mapping</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>Content gap analysis and creation</span>
-                  </li>
-                  <li className="flex items-start">
-                    <span className="inline-block h-5 w-5 mr-2 rounded-full bg-indigo-100 text-indigo-600 flex-shrink-0 flex items-center justify-center text-sm">✓</span>
-                    <span>URL structure optimization</span>
-                  </li>
-                </ul>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Case Studies Teaser */}
-        <section className="py-16 bg-gray-50">
+        {/* Features Section */}
+        <section className="py-16">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-center text-gray-900">Our SEO Results</h2>
+            <h2 className="text-3xl font-bold mb-12 text-center text-gray-900">Our SEO Approach</h2>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Fashion Retailer</h3>
-                <p className="text-gray-600 mb-4">Increased organic traffic by 187% through systematic product page optimization and technical SEO improvements.</p>
-                <p className="font-semibold text-indigo-600">+187% Organic Traffic</p>
-              </div>
+              <Card className="bg-white border border-gray-100 hover:shadow-md transition-all">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="m9 11-6 6v3h9l3-3"></path>
+                      <path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"></path>
+                      <path d="m14 4 6 6"></path>
+                      <path d="m18 2 4 4"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">Technical SEO Audits</h3>
+                  <p className="text-gray-600">
+                    Comprehensive analysis of your e-commerce site's structure, indexability, and performance to ensure search engines can effectively crawl and understand your content.
+                  </p>
+                </CardContent>
+              </Card>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Home Goods Store</h3>
-                <p className="text-gray-600 mb-4">Doubled organic conversions through optimized category structure and enhanced product content.</p>
-                <p className="font-semibold text-indigo-600">+103% Conversion Rate</p>
-              </div>
+              <Card className="bg-white border border-gray-100 hover:shadow-md transition-all">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"></path>
+                      <path d="M15 3v6h6"></path>
+                      <path d="M10 14 8 12l-2 2"></path>
+                      <path d="m18 17-2-2-2 2"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">Product Page Optimization</h3>
+                  <p className="text-gray-600">
+                    Strategic optimization of product pages with relevant keywords, schema markup, and enhanced meta data to improve visibility and click-through rates.
+                  </p>
+                </CardContent>
+              </Card>
               
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold mb-2 text-gray-900">Electronics Retailer</h3>
-                <p className="text-gray-600 mb-4">Achieved 62% higher rankings for competitive product keywords through technical SEO and content optimization.</p>
-                <p className="font-semibold text-indigo-600">+62% Higher Rankings</p>
+              <Card className="bg-white border border-gray-100 hover:shadow-md transition-all">
+                <CardContent className="p-6">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="12" cy="12" r="3"></circle>
+                      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                    </svg>
+                  </div>
+                  <h3 className="text-xl font-bold mb-2 text-gray-900">Category Structure Enhancement</h3>
+                  <p className="text-gray-600">
+                    Optimizing your site's taxonomy and category structure to improve user experience and search engine visibility for key product segments.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </section>
+
+        {/* Process Section */}
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-12 text-center text-gray-900">Our SEO Process</h2>
+            <div className="max-w-4xl mx-auto">
+              <div className="space-y-8">
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                    <span className="font-bold">1</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900">Comprehensive Audit</h3>
+                    <p className="text-gray-600">
+                      We start by analyzing your current SEO performance, identifying technical issues, content gaps, and opportunities for improvement.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                    <span className="font-bold">2</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900">Strategic Planning</h3>
+                    <p className="text-gray-600">
+                      We develop a customized SEO strategy that aligns with your business goals and targets your most valuable product categories and keywords.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                    <span className="font-bold">3</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900">Implementation</h3>
+                    <p className="text-gray-600">
+                      Our team executes the strategy by improving site structure, enhancing on-page elements, and implementing technical SEO improvements.
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                    <span className="font-bold">4</span>
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2 text-gray-900">Monitoring & Optimization</h3>
+                    <p className="text-gray-600">
+                      We continuously track performance metrics and refine our approach to ensure maximum visibility and ROI from your SEO investment.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -143,16 +170,39 @@ const SEO = () => {
         {/* CTA Section */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
+            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to improve your organic visibility?</h2>
-              <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                Let our e-commerce SEO specialists help you drive more qualified traffic and conversions through strategic optimization.
+              <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
+                Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
               </p>
-              <Button asChild size="lg" variant="cta" className="shadow-xl">
+              <Button asChild size="lg" variant="white" className="shadow-lg">
                 <Link to="/contact">
-                  Get Your SEO Strategy <ArrowRight className="ml-2 h-4 w-4" />
+                  Schedule a Consultation
                 </Link>
               </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* Newsletter Section */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-xl mx-auto text-center">
+              <h2 className="text-2xl font-bold mb-4 text-gray-900">Subscribe to Our Newsletter</h2>
+              <p className="text-gray-600 mb-6">
+                Get the latest SEO tips, trends, and insights delivered straight to your inbox.
+              </p>
+              <form onSubmit={handleSubmit} className="flex space-x-2">
+                <Input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="flex-1" 
+                  required 
+                />
+                <Button type="submit" variant="white" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white">
+                  Subscribe
+                </Button>
+              </form>
             </div>
           </div>
         </section>
@@ -162,4 +212,4 @@ const SEO = () => {
   );
 };
 
-export default SEO;
+export default SEOServices;

@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -55,8 +54,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1 text-gray-900">Email</h3>
-                      <p className="text-gray-600">contact@stellmedia.com</p>
-                      <p className="text-gray-600">support@stellmedia.com</p>
+                      <p className="text-gray-600">info@stellmedia.com</p>
                     </div>
                   </div>
                   
@@ -66,8 +64,12 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1 text-gray-900">Phone</h3>
-                      <p className="text-gray-600">Main: +1 (555) 123-4567</p>
-                      <p className="text-gray-600">Support: +1 (555) 987-6543</p>
+                      <p className="text-gray-600">
+                        <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">+91 98771 00369</a>
+                      </p>
+                      <p className="text-gray-600">
+                        <a href="https://wa.me/919877100369" className="hover:text-indigo-600 transition-colors">WhatsApp: +91 98771 00369</a>
+                      </p>
                     </div>
                   </div>
                   
@@ -77,8 +79,8 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="text-lg font-semibold mb-1 text-gray-900">Office</h3>
-                      <p className="text-gray-600">123 E-Commerce Drive</p>
-                      <p className="text-gray-600">Digital City, DC 10101</p>
+                      <p className="text-gray-600">Zirakpur, SAS Nagar (Mohali),</p>
+                      <p className="text-gray-600">Punjab, India</p>
                     </div>
                   </div>
                   

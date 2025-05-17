@@ -109,7 +109,7 @@ const ContactSection = () => {
                 />
               </div>
               
-              <Button type="submit" size="lg" className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90">
+              <Button type="submit" size="lg" variant="white" className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90">
                 Request Consultation
               </Button>
               

@@ -1,87 +1,71 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, Code, Database, Layout, Layers, Network, ServerIcon, Rocket } from "lucide-react";
+import { ArrowRight, Code, Database, Layout, BarChart, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const careers = [
   {
-    title: "AI Solutions Architect",
-    department: "Technology",
-    location: "Remote (US)",
+    title: "Sr Manager - Digital Marketing & Ecommerce",
+    department: "Marketing",
+    location: "Zirakpur, India",
     type: "Full-time",
-    description: "Lead the design and implementation of cutting-edge AI and machine learning solutions for e-commerce product discovery platforms.",
+    description: "Lead our digital marketing and e-commerce strategies to drive growth and improve online presence for our clients.",
     requirements: [
-      "5+ years of experience in AI/ML engineering",
-      "Experience with NLP and search relevancy algorithms",
-      "Proficiency in Python, TensorFlow, or PyTorch",
-      "Understanding of e-commerce data structures and taxonomy",
-      "Experience with cloud-based AI services (AWS, GCP, Azure)"
+      "5+ years of experience in digital marketing and e-commerce management",
+      "Proven track record of implementing successful online marketing campaigns",
+      "Deep understanding of SEO, SEM, and e-commerce platforms",
+      "Experience with marketing automation tools and analytics",
+      "Strong leadership and team management skills"
+    ],
+    icon: <BarChart className="h-10 w-10 text-indigo-500" />
+  },
+  {
+    title: "Automation Expert with AI Tools and N8n",
+    department: "Technology",
+    location: "Remote",
+    type: "Full-time",
+    description: "Design and implement automation workflows using N8n and integrate AI tools to streamline business processes and improve efficiency.",
+    requirements: [
+      "3+ years experience with workflow automation tools, specifically N8n",
+      "Knowledge of AI integration and implementation in business processes",
+      "Experience with API integrations and data transformation",
+      "Problem-solving mindset and analytical skills",
+      "Understanding of e-commerce operational processes"
     ],
     icon: <Code className="h-10 w-10 text-indigo-500" />
   },
   {
-    title: "Data Enrichment Specialist",
-    department: "Data & Analytics",
-    location: "Hybrid (New York)",
-    type: "Full-time",
-    description: "Transform messy e-commerce product data into structured, actionable information that drives superior shopping experiences.",
+    title: "Digital Marketing Intern",
+    department: "Marketing",
+    location: "Zirakpur, India",
+    type: "Internship",
+    description: "Support our digital marketing team in implementing campaigns, social media management, and content creation for e-commerce clients.",
     requirements: [
-      "3+ years in product data management or taxonomy",
-      "Experience with PIM/DAM systems",
-      "Strong analytical skills and attention to detail",
-      "Knowledge of product attribute structures",
-      "Experience with data cleansing techniques"
-    ],
-    icon: <Database className="h-10 w-10 text-indigo-500" />
-  },
-  {
-    title: "Search Technology Engineer",
-    department: "Product",
-    location: "Remote (Europe)",
-    type: "Full-time",
-    description: "Implement and optimize search technologies like Algolia and Bloomreach to create intelligent product discovery experiences.",
-    requirements: [
-      "4+ years of experience with search technologies",
-      "Experience with Algolia, Bloomreach, or Elasticsearch",
-      "Strong JavaScript/TypeScript skills",
-      "Understanding of search relevancy and ranking algorithms",
-      "E-commerce platform integration experience"
-    ],
-    icon: <Rocket className="h-10 w-10 text-indigo-500" />
-  },
-  {
-    title: "E-commerce Automation Specialist",
-    department: "Operations",
-    location: "Hybrid (London)",
-    type: "Full-time",
-    description: "Develop automation workflows that streamline e-commerce operations and product data management processes.",
-    requirements: [
-      "3+ years in automation or workflow development",
-      "Experience with RPA tools or workflow automation software",
-      "Understanding of e-commerce operational processes",
-      "API integration experience",
-      "Problem-solving mindset with analytical skills"
-    ],
-    icon: <ServerIcon className="h-10 w-10 text-indigo-500" />
-  },
-  {
-    title: "Product Discovery UX Researcher",
-    department: "Design",
-    location: "Remote (Global)",
-    type: "Full-time",
-    description: "Drive user research to understand how customers interact with search and navigation features in e-commerce platforms.",
-    requirements: [
-      "3+ years in UX research",
-      "Experience conducting usability studies for search interfaces",
-      "Knowledge of search patterns and behavior",
-      "Ability to translate research insights into actionable recommendations",
-      "E-commerce or retail experience preferred"
+      "Pursuing degree in Marketing, Communications, or related field",
+      "Understanding of digital marketing principles and social media platforms",
+      "Basic knowledge of SEO and SEM concepts",
+      "Strong written and verbal communication skills",
+      "Creative mindset and willingness to learn"
     ],
     icon: <Layout className="h-10 w-10 text-indigo-500" />
+  },
+  {
+    title: "Telesales Specialist (International Experience)",
+    department: "Sales",
+    location: "Remote",
+    type: "Full-time",
+    description: "Drive sales growth through outbound calling and lead qualification with a focus on international markets and e-commerce solutions.",
+    requirements: [
+      "3+ years experience in B2B telesales, preferably in international markets",
+      "Proven track record of meeting or exceeding sales targets",
+      "Excellent communication skills and cultural sensitivity",
+      "Experience selling technology or e-commerce solutions",
+      "CRM experience and data management skills"
+    ],
+    icon: <Phone className="h-10 w-10 text-indigo-500" />
   }
 ];
 
@@ -242,7 +226,7 @@ const Careers = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 We're always looking for talented individuals who are passionate about e-commerce, technology, and innovation.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200">
+              <Button asChild size="lg" variant="white" className="shadow-lg">
                 <Link to="/contact">
                   Contact Us
                 </Link>

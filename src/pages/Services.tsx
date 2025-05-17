@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -196,15 +195,15 @@ const Services = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated button style for better visibility */}
+        {/* CTA Section - Updated button style to white variant */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
+            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 Let's talk about how our technology-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="xl" className="bg-white text-indigo-700 hover:bg-gray-100 font-bold active:bg-gray-200 shadow-xl border-2 border-white hover:border-indigo-100">
+              <Button asChild size="xl" variant="white" className="font-bold shadow-xl">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
