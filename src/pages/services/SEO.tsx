@@ -43,7 +43,7 @@ const SEOServices = () => {
               </div>
               <div>
                 <img 
-                  src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2VvfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60" 
+                  src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=60" 
                   alt="SEO Services" 
                   className="rounded-lg shadow-lg w-full"
                 />
@@ -175,7 +175,7 @@ const SEOServices = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
               </p>
-              <Button asChild size="lg" variant="white" className="shadow-lg">
+              <Button asChild size="lg" variant="white" className="shadow-lg text-indigo-700">
                 <Link to="/contact">
                   Schedule a Consultation
                 </Link>
@@ -199,7 +199,7 @@ const SEOServices = () => {
                   className="flex-1" 
                   required 
                 />
-                <Button type="submit" variant="white" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white">
+                <Button type="submit" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white">
                   Subscribe
                 </Button>
               </form>

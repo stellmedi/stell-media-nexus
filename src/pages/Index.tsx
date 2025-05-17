@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -140,7 +141,7 @@ const Index = () => {
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's talk about how our product discovery solutions, search platform migration, and marketplace management can boost your conversions.
               </p>
-              <Button asChild size="xl" variant="white" className="font-bold text-lg shadow-md">
+              <Button asChild size="xl" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
