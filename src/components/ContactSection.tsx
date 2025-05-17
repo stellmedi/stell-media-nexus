@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,10 +31,7 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Initialize EmailJS with your public key
-      emailjs.init("qvOI69jBJFIylxNL2"); // Replace with your actual EmailJS public key
-      
-      // Prepare email parameters for consultation request
+      // Send email using EmailJS without initialization
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -45,11 +41,12 @@ const ContactSection = () => {
         subject: "Consultation Request"
       };
       
-      // Send email using EmailJS
+      // Send email directly without init
       await emailjs.send(
-        "service_d2t6zi8", // Replace with your actual EmailJS service ID
-        "template_f06dqcm", // Replace with your actual EmailJS template ID
-        templateParams
+        "service_d2t6zi8", // Your EmailJS service ID
+        "template_f06dqcm", // Your EmailJS template ID
+        templateParams,
+        "qvOI69jBJFIylxNL2" // Public key as the fourth parameter
       );
       
       // Log submission for tracking
