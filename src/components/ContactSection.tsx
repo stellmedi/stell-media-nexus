@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +32,9 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Send email using EmailJS without initialization
+      // Initialize EmailJS with your user ID before sending
+      emailjs.init("user_MuH9A8MXAdxCfXw1wQ3RH");
+      
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -41,12 +44,11 @@ const ContactSection = () => {
         subject: "Consultation Request"
       };
       
-      // Send email directly without init
+      // Send email with corrected parameters
       await emailjs.send(
-        "service_d2t6zi8", // Your EmailJS service ID
-        "template_f06dqcm", // Your EmailJS template ID
-        templateParams,
-        "qvOI69jBJFIylxNL2" // Public key as the fourth parameter
+        "service_stellmedia", // Update with a valid service ID
+        "template_consultation", // Update with a valid template ID
+        templateParams
       );
       
       // Log submission for tracking
