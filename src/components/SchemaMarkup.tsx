@@ -132,8 +132,8 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
     }
   };
 
-  // Breadcrumb schema
-  const breadcrumbSchema = data ? {
+  // Breadcrumb schema - Fix to check if data is an array before using map
+  const breadcrumbSchema = data && Array.isArray(data) ? {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": data.map((item: any, index: number) => ({

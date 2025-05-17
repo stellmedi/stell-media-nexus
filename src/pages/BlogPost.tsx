@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import BlogPost from '@/components/blog/BlogPost';
@@ -30,6 +31,10 @@ const BlogPostPage: React.FC = () => {
   
   return (
     <div className="min-h-screen bg-indigo-50">
+      <Helmet>
+        <title>{post.title} | Stell Media Blog</title>
+        <meta name="description" content={post.excerpt} />
+      </Helmet>
       <Navbar />
       <main className="pt-32 pb-16">
         <div className="container mx-auto px-4">
