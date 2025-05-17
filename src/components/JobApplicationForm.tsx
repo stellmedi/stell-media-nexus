@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,7 +23,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { LinkedIn } from "lucide-react";
+import { Linkedin } from "lucide-react";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -141,7 +140,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
                   <FormLabel>LinkedIn Profile</FormLabel>
                   <FormControl>
                     <div className="flex items-center space-x-2">
-                      <LinkedIn className="text-blue-600 h-5 w-5" />
+                      <Linkedin className="text-blue-600 h-5 w-5" />
                       <Input placeholder="https://linkedin.com/in/your-profile" {...field} />
                     </div>
                   </FormControl>
