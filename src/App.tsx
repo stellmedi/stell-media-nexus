@@ -14,6 +14,7 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
+import ScrollToTop from "./components/ScrollToTop";
 
 // Service pages
 import ProductDiscovery from "./pages/services/ProductDiscovery";
@@ -32,6 +33,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/services" element={<Services />} />
