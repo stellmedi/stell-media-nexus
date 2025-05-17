@@ -34,14 +34,6 @@ const Contact = () => {
     setFormError(null);
     
     try {
-      // Prepare email content for mailto link
-      const subject = formData.subject || 'Contact Form Submission';
-      const body = 
-        `Name: ${formData.name}\n` +
-        `Email: ${formData.email}\n` +
-        `Company: ${formData.company || 'Not provided'}\n\n` +
-        `Message:\n${formData.message}`;
-      
       // Log submission for tracking
       console.log("Contact form submitted:", {
         name: formData.name,
@@ -51,33 +43,25 @@ const Contact = () => {
         message: formData.message
       });
       
-      // Create mailto link and open default email client
-      const encodedSubject = encodeURIComponent(subject);
-      const encodedBody = encodeURIComponent(body);
-      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodedSubject}&body=${encodedBody}`;
-      
-      window.location.href = mailtoLink;
-      
+      // Show success message
       toast({
-        title: "Email client opening",
-        description: "Please complete sending the email in your email client.",
+        title: "Message Sent",
+        description: "Thank you for your message. We'll get back to you soon!",
       });
       
-      // Reset form after a short delay
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          subject: "",
-          message: ""
-        });
-        setIsSubmitting(false);
-      }, 1000);
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        subject: "",
+        message: ""
+      });
       
     } catch (error) {
       console.error("Error with contact form:", error);
-      setFormError("There was a problem opening your email client. Please email us directly at info@stellmedia.com.");
+      setFormError("There was a problem sending your message. Please try again.");
+    } finally {
       setIsSubmitting(false);
     }
   };
@@ -251,7 +235,7 @@ const Contact = () => {
                     className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Opening Email..." : "Send Message"}
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </div>

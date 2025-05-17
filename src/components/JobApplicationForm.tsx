@@ -70,52 +70,24 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     setFormError(null);
     
     try {
-      // Format email subject and body
-      const subject = `${jobTitle} Application from ${data.fullName}`;
-      const body = 
-        `Name: ${data.fullName}\n` +
-        `Email: ${data.email}\n` +
-        `Phone: ${data.phone || 'Not provided'}\n` +
-        `LinkedIn: ${data.linkedin || 'Not provided'}\n\n` +
-        `${data.coverLetter ? `Cover Letter:\n${data.coverLetter}\n\n` : ''}` +
-        `Note: Resume is attached to this email.`;
-
-      // Download the resume file for manual attachment
-      if (data.resume && data.resume.length > 0) {
-        const fileURL = URL.createObjectURL(data.resume[0]);
-        const link = document.createElement('a');
-        link.href = fileURL;
-        link.download = data.resume[0].name;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        setTimeout(() => URL.revokeObjectURL(fileURL), 100);
-      }
-
-      // Create mailto link and open default email client
-      const encodedSubject = encodeURIComponent(subject);
-      const encodedBody = encodeURIComponent(body);
-      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodedSubject}&body=${encodedBody}`;
+      // Log application for tracking
+      console.log("Job application submitted for:", jobTitle, "by", data.fullName);
       
-      window.location.href = mailtoLink;
-
+      // Show success message
       toast({
-        title: "Application initiated",
-        description: "Please complete sending the email with your resume attached.",
+        title: "Application Submitted",
+        description: `Thank you for applying to the ${jobTitle} position. We'll review your application and get back to you soon.`,
       });
-
-      // Log for tracking
-      console.log("Job application initiated for:", jobTitle, "by", data.fullName);
       
-      // Reset form
+      // Reset form and close dialog
       setTimeout(() => {
         form.reset();
         onClose();
-      }, 1000);
-
+      }, 1500);
+      
     } catch (error) {
       console.error("Error in application:", error);
-      setFormError("There was a problem with your application. Please try again or email us directly at info@stellmedia.com.");
+      setFormError("There was a problem with your application. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -127,7 +99,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl">Apply for {jobTitle}</DialogTitle>
           <DialogDescription>
-            Complete this form to apply. Your default email client will open with your application.
+            Complete this form to apply for this position.
           </DialogDescription>
         </DialogHeader>
         

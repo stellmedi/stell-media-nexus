@@ -31,15 +31,6 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Prepare email content for mailto link
-      const subject = `Consultation Request from ${formData.name}`;
-      const body = 
-        `Name: ${formData.name}\n` +
-        `Email: ${formData.email}\n` +
-        `Company: ${formData.company || 'Not provided'}\n` +
-        `Website: ${formData.website || 'Not provided'}\n\n` +
-        `Message:\n${formData.message}`;
-      
       // Log submission for tracking
       console.log("Consultation request submitted:", {
         name: formData.name,
@@ -49,33 +40,25 @@ const ContactSection = () => {
         message: formData.message
       });
       
-      // Create mailto link and open default email client
-      const encodedSubject = encodeURIComponent(subject);
-      const encodedBody = encodeURIComponent(body);
-      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodedSubject}&body=${encodedBody}`;
-      
-      window.location.href = mailtoLink;
-      
+      // Show success message
       toast({
-        title: "Consultation Request Initiated",
-        description: "Please complete sending the email in your email client.",
+        title: "Consultation Request Sent",
+        description: "Thank you! We'll get back to you shortly.",
       });
       
-      // Reset form after a short delay
-      setTimeout(() => {
-        setFormData({
-          name: "",
-          email: "",
-          company: "",
-          website: "",
-          message: ""
-        });
-        setIsSubmitting(false);
-      }, 1000);
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        website: "",
+        message: ""
+      });
       
     } catch (error) {
       console.error("Error with consultation request:", error);
-      setFormError("There was a problem opening your email client. Please email us directly at info@stellmedia.com.");
+      setFormError("There was a problem submitting your request. Please try again.");
+    } finally {
       setIsSubmitting(false);
     }
   };
