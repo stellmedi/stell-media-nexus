@@ -28,14 +28,27 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
   articleSection = "Blog"
 }) => {
   const articleData = {
-    title,
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: title,
     description,
     image,
     datePublished,
     dateModified,
-    authorName,
-    url,
-    keywords,
+    author: {
+      '@type': 'Person',
+      name: authorName
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Stell Media',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://stellmediaglobal.com/logo.png'
+      }
+    },
+    mainEntityOfPage: url,
+    keywords: keywords.join(', '),
     articleBody,
     articleSection
   };
