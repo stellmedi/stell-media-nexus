@@ -24,7 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Linkedin } from "lucide-react";
+import { Linkedin, Copy, Mail, Download, CheckCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
@@ -71,6 +71,8 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     fileName: string;
     fileUrl: string | null;
   } | null>(null);
+  const [emailSubjectCopied, setEmailSubjectCopied] = React.useState(false);
+  const [emailBodyCopied, setEmailBodyCopied] = React.useState(false);
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
@@ -160,10 +162,32 @@ Please contact the applicant directly to proceed with the application process.
       link.download = applicationData.fileName;
       link.click();
     }
-    
-    // Reset form and close dialog
-    form.reset();
-    onClose();
+  };
+
+  const handleDownloadResume = () => {
+    if (applicationData?.fileUrl) {
+      const link = document.createElement('a');
+      link.href = applicationData.fileUrl;
+      link.download = applicationData.fileName;
+      link.click();
+    }
+  };
+
+  const copyToClipboard = (text: string, type: 'subject' | 'body') => {
+    navigator.clipboard.writeText(text).then(() => {
+      if (type === 'subject') {
+        setEmailSubjectCopied(true);
+        setTimeout(() => setEmailSubjectCopied(false), 2000);
+      } else {
+        setEmailBodyCopied(true);
+        setTimeout(() => setEmailBodyCopied(false), 2000);
+      }
+      
+      toast({
+        title: `${type === 'subject' ? 'Subject' : 'Email body'} copied to clipboard`,
+        description: "You can now paste it into your email client",
+      });
+    });
   };
 
   const handleClose = () => {
@@ -313,50 +337,91 @@ Please contact the applicant directly to proceed with the application process.
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="text-xl">Application Instructions</DialogTitle>
+              <DialogTitle className="text-xl">Complete Your Application</DialogTitle>
               <DialogDescription>
-                Follow these steps to complete your application
+                Follow these steps to submit your application to info@stellmedia.com
               </DialogDescription>
             </DialogHeader>
             
             <div className="py-6">
               <Alert className="mb-6 bg-green-50 border-green-200">
                 <AlertDescription className="text-green-800">
-                  Your application form has been submitted successfully! Please follow these steps to complete your application:
+                  Your application form has been processed! Please complete the process by sending an email to info@stellmedia.com with your resume.
                 </AlertDescription>
               </Alert>
               
-              <div className="space-y-4 text-gray-700">
+              <div className="space-y-6 text-gray-700">
                 <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-                  <p className="font-medium mb-2">Step 1: Send your application email</p>
-                  <p className="mb-3">Click the button below to open your email client with a pre-filled message. This will open in a new window.</p>
+                  <h3 className="font-medium text-lg mb-2">Option 1: Use Your Default Email Client</h3>
+                  <p className="mb-3">Click the button below to open your email client with a pre-filled message.</p>
                   <Button 
                     onClick={handleSendEmail} 
-                    className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600"
+                    className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 mb-2"
                   >
-                    Open Email Application
+                    <Mail className="mr-2 h-4 w-4" /> Open Email Application
                   </Button>
+                  <p className="text-sm text-gray-500 mt-1 italic">
+                    Note: This will also download your resume, which you'll need to attach to the email.
+                  </p>
                 </div>
                 
                 <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-                  <p className="font-medium mb-2">Step 2: Attach your resume</p>
-                  <p>Your resume will be downloaded automatically. Please attach it to the email before sending.</p>
+                  <h3 className="font-medium text-lg mb-2">Option 2: Manual Email Method</h3>
+                  <p className="mb-3">If the button above doesn't work, follow these steps:</p>
+                  
+                  <ol className="list-decimal pl-5 space-y-4">
+                    <li>
+                      <p className="font-medium">Download your resume first</p>
+                      <Button 
+                        variant="outline" 
+                        onClick={handleDownloadResume}
+                        className="mt-1 border-indigo-200"
+                      >
+                        <Download className="mr-2 h-4 w-4" /> Download Resume
+                      </Button>
+                    </li>
+                    
+                    <li>
+                      <p className="font-medium">Copy this subject line:</p>
+                      <div className="flex items-center mt-1 bg-white border rounded p-2">
+                        <p className="flex-1 text-sm">{applicationData?.subject}</p>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => applicationData?.subject && copyToClipboard(applicationData.subject, 'subject')}
+                          className="ml-2"
+                        >
+                          {emailSubjectCopied ? <CheckCircle className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+                        </Button>
+                      </div>
+                    </li>
+                    
+                    <li>
+                      <p className="font-medium">Copy the email body (optional):</p>
+                      <div className="mt-1 bg-white border rounded">
+                        <div className="p-2 text-sm whitespace-pre-wrap">
+                          {applicationData?.body}
+                        </div>
+                        <div className="border-t p-2 flex justify-end bg-gray-50">
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => applicationData?.body && copyToClipboard(applicationData.body, 'body')}
+                          >
+                            {emailBodyCopied ? <CheckCircle className="h-4 w-4 mr-1 text-green-500" /> : <Copy className="h-4 w-4 mr-1" />} Copy text
+                          </Button>
+                        </div>
+                      </div>
+                    </li>
+                    
+                    <li>
+                      <p className="font-medium">Send your email:</p>
+                      <p className="text-sm mt-1">
+                        Compose a new email to <a href="mailto:info@stellmedia.com" className="text-blue-600 hover:underline">info@stellmedia.com</a> with the copied subject and body, and attach your downloaded resume.
+                      </p>
+                    </li>
+                  </ol>
                 </div>
-                
-                <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
-                  <p className="font-medium mb-2">Step 3: Send the email</p>
-                  <p>Review your application details and click send in your email client.</p>
-                </div>
-              </div>
-              
-              <div className="mt-6 p-4 border border-amber-200 rounded-md bg-amber-50 text-amber-800">
-                <p className="font-medium mb-2">Important Note:</p>
-                <p>If your email client doesn't open automatically, please send an email to info@stellmedia.com with the following:</p>
-                <ul className="list-disc pl-5 mt-2">
-                  <li>Subject: {applicationData?.subject || "Job Application"}</li>
-                  <li>Attach your resume</li>
-                  <li>Include your contact details and the position you're applying for</li>
-                </ul>
               </div>
             </div>
             
