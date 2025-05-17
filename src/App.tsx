@@ -12,6 +12,7 @@ import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
+import FAQ from "./pages/FAQ";
 
 // Service pages
 import ProductDiscovery from "./pages/services/ProductDiscovery";
@@ -36,6 +37,7 @@ const App = () => (
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/careers" element={<Careers />} />
+            <Route path="/faq" element={<FAQ />} />
             <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
             
             {/* Service pages */}
