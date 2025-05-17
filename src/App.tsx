@@ -12,6 +12,7 @@ import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 
+// Add the case-studies route for proper linking
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/careers" element={<Careers />} />
+          <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

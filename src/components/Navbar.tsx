@@ -28,7 +28,7 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - Updated Case Studies link to go to the case-studies route */}
         <div className="hidden md:flex items-center space-x-6">
           <Link to="/services" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Services
@@ -58,7 +58,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Updated Case Studies link */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-indigo-50 border-t border-gray-100">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">

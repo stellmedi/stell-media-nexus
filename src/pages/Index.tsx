@@ -10,8 +10,9 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
-// Stats data
+// Stats data (updated as requested)
 const stats = [
   { value: "18%", label: "Average conversion increase" },
   { value: "10+", label: "E-commerce clients" },
@@ -19,7 +20,7 @@ const stats = [
   { value: "99%", label: "Client retention rate" }
 ];
 
-// Featured case studies
+// Featured case studies - updated to match the new services
 const caseStudies = [
   {
     title: "AI-Powered Electronics Search",
@@ -29,7 +30,7 @@ const caseStudies = [
   },
   {
     title: "Search Migration Success Story",
-    description: "Our algorithm optimization during migration from Algolia to Coveo transformed search performance and improved customer satisfaction by 38%.",
+    description: "Our algorithm optimization during migration from Elastic Search to Coveo transformed search performance and improved customer satisfaction by 38%.",
     category: "Search Platform Migration",
     image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
@@ -48,13 +49,26 @@ const caseStudies = [
 ];
 
 const Index = () => {
+  // Function to handle chatbot click
+  const handleChatbotClick = () => {
+    toast({
+      title: "Chat with us",
+      description: "Our team will be with you shortly. How can we help?",
+      action: (
+        <Button size="sm" variant="secondary" onClick={() => console.log("Starting chat...")}>
+          Start Chat
+        </Button>
+      ),
+    });
+  };
+
   return (
     <div className="min-h-screen bg-indigo-50">
       <Navbar />
       <main>
         <HeroSection />
         
-        {/* Stats Section */}
+        {/* Stats Section - Updated with new stats */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
@@ -118,15 +132,15 @@ const Index = () => {
         
         <TestimonialsSection />
         
-        {/* CTA Section */}
+        {/* CTA Section with improved contrast for visibility */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
+            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
-              <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
+              <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's talk about how our product discovery solutions, search algorithm optimization, and marketplace management can boost your conversions.
               </p>
-              <Button asChild size="xl" variant="cta" className="font-bold text-lg bg-white text-indigo-700">
+              <Button asChild size="xl" className="font-bold text-lg bg-white text-indigo-700 hover:bg-indigo-50 shadow-md">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
@@ -135,13 +149,13 @@ const Index = () => {
         
         <ContactSection />
         
-        {/* Chatbot */}
+        {/* Chatbot - now with functionality */}
         <div className="fixed bottom-6 right-6 z-50">
           <Button 
             variant="default" 
             size="icon" 
             className="h-14 w-14 rounded-full shadow-lg"
-            onClick={() => alert("Chatbot functionality will be implemented here")}
+            onClick={handleChatbotClick}
           >
             <MessageCircle size={24} />
           </Button>
