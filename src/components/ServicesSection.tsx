@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Search, BarChart, Globe, Database, Code, Zap } from "lucide-react";
@@ -7,35 +8,35 @@ import { Button } from "@/components/ui/button";
 const services = [
   {
     icon: <Search className="h-10 w-10 text-indigo-500" />,
-    title: "Product Discovery Solutions",
-    description: "Enhance search performance with Algolia and Bloomreach integration. Improve navigation and browse experiences for complex product catalogs.",
+    title: "AI-Powered Product Discovery",
+    description: "Enhance search performance with AI algorithms, Algolia and Bloomreach integration. Improve navigation and browse experiences for complex product catalogs.",
     features: [
-      "Site search optimization",
-      "Navigation restructuring",
-      "Product data cleanup",
-      "Faceted filtering implementation"
+      "AI-driven search optimization",
+      "Machine learning for navigation",
+      "Intelligent product filtering",
+      "Automated data enrichment"
     ],
     link: "/services/product-discovery"
   },
   {
     icon: <Database className="h-10 w-10 text-indigo-500" />,
-    title: "Data Enrichment",
-    description: "Transform messy product data into clean, structured information that improves both customer experience and your backend operations.",
+    title: "Automated Data Enrichment",
+    description: "Transform messy product data into clean, structured information through AI-powered automation that improves both customer experience and operations.",
     features: [
-      "Data cleansing and standardization",
-      "Attribute mapping and enhancement",
-      "Product tagging automation",
-      "Taxonomy development"
+      "Automated data cleansing",
+      "Machine learning tagging",
+      "AI-powered categorization",
+      "Intelligent taxonomy development"
     ],
     link: "/services/data-enrichment"
   },
   {
     icon: <Code className="h-10 w-10 text-indigo-500" />,
     title: "Technical Implementation",
-    description: "Expert development and integration of e-commerce product discovery tools to maximize performance and ROI.",
+    description: "Expert development and integration of AI-powered e-commerce discovery tools with automated workflows to maximize performance and ROI.",
     features: [
-      "Algolia & Bloomreach integration",
-      "Custom search UI development",
+      "AI search integration",
+      "Automated workflow development",
       "API development & integration",
       "Performance optimization"
     ],
@@ -43,50 +44,50 @@ const services = [
   },
   {
     icon: <Globe className="h-10 w-10 text-indigo-500" />,
-    title: "SEO Services",
-    description: "Improve organic visibility with data-driven SEO strategies tailored for e-commerce sites with large product catalogs.",
+    title: "Hybrid Commerce Solutions",
+    description: "Create seamless shopping experiences that bridge digital and physical retail through innovative connected technology and automation.",
     features: [
-      "Technical SEO audits",
-      "Product page optimization",
-      "Category structure enhancement",
-      "Content gap analysis"
+      "Omnichannel integration",
+      "In-store digital experiences",
+      "Unified inventory management",
+      "Cross-channel analytics"
     ],
-    link: "/services/seo"
+    link: "/services/hybrid-commerce"
   },
   {
     icon: <BarChart className="h-10 w-10 text-indigo-500" />,
-    title: "SEM Services",
-    description: "Drive measurable traffic and conversions through targeted search marketing campaigns for e-commerce products.",
+    title: "AI Marketing Automation",
+    description: "Drive measurable traffic and conversions through AI-optimized, automated search marketing campaigns for e-commerce products.",
     features: [
-      "Google Shopping optimization",
-      "Performance-based campaigns",
-      "Product feed management",
-      "Conversion tracking setup"
+      "AI-powered campaign optimization",
+      "Automated performance tracking",
+      "Product feed automation",
+      "Conversion optimization"
     ],
-    link: "/services/sem"
+    link: "/services/ai-marketing"
   },
   {
     icon: <Zap className="h-10 w-10 text-indigo-500" />,
-    title: "Conversion Optimization",
-    description: "Scientifically improve your e-commerce conversion rates through data-driven testing and optimization strategies.",
+    title: "E-commerce Automation",
+    description: "Streamline operations and reduce manual tasks with our comprehensive automation solutions powered by AI and machine learning.",
     features: [
-      "UX/UI analysis & enhancement",
-      "A/B testing implementation",
-      "Customer journey optimization",
-      "Abandonment reduction strategies"
+      "Workflow automation",
+      "Inventory management automation",
+      "Customer service AI tools",
+      "Analytics and reporting automation"
     ],
-    link: "/services/conversion-optimization"
+    link: "/services/ecommerce-automation"
   }
 ];
 
 const ServicesSection = () => {
   return (
-    <section id="services" className="py-20 bg-gray-50">
+    <section id="services" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Our Services</h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            We specialize in improving how customers find and discover products in your online store, with solutions tailored to your specific business needs.
+            We specialize in improving how customers find and discover products through AI, automation, and hybrid solutions tailored to your specific business needs.
           </p>
         </div>
 
@@ -117,7 +118,7 @@ const ServicesSection = () => {
         </div>
         
         <div className="mt-16 text-center">
-          <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90">
+          <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
             <Link to="/services">View All Services</Link>
           </Button>
         </div>

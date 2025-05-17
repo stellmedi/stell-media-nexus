@@ -22,28 +22,40 @@ const stats = [
 // Featured case studies
 const caseStudies = [
   {
-    title: "Electronics Retailer",
-    description: "How we helped increase search conversion by 42% and reduced no-results searches by 68%.",
-    category: "Search Optimization",
+    title: "AI-Powered Electronics Search",
+    description: "How we implemented AI algorithms and machine learning to increase search conversion by 42% and reduced no-results searches by 68%.",
+    category: "AI Search Optimization",
     image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
-    title: "Fashion Brand",
-    description: "Transforming messy product data into a structured taxonomy that boosted product discovery.",
-    category: "Data Enrichment",
+    title: "Automated Fashion Data Enrichment",
+    description: "Our automated taxonomy and tagging system transformed messy product data into a structured database that boosted product discovery by 56%.",
+    category: "Automation & Data",
     image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+  },
+  {
+    title: "Hybrid Retail Solution",
+    description: "Combining in-store digital kiosks with online inventory through our hybrid commerce platform increased overall sales by 23%.",
+    category: "Hybrid Commerce",
+    image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJldGFpbCUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+  },
+  {
+    title: "AI-Enhanced Product Recommendations",
+    description: "Our machine learning algorithm improved cross-selling opportunities by analyzing purchase patterns and customer behavior in real time.",
+    category: "AI Personalization",
+    image: "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZWNvbW1lcmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   }
 ];
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-indigo-50">
       <Navbar />
       <main>
         <HeroSection />
         
         {/* Stats Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
               {stats.map((stat, index) => (
@@ -64,12 +76,12 @@ const Index = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                See how we've helped e-commerce brands overcome their product discovery challenges.
+                See how our innovative AI solutions, automation tools, and hybrid commerce strategies have helped e-commerce brands overcome their product discovery challenges.
               </p>
             </div>
             
             <div className="grid md:grid-cols-2 gap-8">
-              {caseStudies.map((study, index) => (
+              {caseStudies.slice(0, 2).map((study, index) => (
                 <Card key={index} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
                   <div className="relative h-64">
                     <img 
@@ -86,7 +98,7 @@ const Index = () => {
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2">{study.title}</h3>
                     <p className="text-gray-600 mb-4">{study.description}</p>
-                    <Link to="/case-studies" className="text-indigo-600 font-medium inline-flex items-center">
+                    <Link to="/case-studies" className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900">
                       Read case study <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </CardContent>
@@ -95,7 +107,7 @@ const Index = () => {
             </div>
             
             <div className="text-center mt-12">
-              <Button asChild variant="outline" className="border-indigo-300">
+              <Button asChild variant="outline" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Case Studies <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -107,14 +119,14 @@ const Index = () => {
         <TestimonialsSection />
         
         {/* CTA Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-                Let's talk about how we can help optimize your product discovery and boost your conversions.
+                Let's talk about how our AI-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100">
+              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
