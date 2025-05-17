@@ -4,9 +4,43 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const ProductDiscovery = () => {
+  // FAQ items
+  const faqItems = [
+    {
+      question: "How does your product discovery solution differ from standard search implementations?",
+      answer: "Our product discovery solutions go beyond basic keyword matching by incorporating natural language processing, user behavior analysis, and machine learning to understand customer intent. This allows us to deliver more relevant results even with partial, misspelled, or conversational queries."
+    },
+    {
+      question: "Which search platforms do you work with?",
+      answer: "We specialize in optimizing experiences with Elastic Search, Coveo, Algolia, and Bloomreach. We can either enhance your existing implementation or help you migrate to a platform that better suits your specific business needs."
+    },
+    {
+      question: "How long does it take to implement your product discovery solution?",
+      answer: "Implementation timelines vary based on your existing infrastructure, but typically range from 4-8 weeks. We begin with a discovery phase to understand your catalog and customer behavior, followed by staged implementation that allows for continuous improvement without disrupting your business."
+    },
+    {
+      question: "Can your product discovery solutions handle large or complex product catalogs?",
+      answer: "Yes, our solutions are specifically designed for complex catalogs with numerous attributes, variations, and relationships. We've successfully implemented solutions for catalogs with millions of SKUs across various industries including fashion, electronics, and industrial supplies."
+    },
+    {
+      question: "How do you measure success for product discovery implementations?",
+      answer: "We track a comprehensive set of metrics including search conversion rate, zero-results rate, click-through rate, search refinements, and average order value from search. We establish baseline measurements before implementation and provide ongoing analytics to demonstrate ROI."
+    },
+    {
+      question: "Do I need to replace my entire e-commerce platform to improve product discovery?",
+      answer: "No, our solutions are designed to integrate with your existing e-commerce platform. We can enhance product discovery through API integrations, middleware solutions, or frontend implementations depending on your specific needs and technical constraints."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -70,6 +104,25 @@ const ProductDiscovery = () => {
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                 <h4 className="font-bold mb-3 text-gray-900">Advanced Filtering</h4>
                 <p className="text-gray-600">Implement smart faceted search to help customers narrow down options quickly and efficiently.</p>
+              </div>
+            </div>
+
+            {/* FAQ Section */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Frequently Asked Questions</h3>
+              <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-100 shadow-sm">
+                <Accordion type="single" collapsible className="w-full">
+                  {faqItems.map((item, index) => (
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger className="px-6 text-left font-semibold text-gray-900 hover:text-indigo-700">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 text-gray-600">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               </div>
             </div>
           </div>

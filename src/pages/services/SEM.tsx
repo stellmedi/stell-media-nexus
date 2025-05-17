@@ -1,17 +1,11 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import FAQSection from "@/components/FAQSection";
 
 const SEM = () => {
   // Function to handle chatbot click
@@ -163,23 +157,7 @@ const SEM = () => {
             </div>
 
             {/* FAQ Section */}
-            <div className="mb-16">
-              <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Frequently Asked Questions</h3>
-              <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-100 shadow-sm">
-                <Accordion type="single" collapsible className="w-full">
-                  {faqItems.map((item, index) => (
-                    <AccordionItem key={index} value={`item-${index}`}>
-                      <AccordionTrigger className="px-6 text-left font-semibold text-gray-900 hover:text-indigo-700">
-                        {item.question}
-                      </AccordionTrigger>
-                      <AccordionContent className="px-6 text-gray-600">
-                        {item.answer}
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
-              </div>
-            </div>
+            <FAQSection items={faqItems} />
           </div>
         </section>
 

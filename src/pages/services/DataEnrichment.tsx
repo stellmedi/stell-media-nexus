@@ -1,12 +1,40 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import FAQSection from "@/components/FAQSection";
 
 const DataEnrichment = () => {
+  // FAQ items
+  const faqItems = [
+    {
+      question: "What types of product data can you help us enrich?",
+      answer: "We can enrich virtually any type of product data including basic attributes (dimensions, weights, materials), marketing content (descriptions, features, benefits), technical specifications, categorization data, imagery metadata, and SEO-focused content across any industry or product category."
+    },
+    {
+      question: "How does your automated approach differ from manual data enrichment?",
+      answer: "Our technology-powered automation combines machine learning with domain expertise to process data at scale. Unlike manual methods which are error-prone and time-consuming, our approach can process thousands of products simultaneously, maintain consistency across your catalog, and continuously improve through feedback loops."
+    },
+    {
+      question: "Can you integrate with our existing PIM or e-commerce platform?",
+      answer: "Yes, our solutions integrate with all major PIMs (Akeneo, Informatica, Riversand, etc.), e-commerce platforms (Shopify, Magento, BigCommerce, Salesforce Commerce Cloud), and ERP systems. We provide flexible API integrations or can work with batch processing via secure file transfers."
+    },
+    {
+      question: "How do you ensure data quality and accuracy?",
+      answer: "We employ a multi-layered approach to data quality: AI validation against industry standards, automated rules-based verification, statistical anomaly detection, and expert human review for complex cases. We also provide comprehensive reporting on data quality metrics and continuous monitoring."
+    },
+    {
+      question: "How long does it take to enrich our product catalog?",
+      answer: "Timelines depend on catalog size and complexity, but our automated systems typically process 5,000-10,000 SKUs per week after initial setup. Most mid-sized catalogs (30,000-50,000 SKUs) can be completely enriched within 6-8 weeks, with initial results available much sooner."
+    },
+    {
+      question: "Do you offer ongoing data maintenance services?",
+      answer: "Yes, we provide continuous data maintenance services that include monitoring for data degradation, updating information as products change, enriching new products as they're added to your catalog, and periodic data quality audits to ensure your product information remains accurate and complete."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -85,17 +113,20 @@ const DataEnrichment = () => {
           </div>
         </section>
 
+        {/* FAQ Section */}
+        <FAQSection items={faqItems} />
+
         {/* CTA Section */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your product data?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                Let us help you clean, enrich, and optimize your product information for better customer experiences and operational efficiency.
+                Let's discuss how our automated data enrichment solutions can improve your product information quality.
               </p>
               <Button asChild size="lg" variant="cta" className="shadow-xl">
                 <Link to="/contact">
-                  Get Started Today <ArrowRight className="ml-2 h-4 w-4" />
+                  Book Your Consultation <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>

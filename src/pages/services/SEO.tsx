@@ -8,6 +8,7 @@ import SEOFeaturesSection from "@/components/seo/SEOFeaturesSection";
 import SEOProcessSection from "@/components/seo/SEOProcessSection";
 import SEOCTASection from "@/components/seo/SEOCTASection";
 import SEONewsletterSection from "@/components/seo/SEONewsletterSection";
+import SEOFAQSection from "@/components/seo/SEOFAQSection";
 
 const SEOServices = () => {
   return (
@@ -26,6 +27,7 @@ const SEOServices = () => {
         <SEOHeroSection />
         <SEOFeaturesSection />
         <SEOProcessSection />
+        <SEOFAQSection />
         <SEOCTASection />
         <SEONewsletterSection />
       </main>

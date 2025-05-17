@@ -1,12 +1,40 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import FAQSection from "@/components/FAQSection";
 
 const ConversionOptimization = () => {
+  // FAQ items for Conversion Optimization
+  const faqItems = [
+    {
+      question: "How do you identify conversion rate optimization opportunities?",
+      answer: "We use a data-driven approach that combines quantitative analysis (heatmaps, session recordings, analytics) with qualitative insights (user testing, surveys) to identify specific friction points in your conversion funnel. Our proprietary analytics platform also detects pattern anomalies and opportunities that basic analytics might miss."
+    },
+    {
+      question: "What testing methodology do you use for optimizing conversions?",
+      answer: "We primarily use A/B and multivariate testing backed by statistical significance calculations to ensure reliable results. For lower traffic sites, we employ sequential testing methods. All tests are designed based on behavioral psychology principles and data-backed hypotheses rather than subjective opinions."
+    },
+    {
+      question: "How long does it typically take to see results from CRO efforts?",
+      answer: "Most clients see measurable improvements within the first 90 days. Initial quick wins often come from fixing obvious usability issues, while more substantial gains emerge from our iterative testing program over 6-12 months. The compounding effect of continuous optimization typically delivers 15-30% conversion rate improvements within the first year."
+    },
+    {
+      question: "Do you focus only on checkout conversion or the entire customer journey?",
+      answer: "We optimize the entire customer journey from initial landing page experience through product discovery, consideration, checkout, and post-purchase communication. Our holistic approach recognizes that conversion optimization extends beyond the buy button to include average order value, repeat purchases, and customer lifetime value."
+    },
+    {
+      question: "How do you measure the ROI of conversion optimization services?",
+      answer: "We establish clear baseline metrics before beginning optimization work and track improvements in conversion rate, average order value, revenue per visitor, and ultimately overall revenue impact. Our reporting includes projected annualized revenue increases based on implemented changes, giving you clear visibility into program ROI."
+    },
+    {
+      question: "Can you integrate with our existing tech stack and analytics tools?",
+      answer: "Yes, our conversion optimization infrastructure works with virtually any e-commerce platform and integrates with all major analytics tools including Google Analytics, Adobe Analytics, Hotjar, FullStory, and custom data solutions. We can also deploy custom tracking when needed to capture specific interactions."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -16,10 +44,10 @@ const ConversionOptimization = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Conversion Optimization
+                Conversion Rate Optimization
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Transform visitors into customers with data-driven strategies that optimize every step of the customer journey.
+                Transform more of your website visitors into customers with data-driven optimization strategies.
               </p>
             </div>
           </div>
@@ -136,6 +164,9 @@ const ConversionOptimization = () => {
                 <p className="text-gray-600">Refine messaging to clearly communicate the unique value of your products and overcome objections.</p>
               </div>
             </div>
+
+            {/* FAQ Section */}
+            <FAQSection items={faqItems} />
           </div>
         </section>
 
@@ -145,11 +176,11 @@ const ConversionOptimization = () => {
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to boost your conversion rates?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                Let us help you transform more of your existing traffic into paying customers with our data-driven optimization approach.
+                Let's discuss how our conversion optimization strategies can help turn more of your traffic into paying customers.
               </p>
               <Button asChild size="lg" variant="cta" className="shadow-xl">
                 <Link to="/contact">
-                  Start Converting More <ArrowRight className="ml-2 h-4 w-4" />
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
