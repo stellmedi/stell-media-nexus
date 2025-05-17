@@ -84,6 +84,9 @@ const Index = () => {
         
         <ServicesSection />
         
+        {/* Testimonials Section - Enhanced and more prominent */}
+        <TestimonialsSection />
+        
         {/* Case Studies Preview - Updated to align with services */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
@@ -129,8 +132,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-        
-        <TestimonialsSection />
         
         {/* CTA Section with improved button visibility */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">

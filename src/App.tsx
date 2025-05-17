@@ -43,6 +43,9 @@ const App = () => (
           <Route path="/services/sem" element={<SEM />} />
           <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
           
+          {/* Blog post pages - would normally have dedicated pages */}
+          <Route path="/blog/:postId" element={<Blog />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

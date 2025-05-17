@@ -1,6 +1,9 @@
 
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const clients = [
   { name: "Tech Retailer", industry: "Electronics", logo: "T" },
@@ -29,12 +32,18 @@ const testimonials = [
     author: "Jennifer Williams",
     title: "CEO",
     company: "Home Goods Store"
+  },
+  {
+    quote: "Implementing Stell Media's AI-driven product discovery solution has reduced our customer support tickets by 40% as shoppers can now easily find what they're looking for.",
+    author: "David Rodriguez",
+    title: "CTO",
+    company: "Outdoor Equipment"
   }
 ];
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-20">
+    <section id="testimonials" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Trusted by Leading Brands</h2>
@@ -57,7 +66,7 @@ const TestimonialsSection = () => {
         </div>
 
         {/* Testimonials */}
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {testimonials.map((testimonial, index) => (
             <Card key={index} className="bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
               <CardContent className="p-6">
@@ -75,6 +84,16 @@ const TestimonialsSection = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* CTA for Case Studies */}
+        <div className="text-center mt-12">
+          <p className="text-lg text-gray-600 mb-4">See how we've helped clients achieve real results</p>
+          <Button asChild variant="outline" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
+            <Link to="/case-studies">
+              View Our Case Studies <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
       </div>
     </section>
