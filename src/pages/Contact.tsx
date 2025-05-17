@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -9,7 +8,6 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -36,24 +34,16 @@ const Contact = () => {
     setFormError(null);
     
     try {
-      // Prepare email template parameters
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        company: formData.company || 'Not provided',
-        subject: formData.subject,
-        message: formData.message
-      };
-      
-      // Send email using EmailJS
-      await emailjs.send(
-        'service_stellmedia', 
-        'template_contact', 
-        templateParams,
-        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
+      // Prepare email content for mailto link
+      const subject = encodeURIComponent(formData.subject || 'Contact Form Submission');
+      const body = encodeURIComponent(
+        `Name: ${formData.name}\n` +
+        `Email: ${formData.email}\n` +
+        `Company: ${formData.company || 'Not provided'}\n\n` +
+        `Message:\n${formData.message}`
       );
       
-      // Log for debugging
+      // Log submission for tracking
       console.log("Contact form submitted:", {
         name: formData.name,
         email: formData.email,
@@ -62,9 +52,13 @@ const Contact = () => {
         message: formData.message
       });
       
+      // Create mailto link and open default email client
+      const mailtoLink = `mailto:info@stellmedia.com?subject=${subject}&body=${body}`;
+      window.open(mailtoLink, '_blank');
+      
       toast({
-        title: "Message Sent",
-        description: "Thank you for contacting us. We'll respond within 24 hours.",
+        title: "Email client opened",
+        description: "Please complete sending the email in your email client.",
       });
       
       // Reset form
@@ -76,8 +70,8 @@ const Contact = () => {
         message: ""
       });
     } catch (error) {
-      console.error("Error submitting contact form:", error);
-      setFormError("There was a problem sending your message. Please try again or email us directly at info@stellmedia.com.");
+      console.error("Error with contact form:", error);
+      setFormError("There was a problem opening your email client. Please email us directly at info@stellmedia.com.");
     } finally {
       setIsSubmitting(false);
     }
@@ -252,7 +246,7 @@ const Contact = () => {
                     className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
                     disabled={isSubmitting}
                   >
-                    {isSubmitting ? "Sending..." : "Send Message"}
+                    {isSubmitting ? "Opening Email..." : "Send Message"}
                   </Button>
                 </form>
               </div>
