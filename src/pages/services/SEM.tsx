@@ -1,10 +1,9 @@
-
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight, MessageCircle, WhatsApp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
 const SEM = () => {
@@ -14,8 +13,13 @@ const SEM = () => {
       title: "Chat with us",
       description: "Our team will be with you shortly. How can we help?",
       action: (
-        <Button size="sm" variant="secondary" onClick={() => console.log("Starting chat...")}>
-          Start Chat
+        <Button 
+          size="sm" 
+          variant="secondary" 
+          onClick={() => window.open("https://wa.me/1234567890", "_blank")}
+          className="flex items-center gap-1"
+        >
+          <WhatsApp className="h-4 w-4" /> Start WhatsApp Chat
         </Button>
       ),
     });
