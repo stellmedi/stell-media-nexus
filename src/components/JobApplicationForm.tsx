@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -63,6 +64,13 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [formError, setFormError] = React.useState<string | null>(null);
+  const [showInstructions, setShowInstructions] = React.useState(false);
+  const [applicationData, setApplicationData] = React.useState<{
+    subject: string;
+    body: string;
+    fileName: string;
+    fileUrl: string | null;
+  } | null>(null);
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
@@ -101,36 +109,28 @@ ${data.coverLetter ? `Cover Letter:\n${data.coverLetter}` : 'No cover letter pro
 Please contact the applicant directly to proceed with the application process.
       `;
       
-      // Create mailto link to directly open email client with pre-filled content
-      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
-      
       // Create a downloadable version of the resume
       const resumeURL = URL.createObjectURL(resumeFile);
-      const resumeLink = document.createElement('a');
-      resumeLink.href = resumeURL;
-      resumeLink.download = resumeFile.name;
+      
+      // Store application data for later use
+      setApplicationData({
+        subject: emailSubject,
+        body: emailBody,
+        fileName: resumeFile.name,
+        fileUrl: resumeURL
+      });
       
       // Show success message with instructions
       toast({
-        title: "Application submitted",
-        description: "Please check your email for instructions to complete your application.",
+        title: "Application submitted successfully",
+        description: "Please follow the next instructions to complete your application.",
       });
       
-      // Open email client with pre-filled content
-      window.open(mailtoLink, '_blank');
+      setShowInstructions(true);
       
-      // Also trigger resume download
-      resumeLink.click();
-      
-      // Cleanup
-      URL.revokeObjectURL(resumeURL);
-      
-      // Reset form and close dialog
-      form.reset();
-      onClose();
     } catch (error) {
       console.error("Error in application submission:", error);
-      setFormError("There was a problem with your application. Please email your resume directly to info@stellmedia.com with the job title in the subject line.");
+      setFormError("There was a problem with your application. Please try again or email your resume directly to info@stellmedia.com with the job title in the subject line.");
       
       toast({
         title: "Application not submitted",
@@ -142,134 +142,229 @@ Please contact the applicant directly to proceed with the application process.
     }
   };
 
+  const handleSendEmail = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    if (!applicationData) return;
+    
+    // Create mailto link for the user's default email client
+    const mailtoLink = `mailto:info@stellmedia.com?subject=${encodeURIComponent(applicationData.subject)}&body=${encodeURIComponent(applicationData.body)}`;
+    
+    // Open email client in a new window
+    window.open(mailtoLink, '_blank');
+    
+    // Download resume file for the user to attach
+    if (applicationData.fileUrl) {
+      const link = document.createElement('a');
+      link.href = applicationData.fileUrl;
+      link.download = applicationData.fileName;
+      link.click();
+    }
+    
+    // Reset form and close dialog
+    form.reset();
+    onClose();
+  };
+
+  const handleClose = () => {
+    // Clean up any object URLs to prevent memory leaks
+    if (applicationData?.fileUrl) {
+      URL.revokeObjectURL(applicationData.fileUrl);
+    }
+    
+    // Reset states
+    setShowInstructions(false);
+    setApplicationData(null);
+    form.reset();
+    onClose();
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+    <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-xl">Apply for {jobTitle}</DialogTitle>
-          <DialogDescription>
-            Complete the form below to apply. All applications will be sent to info@stellmedia.com
-          </DialogDescription>
-        </DialogHeader>
-        
-        {formError && (
-          <Alert variant="destructive" className="mb-4">
-            <AlertDescription>{formError}</AlertDescription>
-          </Alert>
-        )}
-        
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your full name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        {!showInstructions ? (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-xl">Apply for {jobTitle}</DialogTitle>
+              <DialogDescription>
+                Complete the form below to apply. All applications will be sent to info@stellmedia.com
+              </DialogDescription>
+            </DialogHeader>
             
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="your.email@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {formError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{formError}</AlertDescription>
+              </Alert>
+            )}
             
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone (optional)</FormLabel>
-                  <FormControl>
-                    <Input type="tel" placeholder="Your phone number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
+                <FormField
+                  control={form.control}
+                  name="fullName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Full Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your full name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="your.email@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone (optional)</FormLabel>
+                      <FormControl>
+                        <Input type="tel" placeholder="Your phone number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="linkedin"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>LinkedIn Profile</FormLabel>
+                      <FormControl>
+                        <div className="flex items-center space-x-2">
+                          <Linkedin className="text-blue-600 h-5 w-5" />
+                          <Input placeholder="https://linkedin.com/in/your-profile" {...field} />
+                        </div>
+                      </FormControl>
+                      <FormDescription>Share your LinkedIn profile URL</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="resume"
+                  render={({ field: { onChange, value, ...fieldProps } }) => (
+                    <FormItem>
+                      <FormLabel>Resume</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="file" 
+                          accept=".pdf,.doc,.docx"
+                          onChange={(e) => onChange(e.target.files)}
+                          {...fieldProps}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Upload your resume (PDF, DOC, or DOCX format)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="coverLetter"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Cover Letter (optional)</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Tell us why you're interested in this position..." 
+                          className="min-h-[120px]"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="flex justify-end space-x-4">
+                  <DialogClose asChild>
+                    <Button type="button" variant="outline">Cancel</Button>
+                  </DialogClose>
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? "Submitting..." : "Submit Application"}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </>
+        ) : (
+          <>
+            <DialogHeader>
+              <DialogTitle className="text-xl">Application Instructions</DialogTitle>
+              <DialogDescription>
+                Follow these steps to complete your application
+              </DialogDescription>
+            </DialogHeader>
             
-            <FormField
-              control={form.control}
-              name="linkedin"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>LinkedIn Profile</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center space-x-2">
-                      <Linkedin className="text-blue-600 h-5 w-5" />
-                      <Input placeholder="https://linkedin.com/in/your-profile" {...field} />
-                    </div>
-                  </FormControl>
-                  <FormDescription>Share your LinkedIn profile URL</FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="resume"
-              render={({ field: { onChange, value, ...fieldProps } }) => (
-                <FormItem>
-                  <FormLabel>Resume</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="file" 
-                      accept=".pdf,.doc,.docx"
-                      onChange={(e) => onChange(e.target.files)}
-                      {...fieldProps}
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Upload your resume (PDF, DOC, or DOCX format)
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="coverLetter"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Cover Letter (optional)</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Tell us why you're interested in this position..." 
-                      className="min-h-[120px]"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <div className="flex justify-end space-x-4">
-              <DialogClose asChild>
-                <Button type="button" variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Application"}
-              </Button>
+            <div className="py-6">
+              <Alert className="mb-6 bg-green-50 border-green-200">
+                <AlertDescription className="text-green-800">
+                  Your application form has been submitted successfully! Please follow these steps to complete your application:
+                </AlertDescription>
+              </Alert>
+              
+              <div className="space-y-4 text-gray-700">
+                <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+                  <p className="font-medium mb-2">Step 1: Send your application email</p>
+                  <p className="mb-3">Click the button below to open your email client with a pre-filled message. This will open in a new window.</p>
+                  <Button 
+                    onClick={handleSendEmail} 
+                    className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600"
+                  >
+                    Open Email Application
+                  </Button>
+                </div>
+                
+                <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+                  <p className="font-medium mb-2">Step 2: Attach your resume</p>
+                  <p>Your resume will be downloaded automatically. Please attach it to the email before sending.</p>
+                </div>
+                
+                <div className="border border-gray-200 rounded-md p-4 bg-gray-50">
+                  <p className="font-medium mb-2">Step 3: Send the email</p>
+                  <p>Review your application details and click send in your email client.</p>
+                </div>
+              </div>
+              
+              <div className="mt-6 p-4 border border-amber-200 rounded-md bg-amber-50 text-amber-800">
+                <p className="font-medium mb-2">Important Note:</p>
+                <p>If your email client doesn't open automatically, please send an email to info@stellmedia.com with the following:</p>
+                <ul className="list-disc pl-5 mt-2">
+                  <li>Subject: {applicationData?.subject || "Job Application"}</li>
+                  <li>Attach your resume</li>
+                  <li>Include your contact details and the position you're applying for</li>
+                </ul>
+              </div>
             </div>
-          </form>
-        </Form>
+            
+            <div className="flex justify-end">
+              <Button onClick={handleClose}>Close</Button>
+            </div>
+          </>
+        )}
       </DialogContent>
     </Dialog>
   );
