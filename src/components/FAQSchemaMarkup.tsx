@@ -12,17 +12,19 @@ interface FAQSchemaMarkupProps {
   mainEntity?: string;
 }
 
-const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity = "https://stellmedia.com/faq" }) => {
+const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity = "https://stellmediaglobal.com/faq" }) => {
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
+    "@id": mainEntity,
     "mainEntity": items.map(item => ({
       "@type": "Question",
       "name": item.question,
       "acceptedAnswer": {
         "@type": "Answer",
         "text": item.answer
-      }
+      },
+      "wordCount": item.answer.split(' ').length.toString()
     }))
   };
 

@@ -10,6 +10,9 @@ interface BlogPostSchemaProps {
   dateModified?: string;
   authorName: string;
   url: string;
+  keywords?: string[];
+  articleBody?: string;
+  articleSection?: string;
 }
 
 const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({ 
@@ -19,16 +22,22 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
   datePublished, 
   dateModified = datePublished, 
   authorName, 
-  url 
+  url,
+  keywords = [],
+  articleBody = "",
+  articleSection = "Blog"
 }) => {
   const articleData = {
     title,
     description,
-    image: [image],
+    image,
     datePublished,
     dateModified,
     authorName,
-    url
+    url,
+    keywords,
+    articleBody,
+    articleSection
   };
 
   // Breadcrumb data

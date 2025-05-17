@@ -12,9 +12,16 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
+    "@id": "https://stellmediaglobal.com/#organization",
     "name": "Stell Media",
     "url": "https://stellmediaglobal.com",
-    "logo": "https://stellmediaglobal.com/logo.png", // Replace with actual logo URL
+    "logo": {
+      "@type": "ImageObject",
+      "@id": "https://stellmediaglobal.com/#logo",
+      "url": "https://stellmediaglobal.com/logo.png", // Replace with actual logo URL
+      "width": "600",
+      "height": "60"
+    },
     "sameAs": [
       "https://www.facebook.com/StellMedia",
       "https://twitter.com/StellMedia",
@@ -42,6 +49,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
+    "@id": "https://stellmediaglobal.com/#website",
     "name": "Stell Media",
     "url": "https://stellmediaglobal.com",
     "potentialAction": {
@@ -55,14 +63,19 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const serviceSchema = data ? {
     "@context": "https://schema.org",
     "@type": "Service",
+    "@id": `https://stellmediaglobal.com/services/${data.serviceType?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
     "serviceType": data.serviceType || "Digital Marketing Service",
     "name": data.name || "Stell Media Services",
     "provider": {
       "@type": "Organization",
-      "name": "Stell Media"
+      "@id": "https://stellmediaglobal.com/#organization"
     },
     "description": data.description || "Professional digital marketing services for e-commerce businesses.",
     "areaServed": data.areaServed || "Worldwide",
+    "audience": {
+      "@type": "Audience",
+      "audienceType": "E-commerce Businesses"
+    },
     "hasOfferCatalog": {
       "@type": "OfferCatalog",
       "name": "Digital Marketing Services",
@@ -136,7 +149,9 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
     "@context": "https://schema.org",
     "@type": "Article",
     "headline": data.title || "Article Title",
-    "image": data.image || ["https://stellmediaglobal.com/article-image.jpg"],
+    "name": data.title || "Article Title",
+    "description": data.description || "Article description text goes here",
+    "image": data.image ? [data.image] : ["https://stellmediaglobal.com/article-image.jpg"],
     "datePublished": data.datePublished || "2023-01-01T08:00:00+08:00",
     "dateModified": data.dateModified || "2023-01-01T08:00:00+08:00",
     "author": {
@@ -145,17 +160,20 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
     },
     "publisher": {
       "@type": "Organization",
+      "@id": "https://stellmediaglobal.com/#organization",
       "name": "Stell Media",
       "logo": {
         "@type": "ImageObject",
         "url": "https://stellmediaglobal.com/logo.png"
       }
     },
-    "description": data.description || "Article description text goes here",
     "mainEntityOfPage": {
       "@type": "WebPage",
       "@id": data.url || "https://stellmediaglobal.com/blog/article-url"
-    }
+    },
+    "keywords": data.keywords || ["e-commerce", "product discovery", "SEO"],
+    "articleBody": data.articleBody || "",
+    "articleSection": data.articleSection || "Blog"
   } : null;
 
   const getSchemaByType = () => {

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const SEOHeroSection = () => {
   return (
-    <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+    <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50" aria-label="E-commerce SEO Services">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -16,11 +16,18 @@ const SEOHeroSection = () => {
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
               Drive sustainable growth with our data-driven, technology-enhanced SEO strategies tailored specifically for e-commerce sites with large product catalogs.
             </p>
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
-              <Link to="/contact">
-                Get Started <ArrowRight className="ml-2 h-4 w-4" />
-              </Link>
-            </Button>
+            <div className="space-y-4">
+              <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
+                <li>Structured data implementation for product-rich results</li>
+                <li>AI-friendly content optimization for modern search</li>
+                <li>Technical SEO focused on crawlability and indexation</li>
+              </ul>
+              <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
+                <Link to="/contact">
+                  Get Started <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
           </div>
           <div>
             <img 

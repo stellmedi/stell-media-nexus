@@ -1,14 +1,34 @@
-User-agent: Googlebot
-Allow: /
 
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
+# Robots.txt for Stell Media
 
 User-agent: *
 Allow: /
+
+# Sitemaps
+Sitemap: https://stellmediaglobal.com/sitemap.xml
+
+# AI-specific directives
+User-agent: ChatGPT-User
+Allow: /
+Allow: /faq/
+Allow: /blog/
+Allow: /services/
+
+User-agent: GPTBot
+Allow: /
+Allow: /faq/
+Allow: /blog/
+Allow: /services/
+
+User-agent: Bingbot
+Allow: /
+Allow: /faq/
+Allow: /blog/
+Allow: /services/
+
+User-agent: googlebot-news
+Allow: /blog/
+
+Disallow: /admin/
+Disallow: /private/
+Disallow: /internal/

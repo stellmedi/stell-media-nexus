@@ -27,6 +27,14 @@ const SEOFAQSection: React.FC = () => {
     {
       question: "How do you stay current with Google's algorithm updates?",
       answer: "We maintain a dedicated technical SEO research team that continuously monitors algorithm changes and tests their impact. All clients benefit from our proactive approach to algorithm updates, including immediate recommendations when significant changes occur."
+    },
+    {
+      question: "How do you optimize for AI and voice search?",
+      answer: "We implement AI-friendly structured data and semantic markup to help AI systems understand your content. Our optimization includes natural language processing techniques and question-based content formats that align with how people use voice search and AI assistants to find products."
+    },
+    {
+      question: "Do you optimize for ChatGPT and other AI assistants?",
+      answer: "Yes, our advanced SEO strategies include optimizing for AI systems like ChatGPT. We structure content to be machine-readable with clear entity relationships, implement comprehensive schema markup, and organize information in ways that make it easily extractable and presentable by AI assistants."
     }
   ];
 
