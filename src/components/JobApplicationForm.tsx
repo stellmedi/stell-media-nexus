@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,7 +25,6 @@ import {
 } from "@/components/ui/form";
 import { Linkedin } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import emailjs from 'emailjs-com';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -74,7 +72,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       // Get the resume file
       const resumeFile = data.resume[0];
       
-      // Prepare application data summary - this will be shown to the user regardless of email success
+      // Prepare application data summary
       const applicationSummary = {
         name: data.fullName,
         email: data.email, 
@@ -86,73 +84,54 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       
       console.log("Submitting application:", applicationSummary);
       
-      // Create instructions for manual submission
-      const applicationInstructions = `
-Please forward your resume to info@stellmedia.com with the following information:
+      // Create application email content
+      const emailSubject = `${jobTitle} Application from ${data.fullName}`;
+      const emailBody = `
+A new application has been received for the ${jobTitle} position.
 
-- Position: ${jobTitle}
+Applicant Details:
 - Name: ${data.fullName}
 - Email: ${data.email}
 - Phone: ${data.phone || 'Not provided'}
 - LinkedIn: ${data.linkedin || 'Not provided'}
-${data.coverLetter ? `\nCover Letter:\n${data.coverLetter}` : ''}
+- Resume Filename: ${resumeFile.name}
+
+${data.coverLetter ? `Cover Letter:\n${data.coverLetter}` : 'No cover letter provided.'}
+
+Please contact the applicant directly to proceed with the application process.
       `;
       
-      // Show success message immediately (regardless of email success)
+      // Create mailto link to directly open email client with pre-filled content
+      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodeURIComponent(emailSubject)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Create a downloadable version of the resume
+      const resumeURL = URL.createObjectURL(resumeFile);
+      const resumeLink = document.createElement('a');
+      resumeLink.href = resumeURL;
+      resumeLink.download = resumeFile.name;
+      
+      // Show success message with instructions
       toast({
-        title: "Application received",
-        description: `Thank you for applying to the ${jobTitle} position. Please email your resume to info@stellmedia.com if you don't receive a confirmation email.`,
+        title: "Application submitted",
+        description: "Please check your email for instructions to complete your application.",
       });
       
-      // Try to send email - but don't wait for it or let it block the form submission
-      if (resumeFile) {
-        // Convert file to base64 for email attachment
-        const reader = new FileReader();
-        reader.readAsDataURL(resumeFile);
-        
-        reader.onload = async () => {
-          const base64Resume = reader.result as string;
-          
-          try {
-            // Prepare email template parameters
-            const templateParams = {
-              to_email: data.email,
-              from_name: "Stell Media Careers",
-              subject: `Your Application for ${jobTitle} at Stell Media`,
-              message: applicationInstructions,
-              reply_to: "info@stellmedia.com"
-            };
-            
-            // Try to send email but don't block form submission process
-            await emailjs.send(
-              'service_stellmedia', 
-              'template_direct_email', 
-              templateParams, 
-              'qOg5qx_DbcXNrQ8v8' // Public key
-            );
-            
-            console.log("Application email sent successfully");
-          } catch (emailError) {
-            console.error("EmailJS error:", emailError);
-            // Silent fail - we've already shown success message to user
-            // and instructed them to manually send if needed
-          }
-        };
-        
-        reader.onerror = () => {
-          console.error("Error reading resume file");
-          // Silent fail - we've already shown success message
-        };
-      }
+      // Open email client with pre-filled content
+      window.open(mailtoLink, '_blank');
       
-      // Reset form and close dialog regardless of email status
+      // Also trigger resume download
+      resumeLink.click();
+      
+      // Cleanup
+      URL.revokeObjectURL(resumeURL);
+      
+      // Reset form and close dialog
       form.reset();
       onClose();
     } catch (error) {
       console.error("Error in application submission:", error);
       setFormError("There was a problem with your application. Please email your resume directly to info@stellmedia.com with the job title in the subject line.");
       
-      // Still show toast so they know what to do
       toast({
         title: "Application not submitted",
         description: "Please email your resume directly to info@stellmedia.com",
