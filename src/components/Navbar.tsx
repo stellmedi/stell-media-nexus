@@ -28,19 +28,22 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation - Updated Case Studies link to go to the case-studies route */}
+        {/* Desktop Navigation - Removed Case Studies, added FAQ */}
         <div className="hidden md:flex items-center space-x-6">
+          <Link to="/" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            Home
+          </Link>
           <Link to="/services" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Services
           </Link>
-          <Link to="/case-studies" className="text-gray-600 hover:text-indigo-600 transition-colors">
-            Case Studies
+          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            About
           </Link>
           <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Blog
           </Link>
-          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
-            About
+          <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            FAQ
           </Link>
           <Button asChild variant="default" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 text-white">
             <Link to="/contact">Book a Consultation</Link>
@@ -58,10 +61,17 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu - Updated Case Studies link */}
+      {/* Mobile Menu - Updated with new navigation order */}
       {mobileMenuOpen && (
         <div className="md:hidden bg-indigo-50 border-t border-gray-100">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
+            <Link
+              to="/"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
+              onClick={toggleMobileMenu}
+            >
+              Home
+            </Link>
             <Link
               to="/services"
               className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
@@ -70,11 +80,11 @@ const Navbar = () => {
               Services
             </Link>
             <Link
-              to="/case-studies"
+              to="/about"
               className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
-              Case Studies
+              About
             </Link>
             <Link
               to="/blog"
@@ -84,11 +94,11 @@ const Navbar = () => {
               Blog
             </Link>
             <Link
-              to="/about"
+              to="/faq"
               className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
-              About
+              FAQ
             </Link>
             <Button
               asChild
