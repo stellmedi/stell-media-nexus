@@ -25,19 +25,19 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white mb-4">Services</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/services/product-discovery" className="hover:text-indigo-300 transition-colors">Product Discovery</Link>
+                <Link to="/services/product-discovery" className="text-gray-300 hover:text-indigo-300 transition-colors">Product Discovery</Link>
               </li>
               <li>
-                <Link to="/services/data-enrichment" className="hover:text-indigo-300 transition-colors">Data Enrichment</Link>
+                <Link to="/services/data-enrichment" className="text-gray-300 hover:text-indigo-300 transition-colors">Data Enrichment</Link>
               </li>
               <li>
-                <Link to="/services/seo" className="hover:text-indigo-300 transition-colors">SEO Services</Link>
+                <Link to="/services/seo" className="text-gray-300 hover:text-indigo-300 transition-colors">SEO Services</Link>
               </li>
               <li>
-                <Link to="/services/sem" className="hover:text-indigo-300 transition-colors">SEM Management</Link>
+                <Link to="/services/sem" className="text-gray-300 hover:text-indigo-300 transition-colors">SEM Management</Link>
               </li>
               <li>
-                <Link to="/services/conversion-optimization" className="hover:text-indigo-300 transition-colors">Conversion Optimization</Link>
+                <Link to="/services/conversion-optimization" className="text-gray-300 hover:text-indigo-300 transition-colors">Conversion Optimization</Link>
               </li>
             </ul>
           </div>
@@ -46,19 +46,19 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-white mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/about" className="hover:text-indigo-300 transition-colors">About Us</Link>
+                <Link to="/about" className="text-gray-300 hover:text-indigo-300 transition-colors">About Us</Link>
               </li>
               <li>
-                <Link to="/case-studies" className="hover:text-indigo-300 transition-colors">Case Studies</Link>
+                <Link to="/case-studies" className="text-gray-300 hover:text-indigo-300 transition-colors">Case Studies</Link>
               </li>
               <li>
-                <Link to="/blog" className="hover:text-indigo-300 transition-colors">Blog</Link>
+                <Link to="/blog" className="text-gray-300 hover:text-indigo-300 transition-colors">Blog</Link>
               </li>
               <li>
-                <Link to="/careers" className="hover:text-indigo-300 transition-colors">Careers</Link>
+                <Link to="/careers" className="text-gray-300 hover:text-indigo-300 transition-colors">Careers</Link>
               </li>
               <li>
-                <Link to="/contact" className="hover:text-indigo-300 transition-colors">Contact</Link>
+                <Link to="/contact" className="text-gray-300 hover:text-indigo-300 transition-colors">Contact</Link>
               </li>
             </ul>
           </div>
@@ -98,9 +98,9 @@ const Footer = () => {
         <div className="border-t border-gray-800 pt-8 mt-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
           <p>© {new Date().getFullYear()} Stell Media. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/privacy" className="hover:text-indigo-300 transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="hover:text-indigo-300 transition-colors">Terms of Service</Link>
-            <Link to="/sitemap" className="hover:text-indigo-300 transition-colors">Sitemap</Link>
+            <Link to="/privacy" className="text-gray-500 hover:text-indigo-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-gray-500 hover:text-indigo-300 transition-colors">Terms of Service</Link>
+            <Link to="/sitemap" className="text-gray-500 hover:text-indigo-300 transition-colors">Sitemap</Link>
           </div>
         </div>
       </div>

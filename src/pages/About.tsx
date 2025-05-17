@@ -59,7 +59,7 @@ const About = () => {
         </section>
 
         {/* Our Story - Updated with founder info */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
@@ -91,11 +91,11 @@ const About = () => {
         </section>
 
         {/* Our Values */}
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-12 text-center text-gray-900">Our Values</h2>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-100">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-6">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="m22 2-7 20-4-9-9-4Z" />
@@ -108,7 +108,7 @@ const About = () => {
                 </p>
               </div>
               
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-100">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-6">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="18" cy="18" r="3" />
@@ -123,7 +123,7 @@ const About = () => {
                 </p>
               </div>
               
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm border border-gray-100">
+              <div className="bg-white p-8 rounded-lg shadow-sm border border-gray-100">
                 <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-6">
                   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
@@ -139,7 +139,7 @@ const About = () => {
         </section>
 
         {/* Team Section */}
-        <section className="py-16 bg-gray-50">
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Team</h2>
             <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
@@ -166,14 +166,14 @@ const About = () => {
         </section>
 
         {/* CTA Section - Updated for button visibility */}
-        <section className="py-16 bg-white">
+        <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Join Our Growing Team</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 We're always looking for talented individuals passionate about e-commerce, technology innovation, automation, and creative solutions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 shadow-xl border-2 border-white hover:border-indigo-100 font-bold">
+              <Button asChild size="lg" variant="cta" className="shadow-xl font-bold">
                 <Link to="/careers">
                   View Open Positions <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
