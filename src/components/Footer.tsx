@@ -1,8 +1,30 @@
+
 import React from "react";
-import { Link } from "react-router-dom";
-import { Linkedin } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Linkedin, Facebook, Instagram } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const Footer = () => {
+  const navigate = useNavigate();
+
+  const handleLinkClick = (path: string, linkName: string) => {
+    // Show toast notification
+    toast({
+      title: "Navigating...",
+      description: `Going to ${linkName}`,
+      duration: 2000,
+    });
+
+    // Navigate to the path
+    navigate(path);
+    
+    // Scroll to top with smooth behavior
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  };
+
   return (
     <footer id="about" className="bg-indigo-50 text-gray-700 py-16">
       <div className="container mx-auto px-4">
@@ -25,19 +47,44 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Services</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/services/product-discovery" className="text-gray-600 hover:text-indigo-600 transition-colors">Product Discovery</Link>
+                <button 
+                  onClick={() => handleLinkClick("/services/product-discovery", "Product Discovery")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Product Discovery
+                </button>
               </li>
               <li>
-                <Link to="/services/data-enrichment" className="text-gray-600 hover:text-indigo-600 transition-colors">Data Enrichment</Link>
+                <button 
+                  onClick={() => handleLinkClick("/services/data-enrichment", "Data Enrichment")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Data Enrichment
+                </button>
               </li>
               <li>
-                <Link to="/services/seo" className="text-gray-600 hover:text-indigo-600 transition-colors">SEO Services</Link>
+                <button 
+                  onClick={() => handleLinkClick("/services/seo", "SEO Services")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  SEO Services
+                </button>
               </li>
               <li>
-                <Link to="/services/sem" className="text-gray-600 hover:text-indigo-600 transition-colors">SEM Management</Link>
+                <button 
+                  onClick={() => handleLinkClick("/services/sem", "SEM Management")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  SEM Management
+                </button>
               </li>
               <li>
-                <Link to="/services/conversion-optimization" className="text-gray-600 hover:text-indigo-600 transition-colors">Conversion Optimization</Link>
+                <button 
+                  onClick={() => handleLinkClick("/services/conversion-optimization", "Conversion Optimization")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Conversion Optimization
+                </button>
               </li>
             </ul>
           </div>
@@ -46,19 +93,44 @@ const Footer = () => {
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Company</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">About Us</Link>
+                <button 
+                  onClick={() => handleLinkClick("/about", "About Us")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  About Us
+                </button>
               </li>
               <li>
-                <Link to="/case-studies" className="text-gray-600 hover:text-indigo-600 transition-colors">Case Studies</Link>
+                <button 
+                  onClick={() => handleLinkClick("/case-studies", "Case Studies")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Case Studies
+                </button>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors">Blog</Link>
+                <button 
+                  onClick={() => handleLinkClick("/blog", "Blog")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Blog
+                </button>
               </li>
               <li>
-                <Link to="/careers" className="text-gray-600 hover:text-indigo-600 transition-colors">Careers</Link>
+                <button 
+                  onClick={() => handleLinkClick("/careers", "Careers")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Careers
+                </button>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-600 hover:text-indigo-600 transition-colors">Contact</Link>
+                <button 
+                  onClick={() => handleLinkClick("/contact", "Contact")}
+                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2"
+                >
+                  Contact
+                </button>
               </li>
             </ul>
           </div>
@@ -76,22 +148,24 @@ const Footer = () => {
                 href="https://www.linkedin.com/company/stellmediadigital/" 
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="text-gray-500 hover:text-indigo-600 transition-colors"
+                className="text-gray-500 hover:text-indigo-600 transition-colors active:scale-95 transform"
                 aria-label="LinkedIn"
               >
                 <Linkedin size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                </svg>
+              <a 
+                href="#" 
+                className="text-gray-500 hover:text-indigo-600 transition-colors active:scale-95 transform"
+                aria-label="Facebook"
+              >
+                <Facebook size={20} />
               </a>
-              <a href="#" className="text-gray-500 hover:text-indigo-600 transition-colors">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
-                </svg>
+              <a 
+                href="#" 
+                className="text-gray-500 hover:text-indigo-600 transition-colors active:scale-95 transform"
+                aria-label="Instagram"
+              >
+                <Instagram size={20} />
               </a>
             </div>
           </div>
@@ -100,9 +174,24 @@ const Footer = () => {
         <div className="border-t border-indigo-200 pt-8 mt-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
           <p>© {new Date().getFullYear()} Stell Media. All rights reserved. | www.stellmedia.com</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <Link to="/privacy" className="text-gray-500 hover:text-indigo-600 transition-colors">Privacy Policy</Link>
-            <Link to="/terms" className="text-gray-500 hover:text-indigo-600 transition-colors">Terms of Service</Link>
-            <Link to="/sitemap" className="text-gray-500 hover:text-indigo-600 transition-colors">Sitemap</Link>
+            <button 
+              onClick={() => handleLinkClick("/privacy", "Privacy Policy")}
+              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
+            >
+              Privacy Policy
+            </button>
+            <button 
+              onClick={() => handleLinkClick("/terms", "Terms of Service")}
+              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
+            >
+              Terms of Service
+            </button>
+            <button 
+              onClick={() => handleLinkClick("/sitemap", "Sitemap")}
+              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
+            >
+              Sitemap
+            </button>
           </div>
         </div>
       </div>
