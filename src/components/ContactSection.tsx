@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import emailjs from 'emailjs-com';
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -31,11 +32,26 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Simulate sending the consultation request to an email service
-      // In a real implementation, you'd send this data to a backend API
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      // Prepare email template parameters
+      const templateParams = {
+        to_email: "info@stellmedia.com",
+        subject: "New Consultation Request",
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company,
+        website: formData.website || "Not provided",
+        message: formData.message
+      };
       
-      // Log what would be sent in a real implementation
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_stellmedia', // Replace with your EmailJS service ID
+        'template_consultation', // Replace with your EmailJS template ID
+        templateParams,
+        'YOUR_USER_ID' // Replace with your EmailJS user ID
+      );
+      
+      // Log for debugging purposes
       console.log("Consultation request submitted:", {
         to: "info@stellmedia.com",
         subject: "New Consultation Request",
@@ -61,7 +77,7 @@ const ContactSection = () => {
       });
     } catch (error) {
       console.error("Error submitting consultation request:", error);
-      setFormError("There was a problem sending your request. Please try again.");
+      setFormError("There was a problem sending your request. Please try again or email us directly.");
     } finally {
       setIsSubmitting(false);
     }

@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import emailjs from 'emailjs-com';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -35,11 +36,25 @@ const Contact = () => {
     setFormError(null);
     
     try {
-      // Simulate sending the contact form data to an email service
-      // In a real implementation, you'd send this data to a backend API
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      // Prepare email template parameters
+      const templateParams = {
+        to_email: "info@stellmedia.com",
+        subject: `New Contact Form: ${formData.subject}`,
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company || 'Not provided',
+        message: formData.message
+      };
       
-      // Log what would be sent in a real implementation
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_stellmedia', // Replace with your EmailJS service ID
+        'template_contact', // Replace with your EmailJS template ID
+        templateParams,
+        'YOUR_USER_ID' // Replace with your EmailJS user ID
+      );
+      
+      // Log for debugging
       console.log("Contact form submitted:", {
         to: "info@stellmedia.com",
         subject: `New Contact Form: ${formData.subject}`,
@@ -64,7 +79,7 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      setFormError("There was a problem sending your message. Please try again.");
+      setFormError("There was a problem sending your message. Please try again or email us directly.");
     } finally {
       setIsSubmitting(false);
     }

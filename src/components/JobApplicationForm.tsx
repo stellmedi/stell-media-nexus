@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Linkedin } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import emailjs from 'emailjs-com';
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -69,26 +69,41 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     setIsSubmitting(true);
     setFormError(null);
     
-    // Create form data for email service
-    const formData = new FormData();
-    formData.append('jobTitle', jobTitle);
-    formData.append('fullName', data.fullName);
-    formData.append('email', data.email);
-    formData.append('phone', data.phone || 'Not provided');
-    formData.append('linkedin', data.linkedin || 'Not provided');
-    formData.append('coverLetter', data.coverLetter || 'Not provided');
-    
-    // Add resume file
-    if (data.resume[0]) {
-      formData.append('resume', data.resume[0]);
-    }
+    // Convert resume file to base64 for email
+    const resumeFile = data.resume[0];
+    const reader = new FileReader();
     
     try {
-      // Simulate email sending (in a real implementation, you would use an email service)
-      // This is where you'd connect to a backend service or API
-      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      // Convert file to base64
+      const base64Resume = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(resumeFile);
+      });
       
-      // For demo purposes, log what would be sent
+      // Prepare email template parameters
+      const templateParams = {
+        to_email: "info@stellmedia.com",
+        subject: `New Job Application: ${jobTitle}`,
+        full_name: data.fullName,
+        email: data.email,
+        phone: data.phone || 'Not provided',
+        linkedin: data.linkedin || 'Not provided',
+        cover_letter: data.coverLetter || 'Not provided',
+        resume_filename: resumeFile.name,
+        resume_content: base64Resume,
+        job_title: jobTitle
+      };
+      
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_stellmedia', // Replace with your EmailJS service ID
+        'template_job_application', // Replace with your EmailJS template ID
+        templateParams,
+        'YOUR_USER_ID' // Replace with your EmailJS user ID
+      );
+      
+      // For debugging purposes
       console.log("Application submitted:", {
         to: "info@stellmedia.com",
         subject: `New Job Application: ${jobTitle}`,
@@ -108,7 +123,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       onClose();
     } catch (error) {
       console.error("Error submitting application:", error);
-      setFormError("There was a problem submitting your application. Please try again.");
+      setFormError("There was a problem submitting your application. Please try again or email us directly.");
     } finally {
       setIsSubmitting(false);
     }
