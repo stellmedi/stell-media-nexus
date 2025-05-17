@@ -39,12 +39,8 @@ const generalFAQs = [
     answer: "We believe in transparent, collaborative partnerships. Each client is assigned a dedicated success manager who provides regular updates and maintains open communication. We typically work in agile sprints with clear deliverables and feedback cycles, ensuring you're always informed about progress and have input throughout the process."
   },
   {
-    question: "Can you integrate your solutions with our existing technology stack?",
+    question: "Can you integrate your solutions with your existing technology stack?",
     answer: "Absolutely. Our solutions are designed to integrate seamlessly with your existing technology infrastructure. We conduct a thorough assessment of your current stack during onboarding and develop integration strategies that minimize disruption while maximizing value. Our technical team has experience with a wide range of APIs and integration patterns."
-  },
-  {
-    question: "How do you approach data privacy and security?",
-    answer: "We take data privacy and security very seriously. We are compliant with major regulations like GDPR and CCPA, implement strict data access controls, use encryption for sensitive information, and regularly audit our security practices. We're happy to complete your security assessments and can sign custom data processing agreements as needed."
   }
 ];
 
