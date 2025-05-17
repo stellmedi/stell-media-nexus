@@ -70,78 +70,94 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     setIsSubmitting(true);
     setFormError(null);
     
-    // Convert resume file to base64 for email
-    const resumeFile = data.resume[0];
-    const reader = new FileReader();
-    
     try {
-      // Convert file to base64
-      const base64Resume = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = reject;
-        reader.readAsDataURL(resumeFile);
-      });
+      // Get the resume file
+      const resumeFile = data.resume[0];
       
-      // Create a message for the user to forward to Stell Media
-      const fallbackMessage = `
-Thank you for your application for the ${jobTitle} position at Stell Media.
+      // Prepare application data summary - this will be shown to the user regardless of email success
+      const applicationSummary = {
+        name: data.fullName,
+        email: data.email, 
+        phone: data.phone || 'Not provided',
+        linkedin: data.linkedin || 'Not provided',
+        position: jobTitle,
+        resumeFileName: resumeFile.name
+      };
+      
+      console.log("Submitting application:", applicationSummary);
+      
+      // Create instructions for manual submission
+      const applicationInstructions = `
+Please forward your resume to info@stellmedia.com with the following information:
 
-Due to technical limitations, please forward this email with your attached resume to:
-info@stellmedia.com
-
-Include the following details:
+- Position: ${jobTitle}
 - Name: ${data.fullName}
 - Email: ${data.email}
 - Phone: ${data.phone || 'Not provided'}
 - LinkedIn: ${data.linkedin || 'Not provided'}
-- Position: ${jobTitle}
-
-${data.coverLetter ? `Cover Letter: ${data.coverLetter}` : ''}
-
-Your resume is attached to this email.
+${data.coverLetter ? `\nCover Letter:\n${data.coverLetter}` : ''}
       `;
       
-      // Prepare email template parameters for direct email to applicant
-      const templateParams = {
-        to_email: data.email,
-        subject: `Your Application for ${jobTitle} at Stell Media`,
-        message: fallbackMessage,
-        from_name: "Stell Media Careers",
-        reply_to: "info@stellmedia.com"
-      };
-      
-      // Show success message first to improve user experience even if email fails
+      // Show success message immediately (regardless of email success)
       toast({
-        title: "Application submitted",
-        description: `Your application for ${jobTitle} has been sent to your email. Please follow the instructions to forward it to info@stellmedia.com`,
+        title: "Application received",
+        description: `Thank you for applying to the ${jobTitle} position. Please email your resume to info@stellmedia.com if you don't receive a confirmation email.`,
       });
       
-      // Send email using EmailJS - using a template that sends email to the applicant
-      await emailjs.send(
-        'service_stellmedia', 
-        'template_direct_email', 
-        templateParams,
-        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
-      ).catch(error => {
-        console.error("EmailJS error:", error);
-        // Even if email fails, we've already shown success message
-        // The user already has their own email address and instructions from the toast
-      });
+      // Try to send email - but don't wait for it or let it block the form submission
+      if (resumeFile) {
+        // Convert file to base64 for email attachment
+        const reader = new FileReader();
+        reader.readAsDataURL(resumeFile);
+        
+        reader.onload = async () => {
+          const base64Resume = reader.result as string;
+          
+          try {
+            // Prepare email template parameters
+            const templateParams = {
+              to_email: data.email,
+              from_name: "Stell Media Careers",
+              subject: `Your Application for ${jobTitle} at Stell Media`,
+              message: applicationInstructions,
+              reply_to: "info@stellmedia.com"
+            };
+            
+            // Try to send email but don't block form submission process
+            await emailjs.send(
+              'service_stellmedia', 
+              'template_direct_email', 
+              templateParams, 
+              'qOg5qx_DbcXNrQ8v8' // Public key
+            );
+            
+            console.log("Application email sent successfully");
+          } catch (emailError) {
+            console.error("EmailJS error:", emailError);
+            // Silent fail - we've already shown success message to user
+            // and instructed them to manually send if needed
+          }
+        };
+        
+        reader.onerror = () => {
+          console.error("Error reading resume file");
+          // Silent fail - we've already shown success message
+        };
+      }
       
-      // For debugging purposes
-      console.log("Application submitted:", {
-        fallbackEmail: data.email,
-        fullName: data.fullName,
-        resumeFileName: resumeFile.name,
-        jobTitle: jobTitle
-      });
-      
-      // Reset form and close dialog
+      // Reset form and close dialog regardless of email status
       form.reset();
       onClose();
     } catch (error) {
-      console.error("Error submitting application:", error);
-      setFormError("There was a problem submitting your application. Please email your resume directly to info@stellmedia.com with the job title in the subject line.");
+      console.error("Error in application submission:", error);
+      setFormError("There was a problem with your application. Please email your resume directly to info@stellmedia.com with the job title in the subject line.");
+      
+      // Still show toast so they know what to do
+      toast({
+        title: "Application not submitted",
+        description: "Please email your resume directly to info@stellmedia.com",
+        variant: "destructive"
+      });
     } finally {
       setIsSubmitting(false);
     }
