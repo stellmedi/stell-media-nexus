@@ -6,16 +6,16 @@ import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 
 // Stats data
 const stats = [
-  { value: "34%", label: "Average conversion increase" },
-  { value: "60+", label: "E-commerce clients" },
-  { value: "12M+", label: "Products optimized" },
+  { value: "18%", label: "Average conversion increase" },
+  { value: "10+", label: "E-commerce clients" },
+  { value: "100k+", label: "Products optimized" },
   { value: "99%", label: "Client retention rate" }
 ];
 
@@ -23,26 +23,26 @@ const stats = [
 const caseStudies = [
   {
     title: "AI-Powered Electronics Search",
-    description: "How we implemented AI algorithms and machine learning to increase search conversion by 42% and reduced no-results searches by 68%.",
-    category: "AI Search Optimization",
+    description: "How we implemented AI algorithms with Elastic Search to increase search conversion by 42% and reduced no-results searches by 68%.",
+    category: "Product Discovery Optimization",
     image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
-    title: "Automated Fashion Data Enrichment",
-    description: "Our automated taxonomy and tagging system transformed messy product data into a structured database that boosted product discovery by 56%.",
-    category: "Automation & Data",
+    title: "Search Migration Success Story",
+    description: "Our algorithm optimization during migration from Algolia to Coveo transformed search performance and improved customer satisfaction by 38%.",
+    category: "Search Platform Migration",
     image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
   {
-    title: "Hybrid Retail Solution",
-    description: "Combining in-store digital kiosks with online inventory through our hybrid commerce platform increased overall sales by 23%.",
-    category: "Hybrid Commerce",
+    title: "Amazon Marketplace Optimization",
+    description: "Complete overhaul of product listing and SEO strategy resulted in 62% increase in organic visibility and 47% higher conversion rate.",
+    category: "Marketpulse",
     image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJldGFpbCUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
   {
-    title: "AI-Enhanced Product Recommendations",
-    description: "Our machine learning algorithm improved cross-selling opportunities by analyzing purchase patterns and customer behavior in real time.",
-    category: "AI Personalization",
+    title: "Performance Marketing Campaign",
+    description: "Strategic performance marketing for an online retailer resulted in 85% ROAS improvement and 39% reduction in customer acquisition costs.",
+    category: "Performance Marketing",
     image: "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZWNvbW1lcmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   }
 ];
@@ -76,7 +76,7 @@ const Index = () => {
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                See how our innovative AI solutions, automation tools, and hybrid commerce strategies have helped e-commerce brands overcome their product discovery challenges.
+                See how our innovative solutions for product discovery, search algorithm optimization, and marketplace management have helped e-commerce brands overcome their challenges.
               </p>
             </div>
             
@@ -124,9 +124,9 @@ const Index = () => {
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-                Let's talk about how our AI-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
+                Let's talk about how our product discovery solutions, search algorithm optimization, and marketplace management can boost your conversions.
               </p>
-              <Button asChild size="xl" variant="cta" className="font-bold text-lg">
+              <Button asChild size="xl" variant="cta" className="font-bold text-lg bg-white text-indigo-700">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
@@ -134,6 +134,18 @@ const Index = () => {
         </section>
         
         <ContactSection />
+        
+        {/* Chatbot */}
+        <div className="fixed bottom-6 right-6 z-50">
+          <Button 
+            variant="default" 
+            size="icon" 
+            className="h-14 w-14 rounded-full shadow-lg"
+            onClick={() => alert("Chatbot functionality will be implemented here")}
+          >
+            <MessageCircle size={24} />
+          </Button>
+        </div>
       </main>
       <Footer />
     </div>

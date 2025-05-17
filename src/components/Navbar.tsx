@@ -12,7 +12,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-white/95 backdrop-blur-sm z-50 shadow-sm">
+    <nav className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-50 shadow-sm">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
@@ -20,7 +20,7 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" 
               alt="Stell Media Logo" 
-              className="h-8 w-auto mr-3" 
+              className="h-10 w-auto mr-3" 
             />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Stell Media
@@ -60,7 +60,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-100">
+        <div className="md:hidden bg-indigo-50 border-t border-gray-100">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
             <Link
               to="/services"
