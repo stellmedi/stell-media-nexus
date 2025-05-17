@@ -4,8 +4,14 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
+import { ArrowRight, MessageCircle, MessageSquare, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 const SEM = () => {
   // Function to handle chatbot click
@@ -25,6 +31,34 @@ const SEM = () => {
       ),
     });
   };
+
+  // FAQ items
+  const faqItems = [
+    {
+      question: "What makes your automated SEM services different from traditional agencies?",
+      answer: "Our automated approach uses AI and machine learning to continuously optimize your campaigns in real-time, rather than relying on manual adjustments. This allows for faster optimization, 24/7 monitoring, and data-driven decisions that maximize your ROAS without the overhead of traditional agency models."
+    },
+    {
+      question: "How quickly can I expect to see results from your SEM campaigns?",
+      answer: "Most clients see initial performance improvements within 2-3 weeks as our algorithms gather data and optimize your campaigns. However, the most significant results typically emerge after 60-90 days when our system has collected enough data to make advanced optimizations specific to your product catalog and audience behavior."
+    },
+    {
+      question: "Do you work with specific e-commerce platforms?",
+      answer: "Yes, our automated SEM solutions integrate seamlessly with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and custom-built platforms. Our system connects directly to your product data feed, regardless of your platform."
+    },
+    {
+      question: "How do you handle product feed optimization for Google Shopping?",
+      answer: "Our system automatically analyzes your existing product feed and optimizes it based on Google's requirements and best practices. We enhance product titles, descriptions, and attributes, fix missing information, and implement dynamic feed updates that adjust based on performance data and seasonal trends."
+    },
+    {
+      question: "What is your pricing structure for SEM services?",
+      answer: "We offer performance-based pricing models that align with your business goals. Depending on your needs, we can work with a percentage of ad spend (typically 10-15%), a performance fee based on ROAS improvements, or a hybrid model. We'll recommend the most advantageous model after analyzing your current campaigns."
+    },
+    {
+      question: "Can your system integrate with my existing analytics tools?",
+      answer: "Absolutely! Our platform integrates with Google Analytics, Adobe Analytics, Mixpanel, and other major analytics platforms. We can also connect with your CRM systems like Salesforce or HubSpot to track customer journeys from click to conversion and beyond, providing comprehensive performance insights."
+    }
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -125,6 +159,25 @@ const SEM = () => {
                   <p className="text-4xl font-bold text-indigo-600 mb-2">28%</p>
                   <p className="text-gray-700">Decrease in cost per acquisition</p>
                 </div>
+              </div>
+            </div>
+
+            {/* FAQ Section */}
+            <div className="mb-16">
+              <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Frequently Asked Questions</h3>
+              <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-100 shadow-sm">
+                <Accordion type="single" collapsible className="w-full">
+                  {faqItems.map((item, index) => (
+                    <AccordionItem key={index} value={`item-${index}`}>
+                      <AccordionTrigger className="px-6 text-left font-semibold text-gray-900 hover:text-indigo-700">
+                        {item.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="px-6 text-gray-600">
+                        {item.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               </div>
             </div>
           </div>
