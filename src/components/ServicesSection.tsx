@@ -9,7 +9,7 @@ const services = [
   {
     icon: <Search className="h-10 w-10 text-indigo-500" />,
     title: "AI-Powered Product Discovery",
-    description: "Enhance search performance with AI algorithms, Algolia and Bloomreach integration. Improve navigation and browse experiences for complex product catalogs.",
+    description: "Enhance search performance with AI algorithms, Elastic Search, Coveo, Algolia and Bloomreach integration. Improve navigation and browse experiences for complex product catalogs.",
     features: [
       "AI-driven search optimization",
       "Machine learning for navigation",
@@ -32,15 +32,15 @@ const services = [
   },
   {
     icon: <Code className="h-10 w-10 text-indigo-500" />,
-    title: "Technical Implementation",
-    description: "Expert development and integration of AI-powered e-commerce discovery tools with automated workflows to maximize performance and ROI.",
+    title: "Search Platform Migration",
+    description: "Expert migration assistance and algorithm optimization for e-commerce search capabilities between Elastic Search, Coveo, Algolia, and Bloomreach platforms.",
     features: [
-      "AI search integration",
-      "Automated workflow development",
+      "AI search algorithm optimization",
+      "Seamless platform migration",
       "API development & integration",
       "Performance optimization"
     ],
-    link: "/services/technical-implementation"
+    link: "/services/search-migration"
   },
   {
     icon: <Globe className="h-10 w-10 text-indigo-500" />,

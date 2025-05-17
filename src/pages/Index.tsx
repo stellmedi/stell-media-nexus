@@ -126,7 +126,7 @@ const Index = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 Let's talk about how our AI-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200">
+              <Button asChild size="xl" variant="cta" className="font-bold text-lg">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>

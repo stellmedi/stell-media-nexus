@@ -11,7 +11,7 @@ const services = [
   {
     icon: <Search className="h-12 w-12 text-indigo-500" />,
     title: "AI-Powered Product Discovery Solutions",
-    description: "Enhance search performance with AI algorithms, machine learning, and intelligent integrations with Algolia and Bloomreach to create intuitive product discovery experiences.",
+    description: "Enhance search performance with AI algorithms, machine learning, and intelligent integrations with Elastic Search, Coveo, Algolia, and Bloomreach to create intuitive product discovery experiences.",
     features: [
       "AI-driven search relevance optimization",
       "Machine learning for behavioral insights",
@@ -19,7 +19,7 @@ const services = [
       "Product data cleanup and enrichment",
       "Advanced faceted filtering implementation",
       "Real-time search analytics and insights",
-      "Custom search UI development",
+      "Algorithm optimization for better relevance",
       "Personalized product recommendation engines"
     ],
     link: "/services/product-discovery"
@@ -42,19 +42,19 @@ const services = [
   },
   {
     icon: <Code className="h-12 w-12 text-indigo-500" />,
-    title: "Technical Implementation & Automation",
-    description: "Expert development and integration of e-commerce product discovery tools with automation capabilities to maximize performance and ROI.",
+    title: "Search Platform Migration Support",
+    description: "Expert migration assistance and optimization of your e-commerce search capabilities between Elastic Search, Coveo, Algolia, and Bloomreach with minimal disruption to your business.",
     features: [
-      "AI-enhanced search integration",
-      "Automated workflow implementation",
-      "Custom API development & integration",
+      "Search platform migration expertise",
+      "Algorithm optimization services",
+      "Seamless data transition strategies",
       "Performance optimization through ML",
       "Headless commerce architecture",
       "E-commerce platform integration",
-      "Automated testing and deployment",
-      "DevOps automation services"
+      "Custom search configuration",
+      "Search relevance fine-tuning"
     ],
-    link: "/services/technical-implementation"
+    link: "/services/search-migration"
   },
   {
     icon: <Globe className="h-12 w-12 text-indigo-500" />,
@@ -204,7 +204,7 @@ const Services = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 Let's talk about how our AI-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200">
+              <Button asChild size="xl" variant="cta" className="font-bold text-lg">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
