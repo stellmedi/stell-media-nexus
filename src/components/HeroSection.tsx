@@ -2,15 +2,16 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28">
+    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fade-in">
             <span className="text-gray-900">Elevate Your E-Commerce with</span>{" "}
-            <span className="text-stell-600 relative">
+            <span className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent relative">
               Superior Product Discovery
               <svg
                 className="absolute -bottom-2 left-0 w-full hidden md:block"
@@ -21,7 +22,7 @@ const HeroSection = () => {
               >
                 <path
                   d="M2 5C65.3333 2.66667 204.6 -0.7 398 8.5"
-                  stroke="#0EA5E9"
+                  stroke="#6366f1"
                   strokeWidth="3"
                   strokeLinecap="round"
                 />
@@ -33,17 +34,22 @@ const HeroSection = () => {
             fix messy data, and boost conversions.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in delay-200">
-            <Button asChild size="lg" className="bg-stell-600 hover:bg-stell-700 text-lg px-8 py-6">
-              <a href="#contact">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 text-white text-lg px-8 py-6">
+              <Link to="/contact">
                 Book a Consultation <ArrowRight className="ml-2" size={18} />
-              </a>
+              </Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6">
-              <a href="#services">Explore Services</a>
+            <Button asChild size="lg" variant="outline" className="text-lg px-8 py-6 border-indigo-300 hover:bg-indigo-50">
+              <Link to="/services">Explore Services</Link>
             </Button>
           </div>
         </div>
       </div>
+      
+      {/* Abstract background elements */}
+      <div className="absolute top-20 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-full blur-3xl -z-10"></div>
+      
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-gray-50/80 to-transparent -z-10"></div>
     </section>
   );

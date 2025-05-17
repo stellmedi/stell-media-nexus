@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { X, Menu } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -15,24 +16,34 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <a href="#" className="text-2xl font-bold text-stell-700">
-            Stell<span className="text-stell-500">Media</span>
-          </a>
+          <Link to="/" className="flex items-center">
+            <img 
+              src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" 
+              alt="Stell Media Logo" 
+              className="h-10 mr-2" 
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              Stell Media
+            </span>
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-8">
-          <a href="#services" className="text-gray-600 hover:text-stell-600 transition-colors">
+        <div className="hidden md:flex items-center space-x-6">
+          <Link to="/services" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Services
-          </a>
-          <a href="#testimonials" className="text-gray-600 hover:text-stell-600 transition-colors">
-            Clients
-          </a>
-          <a href="#about" className="text-gray-600 hover:text-stell-600 transition-colors">
+          </Link>
+          <Link to="/case-studies" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            Case Studies
+          </Link>
+          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
             About
-          </a>
-          <Button asChild variant="default" className="bg-stell-600 hover:bg-stell-700">
-            <a href="#contact">Book a Consultation</a>
+          </Link>
+          <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            Blog
+          </Link>
+          <Button asChild variant="default" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 text-white">
+            <Link to="/contact">Book a Consultation</Link>
           </Button>
         </div>
 
@@ -40,7 +51,7 @@ const Navbar = () => {
         <div className="md:hidden">
           <button
             onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-gray-600 hover:text-stell-600 focus:outline-none"
+            className="p-2 rounded-md text-gray-600 hover:text-indigo-600 focus:outline-none"
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -51,34 +62,41 @@ const Navbar = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-white border-t border-gray-100">
           <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <a
-              href="#services"
-              className="text-gray-600 hover:text-stell-600 transition-colors py-2"
+            <Link
+              to="/services"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
               Services
-            </a>
-            <a
-              href="#testimonials"
-              className="text-gray-600 hover:text-stell-600 transition-colors py-2"
+            </Link>
+            <Link
+              to="/case-studies"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
-              Clients
-            </a>
-            <a
-              href="#about"
-              className="text-gray-600 hover:text-stell-600 transition-colors py-2"
+              Case Studies
+            </Link>
+            <Link
+              to="/about"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
               About
-            </a>
+            </Link>
+            <Link
+              to="/blog"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
+              onClick={toggleMobileMenu}
+            >
+              Blog
+            </Link>
             <Button
               asChild
               variant="default"
-              className="bg-stell-600 hover:bg-stell-700 w-full"
+              className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 w-full"
               onClick={toggleMobileMenu}
             >
-              <a href="#contact">Book a Consultation</a>
+              <Link to="/contact">Book a Consultation</Link>
             </Button>
           </div>
         </div>
