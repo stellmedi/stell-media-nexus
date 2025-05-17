@@ -5,12 +5,14 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import emailjs from 'emailjs-com';
 
 const ContactSection = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
+  const [showDialog, setShowDialog] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,7 +34,7 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Prepare email template parameters
+      // First try to send via EmailJS
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -41,22 +43,14 @@ const ContactSection = () => {
         message: formData.message
       };
       
-      // Send email using EmailJS
       await emailjs.send(
         'service_stellmedia', 
         'template_consultation', 
         templateParams,
-        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
+        'qOg5qx_DbcXNrQ8v8'
       );
       
-      // Log for debugging purposes
-      console.log("Consultation request submitted:", {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        website: formData.website,
-        message: formData.message
-      });
+      console.log("Consultation request submitted:", templateParams);
       
       toast({
         title: "Consultation Request Received",
@@ -71,12 +65,30 @@ const ContactSection = () => {
         website: "",
         message: ""
       });
+      
+      // Show fallback dialog anyway as a confirmation
+      setShowDialog(true);
     } catch (error) {
       console.error("Error submitting consultation request:", error);
-      setFormError("There was a problem sending your request. Please try again or email us directly at info@stellmedia.com.");
+      setFormError("There was a problem with our email service. Please use the alternative method.");
+      // Show fallback dialog
+      setShowDialog(true);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const constructMailtoLink = () => {
+    const subject = encodeURIComponent(`Consultation Request from ${formData.name}`);
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\n` +
+      `Email: ${formData.email}\n` +
+      `Company: ${formData.company || 'Not provided'}\n` +
+      `Website: ${formData.website || 'Not provided'}\n\n` +
+      `Message:\n${formData.message}\n`
+    );
+    
+    return `mailto:info@stellmedia.com?subject=${subject}&body=${body}`;
   };
 
   return (
@@ -205,6 +217,33 @@ const ContactSection = () => {
           </div>
         </div>
       </div>
+
+      {/* Fallback Dialog */}
+      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Complete Your Consultation Request</DialogTitle>
+            <DialogDescription>
+              To ensure we receive your consultation request, please also send us an email directly.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <p>
+              Click the button below to open your email client with your consultation request details pre-filled.
+            </p>
+            <div className="flex flex-col space-y-2">
+              <Button asChild>
+                <a href={constructMailtoLink()} target="_blank" rel="noopener noreferrer">
+                  Open Email Client
+                </a>
+              </Button>
+              <p className="text-sm text-gray-500">
+                If the button doesn't work, please send an email to <a href="mailto:info@stellmedia.com" className="text-blue-600">info@stellmedia.com</a> with your consultation details.
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
