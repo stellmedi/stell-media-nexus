@@ -12,7 +12,13 @@ import Blog from "./pages/Blog";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 
-// Add the case-studies route for proper linking
+// Service pages
+import ProductDiscovery from "./pages/services/ProductDiscovery";
+import DataEnrichment from "./pages/services/DataEnrichment";
+import SEO from "./pages/services/SEO";
+import SEM from "./pages/services/SEM";
+import ConversionOptimization from "./pages/services/ConversionOptimization";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -29,6 +35,14 @@ const App = () => (
           <Route path="/blog" element={<Blog />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
+          
+          {/* Service pages */}
+          <Route path="/services/product-discovery" element={<ProductDiscovery />} />
+          <Route path="/services/data-enrichment" element={<DataEnrichment />} />
+          <Route path="/services/seo" element={<SEO />} />
+          <Route path="/services/sem" element={<SEM />} />
+          <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

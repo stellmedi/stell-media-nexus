@@ -165,15 +165,15 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated for button visibility */}
+        {/* CTA Section - Updated to match site-wide CTA style */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
+            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Join Our Growing Team</h2>
-              <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
+              <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 We're always looking for talented individuals passionate about e-commerce, technology innovation, automation, and creative solutions.
               </p>
-              <Button asChild size="lg" variant="cta" className="shadow-xl font-bold">
+              <Button asChild size="lg" variant="cta" className="shadow-xl">
                 <Link to="/careers">
                   View Open Positions <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

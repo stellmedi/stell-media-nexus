@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer id="about" className="bg-gray-900 text-gray-300 py-16">
+    <footer id="about" className="bg-indigo-900 text-gray-300 py-16">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
@@ -95,7 +95,7 @@ const Footer = () => {
           </div>
         </div>
         
-        <div className="border-t border-gray-800 pt-8 mt-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
+        <div className="border-t border-indigo-800 pt-8 mt-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
           <p>© {new Date().getFullYear()} Stell Media. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
             <Link to="/privacy" className="text-gray-500 hover:text-indigo-300 transition-colors">Privacy Policy</Link>
