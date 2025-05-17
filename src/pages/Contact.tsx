@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -49,7 +50,7 @@ const Contact = () => {
         'service_stellmedia', 
         'template_contact', 
         templateParams,
-        'YOUR_EMAILJS_PUBLIC_KEY' // Replace with your actual EmailJS public key
+        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
       );
       
       // Log for debugging

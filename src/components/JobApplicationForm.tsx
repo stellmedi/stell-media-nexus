@@ -83,8 +83,6 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       
       // Prepare email template parameters
       const templateParams = {
-        to_email: "info@stellmedia.com",
-        subject: `New Job Application: ${jobTitle}`,
         full_name: data.fullName,
         email: data.email,
         phone: data.phone || 'Not provided',
@@ -97,19 +95,18 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       
       // Send email using EmailJS
       await emailjs.send(
-        'service_stellmedia', // Replace with your EmailJS service ID
-        'template_job_application', // Replace with your EmailJS template ID
+        'service_stellmedia', 
+        'template_job_application', 
         templateParams,
-        'YOUR_USER_ID' // Replace with your EmailJS user ID
+        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
       );
       
       // For debugging purposes
       console.log("Application submitted:", {
-        to: "info@stellmedia.com",
-        subject: `New Job Application: ${jobTitle}`,
         fullName: data.fullName,
         email: data.email,
-        resumeFileName: data.resume[0]?.name
+        resumeFileName: data.resume[0]?.name,
+        jobTitle: jobTitle
       });
 
       // Show success message
@@ -123,7 +120,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       onClose();
     } catch (error) {
       console.error("Error submitting application:", error);
-      setFormError("There was a problem submitting your application. Please try again or email us directly.");
+      setFormError("There was a problem submitting your application. Please try again or email us directly at info@stellmedia.com.");
     } finally {
       setIsSubmitting(false);
     }

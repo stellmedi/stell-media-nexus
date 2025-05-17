@@ -46,7 +46,7 @@ const ContactSection = () => {
         'service_stellmedia', 
         'template_consultation', 
         templateParams,
-        'YOUR_EMAILJS_PUBLIC_KEY' // Replace with your actual EmailJS public key
+        'qOg5qx_DbcXNrQ8v8' // EmailJS public key
       );
       
       // Log for debugging purposes
