@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 
-// Stats data (updated as requested)
+// Stats data
 const stats = [
   { value: "18%", label: "Average conversion increase" },
   { value: "10+", label: "E-commerce clients" },
@@ -20,16 +20,16 @@ const stats = [
   { value: "99%", label: "Client retention rate" }
 ];
 
-// Featured case studies - updated to match the new services
+// Updated case studies to align with service offerings
 const caseStudies = [
   {
-    title: "AI-Powered Electronics Search",
-    description: "How we implemented AI algorithms with Elastic Search to increase search conversion by 42% and reduced no-results searches by 68%.",
+    title: "Advanced Electronics Search Optimization",
+    description: "How we implemented strategic algorithms with Elastic Search to increase search conversion by 42% and reduced no-results searches by 68%.",
     category: "Product Discovery Optimization",
     image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
-    title: "Search Migration Success Story",
+    title: "Search Platform Migration Success",
     description: "Our algorithm optimization during migration from Elastic Search to Coveo transformed search performance and improved customer satisfaction by 38%.",
     category: "Search Platform Migration",
     image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
@@ -68,7 +68,7 @@ const Index = () => {
       <main>
         <HeroSection />
         
-        {/* Stats Section - Updated with new stats */}
+        {/* Stats Section */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
@@ -84,13 +84,13 @@ const Index = () => {
         
         <ServicesSection />
         
-        {/* Case Studies Preview */}
+        {/* Case Studies Preview - Updated to align with services */}
         <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                See how our innovative solutions for product discovery, search algorithm optimization, and marketplace management have helped e-commerce brands overcome their challenges.
+                See how our innovative solutions for product discovery, search platform migration, and marketplace management have helped e-commerce brands achieve measurable results.
               </p>
             </div>
             
@@ -132,13 +132,13 @@ const Index = () => {
         
         <TestimonialsSection />
         
-        {/* CTA Section with improved contrast for visibility */}
+        {/* CTA Section with improved button visibility */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                Let's talk about how our product discovery solutions, search algorithm optimization, and marketplace management can boost your conversions.
+                Let's talk about how our product discovery solutions, search platform migration, and marketplace management can boost your conversions.
               </p>
               <Button asChild size="xl" className="font-bold text-lg bg-white text-indigo-700 hover:bg-indigo-50 shadow-md">
                 <Link to="/contact">Book Your Free Consultation</Link>
@@ -149,7 +149,7 @@ const Index = () => {
         
         <ContactSection />
         
-        {/* Chatbot - now with functionality */}
+        {/* Chatbot */}
         <div className="fixed bottom-6 right-6 z-50">
           <Button 
             variant="default" 

@@ -9,10 +9,10 @@ const services = [
   {
     icon: <Search className="h-10 w-10 text-indigo-500" />,
     title: "Product Discovery Optimization",
-    description: "Enhance search performance with AI algorithms, intelligent product filtering, and machine learning to improve how customers find your products.",
+    description: "Enhance search performance with advanced algorithms, intelligent product filtering, and strategic optimization to improve how customers find your products.",
     features: [
-      "AI-driven search relevance optimization", 
-      "Machine learning for navigation", 
+      "Strategic search relevance optimization", 
+      "Smart product navigation", 
       "Intelligent product filtering", 
       "Automated data enrichment"
     ],
@@ -23,7 +23,7 @@ const services = [
     title: "Search Algorithm Optimization & Platform Migration",
     description: "Expert migration assistance and algorithm optimization between Elastic Search, Coveo, Algolia, and Bloomreach platforms with minimal disruption.",
     features: [
-      "AI search algorithm optimization", 
+      "Search algorithm optimization", 
       "Seamless platform migration", 
       "API development & integration", 
       "Performance optimization"
@@ -33,9 +33,9 @@ const services = [
   {
     icon: <BarChart className="h-10 w-10 text-indigo-500" />,
     title: "Performance Marketing",
-    description: "Drive measurable traffic and conversions through AI-optimized, automated search marketing campaigns for e-commerce products.",
+    description: "Drive measurable traffic and conversions through strategically optimized, automated search marketing campaigns for e-commerce products.",
     features: [
-      "AI-powered campaign optimization", 
+      "Data-powered campaign optimization", 
       "Automated performance tracking", 
       "Product feed automation", 
       "Conversion optimization"
@@ -61,7 +61,7 @@ const ServicesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Our Services</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">We combine technology and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive real results.</p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">We combine technology innovation and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive measurable results.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">

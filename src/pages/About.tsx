@@ -8,27 +8,21 @@ import { ArrowRight, Code, Database, Layers, Network } from "lucide-react";
 
 const team = [
   {
-    name: "Sarah Johnson",
+    name: "Saurav Bansal",
     role: "CEO & Founder",
-    bio: "Former e-commerce executive with 15+ years of experience optimizing product discovery with AI and machine learning for major retail brands.",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmVzc2lvbmFsJTIwcG9ydHJhaXR8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    name: "David Chen",
-    role: "CTO",
-    bio: "AI and ML expert specializing in search algorithms, neural networks, and automation with background from leading tech companies.",
+    bio: "With over 18 years of global experience leading digital transformation, marketing, automation, and AI-powered solutions across Fortune 500 companies and high-growth enterprises.",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvZmVzc2lvbmFsJTIwcG9ydHJhaXQlMjBtYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
     name: "Maria Rodriguez",
-    role: "Head of SEO & AI Strategy",
-    bio: "AI-powered SEO strategist specializing in automated optimization for e-commerce with expertise in machine learning applications for search.",
+    role: "Head of SEO & Strategy",
+    bio: "Expert SEO strategist specializing in automated optimization for e-commerce with expertise in developing practical applications for improved search performance.",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd29tYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
     name: "James Wilson",
     role: "Head of Data Science",
-    bio: "Data scientist specializing in AI-driven automation for transforming unstructured product data into valuable business assets through machine learning.",
+    bio: "Data scientist specializing in automation techniques for transforming unstructured product data into valuable business assets through advanced analytics.",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwbWFufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
   {
@@ -40,7 +34,7 @@ const team = [
   {
     name: "Sophia Lee",
     role: "Head of Automation",
-    bio: "Process automation specialist with expertise in developing AI-driven workflows that streamline e-commerce operations and improve efficiency.",
+    bio: "Process automation specialist with expertise in developing data-driven workflows that streamline e-commerce operations and improve efficiency.",
     image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd29tYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   }
 ];
@@ -58,13 +52,13 @@ const About = () => {
                 About Stell Media
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                We're on a mission to revolutionize e-commerce product discovery through AI innovation, intelligent automation, and hybrid commerce solutions that help brands connect customers with the products they'll love.
+                We blend technology with human expertise to revolutionize e-commerce product discovery, develop intelligent automation, and create hybrid commerce solutions that connect customers with products they'll love.
               </p>
             </div>
           </div>
         </section>
 
-        {/* Our Story */}
+        {/* Our Story - Updated with founder info */}
         <section className="py-16">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -76,16 +70,16 @@ const About = () => {
                 />
               </div>
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-gray-900">Our Story</h2>
+                <h2 className="text-3xl font-bold mb-6 text-gray-900">Our Founder's Journey</h2>
                 <div className="space-y-4 text-gray-600">
                   <p>
-                    Stell Media was founded in 2015 by a team of AI experts, data scientists and e-commerce specialists who saw a common problem: online stores were struggling to help customers find products in large, complex catalogs using outdated technology.
+                    With over 18 years of global experience leading digital transformation, marketing, automation, and strategic innovation across Fortune 500 companies and high-growth enterprises, our founder Saurav Bansal established Stell Media to solve real-world growth challenges at scale.
                   </p>
                   <p>
-                    What started as a small consultancy focused on search optimization has evolved into a full-service product discovery agency, pioneering the use of artificial intelligence, machine learning, and intelligent automation to transform the digital shopping experience.
+                    Throughout his career, Saurav delivered end-to-end digital solutions, operational transformations, and marketing strategies across Europe, North America, and Asia—working with global sportswear companies, leading computer manufacturers, and top telecommunications providers.
                   </p>
                   <p>
-                    Today, our team combines technical expertise in AI algorithms, data science, and hybrid commerce solutions with a deep understanding of customer behavior and conversion optimization to create truly intelligent shopping experiences.
+                    These experiences inspired him to create Stell Media Group—a digital-first company with full-stack capabilities, specialized e-commerce solutions focusing on product discovery, SEO, performance marketing, and automation to help businesses worldwide grow faster and scale smarter.
                   </p>
                 </div>
               </div>
@@ -105,9 +99,9 @@ const About = () => {
                     <path d="M22 2 11 13" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">AI-Driven Innovation</h3>
+                <h3 className="text-xl font-bold mb-3 text-gray-900">Technology-Driven Innovation</h3>
                 <p className="text-gray-600">
-                  We believe in leveraging the power of artificial intelligence and machine learning to create solutions that continuously learn, adapt, and improve based on real data and user behavior.
+                  We leverage cutting-edge technology solutions that continuously learn, adapt, and improve based on real data and user behavior to deliver exceptional results.
                 </p>
               </div>
               
@@ -120,9 +114,9 @@ const About = () => {
                     <path d="M11 18H8a2 2 0 0 1-2-2V9" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold mb-3 text-gray-900">Customer-First Automation</h3>
+                <h3 className="text-xl font-bold mb-3 text-gray-900">Human-Enhanced Automation</h3>
                 <p className="text-gray-600">
-                  We automate to enhance human experiences, not replace them. Our technology solutions are designed to make shopping more intuitive, personalized, and enjoyable.
+                  We automate to enhance human experiences, not replace them. Our technology solutions combine with human expertise to make shopping more intuitive and personalized.
                 </p>
               </div>
               
@@ -134,7 +128,7 @@ const About = () => {
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-gray-900">Hybrid Excellence</h3>
                 <p className="text-gray-600">
-                  We believe in creating seamless experiences that transcend channels, combining the best of digital innovation with the human touch of physical retail.
+                  We create seamless experiences that transcend channels, combining the best of digital innovation with the human touch of physical retail.
                 </p>
               </div>
             </div>
@@ -146,7 +140,7 @@ const About = () => {
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">Our Technology Stack</h2>
             <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-              We leverage cutting-edge technologies to deliver intelligent, scalable, and future-proof solutions.
+              We blend innovative technology with human expertise to deliver intelligent, scalable, and future-proof solutions.
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -154,9 +148,9 @@ const About = () => {
                 <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
                   <Code className="h-8 w-8" />
                 </div>
-                <h3 className="text-lg font-bold mb-2">Artificial Intelligence</h3>
+                <h3 className="text-lg font-bold mb-2">Advanced Algorithm Solutions</h3>
                 <p className="text-gray-600 text-sm">
-                  Custom machine learning models for search relevancy, product recommendations, and customer behavior prediction.
+                  Custom algorithms for search relevancy, product recommendations, and customer behavior prediction with human oversight.
                 </p>
               </div>
               
@@ -166,7 +160,7 @@ const About = () => {
                 </div>
                 <h3 className="text-lg font-bold mb-2">Data Processing</h3>
                 <p className="text-gray-600 text-sm">
-                  Big data architecture for processing millions of products and customer interactions in real-time.
+                  Big data architecture for processing millions of products and customer interactions in real-time with expert analysis.
                 </p>
               </div>
               
@@ -176,7 +170,7 @@ const About = () => {
                 </div>
                 <h3 className="text-lg font-bold mb-2">Automation Platform</h3>
                 <p className="text-gray-600 text-sm">
-                  Proprietary workflow automation tools for e-commerce operations, marketing, and customer service.
+                  Proprietary workflow automation tools for e-commerce operations, marketing, and customer service with human experts guiding implementation.
                 </p>
               </div>
               
@@ -186,19 +180,19 @@ const About = () => {
                 </div>
                 <h3 className="text-lg font-bold mb-2">Hybrid Commerce</h3>
                 <p className="text-gray-600 text-sm">
-                  Omnichannel solutions that bridge online and offline shopping through integrated technology.
+                  Omnichannel solutions that bridge online and offline shopping through integrated technology and expert consultants.
                 </p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Team Section */}
+        {/* Team Section - Updated with founder as main person */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Leadership Team</h2>
             <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-              Meet the experts behind Stell Media's innovative approach to AI-powered e-commerce optimization.
+              Meet the experts behind Stell Media's innovative approach to technology-enhanced e-commerce optimization.
             </p>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -220,15 +214,15 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Updated button color */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Join Our Growing Team</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-                We're always looking for talented individuals passionate about e-commerce, AI, automation, and innovative technology solutions.
+                We're always looking for talented individuals passionate about e-commerce, technology innovation, automation, and creative solutions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200">
+              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 shadow-lg">
                 <Link to="/careers">
                   View Open Positions <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>

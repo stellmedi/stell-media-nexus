@@ -10,16 +10,16 @@ import { Link } from "react-router-dom";
 const services = [
   {
     icon: <Search className="h-12 w-12 text-indigo-500" />,
-    title: "AI-Powered Product Discovery Solutions",
-    description: "Enhance search performance with AI algorithms, machine learning, and intelligent integrations with Elastic Search, Coveo, Algolia, and Bloomreach to create intuitive product discovery experiences.",
+    title: "Smarter Product Discovery Solutions",
+    description: "Enhance search performance with advanced algorithms, intelligent integrations with Elastic Search, Coveo, Algolia, and Bloomreach to create intuitive product discovery experiences.",
     features: [
-      "AI-driven search relevance optimization",
-      "Machine learning for behavioral insights",
+      "Strategic search relevance optimization",
+      "Smart behavioral insights integration",
       "Intelligent navigation restructuring",
       "Product data cleanup and enrichment",
       "Advanced faceted filtering implementation",
       "Real-time search analytics and insights",
-      "Algorithm optimization for better relevance",
+      "Relevance algorithm enhancements",
       "Personalized product recommendation engines"
     ],
     link: "/services/product-discovery"
@@ -27,15 +27,15 @@ const services = [
   {
     icon: <Database className="h-12 w-12 text-indigo-500" />,
     title: "Automated Data Enrichment",
-    description: "Our AI-powered automation tools transform messy product data into clean, structured information that improves both customer experience and backend operations.",
+    description: "Our technology-powered automation tools transform messy product data into clean, structured information that improves both customer experience and backend operations.",
     features: [
       "Automated data cleansing and standardization",
-      "Machine learning for attribute mapping",
-      "AI-powered product tagging automation",
+      "Smart attribute mapping solutions",
+      "Product tagging automation",
       "Intelligent taxonomy development",
       "Real-time data quality assessment",
       "Automated master data management",
-      "Neural network product categorization",
+      "Strategic product categorization",
       "Streamlined legacy data migration"
     ],
     link: "/services/data-enrichment"
@@ -48,7 +48,7 @@ const services = [
       "Search platform migration expertise",
       "Algorithm optimization services",
       "Seamless data transition strategies",
-      "Performance optimization through ML",
+      "Performance optimization strategies",
       "Headless commerce architecture",
       "E-commerce platform integration",
       "Custom search configuration",
@@ -58,16 +58,16 @@ const services = [
   },
   {
     icon: <Globe className="h-12 w-12 text-indigo-500" />,
-    title: "AI-Driven SEO Services",
-    description: "Improve organic visibility with data-driven, AI-powered SEO strategies tailored for e-commerce sites with large product catalogs.",
+    title: "Strategic SEO Services",
+    description: "Improve organic visibility with data-driven, technology-enhanced SEO strategies tailored for e-commerce sites with large product catalogs.",
     features: [
-      "AI-assisted technical SEO audits",
+      "Comprehensive technical SEO audits",
       "Automated product page optimization",
-      "ML-driven category structure enhancement",
+      "Strategic category structure enhancement",
       "Predictive content gap analysis",
       "Automated keyword research and mapping",
-      "Mobile optimization through AI",
-      "Algorithmic URL structure optimization",
+      "Mobile optimization strategies",
+      "Strategic URL structure optimization",
       "Automated schema markup implementation"
     ],
     link: "/services/seo"
@@ -143,7 +143,7 @@ const Services = () => {
     <div className="min-h-screen bg-indigo-50">
       <Navbar />
       <main>
-        {/* Hero Section */}
+        {/* Hero Section - Updated subheader */}
         <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
@@ -151,7 +151,7 @@ const Services = () => {
                 Our Services
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                We help e-commerce businesses leverage AI, automation, and hybrid solutions to optimize their product discovery experience, clean up messy data, and drive more conversions.
+                Discover how our blend of technology innovation and human expertise can transform your e-commerce experience, optimize product discovery, and unlock growth opportunities through strategic digital solutions.
               </p>
             </div>
           </div>
@@ -196,15 +196,15 @@ const Services = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Updated button style for better visibility */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-                Let's talk about how our AI-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
+                Let's talk about how our technology-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="xl" variant="cta" className="font-bold text-lg">
+              <Button asChild size="xl" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 font-bold shadow-lg">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>
