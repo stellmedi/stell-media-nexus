@@ -38,6 +38,17 @@ const BlogPost: React.FC<BlogPostProps> = ({
         <meta name="description" content={description} />
         <meta name="author" content={author.name} />
         <meta name="keywords" content={categories.join(', ')} />
+        <meta property="og:title" content={`${title} | Stell Media Blog`} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="article" />
+        <meta property="og:url" content={blogUrl} />
+        <meta property="og:image" content={image} />
+        <meta property="article:published_time" content={publishDate} />
+        {modifiedDate && <meta property="article:modified_time" content={modifiedDate} />}
+        <meta property="article:author" content={author.name} />
+        {categories.map((category, index) => (
+          <meta key={index} property="article:tag" content={category} />
+        ))}
         <link rel="canonical" href={blogUrl} />
       </Helmet>
 
@@ -53,7 +64,11 @@ const BlogPost: React.FC<BlogPostProps> = ({
 
       {/* Blog post content */}
       <div className="bg-white shadow-md rounded-lg overflow-hidden">
-        <img src={image} alt={title} className="w-full h-64 object-cover" />
+        <img 
+          src={image} 
+          alt={`${title} - Featured image showing content related to ${categories.join(' and ')}`} 
+          className="w-full h-64 object-cover" 
+        />
         
         <div className="p-6">
           <div className="flex items-center gap-2 mb-4">
@@ -68,7 +83,11 @@ const BlogPost: React.FC<BlogPostProps> = ({
           
           <div className="flex items-center mb-6">
             {author.image && (
-              <img src={author.image} alt={author.name} className="w-10 h-10 rounded-full mr-3" />
+              <img 
+                src={author.image} 
+                alt={`${author.name} - Author profile photo`} 
+                className="w-10 h-10 rounded-full mr-3" 
+              />
             )}
             <div>
               <p className="font-medium text-gray-900">{author.name}</p>

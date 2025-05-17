@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { Helmet } from "react-helmet-async";
 
 // Stats data
 const stats = [
@@ -64,6 +65,24 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
+      <Helmet>
+        <title>Stell Media | E-Commerce Product Discovery & Optimization Experts</title>
+        <meta 
+          name="description" 
+          content="Stell Media helps e-commerce brands optimize product discovery and boost conversions with AI-powered search optimization, data enrichment, and navigation improvements." 
+        />
+        <meta 
+          name="keywords" 
+          content="e-commerce optimization, product discovery, search optimization, data enrichment, search platform migration, e-commerce SEO, product catalog optimization" 
+        />
+        <meta name="author" content="Stell Media" />
+        <meta property="og:title" content="Stell Media | E-Commerce Product Discovery Experts" />
+        <meta property="og:description" content="Optimize your e-commerce product discovery experience and boost conversions with Stell Media's specialized solutions." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmediaglobal.com/" />
+        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
+        <link rel="canonical" href="https://stellmediaglobal.com/" />
+      </Helmet>
       <Navbar />
       <main>
         <HeroSection />
@@ -103,7 +122,7 @@ const Index = () => {
                   <div className="relative h-64">
                     <img 
                       src={study.image} 
-                      alt={study.title}
+                      alt={`${study.title} - ${study.category} case study showing ${study.description.substring(0, 50)}...`}
                       className="w-full h-full object-cover" 
                     />
                     <div className="absolute top-4 left-4">
@@ -157,6 +176,7 @@ const Index = () => {
             size="icon" 
             className="h-14 w-14 rounded-full shadow-lg"
             onClick={handleChatbotClick}
+            aria-label="Open chat support"
           >
             <MessageCircle size={24} />
           </Button>

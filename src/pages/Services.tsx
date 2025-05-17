@@ -1,4 +1,6 @@
+
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -140,6 +142,21 @@ const services = [
 const Services = () => {
   return (
     <div className="min-h-screen bg-indigo-50">
+      <Helmet>
+        <title>E-commerce Optimization Services | Product Discovery & Search Solutions | Stell Media</title>
+        <meta 
+          name="description" 
+          content="Transform your e-commerce experience with Stell Media's specialized services including product discovery solutions, data enrichment, search platform migration, SEO, and SEM services." 
+        />
+        <meta name="keywords" content="e-commerce services, product discovery, data enrichment, search platform migration, e-commerce SEO, search optimization, SEM services" />
+        <meta name="author" content="Stell Media" />
+        <meta property="og:title" content="E-commerce Optimization Services | Stell Media" />
+        <meta property="og:description" content="Transform your e-commerce experience with our specialized product discovery and optimization services." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmediaglobal.com/services" />
+        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
+        <link rel="canonical" href="https://stellmediaglobal.com/services" />
+      </Helmet>
       <Navbar />
       <main>
         {/* Hero Section - Updated subheader */}

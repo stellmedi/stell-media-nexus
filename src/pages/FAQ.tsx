@@ -52,12 +52,19 @@ const FAQ = () => {
   return (
     <div className="min-h-screen bg-indigo-50">
       <Helmet>
-        <title>Frequently Asked Questions | Stell Media</title>
+        <title>Frequently Asked Questions | E-commerce Optimization Services | Stell Media</title>
         <meta 
           name="description" 
-          content="Find answers to common questions about Stell Media's e-commerce optimization services, approach, and results." 
+          content="Find comprehensive answers about Stell Media's e-commerce optimization services, search technology, data enrichment, and more. Learn how we help online retailers improve their customer experience." 
         />
-        <link rel="canonical" href="https://stellmedia.com/faq" />
+        <meta name="keywords" content="e-commerce FAQs, product discovery solutions, search platform migration, data enrichment, search optimization, e-commerce services" />
+        <meta name="author" content="Stell Media" />
+        <meta property="og:title" content="Frequently Asked Questions | Stell Media" />
+        <meta property="og:description" content="Find comprehensive answers about our e-commerce optimization services and technologies." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmediaglobal.com/faq" />
+        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
+        <link rel="canonical" href="https://stellmediaglobal.com/faq" />
       </Helmet>
       <Navbar />
       <main>

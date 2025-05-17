@@ -59,13 +59,19 @@ const SEOServices = () => {
   return (
     <div className="min-h-screen bg-indigo-50">
       <Helmet>
-        <title>Expert SEO Services for E-commerce | Stell Media</title>
+        <title>Expert E-commerce SEO Services | Data-Driven Results | Stell Media</title>
         <meta 
           name="description" 
-          content="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Improve rankings, increase organic traffic, and maximize ROI."
+          content="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
         />
-        <meta name="keywords" content="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement" />
-        <link rel="canonical" href="https://stellmedia.com/services/seo" />
+        <meta name="keywords" content="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility" />
+        <meta name="author" content="Stell Media" />
+        <meta property="og:title" content="Expert E-commerce SEO Services | Stell Media" />
+        <meta property="og:description" content="Boost your e-commerce visibility with data-driven SEO strategies tailored for large product catalogs." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmediaglobal.com/services/seo" />
+        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
+        <link rel="canonical" href="https://stellmediaglobal.com/services/seo" />
       </Helmet>
       
       {/* Schema markup for this page */}

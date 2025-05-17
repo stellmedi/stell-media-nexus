@@ -25,7 +25,7 @@ const SEOHeroSection = () => {
           <div>
             <img 
               src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60" 
-              alt="E-commerce SEO optimization dashboard showing improved rankings" 
+              alt="E-commerce SEO optimization dashboard showing improved rankings and metrics" 
               className="rounded-lg shadow-lg w-full"
               loading="eager"
               width="800"
