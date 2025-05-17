@@ -35,13 +35,12 @@ const Contact = () => {
     
     try {
       // Prepare email content for mailto link
-      const subject = encodeURIComponent(formData.subject || 'Contact Form Submission');
-      const body = encodeURIComponent(
+      const subject = formData.subject || 'Contact Form Submission';
+      const body = 
         `Name: ${formData.name}\n` +
         `Email: ${formData.email}\n` +
         `Company: ${formData.company || 'Not provided'}\n\n` +
-        `Message:\n${formData.message}`
-      );
+        `Message:\n${formData.message}`;
       
       // Log submission for tracking
       console.log("Contact form submitted:", {
@@ -53,26 +52,32 @@ const Contact = () => {
       });
       
       // Create mailto link and open default email client
-      const mailtoLink = `mailto:info@stellmedia.com?subject=${subject}&body=${body}`;
-      window.open(mailtoLink, '_blank');
+      const encodedSubject = encodeURIComponent(subject);
+      const encodedBody = encodeURIComponent(body);
+      const mailtoLink = `mailto:info@stellmedia.com?subject=${encodedSubject}&body=${encodedBody}`;
+      
+      window.location.href = mailtoLink;
       
       toast({
-        title: "Email client opened",
+        title: "Email client opening",
         description: "Please complete sending the email in your email client.",
       });
       
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        subject: "",
-        message: ""
-      });
+      // Reset form after a short delay
+      setTimeout(() => {
+        setFormData({
+          name: "",
+          email: "",
+          company: "",
+          subject: "",
+          message: ""
+        });
+        setIsSubmitting(false);
+      }, 1000);
+      
     } catch (error) {
       console.error("Error with contact form:", error);
       setFormError("There was a problem opening your email client. Please email us directly at info@stellmedia.com.");
-    } finally {
       setIsSubmitting(false);
     }
   };
