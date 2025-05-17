@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,9 +31,6 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
-      // Initialize EmailJS with your user ID before sending
-      emailjs.init("user_MuH9A8MXAdxCfXw1wQ3RH");
-      
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
@@ -44,11 +40,12 @@ const ContactSection = () => {
         subject: "Consultation Request"
       };
       
-      // Send email with corrected parameters
+      // Send email using the correct parameter structure for EmailJS
       await emailjs.send(
-        "service_stellmedia", // Update with a valid service ID
-        "template_consultation", // Update with a valid template ID
-        templateParams
+        "service_your_service_id", // Replace with your actual service ID
+        "template_your_template_id", // Replace with your actual template ID
+        templateParams,
+        "your_public_key" // Replace with your actual public key
       );
       
       // Log submission for tracking
