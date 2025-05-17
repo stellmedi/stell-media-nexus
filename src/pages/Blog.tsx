@@ -1,14 +1,12 @@
-
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
 
-const blogPosts = [
+export const blogPosts = [
   {
     id: "ai-search-fashion",
     title: "How AI Improved Search Conversions by 42% for a Fashion Retailer",
@@ -18,7 +16,7 @@ const blogPosts = [
     image: "https://images.unsplash.com/photo-1607082349566-187342175e2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZWNvbW1lcmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
     author: "Sarah Johnson",
     authorRole: "AI Product Discovery Specialist",
-    content: "Artificial intelligence is revolutionizing how consumers find products in e-commerce. In this case study, we examine how our team implemented custom machine learning algorithms to significantly improve search relevance and accuracy for a major fashion retailer. The results speak for themselves: a 42% increase in search conversion rate and a 25% decrease in search abandonment."
+    content: "Artificial intelligence is revolutionizing how consumers find products in e-commerce. In this case study, we examine how our team implemented custom machine learning algorithms to significantly improve search relevance and accuracy for a major fashion retailer.<br><br>Our client, a multinational fashion retailer with over 500 stores worldwide and a robust online presence, was struggling with search functionality on their e-commerce platform. Customers frequently reported difficulty finding products they were looking for, even when using specific search terms. The search abandonment rate was at an alarming 35%, and the conversion rate from search was well below industry standards.<br><br><h2>The Challenge</h2><br>The retailer faced several significant search-related challenges:<br><ul><li>Poor search relevance, especially for non-exact keyword matches</li><li>Inability to understand synonyms and related terms</li><li>No accommodation for common misspellings</li><li>Limited personalization in search results</li><li>Ineffective handling of long-tail search queries</li></ul><br><h2>Our Approach</h2><br>Our team designed a comprehensive AI-powered search solution with these key components:<br><br><h3>1. Natural Language Processing</h3><br>We implemented advanced NLP algorithms to better understand user intent behind search queries. This included:<br><ul><li>Semantic understanding of search terms</li><li>Context awareness for ambiguous terms</li><li>Query expansion to include relevant synonyms</li></ul><br><h3>2. Machine Learning Ranking Model</h3><br>We developed a custom ML model that continuously improved search result ranking based on user behavior data:<br><ul><li>Click-through rates</li><li>Add-to-cart actions</li><li>Purchases</li><li>Time spent viewing products</li></ul><br><h3>3. Personalization Layer</h3><br>We introduced personalized search results based on:<br><ul><li>User browsing history</li><li>Previous purchases</li><li>Category preferences</li><li>Seasonal trends</li></ul><br><h2>Implementation Process</h2><br>The project was executed in phases:<br><ol><li><strong>Data Collection and Analysis</strong>: Gathering historical search data, user behavior, and product catalog information</li><li><strong>Algorithm Development</strong>: Creating and training the ML models</li><li><strong>A/B Testing</strong>: Comparing the new search system against the existing one with real users</li><li><strong>Refinement</strong>: Iteratively improving the algorithms based on test results</li><li><strong>Full Deployment</strong>: Rolling out the solution to all users</li></ol><br><h2>Results</h2><br>The impact of our AI-powered search solution was substantial:<br><ul><li><strong>42% increase</strong> in search conversion rate</li><li><strong>25% decrease</strong> in search abandonment</li><li><strong>37% improvement</strong> in average order value from search</li><li><strong>18% increase</strong> in overall site conversion rate</li></ul><br>Additionally, customer satisfaction metrics showed marked improvement, with search-related customer support tickets decreasing by 32%.<br><br><h2>Conclusion</h2><br>This case study demonstrates the transformative power of AI-driven search optimization in e-commerce. By understanding user intent and delivering highly relevant, personalized results, retailers can significantly improve the customer experience and drive substantial business results.<br><br>Our approach not only solved the immediate search challenges but also established a foundation for ongoing search improvement through machine learning that continues to refine results based on evolving user behavior and preferences."
   },
   {
     id: "product-data-enrichment",
@@ -100,16 +98,13 @@ const blogPosts = [
 ];
 
 const Blog = () => {
+  const navigate = useNavigate();
   const featuredPost = blogPosts[0];
   const regularPosts = blogPosts.slice(1);
 
-  const handleReadArticle = (postId) => {
-    // In a real implementation, this would navigate to a dedicated blog post page
-    // For this demonstration, we'll show a toast notification
-    toast({
-      title: "Article Content Preview",
-      description: blogPosts.find(post => post.id === postId)?.content || "Full article content would appear here.",
-    });
+  const handleReadArticle = (postId: string) => {
+    // Navigate to the blog post detail page
+    navigate(`/blog/${postId}`);
   };
 
   return (

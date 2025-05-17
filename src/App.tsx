@@ -10,9 +10,12 @@ import Services from "./pages/Services";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import Blog from "./pages/Blog";
+import BlogPostPage from "./pages/BlogPost";
 import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -40,9 +43,14 @@ const App = () => (
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/blog" element={<Blog />} />
+            <Route path="/blog/:postId" element={<BlogPostPage />} />
             <Route path="/careers" element={<Careers />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
+            
+            {/* Admin routes */}
+            <Route path="/admin" element={<AdminLogin />} />
+            <Route path="/admin/dashboard" element={<AdminDashboard />} />
             
             {/* Service pages */}
             <Route path="/services/product-discovery" element={<ProductDiscovery />} />
@@ -52,9 +60,6 @@ const App = () => (
             <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
             <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
             <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
-            
-            {/* Blog post pages - would normally have dedicated pages */}
-            <Route path="/blog/:postId" element={<Blog />} />
             
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
