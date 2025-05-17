@@ -8,6 +8,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import emailjs from "emailjs-com";
 
 const Contact = () => {
   const { toast } = useToast();
@@ -34,6 +35,24 @@ const Contact = () => {
     setFormError(null);
     
     try {
+      // Prepare email parameters
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company,
+        subject: formData.subject,
+        message: formData.message,
+        to_email: "info@stellmedia.com" // You can change this to your preferred email
+      };
+      
+      // Send email using EmailJS - Replace with your own Service ID and Template ID
+      await emailjs.send(
+        "service_stellmedia", // Replace with your EmailJS service ID
+        "template_contact", // Replace with your EmailJS template ID
+        templateParams,
+        "YOUR_USER_ID" // Replace with your EmailJS user ID
+      );
+      
       // Log submission for tracking
       console.log("Contact form submitted:", {
         name: formData.name,

@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import emailjs from "emailjs-com";
 
 const ContactSection = () => {
   const { toast } = useToast();
@@ -31,6 +32,25 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
+      // Prepare email parameters for consultation request
+      const templateParams = {
+        from_name: formData.name,
+        from_email: formData.email,
+        company: formData.company,
+        website: formData.website,
+        message: formData.message,
+        subject: "Consultation Request",
+        to_email: "info@stellmedia.com" // You can change this to your preferred email
+      };
+      
+      // Send email using EmailJS - Replace with your own Service ID and Template ID
+      await emailjs.send(
+        "service_stellmedia", // Replace with your EmailJS service ID
+        "template_consultation", // Replace with your EmailJS template ID
+        templateParams,
+        "YOUR_USER_ID" // Replace with your EmailJS user ID
+      );
+      
       // Log submission for tracking
       console.log("Consultation request submitted:", {
         name: formData.name,
