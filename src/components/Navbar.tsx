@@ -20,9 +20,9 @@ const Navbar = () => {
             <img 
               src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" 
               alt="Stell Media Logo" 
-              className="h-10 mr-2" 
+              className="h-8 w-auto mr-3" 
             />
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Stell Media
             </span>
           </Link>
@@ -36,11 +36,11 @@ const Navbar = () => {
           <Link to="/case-studies" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Case Studies
           </Link>
-          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
-            About
-          </Link>
           <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors">
             Blog
+          </Link>
+          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
+            About
           </Link>
           <Button asChild variant="default" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 text-white">
             <Link to="/contact">Book a Consultation</Link>
@@ -77,18 +77,18 @@ const Navbar = () => {
               Case Studies
             </Link>
             <Link
-              to="/about"
-              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
-              onClick={toggleMobileMenu}
-            >
-              About
-            </Link>
-            <Link
               to="/blog"
               className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
               onClick={toggleMobileMenu}
             >
               Blog
+            </Link>
+            <Link
+              to="/about"
+              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
+              onClick={toggleMobileMenu}
+            >
+              About
             </Link>
             <Button
               asChild
