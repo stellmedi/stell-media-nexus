@@ -50,6 +50,8 @@ const App = () => (
             <Route path="/services/seo" element={<SEO />} />
             <Route path="/services/sem" element={<SEM />} />
             <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+            <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
+            <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
             
             {/* Blog post pages - would normally have dedicated pages */}
             <Route path="/blog/:postId" element={<Blog />} />

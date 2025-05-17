@@ -33,14 +33,14 @@ const services = [
   {
     icon: <BarChart className="h-10 w-10 text-indigo-500" />,
     title: "Performance Marketing",
-    description: "Drive measurable traffic and conversions through strategically optimized, automated search marketing campaigns for e-commerce products.",
+    description: "Drive measurable traffic and conversions through strategically optimized search marketing campaigns for e-commerce products.",
     features: [
       "Data-powered campaign optimization", 
-      "Automated performance tracking", 
-      "Product feed automation", 
+      "Performance tracking", 
+      "Product feed optimization", 
       "Conversion optimization"
     ],
-    link: "/services/performance-marketing"
+    link: "/services/sem"
   },
   {
     icon: <Database className="h-10 w-10 text-indigo-500" />,

@@ -30,8 +30,8 @@ const SEM = () => {
   // FAQ items
   const faqItems = [
     {
-      question: "What makes your automated SEM services different from traditional agencies?",
-      answer: "Our automated approach uses AI and machine learning to continuously optimize your campaigns in real-time, rather than relying on manual adjustments. This allows for faster optimization, 24/7 monitoring, and data-driven decisions that maximize your ROAS without the overhead of traditional agency models."
+      question: "What makes your SEM services different from traditional agencies?",
+      answer: "Our approach uses AI and machine learning to continuously optimize your campaigns in real-time, rather than relying on manual adjustments. This allows for faster optimization, 24/7 monitoring, and data-driven decisions that maximize your ROAS without the overhead of traditional agency models."
     },
     {
       question: "How quickly can I expect to see results from your SEM campaigns?",
@@ -39,11 +39,11 @@ const SEM = () => {
     },
     {
       question: "Do you work with specific e-commerce platforms?",
-      answer: "Yes, our automated SEM solutions integrate seamlessly with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and custom-built platforms. Our system connects directly to your product data feed, regardless of your platform."
+      answer: "Yes, our SEM solutions integrate seamlessly with all major e-commerce platforms including Shopify, WooCommerce, Magento, BigCommerce, and custom-built platforms. Our system connects directly to your product data feed, regardless of your platform."
     },
     {
       question: "How do you handle product feed optimization for Google Shopping?",
-      answer: "Our system automatically analyzes your existing product feed and optimizes it based on Google's requirements and best practices. We enhance product titles, descriptions, and attributes, fix missing information, and implement dynamic feed updates that adjust based on performance data and seasonal trends."
+      answer: "Our system analyzes your existing product feed and optimizes it based on Google's requirements and best practices. We enhance product titles, descriptions, and attributes, fix missing information, and implement dynamic feed updates that adjust based on performance data and seasonal trends."
     },
     {
       question: "What is your pricing structure for SEM services?",
@@ -64,10 +64,10 @@ const SEM = () => {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Automated SEM Services
+                SEM Services
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Drive measurable traffic and conversions through optimized, automated search marketing campaigns for e-commerce products.
+                Drive measurable traffic and conversions through optimized search marketing campaigns for e-commerce products.
               </p>
             </div>
           </div>
@@ -88,7 +88,7 @@ const SEM = () => {
                 <h2 className="text-3xl font-bold mb-6 text-gray-900">Data-Driven Paid Search Marketing</h2>
                 <div className="space-y-4 text-gray-600">
                   <p>
-                    Our automated approach to search engine marketing combines intelligent bid management, dynamic product feeds, and performance optimization to maximize your ROAS.
+                    Our approach to search engine marketing combines intelligent bid management, dynamic product feeds, and performance optimization to maximize your ROAS.
                   </p>
                   <p>
                     We specialize in creating targeted campaigns that put your products in front of high-intent shoppers at the perfect moment in their buying journey.
@@ -119,11 +119,11 @@ const SEM = () => {
               
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-full">
                 <h4 className="font-bold mb-3 text-gray-900">Dynamic Product Feed Management</h4>
-                <p className="text-gray-600">Automatically update your product feeds to ensure your ads always show accurate pricing, inventory, and promotions.</p>
+                <p className="text-gray-600">Update your product feeds to ensure your ads always show accurate pricing, inventory, and promotions.</p>
               </div>
               
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 h-full">
-                <h4 className="font-bold mb-3 text-gray-900">Conversion Tracking Automation</h4>
+                <h4 className="font-bold mb-3 text-gray-900">Conversion Tracking Optimization</h4>
                 <p className="text-gray-600">Set up comprehensive tracking to measure success across the entire customer journey.</p>
               </div>
               

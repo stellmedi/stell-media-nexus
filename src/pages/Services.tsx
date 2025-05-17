@@ -75,35 +75,35 @@ const services = [
   },
   {
     icon: <BarChart className="h-12 w-12 text-indigo-500" />,
-    title: "Automated SEM Services",
-    description: "Drive measurable traffic and conversions through AI-optimized, automated search marketing campaigns for e-commerce products.",
+    title: "SEM Services",
+    description: "Drive measurable traffic and conversions through optimized search marketing campaigns for e-commerce products.",
     features: [
       "AI-powered Google Shopping optimization",
-      "Automated performance-based campaigns",
+      "Performance-based campaigns",
       "Dynamic product feed management",
-      "Conversion tracking automation",
+      "Conversion tracking optimization",
       "AI-driven bid management strategies",
       "ML audience targeting optimization",
-      "Automated creative A/B testing",
+      "Creative A/B testing",
       "ROAS optimization through AI"
     ],
     link: "/services/sem"
   },
   {
     icon: <Layout className="h-12 w-12 text-indigo-500" />,
-    title: "Hybrid Commerce Solutions",
-    description: "Create seamless shopping experiences that bridge online and offline channels through innovative technology and automation.",
+    title: "Conversion Optimization",
+    description: "Transform more of your website visitors into customers with data-driven optimization strategies that enhance user experience and drive conversions.",
     features: [
-      "Unified inventory management",
-      "Click-and-collect implementation",
-      "In-store digital experience design",
-      "Omnichannel customer journey mapping",
-      "Mobile app development for stores",
-      "Store locator and local inventory API",
-      "Cross-channel analytics integration",
-      "Hybrid loyalty program development"
+      "Product page optimization",
+      "Checkout flow enhancement",
+      "Mobile optimization",
+      "Trust & credibility enhancements",
+      "Personalization strategies",
+      "Value proposition clarity",
+      "A/B testing implementation",
+      "User behavior analysis"
     ],
-    link: "/services/hybrid-commerce"
+    link: "/services/conversion-optimization"
   },
   {
     icon: <Network className="h-12 w-12 text-indigo-500" />,
