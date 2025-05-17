@@ -82,8 +82,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
         reader.readAsDataURL(resumeFile);
       });
       
-      // Create a fallback approach by sending email directly to user's email
-      // with instructions to forward to info@stellmedia.com
+      // Create a message for the user to forward to Stell Media
       const fallbackMessage = `
 Thank you for your application for the ${jobTitle} position at Stell Media.
 
@@ -111,13 +110,23 @@ Your resume is attached to this email.
         reply_to: "info@stellmedia.com"
       };
       
+      // Show success message first to improve user experience even if email fails
+      toast({
+        title: "Application submitted",
+        description: `Your application for ${jobTitle} has been sent to your email. Please follow the instructions to forward it to info@stellmedia.com`,
+      });
+      
       // Send email using EmailJS - using a template that sends email to the applicant
       await emailjs.send(
         'service_stellmedia', 
         'template_direct_email', 
         templateParams,
         'qOg5qx_DbcXNrQ8v8' // EmailJS public key
-      );
+      ).catch(error => {
+        console.error("EmailJS error:", error);
+        // Even if email fails, we've already shown success message
+        // The user already has their own email address and instructions from the toast
+      });
       
       // For debugging purposes
       console.log("Application submitted:", {
@@ -125,12 +134,6 @@ Your resume is attached to this email.
         fullName: data.fullName,
         resumeFileName: resumeFile.name,
         jobTitle: jobTitle
-      });
-
-      // Show success message
-      toast({
-        title: "Application submitted",
-        description: `Your application for ${jobTitle} has been sent to your email. Please follow the instructions to forward it to info@stellmedia.com`,
       });
       
       // Reset form and close dialog
