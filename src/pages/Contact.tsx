@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -38,29 +37,27 @@ const Contact = () => {
     try {
       // Prepare email template parameters
       const templateParams = {
-        to_email: "info@stellmedia.com",
-        subject: `New Contact Form: ${formData.subject}`,
         from_name: formData.name,
         from_email: formData.email,
         company: formData.company || 'Not provided',
+        subject: formData.subject,
         message: formData.message
       };
       
       // Send email using EmailJS
       await emailjs.send(
-        'service_stellmedia', // Replace with your EmailJS service ID
-        'template_contact', // Replace with your EmailJS template ID
+        'service_stellmedia', 
+        'template_contact', 
         templateParams,
-        'YOUR_USER_ID' // Replace with your EmailJS user ID
+        'YOUR_EMAILJS_PUBLIC_KEY' // Replace with your actual EmailJS public key
       );
       
       // Log for debugging
       console.log("Contact form submitted:", {
-        to: "info@stellmedia.com",
-        subject: `New Contact Form: ${formData.subject}`,
         name: formData.name,
         email: formData.email,
         company: formData.company,
+        subject: formData.subject,
         message: formData.message
       });
       
@@ -79,7 +76,7 @@ const Contact = () => {
       });
     } catch (error) {
       console.error("Error submitting contact form:", error);
-      setFormError("There was a problem sending your message. Please try again or email us directly.");
+      setFormError("There was a problem sending your message. Please try again or email us directly at info@stellmedia.com.");
     } finally {
       setIsSubmitting(false);
     }

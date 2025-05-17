@@ -34,27 +34,23 @@ const ContactSection = () => {
     try {
       // Prepare email template parameters
       const templateParams = {
-        to_email: "info@stellmedia.com",
-        subject: "New Consultation Request",
         from_name: formData.name,
         from_email: formData.email,
-        company: formData.company,
+        company: formData.company || 'Not provided',
         website: formData.website || "Not provided",
         message: formData.message
       };
       
       // Send email using EmailJS
       await emailjs.send(
-        'service_stellmedia', // Replace with your EmailJS service ID
-        'template_consultation', // Replace with your EmailJS template ID
+        'service_stellmedia', 
+        'template_consultation', 
         templateParams,
-        'YOUR_USER_ID' // Replace with your EmailJS user ID
+        'YOUR_EMAILJS_PUBLIC_KEY' // Replace with your actual EmailJS public key
       );
       
       // Log for debugging purposes
       console.log("Consultation request submitted:", {
-        to: "info@stellmedia.com",
-        subject: "New Consultation Request",
         name: formData.name,
         email: formData.email,
         company: formData.company,
@@ -77,7 +73,7 @@ const ContactSection = () => {
       });
     } catch (error) {
       console.error("Error submitting consultation request:", error);
-      setFormError("There was a problem sending your request. Please try again or email us directly.");
+      setFormError("There was a problem sending your request. Please try again or email us directly at info@stellmedia.com.");
     } finally {
       setIsSubmitting(false);
     }
