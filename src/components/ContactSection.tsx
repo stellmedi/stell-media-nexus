@@ -1,20 +1,70 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const ContactSection = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    website: "",
+    message: ""
+  });
   
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real implementation, you'd send the form data to an API
-    toast({
-      title: "Consultation Request Received",
-      description: "We'll get back to you within 24 hours.",
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
     });
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormError(null);
+    
+    try {
+      // Simulate sending the consultation request to an email service
+      // In a real implementation, you'd send this data to a backend API
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      
+      // Log what would be sent in a real implementation
+      console.log("Consultation request submitted:", {
+        to: "info@stellmedia.com",
+        subject: "New Consultation Request",
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        website: formData.website,
+        message: formData.message
+      });
+      
+      toast({
+        title: "Consultation Request Received",
+        description: "We'll get back to you within 24 hours.",
+      });
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        website: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error("Error submitting consultation request:", error);
+      setFormError("There was a problem sending your request. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -50,6 +100,13 @@ const ContactSection = () => {
           
           <div className="bg-white p-8 rounded-lg shadow-lg text-gray-800">
             <h3 className="text-2xl font-bold mb-6 text-gray-900">Book a Consultation</h3>
+            
+            {formError && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertDescription>{formError}</AlertDescription>
+              </Alert>
+            )}
+            
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
@@ -59,6 +116,8 @@ const ContactSection = () => {
                   <Input
                     id="name"
                     placeholder="Your name"
+                    value={formData.name}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -70,6 +129,8 @@ const ContactSection = () => {
                     id="email"
                     type="email"
                     placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={handleChange}
                     required
                   />
                 </div>
@@ -82,6 +143,8 @@ const ContactSection = () => {
                 <Input
                   id="company"
                   placeholder="Your company"
+                  value={formData.company}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -94,6 +157,8 @@ const ContactSection = () => {
                   id="website"
                   type="url"
                   placeholder="https://yourcompany.com"
+                  value={formData.website}
+                  onChange={handleChange}
                 />
               </div>
               
@@ -105,12 +170,20 @@ const ContactSection = () => {
                   id="message"
                   placeholder="Tell us about your current challenges..."
                   className="h-32"
+                  value={formData.message}
+                  onChange={handleChange}
                   required
                 />
               </div>
               
-              <Button type="submit" size="lg" variant="white" className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90">
-                Request Consultation
+              <Button 
+                type="submit" 
+                size="lg" 
+                variant="white" 
+                className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Request Consultation"}
               </Button>
               
               <p className="text-xs text-gray-500 text-center mt-4">

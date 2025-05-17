@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,6 +25,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Linkedin } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -60,22 +62,56 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     }
   });
 
+  const [isSubmitting, setIsSubmitting] = React.useState(false);
+  const [formError, setFormError] = React.useState<string | null>(null);
+
   const onSubmit = async (data: FormValues) => {
-    // In a real implementation, you would handle file upload and form submission
-    // to your email service or server endpoint
+    setIsSubmitting(true);
+    setFormError(null);
     
-    // For this example, we'll show a success toast
-    toast({
-      title: "Application submitted",
-      description: `Your application for ${jobTitle} has been sent to info@stellmedia.com`,
-    });
+    // Create form data for email service
+    const formData = new FormData();
+    formData.append('jobTitle', jobTitle);
+    formData.append('fullName', data.fullName);
+    formData.append('email', data.email);
+    formData.append('phone', data.phone || 'Not provided');
+    formData.append('linkedin', data.linkedin || 'Not provided');
+    formData.append('coverLetter', data.coverLetter || 'Not provided');
     
-    console.log("Form submitted:", data);
-    console.log("Resume file:", data.resume[0]?.name);
+    // Add resume file
+    if (data.resume[0]) {
+      formData.append('resume', data.resume[0]);
+    }
     
-    // Reset form and close dialog
-    form.reset();
-    onClose();
+    try {
+      // Simulate email sending (in a real implementation, you would use an email service)
+      // This is where you'd connect to a backend service or API
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      
+      // For demo purposes, log what would be sent
+      console.log("Application submitted:", {
+        to: "info@stellmedia.com",
+        subject: `New Job Application: ${jobTitle}`,
+        fullName: data.fullName,
+        email: data.email,
+        resumeFileName: data.resume[0]?.name
+      });
+
+      // Show success message
+      toast({
+        title: "Application submitted",
+        description: `Your application for ${jobTitle} has been sent to info@stellmedia.com`,
+      });
+      
+      // Reset form and close dialog
+      form.reset();
+      onClose();
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      setFormError("There was a problem submitting your application. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -87,6 +123,12 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
             Complete the form below to apply. All applications will be sent to info@stellmedia.com
           </DialogDescription>
         </DialogHeader>
+        
+        {formError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertDescription>{formError}</AlertDescription>
+          </Alert>
+        )}
         
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 py-4">
@@ -194,7 +236,9 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
               <DialogClose asChild>
                 <Button type="button" variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Submit Application</Button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? "Submitting..." : "Submit Application"}
+              </Button>
             </div>
           </form>
         </Form>

@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,66 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const Contact = () => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    subject: "",
+    message: ""
+  });
   
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // In a real implementation, you'd send the form data to an API
-    toast({
-      title: "Message Sent",
-      description: "Thank you for contacting us. We'll respond within 24 hours.",
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
     });
+  };
+  
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setFormError(null);
+    
+    try {
+      // Simulate sending the contact form data to an email service
+      // In a real implementation, you'd send this data to a backend API
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Simulate API call
+      
+      // Log what would be sent in a real implementation
+      console.log("Contact form submitted:", {
+        to: "info@stellmedia.com",
+        subject: `New Contact Form: ${formData.subject}`,
+        name: formData.name,
+        email: formData.email,
+        company: formData.company,
+        message: formData.message
+      });
+      
+      toast({
+        title: "Message Sent",
+        description: "Thank you for contacting us. We'll respond within 24 hours.",
+      });
+      
+      // Reset form
+      setFormData({
+        name: "",
+        email: "",
+        company: "",
+        subject: "",
+        message: ""
+      });
+    } catch (error) {
+      console.error("Error submitting contact form:", error);
+      setFormError("There was a problem sending your message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -110,6 +159,13 @@ const Contact = () => {
               
               <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
                 <h3 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h3>
+                
+                {formError && (
+                  <Alert variant="destructive" className="mb-4">
+                    <AlertDescription>{formError}</AlertDescription>
+                  </Alert>
+                )}
+                
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
@@ -119,6 +175,8 @@ const Contact = () => {
                       <Input
                         id="name"
                         placeholder="Your name"
+                        value={formData.name}
+                        onChange={handleChange}
                         required
                       />
                     </div>
@@ -130,6 +188,8 @@ const Contact = () => {
                         id="email"
                         type="email"
                         placeholder="your@email.com"
+                        value={formData.email}
+                        onChange={handleChange}
                         required
                       />
                     </div>
@@ -142,6 +202,8 @@ const Contact = () => {
                     <Input
                       id="company"
                       placeholder="Your company"
+                      value={formData.company}
+                      onChange={handleChange}
                     />
                   </div>
                   
@@ -152,6 +214,8 @@ const Contact = () => {
                     <Input
                       id="subject"
                       placeholder="What's this about?"
+                      value={formData.subject}
+                      onChange={handleChange}
                       required
                     />
                   </div>
@@ -164,12 +228,18 @@ const Contact = () => {
                       id="message"
                       placeholder="How can we help you?"
                       className="h-32"
+                      value={formData.message}
+                      onChange={handleChange}
                       required
                     />
                   </div>
                   
-                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90">
-                    Send Message
+                  <Button 
+                    type="submit" 
+                    className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </div>
