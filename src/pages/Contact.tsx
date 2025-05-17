@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -35,22 +36,23 @@ const Contact = () => {
     setFormError(null);
     
     try {
+      // Initialize EmailJS with your public key
+      emailjs.init("qvOI69jBJFIylxNL2"); // Replace with your actual EmailJS public key
+      
       // Prepare email parameters
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
-        company: formData.company,
+        company: formData.company || "Not provided",
         subject: formData.subject,
-        message: formData.message,
-        to_email: "info@stellmedia.com" // You can change this to your preferred email
+        message: formData.message
       };
       
-      // Send email using EmailJS - Replace with your own Service ID and Template ID
+      // Send email using EmailJS
       await emailjs.send(
-        "service_stellmedia", // Replace with your EmailJS service ID
-        "template_contact", // Replace with your EmailJS template ID
-        templateParams,
-        "YOUR_USER_ID" // Replace with your EmailJS user ID
+        "service_d2t6zi8", // Replace with your actual EmailJS service ID
+        "template_f06dqcm", // Replace with your actual EmailJS template ID
+        templateParams
       );
       
       // Log submission for tracking

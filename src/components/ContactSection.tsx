@@ -32,23 +32,24 @@ const ContactSection = () => {
     setFormError(null);
     
     try {
+      // Initialize EmailJS with your public key
+      emailjs.init("qvOI69jBJFIylxNL2"); // Replace with your actual EmailJS public key
+      
       // Prepare email parameters for consultation request
       const templateParams = {
         from_name: formData.name,
         from_email: formData.email,
-        company: formData.company,
-        website: formData.website,
+        company: formData.company || "Not provided",
+        website: formData.website || "Not provided",
         message: formData.message,
-        subject: "Consultation Request",
-        to_email: "info@stellmedia.com" // You can change this to your preferred email
+        subject: "Consultation Request"
       };
       
-      // Send email using EmailJS - Replace with your own Service ID and Template ID
+      // Send email using EmailJS
       await emailjs.send(
-        "service_stellmedia", // Replace with your EmailJS service ID
-        "template_consultation", // Replace with your EmailJS template ID
-        templateParams,
-        "YOUR_USER_ID" // Replace with your EmailJS user ID
+        "service_d2t6zi8", // Replace with your actual EmailJS service ID
+        "template_f06dqcm", // Replace with your actual EmailJS template ID
+        templateParams
       );
       
       // Log submission for tracking
