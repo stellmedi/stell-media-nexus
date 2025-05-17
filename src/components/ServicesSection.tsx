@@ -61,7 +61,7 @@ const ServicesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Our Services</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">We combine technology innovation and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive measurable results.</p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Our expert team pairs industry-leading technology with hands-on human expertise to optimize every aspect of your e-commerce experience—from search and navigation to data management and marketing.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-8">
@@ -87,7 +87,7 @@ const ServicesSection = () => {
         </div>
         
         <div className="mt-16 text-center">
-          <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
+          <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100 shadow-lg">
             <Link to="/services">View All Services</Link>
           </Button>
         </div>

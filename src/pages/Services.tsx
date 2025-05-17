@@ -151,7 +151,7 @@ const Services = () => {
                 Our Services
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Discover how our blend of technology innovation and human expertise can transform your e-commerce experience, optimize product discovery, and unlock growth opportunities through strategic digital solutions.
+                Explore our comprehensive range of technology-powered services designed to optimize your e-commerce experience, enhance product discovery, and create meaningful customer connections.
               </p>
             </div>
           </div>
@@ -204,7 +204,7 @@ const Services = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 Let's talk about how our technology-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
               </p>
-              <Button asChild size="xl" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 font-bold shadow-lg">
+              <Button asChild size="xl" className="bg-white text-indigo-700 hover:bg-gray-100 font-bold active:bg-gray-200 shadow-xl border-2 border-white hover:border-indigo-100">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>

@@ -4,7 +4,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Code, Database, Layers, Network } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 const team = [
   {
@@ -52,7 +52,7 @@ const About = () => {
                 About Stell Media
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                We blend technology with human expertise to revolutionize e-commerce product discovery, develop intelligent automation, and create hybrid commerce solutions that connect customers with products they'll love.
+                We're a digital-first company that combines the power of technology with human expertise to deliver transformative solutions for e-commerce businesses seeking growth and innovation.
               </p>
             </div>
           </div>
@@ -74,6 +74,9 @@ const About = () => {
                 <div className="space-y-4 text-gray-600">
                   <p>
                     With over 18 years of global experience leading digital transformation, marketing, automation, and strategic innovation across Fortune 500 companies and high-growth enterprises, our founder Saurav Bansal established Stell Media to solve real-world growth challenges at scale.
+                  </p>
+                  <p>
+                    In his past engagements, Saurav has worked with Fortune 500 clients across the globe in various leadership roles, including managing tech support centers and leading digital operations and automation teams for major brands.
                   </p>
                   <p>
                     Throughout his career, Saurav delivered end-to-end digital solutions, operational transformations, and marketing strategies across Europe, North America, and Asia—working with global sportswear companies, leading computer manufacturers, and top telecommunications providers.
@@ -135,62 +138,10 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Technology */}
-        <section className="py-16">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-6 text-center text-gray-900">Our Technology Stack</h2>
-            <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-              We blend innovative technology with human expertise to deliver intelligent, scalable, and future-proof solutions.
-            </p>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
-                <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
-                  <Code className="h-8 w-8" />
-                </div>
-                <h3 className="text-lg font-bold mb-2">Advanced Algorithm Solutions</h3>
-                <p className="text-gray-600 text-sm">
-                  Custom algorithms for search relevancy, product recommendations, and customer behavior prediction with human oversight.
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
-                <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
-                  <Database className="h-8 w-8" />
-                </div>
-                <h3 className="text-lg font-bold mb-2">Data Processing</h3>
-                <p className="text-gray-600 text-sm">
-                  Big data architecture for processing millions of products and customer interactions in real-time with expert analysis.
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
-                <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
-                  <Network className="h-8 w-8" />
-                </div>
-                <h3 className="text-lg font-bold mb-2">Automation Platform</h3>
-                <p className="text-gray-600 text-sm">
-                  Proprietary workflow automation tools for e-commerce operations, marketing, and customer service with human experts guiding implementation.
-                </p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 text-center">
-                <div className="mx-auto w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mb-4">
-                  <Layers className="h-8 w-8" />
-                </div>
-                <h3 className="text-lg font-bold mb-2">Hybrid Commerce</h3>
-                <p className="text-gray-600 text-sm">
-                  Omnichannel solutions that bridge online and offline shopping through integrated technology and expert consultants.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Team Section - Updated with founder as main person */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Leadership Team</h2>
+            <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Team</h2>
             <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
               Meet the experts behind Stell Media's innovative approach to technology-enhanced e-commerce optimization.
             </p>
@@ -222,7 +173,7 @@ const About = () => {
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
                 We're always looking for talented individuals passionate about e-commerce, technology innovation, automation, and creative solutions.
               </p>
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 shadow-lg">
+              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 active:bg-gray-200 shadow-xl border-2 border-white hover:border-indigo-100 font-bold">
                 <Link to="/careers">
                   View Open Positions <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
