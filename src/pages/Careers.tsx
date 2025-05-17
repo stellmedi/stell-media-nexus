@@ -1,11 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Code, Database, Layout, BarChart, Phone, Rocket, Network, Layers } from "lucide-react";
 import { Link } from "react-router-dom";
+import JobApplicationForm from "@/components/JobApplicationForm";
 
 const careers = [
   {
@@ -71,6 +72,14 @@ const careers = [
 ];
 
 const Careers = () => {
+  const [isApplicationFormOpen, setIsApplicationFormOpen] = useState(false);
+  const [selectedJob, setSelectedJob] = useState("");
+
+  const handleApplyClick = (jobTitle: string) => {
+    setSelectedJob(jobTitle);
+    setIsApplicationFormOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-indigo-50">
       <Navbar />
@@ -202,7 +211,10 @@ const Careers = () => {
                         ))}
                       </ul>
                       
-                      <Button className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100">
+                      <Button 
+                        className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100"
+                        onClick={() => handleApplyClick(job.title)}
+                      >
                         Apply Now <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </div>
@@ -237,6 +249,13 @@ const Careers = () => {
         </section>
       </main>
       <Footer />
+
+      {/* Job Application Form Dialog */}
+      <JobApplicationForm 
+        isOpen={isApplicationFormOpen}
+        onClose={() => setIsApplicationFormOpen(false)}
+        jobTitle={selectedJob}
+      />
     </div>
   );
 };
