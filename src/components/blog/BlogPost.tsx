@@ -30,7 +30,8 @@ const BlogPost: React.FC<BlogPostProps> = ({
   categories
 }) => {
   const blogUrl = `https://stellmediaglobal.com/blog/${id}`;
-  const articleBody = content.replace(/<[^>]*>/g, '').substring(0, 500) + '...'; // Extract text for schema
+  // Extract text for schema without truncating the display content
+  const articleBody = content.replace(/<[^>]*>/g, '').substring(0, 500) + '...';
   
   return (
     <article className="max-w-3xl mx-auto" itemScope itemType="https://schema.org/BlogPosting">
