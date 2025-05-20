@@ -29,6 +29,8 @@ import { toast } from "sonner";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { useAuth } from "@/hooks/use-auth";
 import { isEmailJSConfigured } from "@/utils/emailService";
+import { ContactFormConfig } from "@/types/contactFormConfig";
+import { useContactFormConfig } from "@/hooks/use-contact-form-config";
 
 // Define site settings schema
 const siteSettingsSchema = z.object({
@@ -54,6 +56,10 @@ const SettingsPage = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [notifyOnContact, setNotifyOnContact] = useState(true);
   const [notifyOnConsultation, setNotifyOnConsultation] = useState(true);
+  
+  // Get contact form configs to update them with new email settings
+  const { config: contactConfig, saveConfig: saveContactConfig } = useContactFormConfig('contact');
+  const { config: consultConfig, saveConfig: saveConsultConfig } = useContactFormConfig('consultation');
 
   // Initialize site settings form
   const siteSettingsForm = useForm<SiteSettingsFormValues>({
@@ -106,15 +112,50 @@ const SettingsPage = () => {
   // Save site settings
   const onSaveSiteSettings = (data: SiteSettingsFormValues) => {
     localStorage.setItem("site_settings", JSON.stringify(data));
+    
+    // Also update the notification email in contact form configs
+    const updatedContactConfig = {
+      ...contactConfig,
+      notificationEmail: data.contactEmail
+    };
+    
+    const updatedConsultConfig = {
+      ...consultConfig,
+      notificationEmail: data.contactEmail
+    };
+    
+    saveContactConfig(updatedContactConfig);
+    saveConsultConfig(updatedConsultConfig);
+    
     toast.success("Site settings saved successfully");
   };
 
   // Save email settings
   const onSaveEmailSettings = (data: EmailSettingsFormValues) => {
-    localStorage.setItem("emailjs_settings", JSON.stringify(data));
-    
     // Store in localStorage for future sessions
     localStorage.setItem("emailjs_settings", JSON.stringify(data));
+    
+    // Set environment variables for EmailJS
+    if (import.meta.env.DEV) {
+      (window as any).VITE_EMAILJS_SERVICE_ID = data.emailjsServiceId;
+      (window as any).VITE_EMAILJS_PUBLIC_KEY = data.emailjsPublicKey;
+      (window as any).VITE_EMAILJS_CONTACT_TEMPLATE_ID = data.emailjsContactTemplateId;
+      (window as any).VITE_EMAILJS_CONSULTATION_TEMPLATE_ID = data.emailjsConsultationTemplateId;
+    }
+    
+    // Update template IDs in contact form configs
+    const updatedContactConfig = {
+      ...contactConfig,
+      templateId: data.emailjsContactTemplateId
+    };
+    
+    const updatedConsultConfig = {
+      ...consultConfig,
+      templateId: data.emailjsConsultationTemplateId
+    };
+    
+    saveContactConfig(updatedContactConfig);
+    saveConsultConfig(updatedConsultConfig);
     
     toast.success("Email settings saved successfully");
     toast.info("Please reload the page for settings to take effect");

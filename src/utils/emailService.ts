@@ -45,11 +45,41 @@ export interface EmailFormData {
  * 5. Replace the placeholder values below with your actual credentials
  */
 
+// Get EmailJS settings from various sources
+const getEmailJSSettings = () => {
+  // First try to get from localStorage
+  try {
+    const emailSettings = localStorage.getItem('emailjs_settings');
+    if (emailSettings) {
+      const settings = JSON.parse(emailSettings);
+      return {
+        serviceId: settings.emailjsServiceId,
+        publicKey: settings.emailjsPublicKey,
+        contactTemplateId: settings.emailjsContactTemplateId,
+        consultationTemplateId: settings.emailjsConsultationTemplateId
+      };
+    }
+  } catch (error) {
+    console.error("Error reading EmailJS settings from localStorage:", error);
+  }
+
+  // Fall back to environment variables
+  return {
+    serviceId: import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_example",
+    publicKey: import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY",
+    contactTemplateId: import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
+    consultationTemplateId: import.meta.env.VITE_EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult"
+  };
+};
+
+// Get settings
+const emailJSSettings = getEmailJSSettings();
+
 // Your EmailJS Service ID from dashboard.emailjs.com/admin/services
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_example";  
+const SERVICE_ID = emailJSSettings.serviceId;  
 
 // Your EmailJS Public Key from dashboard.emailjs.com/admin/account
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+const PUBLIC_KEY = emailJSSettings.publicKey;
 
 // Email where notifications will be sent
 let NOTIFICATION_EMAIL = "info@stellmedia.com"; 
@@ -70,7 +100,20 @@ try {
 // Template IDs from dashboard.emailjs.com/admin/templates
 export const TEMPLATES = {
   // Template ID for Contact Form
-  CONTACT: import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
+  get CONTACT() {
+    try {
+      const contactConfig = localStorage.getItem('stell_contact_form_config');
+      if (contactConfig) {
+        const parsedConfig = JSON.parse(contactConfig);
+        if (parsedConfig.templateId) {
+          return parsedConfig.templateId;
+        }
+      }
+    } catch (error) {
+      console.error("Error reading template ID from contact config:", error);
+    }
+    return emailJSSettings.contactTemplateId;
+  },
   
   // Consultation Form - Check localStorage first, fallback to env var
   get CONSULTATION() {
@@ -85,7 +128,7 @@ export const TEMPLATES = {
     } catch (error) {
       console.error("Error reading template ID from config:", error);
     }
-    return import.meta.env.VITE_EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult";
+    return emailJSSettings.consultationTemplateId;
   }
 };
 
@@ -109,6 +152,15 @@ export const getNotificationEmail = (): string => {
         return parsedConfig.notificationEmail;
       }
     }
+    
+    // Try site settings
+    const siteSettings = localStorage.getItem('site_settings');
+    if (siteSettings) {
+      const parsedSettings = JSON.parse(siteSettings);
+      if (parsedSettings.contactEmail) {
+        return parsedSettings.contactEmail;
+      }
+    }
   } catch (error) {
     console.error("Error reading notification email from configs:", error);
   }
@@ -124,7 +176,7 @@ export const getNotificationEmail = (): string => {
 export const initEmailJS = () => {
   try {
     emailjs.init(PUBLIC_KEY);
-    console.log("EmailJS initialized");
+    console.log("EmailJS initialized with key:", PUBLIC_KEY);
   } catch (error) {
     console.error("Failed to initialize EmailJS:", error);
     toast.error("Email service initialization failed");
@@ -136,11 +188,12 @@ export const initEmailJS = () => {
  * @returns boolean indicating if EmailJS is configured properly
  */
 export const isEmailJSConfigured = (): boolean => {
+  const settings = getEmailJSSettings();
   return !(
-    SERVICE_ID === "service_example" || 
-    PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
-    TEMPLATES.CONTACT === "template_contact" || 
-    TEMPLATES.CONSULTATION === "template_consult"
+    settings.serviceId === "service_example" || 
+    settings.publicKey === "YOUR_PUBLIC_KEY" || 
+    settings.contactTemplateId === "template_contact" || 
+    settings.consultationTemplateId === "template_consult"
   );
 };
 
@@ -173,6 +226,11 @@ export const sendEmail = async (
     timestamp: new Date().toISOString(),
   };
 
+  // Refresh settings on each call to ensure we have latest
+  const settings = getEmailJSSettings();
+  const serviceId = settings.serviceId;
+  const publicKey = settings.publicKey;
+
   // Check for proper configuration first
   if (!isEmailJSConfigured()) {
     console.error(
@@ -180,7 +238,7 @@ export const sendEmail = async (
       "\n1. Create an account at https://www.emailjs.com/" +
       "\n2. Create an email service and get your Service ID" +
       "\n3. Create email templates for contact and consultation forms" +
-      "\n4. Update environment variables or the constants in emailService.ts with your credentials"
+      "\n4. Go to Admin -> Settings -> Email Settings and enter your credentials"
     );
     throw new Error("EmailJS configuration error: Please set up your EmailJS credentials");
   }
@@ -192,12 +250,13 @@ export const sendEmail = async (
   while (retryCount <= maxRetries) {
     try {
       console.log(`Sending email attempt ${retryCount + 1}/${maxRetries + 1} with params:`, templateParams);
+      console.log(`Using service ID: ${serviceId}, template ID: ${templateId}`);
       
       const response = await emailjs.send(
-        SERVICE_ID,
+        serviceId,
         templateId, 
         templateParams,
-        PUBLIC_KEY
+        publicKey
       );
       
       console.log(`Email sent successfully on attempt ${retryCount + 1}:`, response);
