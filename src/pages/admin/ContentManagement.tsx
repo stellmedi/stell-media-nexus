@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -22,12 +21,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, Edit, Trash, Eye, FileText, Image, FilePlus, Film } from "lucide-react";
+import { Search, Plus, Edit, Trash, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import ContentForm, { ContentFormValues } from "@/components/admin/ContentForm";
+import { MediaManager } from "@/components/admin/MediaManager";
 
 // Define route structure to extract pages from App.tsx
 interface Route {
@@ -181,17 +180,31 @@ const ContentManagement = () => {
   const [faqs, setFaqs] = useState(mockFAQs);
   const [mediaItems, setMediaItems] = useState<MediaItem[]>(mockMedia);
   
-  // New content form state
-  const [formData, setFormData] = useState<ContentFormData>({
-    title: "",
-    type: "page",
-    content: "",
-    status: "draft"
-  });
-
   // Add state for edit mode
   const [editMode, setEditMode] = useState(false);
   const [currentEditId, setCurrentEditId] = useState<string>("");
+  const [isSystemPage, setIsSystemPage] = useState(false);
+  
+  // Form default values
+  const [formDefaultValues, setFormDefaultValues] = useState<ContentFormValues>({
+    title: "",
+    type: "page",
+    content: "",
+    status: "draft",
+    slug: "",
+    language: "en",
+    author: user?.name || "Admin User",
+    metaTitle: "",
+    metaDescription: "",
+    canonicalUrl: "",
+    noIndex: false,
+    noFollow: false,
+    ogTitle: "",
+    ogDescription: "",
+    twitterTitle: "",
+    twitterDescription: "",
+    schemaType: "None",
+  });
   
   // Load page data on component mount
   useEffect(() => {
@@ -202,6 +215,16 @@ const ContentManagement = () => {
     // Combine them as pages for display
     setPages([...pageRoutes, ...serviceRoutes]);
   }, []);
+
+  // Set author when user changes
+  useEffect(() => {
+    if (user?.name && !editMode) {
+      setFormDefaultValues(prev => ({
+        ...prev,
+        author: user.name || "Admin User"
+      }));
+    }
+  }, [user, editMode]);
 
   // Check authentication
   if (isLoading) {
@@ -226,11 +249,6 @@ const ContentManagement = () => {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const filteredMedia = mediaItems.filter(item => 
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.type.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   // Delete content handler
   const handleDeleteContent = (id: string, type: string) => {
     if (type === "page" || type === "service") {
@@ -250,53 +268,81 @@ const ContentManagement = () => {
     toast.success("Media deleted successfully");
   };
   
-  // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-  
-  // Handle select changes
-  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
   // New edit content handler
   const handleEditContent = (id: string, type: string) => {
     setEditMode(true);
     setCurrentEditId(id);
+    setIsSystemPage(type === "page" || type === "service");
     
     // Populate form with content data based on type
     if (type === "blog") {
       const post = blogPosts.find(post => post.id === id);
       if (post) {
-        setFormData({
+        setFormDefaultValues({
           title: post.title,
           type: "blog",
           content: "", // In a real app, you would fetch the full content
-          status: post.status as "published" | "draft"
+          status: post.status as "published" | "draft",
+          slug: `blog/${post.id}`,
+          language: "en",
+          author: post.author,
+          metaTitle: post.title,
+          metaDescription: "",
+          canonicalUrl: "",
+          noIndex: false,
+          noFollow: false,
+          ogTitle: "",
+          ogDescription: "",
+          twitterTitle: "",
+          twitterDescription: "",
+          schemaType: "Article",
         });
       }
     } else if (type === "faq") {
       const faq = faqs.find(faq => faq.id === id);
       if (faq) {
-        setFormData({
+        setFormDefaultValues({
           title: faq.title,
           type: "faq",
           content: "", // In a real app, you would fetch the full content
-          status: faq.status as "published" | "draft"
+          status: faq.status as "published" | "draft",
+          slug: `faq/${faq.id}`,
+          language: "en",
+          author: faq.author,
+          metaTitle: faq.title,
+          metaDescription: "",
+          canonicalUrl: "",
+          noIndex: false,
+          noFollow: false,
+          ogTitle: "",
+          ogDescription: "",
+          twitterTitle: "",
+          twitterDescription: "",
+          schemaType: "FAQ",
         });
       }
     } else if (type === "page" || type === "service") {
       const pageIndex = filteredPages.findIndex(p => `${p.path}-${p.name}` === id);
       if (pageIndex >= 0) {
         const page = filteredPages[pageIndex];
-        setFormData({
+        setFormDefaultValues({
           title: page.name,
           type: page.type,
           content: "", // In a real app, you would fetch the full content
-          status: page.status
+          status: page.status,
+          slug: page.path.substring(1), // Remove leading slash
+          language: "en",
+          author: page.author,
+          metaTitle: page.name,
+          metaDescription: "",
+          canonicalUrl: "",
+          noIndex: false,
+          noFollow: false,
+          ogTitle: "",
+          ogDescription: "",
+          twitterTitle: "",
+          twitterDescription: "",
+          schemaType: page.type === "service" ? "Service" : "None",
         });
         toast.info("System pages can only be partially edited. Some fields may be read-only.");
       }
@@ -307,75 +353,79 @@ const ContentManagement = () => {
   };
   
   // Handle form submission - create or update content
-  const handleSubmitContent = () => {
+  const handleSubmitContent = (values: ContentFormValues) => {
     const newDate = new Date().toISOString().split('T')[0];
     const currentUser = user?.name || "Admin User";
     
     if (editMode) {
       // Update existing content
-      if (formData.type === "blog") {
+      if (values.type === "blog") {
         setBlogPosts(prev => 
           prev.map(post => 
             post.id === currentEditId 
-              ? { ...post, title: formData.title, status: formData.status, lastUpdated: newDate }
+              ? { 
+                  ...post, 
+                  title: values.title, 
+                  status: values.status, 
+                  lastUpdated: newDate,
+                  author: values.author || currentUser
+                }
               : post
           )
         );
         toast.success("Blog post updated successfully");
-      } else if (formData.type === "faq") {
+      } else if (values.type === "faq") {
         setFaqs(prev => 
           prev.map(faq => 
             faq.id === currentEditId 
-              ? { ...faq, title: formData.title, status: formData.status, lastUpdated: newDate }
+              ? { 
+                  ...faq, 
+                  title: values.title, 
+                  status: values.status, 
+                  lastUpdated: newDate,
+                  author: values.author || currentUser
+                }
               : faq
           )
         );
         toast.success("FAQ updated successfully");
-      } else if (formData.type === "page" || formData.type === "service") {
+      } else if (values.type === "page" || values.type === "service") {
         // For system pages, we can only simulate an update (in a real app, this would be limited)
-        toast.info("System page updates require developer assistance for full changes");
+        toast.info("Page metadata updated. System page content updates require developer assistance for full changes");
       }
     } else {
       // Create new content
       const newId = Date.now().toString();
       
-      if (formData.type === "blog") {
+      if (values.type === "blog") {
         const newBlogPost = {
           id: newId,
-          title: formData.title,
+          title: values.title,
           type: "blog" as "blog",
-          status: formData.status,
+          status: values.status,
           lastUpdated: newDate,
-          author: currentUser,
+          author: values.author || currentUser,
         };
         setBlogPosts(prev => [...prev, newBlogPost]);
         toast.success("Blog post created successfully");
-      } else if (formData.type === "faq") {
+      } else if (values.type === "faq") {
         const newFaq = {
           id: newId,
-          title: formData.title,
+          title: values.title,
           type: "faq" as "faq",
-          status: formData.status,
+          status: values.status,
           lastUpdated: newDate,
-          author: currentUser,
+          author: values.author || currentUser,
         };
         setFaqs(prev => [...prev, newFaq]);
         toast.success("FAQ created successfully");
-      } else if (formData.type === "page") {
-        toast.info("Custom pages require developer assistance. Please contact your developer.");
+      } else if (values.type === "page") {
+        toast.info("Custom pages require developer assistance for full creation. Page metadata saved.");
       }
     }
     
     // Reset form and dialog states
-    setFormData({
-      title: "",
-      type: "page",
-      content: "",
-      status: "draft"
-    });
-    setEditMode(false);
-    setCurrentEditId("");
-    setDialogOpen(false);
+    resetFormState();
   };
   
   // View content handler
@@ -386,9 +436,50 @@ const ContentManagement = () => {
     }
   };
 
+  // Reset form state
+  const resetFormState = () => {
+    setFormDefaultValues({
+      title: "",
+      type: "page",
+      content: "",
+      status: "draft",
+      slug: "",
+      language: "en",
+      author: user?.name || "Admin User",
+      metaTitle: "",
+      metaDescription: "",
+      canonicalUrl: "",
+      noIndex: false,
+      noFollow: false,
+      ogTitle: "",
+      ogDescription: "",
+      twitterTitle: "",
+      twitterDescription: "",
+      schemaType: "None",
+    });
+    setEditMode(false);
+    setCurrentEditId("");
+    setIsSystemPage(false);
+    setDialogOpen(false);
+  };
+
+  // Mock upload media handler
+  const handleUploadMedia = (file: File) => {
+    const newMediaItem: MediaItem = {
+      id: Date.now().toString(),
+      name: file.name,
+      type: file.type,
+      size: `${(file.size / 1024 / 1024).toFixed(2)} MB`,
+      uploadedBy: user?.name || "Admin User",
+      uploadedOn: new Date().toISOString().split('T')[0],
+      url: URL.createObjectURL(file), // In a real app, this would be a server URL
+    };
+    
+    setMediaItems(prev => [...prev, newMediaItem]);
+  };
+
   // Dialog title based on mode
   const dialogTitle = editMode ? "Edit Content" : "Create New Content";
-  const submitButtonText = editMode ? "Update" : "Create";
 
   return (
     <AdminLayout>
@@ -408,89 +499,33 @@ const ContentManagement = () => {
           <Dialog open={dialogOpen} onOpenChange={(open) => {
             setDialogOpen(open);
             if (!open) {
-              // Reset form when dialog is closed
-              setFormData({
-                title: "",
-                type: "page",
-                content: "",
-                status: "draft"
-              });
-              setEditMode(false);
-              setCurrentEditId("");
+              resetFormState();
             }
           }}>
             <DialogTrigger asChild>
               <Button className="ml-4" onClick={() => {
                 setEditMode(false);
                 setCurrentEditId("");
+                setIsSystemPage(false);
               }}>
                 <Plus className="mr-2 h-4 w-4" /> Create New
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogDescription>
                   {editMode ? "Update the details for this content." : "Enter the details for your new content."}
                 </DialogDescription>
               </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Title</Label>
-                  <Input 
-                    id="title" 
-                    name="title" 
-                    placeholder="Enter title" 
-                    value={formData.title} 
-                    onChange={handleInputChange} 
-                    disabled={editMode && (formData.type === "page" || formData.type === "service")}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="type">Content Type</Label>
-                  <select 
-                    id="type" 
-                    name="type" 
-                    className="w-full p-2 border rounded-md" 
-                    value={formData.type}
-                    onChange={handleSelectChange}
-                    disabled={editMode}
-                  >
-                    <option value="page">Page</option>
-                    <option value="blog">Blog Post</option>
-                    <option value="faq">FAQ</option>
-                    {editMode && formData.type === "service" && <option value="service">Service</option>}
-                  </select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="content">Content</Label>
-                  <Textarea 
-                    id="content" 
-                    name="content" 
-                    placeholder="Enter content" 
-                    rows={5} 
-                    value={formData.content}
-                    onChange={handleInputChange}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="status">Status</Label>
-                  <select 
-                    id="status" 
-                    name="status" 
-                    className="w-full p-2 border rounded-md" 
-                    value={formData.status}
-                    onChange={handleSelectChange}
-                  >
-                    <option value="draft">Draft</option>
-                    <option value="published">Published</option>
-                  </select>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleSubmitContent}>{submitButtonText}</Button>
-              </DialogFooter>
+              
+              <ContentForm 
+                defaultValues={formDefaultValues} 
+                onSubmit={handleSubmitContent}
+                onCancel={() => setDialogOpen(false)}
+                isEditMode={editMode}
+                isSystemPage={isSystemPage}
+              />
             </DialogContent>
           </Dialog>
         </div>
@@ -720,62 +755,11 @@ const ContentManagement = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="mb-6">
-                  <Button>Upload New Media</Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredMedia.length > 0 ? (
-                    filteredMedia.map(media => (
-                      <Card key={media.id} className="overflow-hidden">
-                        {media.type.startsWith("image/") ? (
-                          <div className="aspect-square bg-gray-100 relative">
-                            <img 
-                              src={media.url} 
-                              alt={media.name} 
-                              className="w-full h-full object-cover" 
-                            />
-                          </div>
-                        ) : (
-                          <div className="aspect-square bg-gray-100 flex items-center justify-center">
-                            <div className="text-4xl text-gray-400">
-                              {media.type.includes("video") ? <Film className="h-12 w-12 text-gray-400" /> : <FileText className="h-12 w-12 text-gray-400" />}
-                            </div>
-                          </div>
-                        )}
-                        
-                        <CardContent className="p-4">
-                          <h3 className="font-medium mb-1 truncate" title={media.name}>
-                            {media.name}
-                          </h3>
-                          <p className="text-sm text-gray-500 mb-2">
-                            {media.type} • {media.size}
-                          </p>
-                          <div className="flex justify-between items-center">
-                            <span className="text-xs text-gray-500">
-                              {media.uploadedOn}
-                            </span>
-                            <div className="flex space-x-1">
-                              <Button size="sm" variant="ghost">
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button 
-                                size="sm" 
-                                variant="ghost" 
-                                className="text-destructive hover:text-destructive"
-                                onClick={() => handleDeleteMedia(media.id)}
-                              >
-                                <Trash className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))
-                  ) : (
-                    <div className="col-span-3 text-center py-8">No media found</div>
-                  )}
-                </div>
+                <MediaManager 
+                  mediaItems={mediaItems} 
+                  onDeleteMedia={handleDeleteMedia}
+                  onUploadMedia={handleUploadMedia}
+                />
               </CardContent>
             </Card>
           </TabsContent>
