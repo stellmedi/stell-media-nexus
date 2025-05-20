@@ -188,6 +188,10 @@ const ContentManagement = () => {
     content: "",
     status: "draft"
   });
+
+  // Add state for edit mode
+  const [editMode, setEditMode] = useState(false);
+  const [currentEditId, setCurrentEditId] = useState<string>("");
   
   // Load page data on component mount
   useEffect(() => {
@@ -257,44 +261,120 @@ const ContentManagement = () => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
-  
-  // Handle new content creation
-  const handleCreateContent = () => {
-    const newId = Date.now().toString();
+
+  // New edit content handler
+  const handleEditContent = (id: string, type: string) => {
+    setEditMode(true);
+    setCurrentEditId(id);
     
-    if (formData.type === "blog") {
-      const newBlogPost = {
-        id: newId,
-        title: formData.title,
-        type: "blog" as "blog",
-        status: formData.status,
-        lastUpdated: new Date().toISOString().split('T')[0],
-        author: user?.name || "Admin User",
-      };
-      setBlogPosts(prev => [...prev, newBlogPost]);
-      toast.success("Blog post created successfully");
-    } else if (formData.type === "faq") {
-      const newFaq = {
-        id: newId,
-        title: formData.title,
-        type: "faq" as "faq",
-        status: formData.status,
-        lastUpdated: new Date().toISOString().split('T')[0],
-        author: user?.name || "Admin User",
-      };
-      setFaqs(prev => [...prev, newFaq]);
-      toast.success("FAQ created successfully");
-    } else if (formData.type === "page") {
-      toast.info("Custom pages require developer assistance. Please contact your developer.");
+    // Populate form with content data based on type
+    if (type === "blog") {
+      const post = blogPosts.find(post => post.id === id);
+      if (post) {
+        setFormData({
+          title: post.title,
+          type: "blog",
+          content: "", // In a real app, you would fetch the full content
+          status: post.status as "published" | "draft"
+        });
+      }
+    } else if (type === "faq") {
+      const faq = faqs.find(faq => faq.id === id);
+      if (faq) {
+        setFormData({
+          title: faq.title,
+          type: "faq",
+          content: "", // In a real app, you would fetch the full content
+          status: faq.status as "published" | "draft"
+        });
+      }
+    } else if (type === "page" || type === "service") {
+      const pageIndex = filteredPages.findIndex(p => `${p.path}-${p.name}` === id);
+      if (pageIndex >= 0) {
+        const page = filteredPages[pageIndex];
+        setFormData({
+          title: page.name,
+          type: page.type,
+          content: "", // In a real app, you would fetch the full content
+          status: page.status
+        });
+        toast.info("System pages can only be partially edited. Some fields may be read-only.");
+      }
     }
     
-    // Reset form and close dialog
+    // Open the dialog
+    setDialogOpen(true);
+  };
+  
+  // Handle form submission - create or update content
+  const handleSubmitContent = () => {
+    const newDate = new Date().toISOString().split('T')[0];
+    const currentUser = user?.name || "Admin User";
+    
+    if (editMode) {
+      // Update existing content
+      if (formData.type === "blog") {
+        setBlogPosts(prev => 
+          prev.map(post => 
+            post.id === currentEditId 
+              ? { ...post, title: formData.title, status: formData.status, lastUpdated: newDate }
+              : post
+          )
+        );
+        toast.success("Blog post updated successfully");
+      } else if (formData.type === "faq") {
+        setFaqs(prev => 
+          prev.map(faq => 
+            faq.id === currentEditId 
+              ? { ...faq, title: formData.title, status: formData.status, lastUpdated: newDate }
+              : faq
+          )
+        );
+        toast.success("FAQ updated successfully");
+      } else if (formData.type === "page" || formData.type === "service") {
+        // For system pages, we can only simulate an update (in a real app, this would be limited)
+        toast.info("System page updates require developer assistance for full changes");
+      }
+    } else {
+      // Create new content
+      const newId = Date.now().toString();
+      
+      if (formData.type === "blog") {
+        const newBlogPost = {
+          id: newId,
+          title: formData.title,
+          type: "blog" as "blog",
+          status: formData.status,
+          lastUpdated: newDate,
+          author: currentUser,
+        };
+        setBlogPosts(prev => [...prev, newBlogPost]);
+        toast.success("Blog post created successfully");
+      } else if (formData.type === "faq") {
+        const newFaq = {
+          id: newId,
+          title: formData.title,
+          type: "faq" as "faq",
+          status: formData.status,
+          lastUpdated: newDate,
+          author: currentUser,
+        };
+        setFaqs(prev => [...prev, newFaq]);
+        toast.success("FAQ created successfully");
+      } else if (formData.type === "page") {
+        toast.info("Custom pages require developer assistance. Please contact your developer.");
+      }
+    }
+    
+    // Reset form and dialog states
     setFormData({
       title: "",
       type: "page",
       content: "",
       status: "draft"
     });
+    setEditMode(false);
+    setCurrentEditId("");
     setDialogOpen(false);
   };
   
@@ -305,6 +385,10 @@ const ContentManagement = () => {
       window.open(path, "_blank");
     }
   };
+
+  // Dialog title based on mode
+  const dialogTitle = editMode ? "Edit Content" : "Create New Content";
+  const submitButtonText = editMode ? "Update" : "Create";
 
   return (
     <AdminLayout>
@@ -321,17 +405,33 @@ const ContentManagement = () => {
               onChange={e => setSearchTerm(e.target.value)}
             />
           </div>
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog open={dialogOpen} onOpenChange={(open) => {
+            setDialogOpen(open);
+            if (!open) {
+              // Reset form when dialog is closed
+              setFormData({
+                title: "",
+                type: "page",
+                content: "",
+                status: "draft"
+              });
+              setEditMode(false);
+              setCurrentEditId("");
+            }
+          }}>
             <DialogTrigger asChild>
-              <Button className="ml-4">
+              <Button className="ml-4" onClick={() => {
+                setEditMode(false);
+                setCurrentEditId("");
+              }}>
                 <Plus className="mr-2 h-4 w-4" /> Create New
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Create New Content</DialogTitle>
+                <DialogTitle>{dialogTitle}</DialogTitle>
                 <DialogDescription>
-                  Enter the details for your new content.
+                  {editMode ? "Update the details for this content." : "Enter the details for your new content."}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -343,6 +443,7 @@ const ContentManagement = () => {
                     placeholder="Enter title" 
                     value={formData.title} 
                     onChange={handleInputChange} 
+                    disabled={editMode && (formData.type === "page" || formData.type === "service")}
                   />
                 </div>
                 <div className="space-y-2">
@@ -353,10 +454,12 @@ const ContentManagement = () => {
                     className="w-full p-2 border rounded-md" 
                     value={formData.type}
                     onChange={handleSelectChange}
+                    disabled={editMode}
                   >
                     <option value="page">Page</option>
                     <option value="blog">Blog Post</option>
                     <option value="faq">FAQ</option>
+                    {editMode && formData.type === "service" && <option value="service">Service</option>}
                   </select>
                 </div>
                 <div className="space-y-2">
@@ -386,7 +489,7 @@ const ContentManagement = () => {
               </div>
               <DialogFooter>
                 <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleCreateContent}>Create</Button>
+                <Button onClick={handleSubmitContent}>{submitButtonText}</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
@@ -442,7 +545,11 @@ const ContentManagement = () => {
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleEditContent(`${page.path}-${page.name}`, page.type)}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button 
@@ -507,7 +614,11 @@ const ContentManagement = () => {
                               <Button size="sm" variant="outline">
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleEditContent(post.id, "blog")}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button 
@@ -570,7 +681,11 @@ const ContentManagement = () => {
                               <Button size="sm" variant="outline">
                                 <Eye className="h-4 w-4" />
                               </Button>
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleEditContent(faq.id, "faq")}
+                              >
                                 <Edit className="h-4 w-4" />
                               </Button>
                               <Button 
