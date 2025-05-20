@@ -6,11 +6,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
-import { initEmailJS } from "@/utils/emailService";
+import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
+import Consultation from "./pages/Consultation";
 import Blog from "./pages/Blog";
 import BlogPostPage from "./pages/BlogPost";
 import Careers from "./pages/Careers";
@@ -36,7 +37,7 @@ const App = () => {
     initEmailJS();
     
     // Display a warning if EmailJS isn't properly configured
-    if (!process.env.EMAILJS_SERVICE_ID && !process.env.EMAILJS_PUBLIC_KEY) {
+    if (!isEmailJSConfigured()) {
       console.warn(
         "EmailJS environment variables not detected. " +
         "Please set up EmailJS credentials in environment variables or directly in emailService.ts file."
@@ -58,6 +59,7 @@ const App = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/consultation" element={<Consultation />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:postId" element={<BlogPostPage />} />
               <Route path="/careers" element={<Careers />} />

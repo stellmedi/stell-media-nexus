@@ -2,10 +2,24 @@
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ContactFormComponent from "@/components/forms/ContactFormComponent";
+import NewContactForm from "@/components/contact/NewContactForm";
 import { TEMPLATES } from "@/utils/emailService";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
 import { Helmet } from "react-helmet-async";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+
+const ContactInfo = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
+  <div className="flex items-start">
+    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+      <Icon size={20} />
+    </div>
+    <div>
+      <h3 className="text-lg font-semibold mb-1 text-gray-900">{title}</h3>
+      {children}
+    </div>
+  </div>
+);
 
 const Contact = () => {
   return (
@@ -22,15 +36,28 @@ const Contact = () => {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <section className="pt-32 pb-16 bg-gray-50">
+        <section className="pt-32 pb-16 bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Contact Us
+                Get In Touch
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Have a question or ready to transform your e-commerce experience? Get in touch with our team today.
+                Have questions or ready to transform your e-commerce experience? Our team is here to help you succeed.
               </p>
+              <div className="flex flex-wrap justify-center gap-4">
+                <Button asChild size="lg">
+                  <Link to="/consultation">
+                    Book a Consultation <ArrowRight className="ml-2" size={18} />
+                  </Link>
+                </Button>
+                <Button asChild size="lg" variant="outline">
+                  <a href="tel:+919877100369">
+                    <Phone className="mr-2" size={18} />
+                    Call Us Directly
+                  </a>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
@@ -40,75 +67,107 @@ const Contact = () => {
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <div>
-                <h2 className="text-3xl font-bold mb-6 text-gray-900">Get in Touch</h2>
+                <h2 className="text-3xl font-bold mb-6 text-gray-900">Contact Information</h2>
                 <p className="text-lg text-gray-600 mb-8">
                   Fill out the form and we'll get back to you within 24 hours. For urgent inquiries, please call us directly.
                 </p>
                 
-                <div className="space-y-6">
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
-                      <Mail size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Email</h3>
-                      <p className="text-gray-600">info@stellmedia.com</p>
-                    </div>
-                  </div>
+                <div className="space-y-8">
+                  <ContactInfo icon={Mail} title="Email">
+                    <p className="text-gray-600">
+                      <a href="mailto:info@stellmedia.com" className="hover:text-indigo-600 transition-colors">
+                        info@stellmedia.com
+                      </a>
+                    </p>
+                  </ContactInfo>
                   
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
-                      <Phone size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Phone</h3>
-                      <p className="text-gray-600">
-                        <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">+91 98771 00369</a>
-                      </p>
-                      <p className="text-gray-600">
-                        <a href="https://wa.me/919877100369" className="hover:text-indigo-600 transition-colors">WhatsApp: +91 98771 00369</a>
-                      </p>
-                    </div>
-                  </div>
+                  <ContactInfo icon={Phone} title="Phone">
+                    <p className="text-gray-600">
+                      <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">
+                        +91 98771 00369
+                      </a>
+                    </p>
+                    <p className="text-gray-600 mt-1">
+                      <a href="https://wa.me/919877100369" className="hover:text-indigo-600 transition-colors flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                          <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                          <path d="M9 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
+                          <path d="M14 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
+                        </svg>
+                        WhatsApp: +91 98771 00369
+                      </a>
+                    </p>
+                  </ContactInfo>
                   
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
-                      <MapPin size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Office</h3>
-                      <p className="text-gray-600">Zirakpur, SAS Nagar (Mohali),</p>
-                      <p className="text-gray-600">Punjab, India</p>
-                    </div>
-                  </div>
+                  <ContactInfo icon={MapPin} title="Office">
+                    <p className="text-gray-600">Zirakpur, SAS Nagar (Mohali),</p>
+                    <p className="text-gray-600">Punjab, India</p>
+                  </ContactInfo>
                   
-                  <div className="flex items-start">
-                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
-                      <Clock size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Business Hours</h3>
-                      <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
-                      <p className="text-gray-600">Saturday - Sunday: Closed</p>
-                    </div>
-                  </div>
+                  <ContactInfo icon={Clock} title="Business Hours">
+                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                    <p className="text-gray-600">Saturday - Sunday: Closed</p>
+                  </ContactInfo>
+                </div>
+                
+                <div className="mt-12">
+                  <h3 className="text-xl font-semibold mb-4">Need a consultation?</h3>
+                  <p className="text-gray-600 mb-4">
+                    If you're looking for a more detailed conversation about your e-commerce needs, 
+                    book a consultation with our experts.
+                  </p>
+                  <Button asChild className="mt-2">
+                    <Link to="/consultation">
+                      Schedule a Consultation <ArrowRight className="ml-2" size={16} />
+                    </Link>
+                  </Button>
                 </div>
               </div>
               
-              <ContactFormComponent 
+              <NewContactForm 
                 templateId={TEMPLATES.CONTACT}
-                title="Send Us a Message"
-                showCompany={true}
-                showSubject={true}
+                className="md:mt-4"
               />
             </div>
           </div>
         </section>
 
-        {/* Map Section */}
-        <section className="py-16 bg-gray-50">
+        {/* FAQ Section */}
+        <section className="py-16 bg-indigo-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">Find Us</h2>
+            <h2 className="text-3xl font-bold mb-10 text-center text-gray-900">Frequently Asked Questions</h2>
+            <div className="max-w-3xl mx-auto grid gap-6">
+              {[
+                {
+                  q: "How soon can I expect a response to my inquiry?",
+                  a: "We aim to respond to all inquiries within 24 hours during business days. For urgent matters, we recommend calling us directly."
+                },
+                {
+                  q: "Do you offer free consultations?",
+                  a: "Yes, we offer a free initial consultation to understand your needs and determine how we can best help your e-commerce business."
+                },
+                {
+                  q: "What areas do you serve?",
+                  a: "As a digital service provider, we work with clients worldwide. Our team operates remotely and can accommodate different time zones."
+                },
+                {
+                  q: "What information should I provide for the best response?",
+                  a: "Including details about your business, website URL, specific challenges you're facing, and your goals will help us provide the most relevant assistance."
+                }
+              ].map((faq, index) => (
+                <div key={index} className="bg-white p-6 rounded-lg shadow-md">
+                  <h3 className="text-lg font-semibold mb-2 text-gray-900">{faq.q}</h3>
+                  <p className="text-gray-600">{faq.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Map Section */}
+        <section className="py-16">
+          <div className="container mx-auto px-4">
+            <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">Our Location</h2>
             <div className="h-96 rounded-lg overflow-hidden shadow-lg">
               <iframe 
                 title="Stell Media Office Location"
