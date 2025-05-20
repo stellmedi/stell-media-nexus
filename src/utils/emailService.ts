@@ -44,10 +44,10 @@ export interface EmailFormData {
  */
 
 // Your EmailJS Service ID from dashboard.emailjs.com/admin/services
-const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || "service_example";  
+const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_example";  
 
 // Your EmailJS Public Key from dashboard.emailjs.com/admin/account
-const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
+const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
 
 // Email where notifications will be sent
 const NOTIFICATION_EMAIL = "info@stellmedia.com"; 
@@ -55,10 +55,10 @@ const NOTIFICATION_EMAIL = "info@stellmedia.com";
 // Template IDs from dashboard.emailjs.com/admin/templates
 export const TEMPLATES = {
   // Template ID for Contact Form
-  CONTACT: process.env.EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
+  CONTACT: import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
   
   // Template ID for Consultation Form
-  CONSULTATION: process.env.EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult",
+  CONSULTATION: import.meta.env.VITE_EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult",
 };
 
 /**
