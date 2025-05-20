@@ -2,6 +2,13 @@
 import emailjs from 'emailjs-com';
 import { toast } from 'sonner';
 
+// Add TypeScript declaration for gtag
+declare global {
+  interface Window {
+    gtag: (command: string, action: string, params: object) => void;
+  }
+}
+
 // Types for form submissions
 export interface EmailFormData {
   name: string;
@@ -137,7 +144,7 @@ export const sendEmail = async (
       console.log(`Email sent successfully on attempt ${retryCount + 1}:`, response);
       console.log(`Notification sent to ${NOTIFICATION_EMAIL}`);
 
-      // Track successful submission for analytics
+      // Track successful submission for analytics if gtag is available
       if (window && typeof window.gtag === 'function') {
         window.gtag('event', 'form_submission', {
           'event_category': templateId === TEMPLATES.CONTACT ? 'contact_form' : 'consultation_form',
