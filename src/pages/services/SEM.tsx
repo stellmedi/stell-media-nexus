@@ -1,29 +1,23 @@
-
 import React, { useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, MessageCircle, MessageSquare } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/sonner";
 import FAQSection from "@/components/FAQSection";
 
 const SEM = () => {
-  // Function to handle chatbot click
+  // Function to handle chatbot click - updated to use Sonner toast
   const handleChatbotClick = () => {
-    toast({
-      title: "Chat with us",
+    toast("Chat with us", {
       description: "Our team will be with you shortly. How can we help?",
-      action: (
-        <Button 
-          size="sm" 
-          variant="secondary" 
-          onClick={() => window.open("https://wa.me/1234567890", "_blank")}
-          className="flex items-center gap-1"
-        >
-          <MessageSquare className="h-4 w-4" /> Start WhatsApp Chat
-        </Button>
-      ),
+      action: {
+        label: "Start WhatsApp Chat",
+        onClick: () => window.open("https://wa.me/1234567890", "_blank")
+      },
+      duration: 5000,
+      position: "bottom-right",
     });
   };
 

@@ -10,7 +10,7 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "@/components/ui/sonner"; // Updated import to use Sonner toast
 import { Helmet } from "react-helmet-async";
 
 // Stats data
@@ -54,16 +54,16 @@ const caseStudies = [
 ];
 
 const Index = () => {
-  // Function to handle chatbot click
+  // Function to handle chatbot click - updated to use Sonner toast
   const handleChatbotClick = () => {
-    toast({
-      title: "Chat with us",
+    toast("Chat with us", {
       description: "Our team will be with you shortly. How can we help?",
-      action: (
-        <Button size="sm" variant="secondary" onClick={() => console.log("Starting chat...")}>
-          Start Chat
-        </Button>
-      ),
+      action: {
+        label: "Start Chat",
+        onClick: () => console.log("Starting chat..."),
+      },
+      duration: 5000,
+      position: "bottom-right",
     });
   };
 
