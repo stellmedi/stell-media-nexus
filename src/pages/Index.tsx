@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -10,7 +9,7 @@ import { ArrowRight, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
-import { toast } from "@/components/ui/sonner"; // Updated import to use Sonner toast
+import { useChat } from "@/hooks/use-chat";
 import { Helmet } from "react-helmet-async";
 
 // Stats data
@@ -54,18 +53,7 @@ const caseStudies = [
 ];
 
 const Index = () => {
-  // Function to handle chatbot click - updated to use Sonner toast
-  const handleChatbotClick = () => {
-    toast("Chat with us", {
-      description: "Our team will be with you shortly. How can we help?",
-      action: {
-        label: "Start Chat",
-        onClick: () => console.log("Starting chat..."),
-      },
-      duration: 5000,
-      position: "bottom-right",
-    });
-  };
+  const { openChat } = useChat();
 
   return (
     <div className="min-h-screen bg-indigo-50">
@@ -172,19 +160,6 @@ const Index = () => {
         </section>
         
         <ContactSection />
-        
-        {/* Chatbot */}
-        <div className="fixed bottom-6 right-6 z-50">
-          <Button 
-            variant="default" 
-            size="icon" 
-            className="h-14 w-14 rounded-full shadow-lg"
-            onClick={handleChatbotClick}
-            aria-label="Open chat support"
-          >
-            <MessageCircle size={24} />
-          </Button>
-        </div>
       </main>
       <Footer />
     </div>

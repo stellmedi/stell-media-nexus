@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,6 +7,8 @@ import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
 import { AuthProvider } from "@/hooks/use-auth";
+import { ChatProvider } from "@/hooks/use-chat";
+import ChatButton from "@/components/ChatButton";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import About from "./pages/About";
@@ -57,47 +58,50 @@ const App = () => {
       <TooltipProvider>
         <AuthProvider>
           <HelmetProvider>
-            <SiteSchemaMarkup />
-            <Toaster />
-            <Sonner position="bottom-right" expand={true} closeButton /> {/* Configured Sonner with proper positioning */}
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/consultation" element={<Consultation />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/blog/:postId" element={<BlogPostPage />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/faq" element={<FAQ />} />
-                
-                {/* Case Studies routes - new dedicated pages */}
-                <Route path="/case-studies" element={<CaseStudies />} />
-                <Route path="/case-studies/:studyId" element={<CaseStudyDetail />} />
-                
-                {/* Admin routes */}
-                <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/users" element={<UsersManagement />} />
-                <Route path="/admin/content" element={<ContentManagement />} />
-                <Route path="/admin/emails" element={<EmailManagement />} />
-                <Route path="/admin/settings" element={<SettingsPage />} />
-                
-                {/* Service pages */}
-                <Route path="/services/product-discovery" element={<ProductDiscovery />} />
-                <Route path="/services/data-enrichment" element={<DataEnrichment />} />
-                <Route path="/services/seo" element={<SEO />} />
-                <Route path="/services/sem" element={<SEM />} />
-                <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
-                <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
-                <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
-                
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
+            <ChatProvider>
+              <SiteSchemaMarkup />
+              <Toaster />
+              <Sonner position="bottom-right" expand={true} closeButton /> {/* Configured Sonner with proper positioning */}
+              <BrowserRouter>
+                <ScrollToTop />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/consultation" element={<Consultation />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:postId" element={<BlogPostPage />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  
+                  {/* Case Studies routes - new dedicated pages */}
+                  <Route path="/case-studies" element={<CaseStudies />} />
+                  <Route path="/case-studies/:studyId" element={<CaseStudyDetail />} />
+                  
+                  {/* Admin routes */}
+                  <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/users" element={<UsersManagement />} />
+                  <Route path="/admin/content" element={<ContentManagement />} />
+                  <Route path="/admin/emails" element={<EmailManagement />} />
+                  <Route path="/admin/settings" element={<SettingsPage />} />
+                  
+                  {/* Service pages */}
+                  <Route path="/services/product-discovery" element={<ProductDiscovery />} />
+                  <Route path="/services/data-enrichment" element={<DataEnrichment />} />
+                  <Route path="/services/seo" element={<SEO />} />
+                  <Route path="/services/sem" element={<SEM />} />
+                  <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+                  <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
+                  <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
+                  
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+                <ChatButton />
+              </BrowserRouter>
+            </ChatProvider>
           </HelmetProvider>
         </AuthProvider>
       </TooltipProvider>
