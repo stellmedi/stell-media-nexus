@@ -24,7 +24,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Plus, Edit, Trash, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ContentForm, { ContentFormValues } from "@/components/admin/ContentForm";
 import { MediaManager } from "@/components/admin/MediaManager";
 
