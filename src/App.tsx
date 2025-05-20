@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,7 +9,7 @@ import { useEffect } from "react";
 import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ChatProvider } from "@/hooks/use-chat";
-import ChatButton from "@/components/ChatButton";
+import WhatsAppButton from "@/components/ChatButton";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import About from "./pages/About";
@@ -99,7 +100,7 @@ const App = () => {
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-                <ChatButton />
+                <WhatsAppButton />
               </BrowserRouter>
             </ChatProvider>
           </HelmetProvider>
