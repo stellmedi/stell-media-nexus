@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { Phone } from "lucide-react";
+import { WhatsApp } from "lucide-react";
 import { toast } from "sonner";
 
 const WhatsAppButton = () => {
@@ -27,7 +27,7 @@ const WhatsAppButton = () => {
         onClick={handleWhatsAppClick}
         aria-label="Contact us on WhatsApp"
       >
-        <Phone size={24} />
+        <WhatsApp size={24} />
       </Button>
     </div>
   );
