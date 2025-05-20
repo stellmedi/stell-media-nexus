@@ -1,88 +1,13 @@
-import React, { useState } from "react";
+
+import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import ContactFormComponent from "@/components/forms/ContactFormComponent";
+import { TEMPLATES } from "@/utils/emailService";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 import { Helmet } from "react-helmet-async";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import emailjs from "emailjs-com";
 
 const Contact = () => {
-  const { toast } = useToast();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formError, setFormError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    company: "",
-    subject: "",
-    message: ""
-  });
-  
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.id]: e.target.value
-    });
-  };
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    setFormError(null);
-    
-    try {
-      const templateParams = {
-        from_name: formData.name,
-        from_email: formData.email,
-        company: formData.company || "Not provided",
-        subject: formData.subject,
-        message: formData.message
-      };
-      
-      // Send email using the correct parameter structure for EmailJS
-      await emailjs.send(
-        "service_your_service_id", // Replace with your actual service ID
-        "template_your_template_id", // Replace with your actual template ID
-        templateParams,
-        "your_public_key" // Replace with your actual public key
-      );
-      
-      // Log submission for tracking
-      console.log("Contact form submitted:", {
-        name: formData.name,
-        email: formData.email,
-        company: formData.company,
-        subject: formData.subject,
-        message: formData.message
-      });
-      
-      // Show success message
-      toast({
-        title: "Message Sent",
-        description: "Thank you for your message. We'll get back to you soon!",
-      });
-      
-      // Reset form
-      setFormData({
-        name: "",
-        email: "",
-        company: "",
-        subject: "",
-        message: ""
-      });
-      
-    } catch (error) {
-      console.error("Error with contact form:", error);
-      setFormError("There was a problem sending your message. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
@@ -170,92 +95,12 @@ const Contact = () => {
                 </div>
               </div>
               
-              <div className="bg-white p-8 rounded-lg shadow-lg border border-gray-200">
-                <h3 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h3>
-                
-                {formError && (
-                  <Alert variant="destructive" className="mb-4">
-                    <AlertDescription>{formError}</AlertDescription>
-                  </Alert>
-                )}
-                
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
-                      </label>
-                      <Input
-                        id="name"
-                        placeholder="Your name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                        Email
-                      </label>
-                      <Input
-                        id="email"
-                        type="email"
-                        placeholder="your@email.com"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-                      Company
-                    </label>
-                    <Input
-                      id="company"
-                      placeholder="Your company"
-                      value={formData.company}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-1">
-                      Subject
-                    </label>
-                    <Input
-                      id="subject"
-                      placeholder="What's this about?"
-                      value={formData.subject}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  
-                  <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                      Message
-                    </label>
-                    <Textarea
-                      id="message"
-                      placeholder="How can we help you?"
-                      className="h-32"
-                      value={formData.message}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                  
-                  <Button 
-                    type="submit" 
-                    className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? "Sending..." : "Send Message"}
-                  </Button>
-                </form>
-              </div>
+              <ContactFormComponent 
+                templateId={TEMPLATES.CONTACT}
+                title="Send Us a Message"
+                showCompany={true}
+                showSubject={true}
+              />
             </div>
           </div>
         </section>
