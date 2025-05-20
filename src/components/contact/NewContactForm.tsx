@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -20,17 +20,57 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { useContactFormConfig } from "@/hooks/use-contact-form-config";
 
-// Define form schema
-const contactFormSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters" }),
-  email: z.string().email({ message: "Please enter a valid email address" }),
-  company: z.string().optional(),
-  subject: z.string().min(2, { message: "Subject is required" }),
-  message: z.string().min(10, { message: "Message must be at least 10 characters" }),
-});
-
-type ContactFormValues = z.infer<typeof contactFormSchema>;
+// Define dynamic form schema based on config
+const createContactFormSchema = (config: any) => {
+  const schemaFields: any = {};
+  
+  // Add fields based on configuration
+  if (config.fields.name.enabled) {
+    schemaFields.name = config.fields.name.required 
+      ? z.string().min(2, { message: "Name must be at least 2 characters" })
+      : z.string().optional();
+  }
+  
+  if (config.fields.email.enabled) {
+    schemaFields.email = config.fields.email.required 
+      ? z.string().email({ message: "Please enter a valid email address" })
+      : z.string().email({ message: "Please enter a valid email address" }).optional();
+  }
+  
+  if (config.fields.phone.enabled) {
+    schemaFields.phone = config.fields.phone.required
+      ? z.string().min(5, { message: "Phone number is required" })
+      : z.string().optional();
+  }
+  
+  if (config.fields.company.enabled) {
+    schemaFields.company = config.fields.company.required
+      ? z.string().min(1, { message: "Company name is required" })
+      : z.string().optional();
+  }
+  
+  if (config.fields.subject.enabled) {
+    schemaFields.subject = config.fields.subject.required
+      ? z.string().min(2, { message: "Subject is required" })
+      : z.string().optional();
+  }
+  
+  if (config.fields.website.enabled) {
+    schemaFields.website = config.fields.website.required
+      ? z.string().url({ message: "Please enter a valid URL" })
+      : z.string().url({ message: "Please enter a valid URL" }).optional();
+  }
+  
+  if (config.fields.message.enabled) {
+    schemaFields.message = config.fields.message.required
+      ? z.string().min(10, { message: "Message must be at least 10 characters" })
+      : z.string().optional();
+  }
+  
+  return z.object(schemaFields);
+};
 
 interface NewContactFormProps {
   templateId: string;
@@ -42,35 +82,65 @@ const NewContactForm = ({ templateId, className = "" }: NewContactFormProps) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  // Load form configuration
+  const { config, isLoaded } = useContactFormConfig('contact');
+  
+  // Create form schema based on config
+  const [formSchema, setFormSchema] = useState<z.ZodType<any>>(z.object({}));
+  const [defaultValues, setDefaultValues] = useState<any>({});
+  
+  // Update schema and default values when config loads
+  useEffect(() => {
+    if (isLoaded) {
+      const schema = createContactFormSchema(config);
+      setFormSchema(schema);
+      
+      // Create default values object based on enabled fields
+      const newDefaultValues: any = {};
+      Object.entries(config.fields).forEach(([key, field]: [string, any]) => {
+        if (field.enabled) {
+          newDefaultValues[key] = "";
+        }
+      });
+      setDefaultValues(newDefaultValues);
+      
+      // Reset form with new defaults
+      if (form) {
+        form.reset(newDefaultValues);
+      }
+    }
+  }, [config, isLoaded]);
 
-  const form = useForm<ContactFormValues>({
-    resolver: zodResolver(contactFormSchema),
-    defaultValues: {
-      name: "",
-      email: "",
-      company: "",
-      subject: "",
-      message: "",
-    },
+  const form = useForm<any>({
+    resolver: zodResolver(formSchema),
+    defaultValues: defaultValues,
   });
 
-  const onSubmit = async (data: ContactFormValues) => {
+  // Wait for config to load before rendering form
+  if (!isLoaded) {
+    return <div className="flex items-center justify-center p-8">Loading form...</div>;
+  }
+
+  const onSubmit = async (data: any) => {
     setIsSubmitting(true);
     setFormError(null);
     
     try {
-      await sendEmail(templateId, {
-        name: data.name,
-        email: data.email,
+      await sendEmail(config.templateId || templateId, {
+        name: data.name || "",
+        email: data.email || "",
         company: data.company || "",
-        subject: data.subject,
-        message: data.message,
+        subject: data.subject || "",
+        message: data.message || "",
+        website: data.website || "",
+        // Use default params for properties not in form data
       });
       
       // Show success in both toast systems for redundancy
       hookToast({
         title: "Message Sent",
-        description: "We've received your message and will get back to you soon!",
+        description: config.successMessage || "We've received your message and will get back to you soon!",
       });
       
       toast.success("Message sent successfully!", {
@@ -107,12 +177,19 @@ const NewContactForm = ({ templateId, className = "" }: NewContactFormProps) => 
     }
   };
 
+  // Helper to get field label
+  const getFieldLabel = (fieldName: string, fieldConfig: any) => {
+    if (fieldConfig.label) return fieldConfig.label;
+    return fieldName.charAt(0).toUpperCase() + fieldName.slice(1);
+  };
+
   return (
     <Card className={`shadow-lg ${className}`}>
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Send Us a Message</CardTitle>
+        <CardTitle className="text-2xl font-bold">{config.formTitle || "Send Us a Message"}</CardTitle>
         <CardDescription>Fill out the form below and we'll get back to you within 24 hours.</CardDescription>
       </CardHeader>
+      
       <CardContent>
         {formError && (
           <Alert variant="destructive" className="mb-4">
@@ -123,87 +200,133 @@ const NewContactForm = ({ templateId, className = "" }: NewContactFormProps) => 
         {isSuccess && (
           <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
             <CheckCircle2 className="h-4 w-4 mr-2" />
-            <AlertDescription>Thank you! Your message has been sent successfully.</AlertDescription>
+            <AlertDescription>{config.successMessage || "Thank you! Your message has been sent successfully."}</AlertDescription>
           </Alert>
         )}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Name</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Your name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {config.fields.name.enabled && (
+                <FormField
+                  control={form.control}
+                  name="name"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{getFieldLabel("name", config.fields.name)}</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Your name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input type="email" placeholder="your@email.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {config.fields.email.enabled && (
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{getFieldLabel("email", config.fields.email)}</FormLabel>
+                      <FormControl>
+                        <Input type="email" placeholder="your@email.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
             </div>
             
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company (Optional)</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your company" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {config.fields.phone.enabled && (
+              <FormField
+                control={form.control}
+                name="phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{getFieldLabel("phone", config.fields.phone)}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your phone number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             
-            <FormField
-              control={form.control}
-              name="subject"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Subject</FormLabel>
-                  <FormControl>
-                    <Input placeholder="What's this about?" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {config.fields.company.enabled && (
+              <FormField
+                control={form.control}
+                name="company"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{getFieldLabel("company", config.fields.company)}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Your company" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             
-            <FormField
-              control={form.control}
-              name="message"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Message</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="How can we help you?" 
-                      className="h-32" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {config.fields.subject.enabled && (
+              <FormField
+                control={form.control}
+                name="subject"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{getFieldLabel("subject", config.fields.subject)}</FormLabel>
+                    <FormControl>
+                      <Input placeholder="What's this about?" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            
+            {config.fields.website.enabled && (
+              <FormField
+                control={form.control}
+                name="website"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{getFieldLabel("website", config.fields.website)}</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="url" 
+                        placeholder="https://yourcompany.com" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
+            
+            {config.fields.message.enabled && (
+              <FormField
+                control={form.control}
+                name="message"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{getFieldLabel("message", config.fields.message)}</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="How can we help you?" 
+                        className="h-32" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
             
             <Button 
               type="submit" 
@@ -215,7 +338,7 @@ const NewContactForm = ({ templateId, className = "" }: NewContactFormProps) => 
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Sending...
                 </>
-              ) : "Send Message"}
+              ) : config.buttonText || "Send Message"}
             </Button>
           </form>
         </Form>

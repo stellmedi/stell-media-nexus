@@ -19,6 +19,7 @@ export interface EmailFormData {
   budget?: string;
   timeline?: string;
   message: string;
+  phone?: string;
 }
 
 /**
@@ -39,7 +40,8 @@ export interface EmailFormData {
  *    - message (the message content)
  *    - budget (if applicable for consultation)
  *    - timeline (if applicable for consultation)
- *    - to_email (recipient's email - already set to info@stellmedia.com)
+ *    - phone (if applicable)
+ *    - to_email (recipient's email)
  * 5. Replace the placeholder values below with your actual credentials
  */
 
@@ -50,15 +52,69 @@ const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "service_example";
 const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
 
 // Email where notifications will be sent
-const NOTIFICATION_EMAIL = "info@stellmedia.com"; 
+let NOTIFICATION_EMAIL = "info@stellmedia.com"; 
+
+// Try to get configuration from localStorage
+try {
+  const contactConfig = localStorage.getItem('stell_contact_form_config');
+  if (contactConfig) {
+    const parsedConfig = JSON.parse(contactConfig);
+    if (parsedConfig.notificationEmail) {
+      NOTIFICATION_EMAIL = parsedConfig.notificationEmail;
+    }
+  }
+} catch (error) {
+  console.error("Error reading notification email from config:", error);
+}
 
 // Template IDs from dashboard.emailjs.com/admin/templates
 export const TEMPLATES = {
   // Template ID for Contact Form
   CONTACT: import.meta.env.VITE_EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
   
-  // Template ID for Consultation Form
-  CONSULTATION: import.meta.env.VITE_EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult",
+  // Consultation Form - Check localStorage first, fallback to env var
+  get CONSULTATION() {
+    try {
+      const consultConfig = localStorage.getItem('stell_consultation_form_config');
+      if (consultConfig) {
+        const parsedConfig = JSON.parse(consultConfig);
+        if (parsedConfig.templateId) {
+          return parsedConfig.templateId;
+        }
+      }
+    } catch (error) {
+      console.error("Error reading template ID from config:", error);
+    }
+    return import.meta.env.VITE_EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult";
+  }
+};
+
+// Helper to get notification email from configs
+export const getNotificationEmail = (): string => {
+  try {
+    // Try to get from contact config first
+    const contactConfig = localStorage.getItem('stell_contact_form_config');
+    if (contactConfig) {
+      const parsedConfig = JSON.parse(contactConfig);
+      if (parsedConfig.notificationEmail) {
+        return parsedConfig.notificationEmail;
+      }
+    }
+    
+    // Try consultation config next
+    const consultConfig = localStorage.getItem('stell_consultation_form_config');
+    if (consultConfig) {
+      const parsedConfig = JSON.parse(consultConfig);
+      if (parsedConfig.notificationEmail) {
+        return parsedConfig.notificationEmail;
+      }
+    }
+  } catch (error) {
+    console.error("Error reading notification email from configs:", error);
+  }
+  
+  // Fall back to default
+  return NOTIFICATION_EMAIL;
 };
 
 /**
@@ -101,6 +157,8 @@ export const sendEmail = async (
   data: EmailFormData, 
   maxRetries = 2
 ): Promise<any> => {
+  const notificationEmail = getNotificationEmail();
+  
   const templateParams = {
     from_name: data.name,
     from_email: data.email,
@@ -110,7 +168,8 @@ export const sendEmail = async (
     budget: data.budget || "Not specified",
     timeline: data.timeline || "Not specified",
     message: data.message,
-    to_email: NOTIFICATION_EMAIL,
+    phone: data.phone || "Not provided",
+    to_email: notificationEmail,
     timestamp: new Date().toISOString(),
   };
 
@@ -142,7 +201,7 @@ export const sendEmail = async (
       );
       
       console.log(`Email sent successfully on attempt ${retryCount + 1}:`, response);
-      console.log(`Notification sent to ${NOTIFICATION_EMAIL}`);
+      console.log(`Notification sent to ${notificationEmail}`);
 
       // Track successful submission for analytics if gtag is available
       if (window && typeof window.gtag === 'function') {

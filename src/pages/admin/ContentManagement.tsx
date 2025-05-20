@@ -21,12 +21,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Search, Plus, Edit, Trash, Eye } from "lucide-react";
+import { Search, Plus, Edit, Trash, Eye, Settings } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import ContentForm, { ContentFormValues } from "@/components/admin/ContentForm";
 import { MediaManager } from "@/components/admin/MediaManager";
+import { ContactFormConfiguration } from "@/components/admin/ContactFormConfiguration";
 
 // Define route structure to extract pages from App.tsx
 interface Route {
@@ -203,6 +204,11 @@ interface PreviewDialogState {
   title: string;
 }
 
+// Added contact form configuration state
+interface ContactFormConfig {
+  // Define configuration fields here
+}
+
 const ContentManagement = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
@@ -227,6 +233,10 @@ const ContentManagement = () => {
     content: "",
     title: ""
   });
+  
+  // New state for contact form configuration
+  const [contactFormConfigOpen, setContactFormConfigOpen] = useState(false);
+  const [isContactPage, setIsContactPage] = useState(false);
   
   // Form default values
   const [formDefaultValues, setFormDefaultValues] = useState<ContentFormValues>({
@@ -337,11 +347,15 @@ const ContentManagement = () => {
     toast.success("Media deleted successfully");
   };
   
-  // New edit content handler with content loading
+  // New edit content handler with content loading and special handling for contact page
   const handleEditContent = (id: string, type: string) => {
     setEditMode(true);
     setCurrentEditId(id);
     setIsSystemPage(type === "page" || type === "service");
+    
+    // Check if this is the contact page to show the contact form config button
+    const isContactPageEdit = id === "/contact-Contact" || id.includes("contact");
+    setIsContactPage(isContactPageEdit);
     
     // Populate form with content data based on type
     if (type === "blog") {
@@ -589,6 +603,7 @@ const ContentManagement = () => {
                 setEditMode(false);
                 setCurrentEditId("");
                 setIsSystemPage(false);
+                setIsContactPage(false);
               }}>
                 <Plus className="mr-2 h-4 w-4" /> Create New
               </Button>
@@ -600,6 +615,28 @@ const ContentManagement = () => {
                   {editMode ? "Update the details for this content." : "Enter the details for your new content."}
                 </DialogDescription>
               </DialogHeader>
+              
+              {/* Add Contact Form Config Button when editing contact page */}
+              {isContactPage && (
+                <div className="mb-4">
+                  <Dialog open={contactFormConfigOpen} onOpenChange={setContactFormConfigOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" className="w-full">
+                        <Settings className="mr-2 h-4 w-4" /> Configure Contact Form Settings
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                      <DialogHeader>
+                        <DialogTitle>Contact Form Settings</DialogTitle>
+                        <DialogDescription>
+                          Configure the contact forms on this page.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <ContactFormConfiguration onClose={() => setContactFormConfigOpen(false)} />
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
               
               <ContentForm 
                 defaultValues={formDefaultValues} 
