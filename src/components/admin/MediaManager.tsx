@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Search, Upload, Image, FileText, Film, Trash, Filter } from "lucide-rea
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { cn, formatFileSize, getFileTypeIcon } from "@/lib/utils";
 
 interface MediaItem {
   id: string;
@@ -311,7 +310,7 @@ export function MediaManager({ mediaItems, onDeleteMedia, onUploadMedia }: Media
                 
                 <div>
                   <Label className="text-sm text-gray-500">Size</Label>
-                  <p className="font-medium">{selectedMedia.size}</p>
+                  <p className="font-medium">{formatFileSize(selectedMedia.size)}</p>
                 </div>
                 
                 <div>
@@ -487,7 +486,7 @@ export function MediaManager({ mediaItems, onDeleteMedia, onUploadMedia }: Media
         </DialogContent>
       </Dialog>
 
-      <style jsx>{`
+      <style>{`
         .dropdown {
           position: relative;
           display: inline-block;
