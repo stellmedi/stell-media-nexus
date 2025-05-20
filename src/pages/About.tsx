@@ -39,6 +39,9 @@ const team = [
   }
 ];
 
+// Flag to hide the team section
+const HIDE_TEAM_SECTION = true;
+
 const About = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -138,32 +141,34 @@ const About = () => {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Team</h2>
-            <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-              Meet the experts behind Stell Media's innovative approach to technology-enhanced e-commerce optimization.
-            </p>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {team.map((member, index) => (
-                <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                  <img 
-                    src={member.image} 
-                    alt={member.name}
-                    className="w-full h-64 object-cover object-center" 
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-1 text-gray-900">{member.name}</h3>
-                    <p className="text-indigo-600 font-medium mb-3">{member.role}</p>
-                    <p className="text-gray-600">{member.bio}</p>
+        {/* Team Section - Hidden for now using the HIDE_TEAM_SECTION flag */}
+        {!HIDE_TEAM_SECTION && (
+          <section className="py-16 bg-white">
+            <div className="container mx-auto px-4">
+              <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Team</h2>
+              <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
+                Meet the experts behind Stell Media's innovative approach to technology-enhanced e-commerce optimization.
+              </p>
+              
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {team.map((member, index) => (
+                  <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <img 
+                      src={member.image} 
+                      alt={member.name}
+                      className="w-full h-64 object-cover object-center" 
+                    />
+                    <div className="p-6">
+                      <h3 className="text-xl font-bold mb-1 text-gray-900">{member.name}</h3>
+                      <p className="text-indigo-600 font-medium mb-3">{member.role}</p>
+                      <p className="text-gray-600">{member.bio}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         {/* CTA Section - Updated to match site-wide CTA style */}
         <section className="py-16 bg-gray-50">

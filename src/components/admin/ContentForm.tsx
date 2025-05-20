@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
+import { Eye, Edit } from "lucide-react";
 
 // Content form schema with validation
 const formSchema = z.object({
@@ -59,6 +60,8 @@ export default function ContentForm({
   isEditMode,
   isSystemPage
 }: ContentFormProps) {
+  const [contentMode, setContentMode] = useState<'edit' | 'preview'>('edit');
+  
   const form = useForm<ContentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
@@ -77,6 +80,35 @@ export default function ContentForm({
         .replace(/\s+/g, '-');
       form.setValue("slug", slug);
     }
+  };
+
+  // Get current content value for preview
+  const currentContent = form.watch('content') || '';
+
+  // Toggle between edit and preview mode
+  const toggleContentMode = () => {
+    setContentMode(mode => mode === 'edit' ? 'preview' : 'edit');
+  };
+
+  // Render markdown-like content for the preview
+  const renderContent = (content: string) => {
+    return (
+      <div className="prose max-w-none">
+        {content.split('\n').map((paragraph, i) => (
+          paragraph.startsWith('##') ? (
+            <h3 key={i} className="text-lg font-bold mt-4 mb-2">
+              {paragraph.replace(/^##\s/, '')}
+            </h3>
+          ) : paragraph.startsWith('#') ? (
+            <h2 key={i} className="text-xl font-bold mt-6 mb-3">
+              {paragraph.replace(/^#\s/, '')}
+            </h2>
+          ) : paragraph ? (
+            <p key={i} className="mb-4">{paragraph}</p>
+          ) : <br key={i} />
+        ))}
+      </div>
+    );
   };
 
   return (
@@ -207,30 +239,79 @@ export default function ContentForm({
             />
           </TabsContent>
           
-          {/* Content Tab */}
+          {/* Content Tab - Enhanced with Preview */}
           <TabsContent value="content" className="space-y-4">
-            <FormField
-              control={form.control}
-              name="content"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Content</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter content" 
-                      className="min-h-[200px]" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex justify-between items-center mb-2">
+              <h3 className="font-medium">Content Editor</h3>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={toggleContentMode}
+              >
+                {contentMode === 'edit' 
+                  ? <><Eye className="mr-2 h-4 w-4" /> Preview</> 
+                  : <><Edit className="mr-2 h-4 w-4" /> Edit</>
+                }
+              </Button>
+            </div>
+            
+            {contentMode === 'edit' ? (
+              <FormField
+                control={form.control}
+                name="content"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Enter content" 
+                        className="min-h-[300px] font-mono" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      You can use basic markdown formatting: # for headings, ## for subheadings, and paragraphs separated by blank lines.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : (
+              <div className="border rounded-md p-6 min-h-[300px] bg-white">
+                <div className="prose max-w-none">
+                  {currentContent ? renderContent(currentContent) : (
+                    <p className="text-gray-500 italic">No content to preview.</p>
+                  )}
+                </div>
+              </div>
+            )}
+            
             <div className="p-4 border rounded-md bg-gray-50">
               <h3 className="text-sm font-medium mb-2">Rich Content Editor</h3>
-              <p className="text-sm text-muted-foreground">
-                Advanced editor coming soon. Currently using plain text editor.
-              </p>
+              <div className="flex flex-col space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Enhanced rich editor coming soon. Current editor supports basic markdown:
+                </p>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div className="p-2 bg-white rounded border">
+                    <code># Heading</code> - For main headings
+                  </div>
+                  <div className="p-2 bg-white rounded border">
+                    <code>## Subheading</code> - For subheadings
+                  </div>
+                  <div className="p-2 bg-white rounded border">
+                    <code>Blank line</code> - To separate paragraphs
+                  </div>
+                  <div className="p-2 bg-white rounded border">
+                    <code>Regular text</code> - For paragraph content
+                  </div>
+                </div>
+                <div className="mt-2 flex justify-end">
+                  <Button type="button" variant="secondary" size="sm" disabled>
+                    Full Editor (Coming Soon)
+                  </Button>
+                </div>
+              </div>
             </div>
           </TabsContent>
           

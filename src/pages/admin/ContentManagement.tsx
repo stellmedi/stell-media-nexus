@@ -69,6 +69,7 @@ const mockBlogPosts = [
     status: "published",
     lastUpdated: "2023-05-15",
     author: "Content Editor",
+    content: "E-commerce websites face unique challenges when it comes to search engine optimization. In this post, we'll explore the top 10 most effective strategies for improving your online store's visibility in search results and driving more organic traffic. From technical SEO fundamentals to content optimization and user experience improvements, these proven tactics will help your products rank higher and convert better.\n\n## 1. Optimize Product Pages\nEach product page should have unique, detailed descriptions with relevant keywords. Avoid using manufacturer descriptions and create original content that answers potential customer questions.\n\n## 2. Implement Schema Markup\nStructured data helps search engines understand your content better. For e-commerce, use Product schema to highlight prices, availability, and reviews directly in search results."
   },
   {
     id: "2",
@@ -77,6 +78,7 @@ const mockBlogPosts = [
     status: "draft",
     lastUpdated: "2023-05-18",
     author: "Content Editor",
+    content: "Draft content for Product Discovery Guide - coming soon!"
   },
   {
     id: "3",
@@ -85,6 +87,7 @@ const mockBlogPosts = [
     status: "published",
     lastUpdated: "2023-05-20",
     author: "Content Editor",
+    content: "Data enrichment has evolved significantly over the past decade, transforming from basic data appending to sophisticated AI-powered insights generation. This post explores where the field is heading and how businesses should prepare.\n\n## The Evolution of Data Enrichment\n\nTraditionally, data enrichment meant adding missing fields to customer records - phone numbers, addresses, or basic demographic information. Today, it encompasses behavioral analysis, predictive modeling, and real-time personalization capabilities.\n\n## AI-Powered Enrichment\n\nMachine learning algorithms can now identify patterns in seemingly unrelated data points, creating rich customer profiles that predict future behaviors and preferences with remarkable accuracy."
   },
 ];
 
@@ -97,6 +100,7 @@ const mockFAQs = [
     status: "published",
     lastUpdated: "2023-05-12",
     author: "Admin User",
+    content: "## Frequently Asked Questions\n\n### What services does Stell Media offer?\nStell Media offers a comprehensive suite of digital marketing services including SEO, SEM, product discovery, data enrichment, and conversion optimization tailored specifically for e-commerce businesses.\n\n### How do you measure success?\nWe establish clear KPIs at the beginning of each engagement, focusing on metrics that directly impact your bottom line such as conversion rates, organic traffic growth, and ROI.\n\n### Do you work with small businesses?\nYes, we work with businesses of all sizes. Our solutions are scalable and can be tailored to meet your specific needs and budget."
   },
   {
     id: "2",
@@ -105,8 +109,33 @@ const mockFAQs = [
     status: "published",
     lastUpdated: "2023-05-14",
     author: "Content Editor",
+    content: "## Common SEO Questions\n\n### How long does SEO take to show results?\nSEO is a long-term strategy. While some improvements may be visible within weeks, significant results typically take 3-6 months, depending on your industry competition, website history, and the strategies implemented.\n\n### Is SEO still relevant with AI and voice search?\nAbsolutely. While search technologies evolve, the fundamental need to optimize content for discoverability remains essential. Modern SEO incorporates these new technologies rather than being replaced by them.\n\n### How often should I update my SEO strategy?\nSEO requires ongoing attention. We recommend quarterly strategy reviews with monthly tactical adjustments based on performance data and search engine algorithm updates."
   }
 ];
+
+// Mock content for pages
+const mockPageContent = {
+  "/": "Welcome to Stell Media, your partner for e-commerce growth through innovative digital solutions. We combine technology with human expertise to deliver transformative results for businesses seeking to thrive in the digital marketplace.",
+  "/about": "Stell Media was founded with a mission to help e-commerce businesses achieve sustainable growth through innovative digital solutions. With years of experience across Fortune 500 companies and high-growth enterprises, our team brings expertise in digital transformation, marketing automation, and AI-powered strategies.",
+  "/services": "Explore our comprehensive suite of services designed specifically for e-commerce businesses. From product discovery to data enrichment, SEO, SEM, and conversion optimization, we offer tailored solutions to help you grow your online presence and increase revenue.",
+  "/contact": "Get in touch with our team of experts to discuss how we can help your e-commerce business thrive. Whether you're looking for a specific service or need guidance on developing a comprehensive digital strategy, we're here to help.",
+  "/consultation": "Book a free consultation with our experts to discuss your e-commerce challenges and discover how our innovative solutions can help you achieve your business goals. Our team will analyze your current situation and provide tailored recommendations.",
+  "/blog": "Stay updated with the latest trends, insights, and best practices in e-commerce, digital marketing, and technology. Our blog features expert articles, case studies, and practical tips to help you grow your online business.",
+  "/careers": "Join our team of passionate professionals dedicated to transforming the e-commerce landscape. We offer a collaborative culture, continuous learning opportunities, and the chance to work with innovative technologies and strategies.",
+  "/faq": "Find answers to commonly asked questions about our services, methodologies, and approaches. If you can't find what you're looking for, don't hesitate to contact us directly.",
+  "/case-studies": "Explore our success stories and learn how we've helped businesses overcome challenges and achieve remarkable growth through our tailored digital solutions and innovative approaches."
+};
+
+// Mock content for service pages
+const mockServiceContent = {
+  "/services/product-discovery": "Our Product Discovery service helps e-commerce businesses improve how customers find and engage with their products. We optimize search functionality, implement AI-driven recommendations, and enhance navigation to create intuitive shopping experiences that drive conversions.",
+  "/services/data-enrichment": "Transform your product data into a powerful business asset with our Data Enrichment services. We clean, enhance, and structure your product information to improve searchability, enable personalization, and create consistent cross-channel experiences.",
+  "/services/seo": "Our SEO services are designed specifically for e-commerce, focusing on product page optimization, category structure, technical performance, and content strategy to improve organic visibility and drive qualified traffic to your online store.",
+  "/services/sem": "Maximize your return on ad spend with our SEM services. We develop and manage targeted paid search campaigns that capture high-intent shoppers and drive them to conversion, with continuous optimization based on performance data.",
+  "/services/conversion-optimization": "Turn more visitors into customers with our Conversion Rate Optimization services. We analyze user behavior, identify friction points, and implement data-driven improvements to your website's user experience, checkout process, and overall design.",
+  "/services/search-migration": "Seamlessly transition to new search technology with our Search Migration services. We ensure consistent performance, preserve historical data, and leverage new capabilities to enhance your site's search functionality.",
+  "/services/marketpulse": "Stay ahead of market trends with our MarketPulse service. We monitor competitor activity, track emerging customer preferences, and provide actionable insights to help you maintain a competitive edge in your industry."
+};
 
 // Mock data for media items
 interface MediaItem {
@@ -167,6 +196,13 @@ interface ContentFormData {
   status: "published" | "draft";
 }
 
+// Added preview dialog state
+interface PreviewDialogState {
+  isOpen: boolean;
+  content: string;
+  title: string;
+}
+
 const ContentManagement = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const navigate = useNavigate();
@@ -184,6 +220,13 @@ const ContentManagement = () => {
   const [editMode, setEditMode] = useState(false);
   const [currentEditId, setCurrentEditId] = useState<string>("");
   const [isSystemPage, setIsSystemPage] = useState(false);
+  
+  // New state for content preview
+  const [previewDialog, setPreviewDialog] = useState<PreviewDialogState>({
+    isOpen: false,
+    content: "",
+    title: ""
+  });
   
   // Form default values
   const [formDefaultValues, setFormDefaultValues] = useState<ContentFormValues>({
@@ -249,6 +292,32 @@ const ContentManagement = () => {
     item.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Function to get mock content based on type and ID
+  const getMockContent = (type: string, id: string): string => {
+    if (type === "blog") {
+      const post = mockBlogPosts.find(post => post.id === id);
+      return post?.content || "";
+    } else if (type === "faq") {
+      const faq = mockFAQs.find(faq => faq.id === id);
+      return faq?.content || "";
+    } else if (type === "page") {
+      return mockPageContent[id as keyof typeof mockPageContent] || "";
+    } else if (type === "service") {
+      return mockServiceContent[id as keyof typeof mockServiceContent] || "";
+    }
+    return "";
+  };
+
+  // Open preview dialog
+  const openPreview = (type: string, id: string, title: string) => {
+    const content = getMockContent(type, id);
+    setPreviewDialog({
+      isOpen: true,
+      content,
+      title
+    });
+  };
+
   // Delete content handler
   const handleDeleteContent = (id: string, type: string) => {
     if (type === "page" || type === "service") {
@@ -268,7 +337,7 @@ const ContentManagement = () => {
     toast.success("Media deleted successfully");
   };
   
-  // New edit content handler
+  // New edit content handler with content loading
   const handleEditContent = (id: string, type: string) => {
     setEditMode(true);
     setCurrentEditId(id);
@@ -281,7 +350,7 @@ const ContentManagement = () => {
         setFormDefaultValues({
           title: post.title,
           type: "blog",
-          content: "", // In a real app, you would fetch the full content
+          content: post.content || "", // Get actual content
           status: post.status as "published" | "draft",
           slug: `blog/${post.id}`,
           language: "en",
@@ -304,7 +373,7 @@ const ContentManagement = () => {
         setFormDefaultValues({
           title: faq.title,
           type: "faq",
-          content: "", // In a real app, you would fetch the full content
+          content: faq.content || "", // Get actual content
           status: faq.status as "published" | "draft",
           slug: `faq/${faq.id}`,
           language: "en",
@@ -325,10 +394,14 @@ const ContentManagement = () => {
       const pageIndex = filteredPages.findIndex(p => `${p.path}-${p.name}` === id);
       if (pageIndex >= 0) {
         const page = filteredPages[pageIndex];
+        const content = type === "page" 
+          ? mockPageContent[page.path as keyof typeof mockPageContent] || ""
+          : mockServiceContent[page.path as keyof typeof mockServiceContent] || "";
+          
         setFormDefaultValues({
           title: page.name,
           type: page.type,
-          content: "", // In a real app, you would fetch the full content
+          content: content, // Get mock content for the page
           status: page.status,
           slug: page.path.substring(1), // Remove leading slash
           language: "en",
@@ -365,7 +438,8 @@ const ContentManagement = () => {
             post.id === currentEditId 
               ? { 
                   ...post, 
-                  title: values.title, 
+                  title: values.title,
+                  content: values.content, // Update content
                   status: values.status, 
                   lastUpdated: newDate,
                   author: values.author || currentUser
@@ -380,7 +454,8 @@ const ContentManagement = () => {
             faq.id === currentEditId 
               ? { 
                   ...faq, 
-                  title: values.title, 
+                  title: values.title,
+                  content: values.content, // Update content
                   status: values.status, 
                   lastUpdated: newDate,
                   author: values.author || currentUser
@@ -401,6 +476,7 @@ const ContentManagement = () => {
         const newBlogPost = {
           id: newId,
           title: values.title,
+          content: values.content, // Include content
           type: "blog" as "blog",
           status: values.status,
           lastUpdated: newDate,
@@ -412,6 +488,7 @@ const ContentManagement = () => {
         const newFaq = {
           id: newId,
           title: values.title,
+          content: values.content, // Include content
           type: "faq" as "faq",
           status: values.status,
           lastUpdated: newDate,
@@ -434,6 +511,11 @@ const ContentManagement = () => {
       // Open in a new tab
       window.open(path, "_blank");
     }
+  };
+
+  // View content handler - for blog and FAQ
+  const handleViewContentItem = (id: string, type: string, title: string) => {
+    openPreview(type, id, title);
   };
 
   // Reset form state
@@ -526,6 +608,44 @@ const ContentManagement = () => {
                 isEditMode={editMode}
                 isSystemPage={isSystemPage}
               />
+            </DialogContent>
+          </Dialog>
+          
+          {/* Content Preview Dialog */}
+          <Dialog 
+            open={previewDialog.isOpen} 
+            onOpenChange={(open) => setPreviewDialog(prev => ({ ...prev, isOpen: open }))}
+          >
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>{previewDialog.title}</DialogTitle>
+                <DialogDescription>Preview of the content</DialogDescription>
+              </DialogHeader>
+              <div className="mt-4 p-4 border rounded-md bg-white">
+                <div className="prose max-w-none">
+                  {previewDialog.content.split('\n').map((paragraph, i) => (
+                    paragraph.startsWith('##') ? (
+                      <h3 key={i} className="text-lg font-bold mt-4 mb-2">
+                        {paragraph.replace(/^##\s/, '')}
+                      </h3>
+                    ) : paragraph.startsWith('#') ? (
+                      <h2 key={i} className="text-xl font-bold mt-6 mb-3">
+                        {paragraph.replace(/^#\s/, '')}
+                      </h2>
+                    ) : paragraph ? (
+                      <p key={i} className="mb-4">{paragraph}</p>
+                    ) : <br key={i} />
+                  ))}
+                </div>
+              </div>
+              <div className="flex justify-end mt-4">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setPreviewDialog(prev => ({ ...prev, isOpen: false }))}
+                >
+                  Close Preview
+                </Button>
+              </div>
             </DialogContent>
           </Dialog>
         </div>
@@ -646,7 +766,11 @@ const ContentManagement = () => {
                           <TableCell>{post.author}</TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleViewContentItem(post.id, "blog", post.title)}
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
                               <Button 
@@ -713,7 +837,11 @@ const ContentManagement = () => {
                           <TableCell>{faq.author}</TableCell>
                           <TableCell>
                             <div className="flex space-x-2">
-                              <Button size="sm" variant="outline">
+                              <Button 
+                                size="sm" 
+                                variant="outline"
+                                onClick={() => handleViewContentItem(faq.id, "faq", faq.title)}
+                              >
                                 <Eye className="h-4 w-4" />
                               </Button>
                               <Button 
