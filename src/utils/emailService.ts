@@ -11,14 +11,27 @@ export interface EmailFormData {
   message: string;
 }
 
-// Service configuration
-const SERVICE_ID = "service_your_service_id"; // Replace with your actual service ID
-const PUBLIC_KEY = "your_public_key"; // Replace with your actual public key
+/**
+ * Configuration for EmailJS
+ * Replace these values with your actual EmailJS credentials
+ * Get these from your EmailJS dashboard at https://dashboard.emailjs.com/
+ */
+const SERVICE_ID = "replace_with_your_service_id"; // Your EmailJS Service ID
+const PUBLIC_KEY = "replace_with_your_public_key"; // Your EmailJS Public Key
 
 // Template IDs for different forms
 export const TEMPLATES = {
-  CONTACT: "template_your_template_id", // Replace with contact template ID
-  CONSULTATION: "template_your_template_id", // Replace with consultation template ID
+  CONTACT: "replace_with_your_contact_template_id", // Your EmailJS Contact Form Template ID
+  CONSULTATION: "replace_with_your_consultation_template_id", // Your EmailJS Consultation Form Template ID
+};
+
+/**
+ * Initialize EmailJS with your public key
+ * This should be done as early as possible in your application
+ */
+export const initEmailJS = () => {
+  emailjs.init(PUBLIC_KEY);
+  console.log("EmailJS initialized");
 };
 
 /**
@@ -38,10 +51,18 @@ export const sendEmail = async (templateId: string, data: EmailFormData) => {
     message: data.message,
   };
 
-  return emailjs.send(
-    SERVICE_ID,
-    templateId, 
-    templateParams,
-    PUBLIC_KEY
-  );
-};
+  try {
+    console.log("Sending email with params:", templateParams);
+    const response = await emailjs.send(
+      SERVICE_ID,
+      templateId, 
+      templateParams,
+      PUBLIC_KEY
+    );
+    console.log("Email sent successfully:", response);
+    return response;
+  } catch (error) {
+    console.error("Failed to send email:", error);
+    throw error;
+  }
+}

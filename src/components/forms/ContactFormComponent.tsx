@@ -75,7 +75,7 @@ const ContactFormComponent = ({
       await sendEmail(templateId, emailData);
       
       // Log submission for tracking
-      console.log("Form submitted:", data);
+      console.log("Form submitted successfully:", data);
       
       // Show success message
       toast({
@@ -94,7 +94,14 @@ const ContactFormComponent = ({
       
     } catch (error) {
       console.error("Error with form submission:", error);
-      setFormError("There was a problem sending your message. Please try again.");
+      let errorMessage = "There was a problem sending your message. Please try again.";
+      
+      // More detailed error message
+      if (error instanceof Error) {
+        errorMessage += " Details: " + error.message;
+      }
+      
+      setFormError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
