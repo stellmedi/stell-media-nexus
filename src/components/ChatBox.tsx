@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { X, Send, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetFooter } from "@/components/ui/sheet";
+import { toast } from "sonner";
 
 type Message = {
   id: string;
@@ -10,6 +11,20 @@ type Message = {
   sender: 'user' | 'agent';
   timestamp: Date;
 };
+
+// Sample responses for the chatbot to create a more interactive experience
+const sampleResponses = [
+  "How can I help you with our services today?",
+  "That's a great question! Our team specializes in product discovery optimization and search platform migration.",
+  "Would you like to know more about our data enrichment services?",
+  "We've helped many e-commerce businesses increase their conversion rates by 30% or more.",
+  "Feel free to ask any specific questions about our services or methodology.",
+  "We typically respond to all inquiries within 24 hours during business days.",
+  "Would you like to schedule a consultation with one of our specialists?",
+  "Is there a specific e-commerce platform you're working with?",
+  "Our team has extensive experience with all major e-commerce platforms including Shopify, Magento, and WooCommerce.",
+  "Thanks for reaching out! I'll make sure your questions get to the right department."
+];
 
 interface ChatBoxProps {
   isOpen: boolean;
@@ -33,6 +48,12 @@ const ChatBox = ({ isOpen, onClose }: ChatBoxProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Get a random response from our sample responses
+  const getRandomResponse = (): string => {
+    const randomIndex = Math.floor(Math.random() * sampleResponses.length);
+    return sampleResponses[randomIndex];
+  };
+
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
     
@@ -51,12 +72,23 @@ const ChatBox = ({ isOpen, onClose }: ChatBoxProps) => {
     setTimeout(() => {
       const agentMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Thank you for your message! Our team will get back to you soon.",
+        text: getRandomResponse(),
         sender: 'agent',
         timestamp: new Date()
       };
       
       setMessages((prev) => [...prev, agentMessage]);
+      
+      // Notify with toast when chat is minimized
+      if (!isOpen) {
+        toast.info("New message in chat", {
+          description: agentMessage.text.substring(0, 60) + (agentMessage.text.length > 60 ? '...' : ''),
+          action: {
+            label: "View",
+            onClick: () => onClose() // This will toggle the chat open
+          }
+        });
+      }
     }, 1000);
   };
 
