@@ -21,27 +21,31 @@ const stats = [
   { value: "99%", label: "Client retention rate" }
 ];
 
-// Updated case studies to align with service offerings
+// Updated case studies with IDs that match route params
 const caseStudies = [
   {
+    id: "electronics-search",
     title: "Advanced Electronics Search Optimization",
     description: "How we implemented strategic algorithms with Elastic Search to increase search conversion by 42% and reduced no-results searches by 68%.",
     category: "Product Discovery Optimization",
     image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
   },
   {
+    id: "search-platform-migration",
     title: "Search Platform Migration Success",
     description: "Our algorithm optimization during migration from Elastic Search to Coveo transformed search performance and improved customer satisfaction by 38%.",
     category: "Search Platform Migration",
     image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
   {
+    id: "amazon-marketplace",
     title: "Amazon Marketplace Optimization",
     description: "Complete overhaul of product listing and SEO strategy resulted in 62% increase in organic visibility and 47% higher conversion rate.",
     category: "Marketpulse",
     image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJldGFpbCUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
   },
   {
+    id: "performance-marketing",
     title: "Performance Marketing Campaign",
     description: "Strategic performance marketing for an online retailer resulted in 85% ROAS improvement and 39% reduction in customer acquisition costs.",
     category: "Performance Marketing",
@@ -134,7 +138,7 @@ const Index = () => {
                   <CardContent className="p-6">
                     <h3 className="text-xl font-bold mb-2">{study.title}</h3>
                     <p className="text-gray-600 mb-4">{study.description}</p>
-                    <Link to="/case-studies" className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900">
+                    <Link to={`/case-studies/${study.id}`} className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900">
                       Read case study <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </CardContent>

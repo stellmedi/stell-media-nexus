@@ -26,6 +26,8 @@ import EmailManagement from "./pages/admin/EmailManagement";
 import SettingsPage from "./pages/admin/SettingsPage";
 import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 import ScrollToTop from "./components/ScrollToTop";
+import CaseStudies from "./pages/CaseStudies";
+import CaseStudyDetail from "./pages/CaseStudyDetail";
 
 // Service pages
 import ProductDiscovery from "./pages/services/ProductDiscovery";
@@ -70,7 +72,10 @@ const App = () => {
                 <Route path="/blog/:postId" element={<BlogPostPage />} />
                 <Route path="/careers" element={<Careers />} />
                 <Route path="/faq" element={<FAQ />} />
-                <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
+                
+                {/* Case Studies routes - new dedicated pages */}
+                <Route path="/case-studies" element={<CaseStudies />} />
+                <Route path="/case-studies/:studyId" element={<CaseStudyDetail />} />
                 
                 {/* Admin routes */}
                 <Route path="/admin" element={<AdminLogin />} />
