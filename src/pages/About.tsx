@@ -6,42 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 
-const team = [
-  {
-    name: "Saurav Bansal",
-    role: "CEO & Founder",
-    bio: "With over 18 years of global experience leading digital transformation, marketing, automation, and AI-powered solutions across Fortune 500 companies and high-growth enterprises.",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8cHJvZmVzc2lvbmFsJTIwcG9ydHJhaXQlMjBtYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    name: "Maria Rodriguez",
-    role: "Head of SEO & Strategy",
-    bio: "Expert SEO strategist specializing in automated optimization for e-commerce with expertise in developing practical applications for improved search performance.",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd29tYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    name: "James Wilson",
-    role: "Head of Data Science",
-    bio: "Data scientist specializing in automation techniques for transforming unstructured product data into valuable business assets through advanced analytics.",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwbWFufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    name: "Alex Thompson",
-    role: "Head of Hybrid Solutions",
-    bio: "Expert in creating seamless omnichannel experiences that bridge digital and physical retail through innovative technology integration.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwbWFufGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
-  },
-  {
-    name: "Sophia Lee",
-    role: "Head of Automation",
-    bio: "Process automation specialist with expertise in developing data-driven workflows that streamline e-commerce operations and improve efficiency.",
-    image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2Zlc3Npb25hbCUyMHBvcnRyYWl0JTIwd29tYW58ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
-  }
-];
-
-// Flag to hide the team section
-const HIDE_TEAM_SECTION = true;
-
 const About = () => {
   return (
     <div className="min-h-screen bg-white">
@@ -140,35 +104,6 @@ const About = () => {
             </div>
           </div>
         </section>
-
-        {/* Team Section - Hidden for now using the HIDE_TEAM_SECTION flag */}
-        {!HIDE_TEAM_SECTION && (
-          <section className="py-16 bg-white">
-            <div className="container mx-auto px-4">
-              <h2 className="text-3xl font-bold mb-4 text-center text-gray-900">Our Team</h2>
-              <p className="text-lg text-gray-600 mb-12 text-center max-w-3xl mx-auto">
-                Meet the experts behind Stell Media's innovative approach to technology-enhanced e-commerce optimization.
-              </p>
-              
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {team.map((member, index) => (
-                  <div key={index} className="bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-64 object-cover object-center" 
-                    />
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold mb-1 text-gray-900">{member.name}</h3>
-                      <p className="text-indigo-600 font-medium mb-3">{member.role}</p>
-                      <p className="text-gray-600">{member.bio}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
 
         {/* CTA Section - Updated to match site-wide CTA style */}
         <section className="py-16 bg-gray-50">
