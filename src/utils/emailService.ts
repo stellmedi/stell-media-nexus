@@ -26,9 +26,9 @@ export const TEMPLATES = {
  * 
  * @param templateId - The EmailJS template ID
  * @param data - The form data
- * @returns Promise that resolves when email is sent
+ * @returns Promise that resolves with EmailJS response
  */
-export const sendEmail = async (templateId: string, data: EmailFormData): Promise<void> => {
+export const sendEmail = async (templateId: string, data: EmailFormData) => {
   const templateParams = {
     from_name: data.name,
     from_email: data.email,

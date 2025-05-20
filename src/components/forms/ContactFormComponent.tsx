@@ -3,7 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { contactFormSchema, ContactFormValues } from "@/utils/validationSchemas";
-import { sendEmail } from "@/utils/emailService";
+import { sendEmail, EmailFormData } from "@/utils/emailService";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -62,7 +62,17 @@ const ContactFormComponent = ({
     setFormError(null);
     
     try {
-      await sendEmail(templateId, data);
+      // Make sure we have all required fields for EmailFormData
+      const emailData: EmailFormData = {
+        name: data.name,
+        email: data.email,
+        company: data.company,
+        website: data.website,
+        subject: data.subject,
+        message: data.message,
+      };
+      
+      await sendEmail(templateId, emailData);
       
       // Log submission for tracking
       console.log("Form submitted:", data);
