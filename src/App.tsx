@@ -34,6 +34,14 @@ const App = () => {
   // Initialize EmailJS when the app starts
   useEffect(() => {
     initEmailJS();
+    
+    // Display a warning if EmailJS isn't properly configured
+    if (!process.env.EMAILJS_SERVICE_ID && !process.env.EMAILJS_PUBLIC_KEY) {
+      console.warn(
+        "EmailJS environment variables not detected. " +
+        "Please set up EmailJS credentials in environment variables or directly in emailService.ts file."
+      );
+    }
   }, []);
 
   return (

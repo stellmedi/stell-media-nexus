@@ -13,25 +13,40 @@ export interface EmailFormData {
 
 /**
  * Configuration for EmailJS
- * TODO: Replace these placeholder values with your actual EmailJS credentials
- * Get these from your EmailJS dashboard at https://dashboard.emailjs.com/
+ * 
+ * IMPORTANT: How to set up EmailJS for this website:
+ * 1. Create an account at https://www.emailjs.com/
+ * 2. Create an email service (Gmail, Outlook, etc.)
+ * 3. Create two email templates:
+ *    - One for contact form (use template ID for CONTACT)
+ *    - One for consultation form (use template ID for CONSULTATION)
+ * 4. Make sure your templates include these parameters:
+ *    - from_name (sender's name)
+ *    - from_email (sender's email)
+ *    - company (if applicable)
+ *    - website (if applicable)
+ *    - subject (if applicable)
+ *    - message (the message content)
+ *    - to_email (recipient's email - already set to info@stellmedia.com)
+ * 5. Replace the placeholder values below with your actual credentials
  */
-// IMPORTANT: Replace with your actual EmailJS Service ID
-const SERVICE_ID = "replace_with_your_service_id";  
 
-// IMPORTANT: Replace with your actual EmailJS Public Key
-const PUBLIC_KEY = "replace_with_your_public_key";
+// Your EmailJS Service ID from dashboard.emailjs.com/admin/services
+const SERVICE_ID = process.env.EMAILJS_SERVICE_ID || "service_example";  
+
+// Your EmailJS Public Key from dashboard.emailjs.com/admin/account
+const PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY || "YOUR_PUBLIC_KEY";
 
 // Email where notifications will be sent
 const NOTIFICATION_EMAIL = "info@stellmedia.com"; 
 
-// Template IDs for different forms
+// Template IDs from dashboard.emailjs.com/admin/templates
 export const TEMPLATES = {
-  // IMPORTANT: Replace with your actual EmailJS Contact Form Template ID
-  CONTACT: "replace_with_your_contact_template_id", 
+  // Template ID for Contact Form
+  CONTACT: process.env.EMAILJS_CONTACT_TEMPLATE_ID || "template_contact",
   
-  // IMPORTANT: Replace with your actual EmailJS Consultation Form Template ID
-  CONSULTATION: "replace_with_your_consultation_template_id", 
+  // Template ID for Consultation Form
+  CONSULTATION: process.env.EMAILJS_CONSULTATION_TEMPLATE_ID || "template_consult",
 };
 
 /**
@@ -40,7 +55,7 @@ export const TEMPLATES = {
  */
 export const initEmailJS = () => {
   emailjs.init(PUBLIC_KEY);
-  console.log("EmailJS initialized with key:", PUBLIC_KEY);
+  console.log("EmailJS initialized");
 };
 
 /**
@@ -64,11 +79,19 @@ export const sendEmail = async (templateId: string, data: EmailFormData) => {
   try {
     console.log("Sending email with params:", templateParams);
     
-    if (SERVICE_ID === "replace_with_your_service_id" || 
-        PUBLIC_KEY === "replace_with_your_public_key" || 
-        templateId.includes("replace_with_your")) {
-      console.error("EmailJS is not configured properly. Please replace the placeholder credentials with your actual EmailJS credentials.");
-      throw new Error("EmailJS configuration error: Please update your credentials in emailService.ts");
+    // Check for default/placeholder values
+    if (SERVICE_ID === "service_example" || 
+        PUBLIC_KEY === "YOUR_PUBLIC_KEY" || 
+        templateId === "template_contact" || 
+        templateId === "template_consult") {
+      console.error(
+        "EmailJS is not configured properly. Please set up EmailJS credentials by:" +
+        "\n1. Create an account at https://www.emailjs.com/" +
+        "\n2. Create an email service and get your Service ID" +
+        "\n3. Create email templates for contact and consultation forms" +
+        "\n4. Update environment variables or the constants in emailService.ts with your credentials"
+      );
+      throw new Error("EmailJS configuration error: Please set up your EmailJS credentials");
     }
     
     const response = await emailjs.send(
