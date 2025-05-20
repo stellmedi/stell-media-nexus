@@ -13,17 +13,25 @@ export interface EmailFormData {
 
 /**
  * Configuration for EmailJS
- * Replace these values with your actual EmailJS credentials
+ * TODO: Replace these placeholder values with your actual EmailJS credentials
  * Get these from your EmailJS dashboard at https://dashboard.emailjs.com/
  */
-const SERVICE_ID = "replace_with_your_service_id"; // Your EmailJS Service ID
-const PUBLIC_KEY = "replace_with_your_public_key"; // Your EmailJS Public Key
-const NOTIFICATION_EMAIL = "info@stellmedia.com"; // Email to receive notifications
+// IMPORTANT: Replace with your actual EmailJS Service ID
+const SERVICE_ID = "replace_with_your_service_id";  
+
+// IMPORTANT: Replace with your actual EmailJS Public Key
+const PUBLIC_KEY = "replace_with_your_public_key";
+
+// Email where notifications will be sent
+const NOTIFICATION_EMAIL = "info@stellmedia.com"; 
 
 // Template IDs for different forms
 export const TEMPLATES = {
-  CONTACT: "replace_with_your_contact_template_id", // Your EmailJS Contact Form Template ID
-  CONSULTATION: "replace_with_your_consultation_template_id", // Your EmailJS Consultation Form Template ID
+  // IMPORTANT: Replace with your actual EmailJS Contact Form Template ID
+  CONTACT: "replace_with_your_contact_template_id", 
+  
+  // IMPORTANT: Replace with your actual EmailJS Consultation Form Template ID
+  CONSULTATION: "replace_with_your_consultation_template_id", 
 };
 
 /**
@@ -32,7 +40,7 @@ export const TEMPLATES = {
  */
 export const initEmailJS = () => {
   emailjs.init(PUBLIC_KEY);
-  console.log("EmailJS initialized");
+  console.log("EmailJS initialized with key:", PUBLIC_KEY);
 };
 
 /**
@@ -55,6 +63,14 @@ export const sendEmail = async (templateId: string, data: EmailFormData) => {
 
   try {
     console.log("Sending email with params:", templateParams);
+    
+    if (SERVICE_ID === "replace_with_your_service_id" || 
+        PUBLIC_KEY === "replace_with_your_public_key" || 
+        templateId.includes("replace_with_your")) {
+      console.error("EmailJS is not configured properly. Please replace the placeholder credentials with your actual EmailJS credentials.");
+      throw new Error("EmailJS configuration error: Please update your credentials in emailService.ts");
+    }
+    
     const response = await emailjs.send(
       SERVICE_ID,
       templateId, 
