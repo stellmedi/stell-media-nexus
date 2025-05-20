@@ -18,6 +18,7 @@ export interface EmailFormData {
  */
 const SERVICE_ID = "replace_with_your_service_id"; // Your EmailJS Service ID
 const PUBLIC_KEY = "replace_with_your_public_key"; // Your EmailJS Public Key
+const NOTIFICATION_EMAIL = "info@stellmedia.com"; // Email to receive notifications
 
 // Template IDs for different forms
 export const TEMPLATES = {
@@ -49,6 +50,7 @@ export const sendEmail = async (templateId: string, data: EmailFormData) => {
     website: data.website || "Not provided",
     subject: data.subject || "Message from website",
     message: data.message,
+    to_email: NOTIFICATION_EMAIL, // Adding notification email as parameter
   };
 
   try {
@@ -60,6 +62,10 @@ export const sendEmail = async (templateId: string, data: EmailFormData) => {
       PUBLIC_KEY
     );
     console.log("Email sent successfully:", response);
+    
+    // Log notification for tracking purposes
+    console.log(`Notification sent to ${NOTIFICATION_EMAIL}`);
+    
     return response;
   } catch (error) {
     console.error("Failed to send email:", error);
