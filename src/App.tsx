@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { useEffect } from "react";
 import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
+import { AuthProvider } from "@/hooks/use-auth";
 import Index from "./pages/Index";
 import Services from "./pages/Services";
 import About from "./pages/About";
@@ -18,7 +19,11 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import FAQ from "./pages/FAQ";
 import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import UsersManagement from "./pages/admin/UsersManagement";
+import ContentManagement from "./pages/admin/ContentManagement";
+import EmailManagement from "./pages/admin/EmailManagement";
+import SettingsPage from "./pages/admin/SettingsPage";
 import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 import ScrollToTop from "./components/ScrollToTop";
 
@@ -48,42 +53,48 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <HelmetProvider>
-          <SiteSchemaMarkup />
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <ScrollToTop />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:postId" element={<BlogPostPage />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
-              
-              {/* Admin routes */}
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              
-              {/* Service pages */}
-              <Route path="/services/product-discovery" element={<ProductDiscovery />} />
-              <Route path="/services/data-enrichment" element={<DataEnrichment />} />
-              <Route path="/services/seo" element={<SEO />} />
-              <Route path="/services/sem" element={<SEM />} />
-              <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
-              <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
-              <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
-              
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </HelmetProvider>
+        <AuthProvider>
+          <HelmetProvider>
+            <SiteSchemaMarkup />
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <ScrollToTop />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:postId" element={<BlogPostPage />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/case-studies" element={<Services />} /> {/* Temporarily point to Services until a dedicated page is created */}
+                
+                {/* Admin routes */}
+                <Route path="/admin" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/users" element={<UsersManagement />} />
+                <Route path="/admin/content" element={<ContentManagement />} />
+                <Route path="/admin/emails" element={<EmailManagement />} />
+                <Route path="/admin/settings" element={<SettingsPage />} />
+                
+                {/* Service pages */}
+                <Route path="/services/product-discovery" element={<ProductDiscovery />} />
+                <Route path="/services/data-enrichment" element={<DataEnrichment />} />
+                <Route path="/services/seo" element={<SEO />} />
+                <Route path="/services/sem" element={<SEM />} />
+                <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+                <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
+                <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
+                
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </HelmetProvider>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );
