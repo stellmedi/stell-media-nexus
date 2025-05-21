@@ -29,7 +29,7 @@ const SEOCTASection = () => {
             <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
               Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
             </p>
-            <Button asChild size="lg" variant="default" className="shadow-lg bg-white text-indigo-700 hover:bg-gray-100">
+            <Button asChild size="lg" variant="white" className="shadow-lg text-indigo-700 hover:bg-gray-100">
               <Link to="/contact">
                 Schedule a Consultation
               </Link>

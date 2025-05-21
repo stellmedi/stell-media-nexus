@@ -82,7 +82,7 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Testimonials Auto-Scrolling Carousel */}
+        {/* Testimonials Carousel - Fixed to remove autoplay props */}
         <div className="relative px-12 max-w-5xl mx-auto mb-10">
           <Carousel
             opts={{
@@ -91,8 +91,6 @@ const TestimonialsSection = () => {
               dragFree: true,
             }}
             className="w-full"
-            autoplay={true}
-            autoplayTimeout={5000}
           >
             <CarouselContent>
               {testimonials.map((testimonial, index) => (

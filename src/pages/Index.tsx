@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -177,7 +176,7 @@ const Index = () => {
           </div>
         </section>
         
-        {/* CTA Section with white button variant */}
+        {/* CTA Section with white button variant - Updated text color */}
         <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
@@ -185,7 +184,7 @@ const Index = () => {
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's talk about how our product discovery solutions, search platform migration, and marketplace management can boost your conversions.
               </p>
-              <Button asChild size="lg" variant="default" className="font-bold text-lg shadow-md bg-white text-indigo-700 hover:bg-gray-100">
+              <Button asChild size="lg" variant="white" className="font-bold text-lg shadow-md">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>

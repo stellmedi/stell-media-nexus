@@ -15,7 +15,7 @@ const HeroSection = () => {
       {/* Background pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.015] -z-10"></div>
       
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fade-in">
             <span className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent relative">
@@ -49,33 +49,31 @@ const HeroSection = () => {
               </Button>
             </div>
           </div>
-          
-          {/* Abstract visualization instead of device mockup */}
-          <div className="relative h-80 mt-16 hidden md:block">
-            <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 w-full">
-              <div className="mx-auto rounded-lg shadow-2xl border border-gray-100 w-4/5 h-64 bg-white overflow-hidden">
-                <div className="w-full h-full bg-gradient-to-br from-indigo-50 via-blue-50 to-white relative">
-                  {/* Abstract data visualization elements */}
-                  <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2">
-                    <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-70">
-                      <path fill="none" stroke="#6366f1" strokeWidth="1.5" d="M0,50 C20,30 40,70 60,50 C80,30 100,70 120,50 C140,30 160,70 180,50 C200,30 220,70 240,50" />
-                      <path fill="none" stroke="#818cf8" strokeWidth="1" d="M0,60 C20,40 40,80 60,60 C80,40 100,80 120,60 C140,40 160,80 180,60 C200,40 220,80 240,60" />
-                      <path fill="none" stroke="#a5b4fc" strokeWidth="0.5" d="M0,70 C20,50 40,90 60,70 C80,50 100,90 120,70 C140,50 160,90 180,70 C200,50 220,90 240,70" />
-                    </svg>
-                  </div>
-                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-3 p-4 opacity-70">
-                      {Array.from({length: 9}).map((_, i) => (
-                        <div key={i} className="bg-gradient-to-br from-indigo-100 to-blue-50 rounded h-8 w-full"></div>
-                      ))}
-                    </div>
-                  </div>
-                  {/* Circular elements */}
-                  <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-gradient-to-br from-indigo-200 to-purple-100 opacity-40"></div>
-                  <div className="absolute bottom-1/4 left-1/4 w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-indigo-100 opacity-40"></div>
-                </div>
-              </div>
-            </div>
+        </div>
+
+        {/* Abstract data visualization as background element */}
+        <div className="absolute inset-0 -z-10 opacity-20">
+          <div className="w-full h-full flex items-center justify-center overflow-hidden">
+            {/* Abstract data visualization */}
+            <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+              <defs>
+                <linearGradient id="viz-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.6" />
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity="0.6" />
+                </linearGradient>
+              </defs>
+              <path d="M0,250 C100,150 200,450 300,250 C400,50 500,350 600,200 C700,50 800,300 900,150" 
+                    stroke="url(#viz-gradient)" strokeWidth="3" fill="none" />
+              <path d="M0,300 C100,200 200,500 300,300 C400,100 500,400 600,250 C700,100 800,350 900,200" 
+                    stroke="url(#viz-gradient)" strokeWidth="2" strokeDasharray="5,5" fill="none" />
+              <circle cx="200" cy="250" r="20" fill="#6366f1" fillOpacity="0.2" />
+              <circle cx="400" cy="200" r="40" fill="#8b5cf6" fillOpacity="0.2" />
+              <circle cx="600" cy="250" r="30" fill="#6366f1" fillOpacity="0.2" />
+              <circle cx="300" cy="300" r="25" fill="#8b5cf6" fillOpacity="0.2" />
+              <circle cx="500" cy="150" r="35" fill="#6366f1" fillOpacity="0.2" />
+              <rect x="150" y="350" width="200" height="100" rx="10" fill="#6366f1" fillOpacity="0.1" />
+              <rect x="450" y="300" width="200" height="100" rx="10" fill="#8b5cf6" fillOpacity="0.1" />
+            </svg>
           </div>
         </div>
       </div>

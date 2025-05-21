@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -25,14 +24,14 @@ const About = () => {
           </div>
         </section>
 
-        {/* Our Story - Updated with founder info */}
+        {/* Our Story - Updated with founder info and office environment image */}
         <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <img 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTF8fHRlYW18ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60" 
-                  alt="Stell Media Team" 
+                  src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1200&q=80" 
+                  alt="Stell Media Team in a collaborative workspace" 
                   className="rounded-lg shadow-lg w-full h-auto"
                 />
               </div>
@@ -105,7 +104,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated to match site-wide CTA style */}
+        {/* CTA Section */}
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
