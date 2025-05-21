@@ -7,7 +7,7 @@ const SEOCTASection = () => {
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
-        <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center relative overflow-hidden shadow-xl">
           {/* Abstract pattern overlay */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute top-0 left-0 w-full h-full">
@@ -29,8 +29,8 @@ const SEOCTASection = () => {
             <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
               Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
             </p>
-            <Button asChild size="lg" variant="white" className="shadow-lg text-indigo-700 hover:bg-gray-100">
-              <Link to="/contact" className="text-indigo-700">
+            <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 shadow-lg">
+              <Link to="/contact">
                 Schedule a Consultation
               </Link>
             </Button>

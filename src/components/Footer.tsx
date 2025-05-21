@@ -1,8 +1,9 @@
-
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Linkedin, Facebook, Instagram } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -25,6 +26,15 @@ const Footer = () => {
     });
   };
 
+  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    toast({
+      title: "Newsletter subscription received!",
+      description: "Thank you for subscribing to our newsletter.",
+      duration: 3000,
+    });
+  };
+
   return (
     <footer id="about" className="bg-indigo-50 text-gray-700 py-16">
       <div className="container mx-auto px-4">
@@ -42,21 +52,21 @@ const Footer = () => {
               We help e-commerce brands optimize product discovery and boost conversions, especially for those with large and complex catalogs.
             </p>
             
-            {/* Newsletter subscription - Fixed spacing issues */}
+            {/* Newsletter subscription - Fixed layout to prevent overlapping */}
             <div className="mt-6 pt-4 border-t border-indigo-100">
-              <form className="flex flex-col sm:flex-row gap-2">
-                <input 
+              <form onSubmit={handleSubscribe} className="flex flex-col space-y-2">
+                <Input 
                   type="email" 
                   placeholder="Your email address" 
-                  className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow"
+                  className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   required
                 />
-                <button 
+                <Button 
                   type="submit" 
-                  className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors font-medium"
+                  className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors font-medium w-full"
                 >
                   Subscribe
-                </button>
+                </Button>
               </form>
             </div>
           </div>

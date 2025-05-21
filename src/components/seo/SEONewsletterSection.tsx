@@ -23,7 +23,7 @@ const SEONewsletterSection = () => {
           <p className="text-gray-600 mb-6">
             Get the latest SEO tips, e-commerce optimization strategies, and industry insights delivered straight to your inbox.
           </p>
-          <form onSubmit={handleSubmit} className="flex space-x-2">
+          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
             <Input 
               type="email" 
               placeholder="Your email address" 
