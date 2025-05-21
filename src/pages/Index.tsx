@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -5,7 +6,7 @@ import ServicesSection from "@/components/ServicesSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
-import { ArrowRight, MessageCircle } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
@@ -71,9 +72,9 @@ const Index = () => {
         <meta property="og:title" content="Stell Media | E-Commerce Product Discovery Experts" />
         <meta property="og:description" content="Optimize your e-commerce product discovery experience and boost conversions with Stell Media's specialized solutions." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmediaglobal.com/" />
+        <meta property="og:url" content="https://www.stellmedia.com/" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmediaglobal.com/" />
+        <link rel="canonical" href="https://www.stellmedia.com/" />
       </Helmet>
       <Navbar />
       <main>
@@ -152,7 +153,7 @@ const Index = () => {
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's talk about how our product discovery solutions, search platform migration, and marketplace management can boost your conversions.
               </p>
-              <Button asChild size="xl" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
+              <Button asChild size="lg" variant="default" className="font-bold text-lg shadow-md bg-white text-indigo-700 hover:bg-gray-100">
                 <Link to="/contact">Book Your Free Consultation</Link>
               </Button>
             </div>

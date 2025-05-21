@@ -30,6 +30,9 @@ import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 import ScrollToTop from "./components/ScrollToTop";
 import CaseStudies from "./pages/CaseStudies";
 import CaseStudyDetail from "./pages/CaseStudyDetail";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Sitemap from "./pages/Sitemap";
 
 // Service pages
 import ProductDiscovery from "./pages/services/ProductDiscovery";
@@ -37,6 +40,9 @@ import DataEnrichment from "./pages/services/DataEnrichment";
 import SEO from "./pages/services/SEO";
 import SEM from "./pages/services/SEM";
 import ConversionOptimization from "./pages/services/ConversionOptimization";
+
+// Add CSS for the grid pattern
+import "./styles/grid-pattern.css";
 
 const queryClient = new QueryClient();
 
@@ -76,7 +82,12 @@ const App = () => {
                   <Route path="/careers" element={<Careers />} />
                   <Route path="/faq" element={<FAQ />} />
                   
-                  {/* Case Studies routes - new dedicated pages */}
+                  {/* Legal and sitemap pages */}
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/terms" element={<Terms />} />
+                  <Route path="/sitemap" element={<Sitemap />} />
+                  
+                  {/* Case Studies routes */}
                   <Route path="/case-studies" element={<CaseStudies />} />
                   <Route path="/case-studies/:studyId" element={<CaseStudyDetail />} />
                   

@@ -41,6 +41,24 @@ const Footer = () => {
             <p className="text-gray-600 leading-relaxed">
               We help e-commerce brands optimize product discovery and boost conversions, especially for those with large and complex catalogs.
             </p>
+            
+            {/* Newsletter subscription - Added */}
+            <div className="mt-4 pt-4 border-t border-indigo-100">
+              <form className="flex flex-col sm:flex-row gap-2">
+                <input 
+                  type="email" 
+                  placeholder="Your email address" 
+                  className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-indigo-500 flex-grow"
+                  required
+                />
+                <button 
+                  type="submit" 
+                  className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors font-medium"
+                >
+                  Subscribe Now
+                </button>
+              </form>
+            </div>
           </div>
           
           <div>
@@ -138,8 +156,16 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-semibold text-gray-900 mb-4">Contact</h4>
             <ul className="space-y-2 text-gray-600">
-              <li>info@stellmedia.com</li>
-              <li>+91 98771 00369</li>
+              <li>
+                <a href="mailto:info@stellmedia.com" className="hover:text-indigo-600 transition-colors">
+                  info@stellmedia.com
+                </a>
+              </li>
+              <li>
+                <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">
+                  +91 98771 00369
+                </a>
+              </li>
               <li>Zirakpur, SAS Nagar(Mohali),</li>
               <li>Punjab, India</li>
             </ul>
@@ -174,24 +200,15 @@ const Footer = () => {
         <div className="border-t border-indigo-200 pt-8 mt-8 text-sm text-gray-500 flex flex-col md:flex-row justify-between items-center">
           <p>© {new Date().getFullYear()} Stell Media. All rights reserved. | www.stellmedia.com</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            <button 
-              onClick={() => handleLinkClick("/privacy", "Privacy Policy")}
-              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
-            >
+            <Link to="/privacy" className="text-gray-500 hover:text-indigo-600 transition-colors">
               Privacy Policy
-            </button>
-            <button 
-              onClick={() => handleLinkClick("/terms", "Terms of Service")}
-              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
-            >
+            </Link>
+            <Link to="/terms" className="text-gray-500 hover:text-indigo-600 transition-colors">
               Terms of Service
-            </button>
-            <button 
-              onClick={() => handleLinkClick("/sitemap", "Sitemap")}
-              className="text-gray-500 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1"
-            >
+            </Link>
+            <Link to="/sitemap" className="text-gray-500 hover:text-indigo-600 transition-colors">
               Sitemap
-            </button>
+            </Link>
           </div>
         </div>
       </div>

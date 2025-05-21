@@ -1,9 +1,15 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 const clients = [
   { name: "Tech Retailer", industry: "Electronics", logo: "T" },
@@ -65,25 +71,37 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Testimonials */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <Card key={index} className="bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="text-indigo-500 mb-4 text-4xl font-serif">"</div>
-                <p className="text-gray-700 mb-6 italic">{testimonial.quote}</p>
-                <div className="flex items-center">
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3">
-                    <span className="font-bold">{testimonial.author.charAt(0)}</span>
+        {/* Testimonials Carousel */}
+        <div className="relative px-12 max-w-5xl mx-auto mb-10">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full"
+          >
+            <CarouselContent>
+              {testimonials.map((testimonial, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full">
+                    <div className="text-indigo-500 mb-4 text-4xl font-serif">"</div>
+                    <p className="text-gray-700 mb-6 italic">{testimonial.quote}</p>
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3">
+                        <span className="font-bold">{testimonial.author.charAt(0)}</span>
+                      </div>
+                      <div>
+                        <p className="font-medium text-gray-900">{testimonial.author}</p>
+                        <p className="text-sm text-gray-500">{testimonial.title}, {testimonial.company}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{testimonial.author}</p>
-                    <p className="text-sm text-gray-500">{testimonial.title}, {testimonial.company}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="left-0 bg-white" />
+            <CarouselNext className="right-0 bg-white" />
+          </Carousel>
         </div>
 
         {/* CTA for Case Studies */}

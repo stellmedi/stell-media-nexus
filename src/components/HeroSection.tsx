@@ -1,11 +1,20 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, MessageCircle, Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  return <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
+  return (
+    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
+      {/* Abstract background shapes */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-indigo-200/20 rounded-full blur-3xl -z-10"></div>
+      
+      {/* Background pattern */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.015] -z-10"></div>
+      
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fade-in">
@@ -40,6 +49,17 @@ const HeroSection = () => {
               </Button>
             </div>
           </div>
+          
+          {/* Added floating device mockups */}
+          <div className="relative h-64 mt-16 hidden md:block">
+            <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 w-full">
+              <img 
+                src="https://images.unsplash.com/photo-1539186607619-df476afe6ff1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                alt="Dashboard interface with product discovery analytics" 
+                className="mx-auto rounded-lg shadow-2xl border border-gray-200 w-3/4"
+              />
+            </div>
+          </div>
         </div>
       </div>
       
@@ -48,7 +68,8 @@ const HeroSection = () => {
       <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-full blur-3xl -z-10"></div>
       
       <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-indigo-50/80 to-transparent -z-10"></div>
-    </section>;
+    </section>
+  );
 };
 
 export default HeroSection;
