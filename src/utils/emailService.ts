@@ -291,3 +291,4 @@ export const sendEmail = async (
   // This should never be reached due to the throw above, but TypeScript might complain without it
   throw lastError || new Error("Failed to send email for unknown reason");
 };
+

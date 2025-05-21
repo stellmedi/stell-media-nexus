@@ -1,13 +1,15 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import NewContactForm from "@/components/contact/NewContactForm";
-import { TEMPLATES } from "@/utils/emailService";
-import { Mail, Phone, MapPin, Clock, ArrowRight } from "lucide-react";
+import { TEMPLATES, isEmailJSConfigured } from "@/utils/emailService";
+import { Mail, Phone, MapPin, Clock, ArrowRight, AlertTriangle } from "lucide-react";
 import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useAuth } from "@/hooks/use-auth";
 
 const ContactInfo = ({ icon: Icon, title, children }: { icon: React.ElementType, title: string, children: React.ReactNode }) => (
   <div className="flex items-start">
@@ -22,6 +24,14 @@ const ContactInfo = ({ icon: Icon, title, children }: { icon: React.ElementType,
 );
 
 const Contact = () => {
+  const [emailConfigured, setEmailConfigured] = useState(true);
+  const { isAuthenticated } = useAuth();
+  
+  // Check if EmailJS is configured
+  useEffect(() => {
+    setEmailConfigured(isEmailJSConfigured());
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
@@ -61,6 +71,29 @@ const Contact = () => {
             </div>
           </div>
         </section>
+
+        {/* Email Configuration Alert for Admins */}
+        {!emailConfigured && isAuthenticated && (
+          <div className="container mx-auto px-4 my-6">
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Email Service Not Configured</AlertTitle>
+              <AlertDescription>
+                <p>Your contact forms won't work until you configure EmailJS.</p>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="mt-2" 
+                  asChild
+                >
+                  <Link to="/admin/settings">
+                    Configure Email Settings
+                  </Link>
+                </Button>
+              </AlertDescription>
+            </Alert>
+          </div>
+        )}
 
         {/* Contact Details & Form */}
         <section className="py-16">

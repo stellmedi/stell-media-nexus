@@ -31,6 +31,9 @@ import { useAuth } from "@/hooks/use-auth";
 import { isEmailJSConfigured } from "@/utils/emailService";
 import { ContactFormConfig } from "@/types/contactFormConfig";
 import { useContactFormConfig } from "@/hooks/use-contact-form-config";
+import { ExternalLink, HelpCircle } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 // Define site settings schema
 const siteSettingsSchema = z.object({
@@ -56,6 +59,7 @@ const SettingsPage = () => {
   const { isAuthenticated, isLoading, user } = useAuth();
   const [notifyOnContact, setNotifyOnContact] = useState(true);
   const [notifyOnConsultation, setNotifyOnConsultation] = useState(true);
+  const [activeTab, setActiveTab] = useState("site");
   
   // Get contact form configs to update them with new email settings
   const { config: contactConfig, saveConfig: saveContactConfig } = useContactFormConfig('contact');
@@ -106,6 +110,11 @@ const SettingsPage = () => {
     if (savedEmailSettings) {
       const parsedEmailSettings = JSON.parse(savedEmailSettings);
       emailSettingsForm.reset(parsedEmailSettings);
+    }
+    
+    // Auto-redirect to email tab if EmailJS is not configured
+    if (!isEmailJSConfigured()) {
+      setActiveTab("email");
     }
   }, [siteSettingsForm, emailSettingsForm]);
 
@@ -172,6 +181,27 @@ const SettingsPage = () => {
     toast.success("Notification preferences saved");
   };
 
+  // Helper for external links with tooltip
+  const ExternalLinkWithTooltip = ({ href, label, tooltip }: { href: string, label: string, tooltip: string }) => (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <a 
+            href={href} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-600 hover:text-blue-800 flex items-center"
+          >
+            {label} <ExternalLink className="ml-1 h-3 w-3" />
+          </a>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{tooltip}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+
   // Check authentication
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -197,7 +227,7 @@ const SettingsPage = () => {
       <div className="p-6">
         <h1 className="text-3xl font-bold mb-6">Settings</h1>
         
-        <Tabs defaultValue="site" className="w-full mb-8">
+        <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="w-full mb-8">
           <TabsList className="mb-6">
             <TabsTrigger value="site">Site Settings</TabsTrigger>
             <TabsTrigger value="email">Email Settings</TabsTrigger>
@@ -318,9 +348,75 @@ const SettingsPage = () => {
                     <p>
                       {isEmailJSConfigured() 
                         ? "EmailJS is properly configured." 
-                        : "EmailJS is not configured properly. Please update the settings below."
+                        : "EmailJS is not configured properly. Contact forms won't work until you update the settings below."
                       }
                     </p>
+                  </div>
+                  
+                  {!isEmailJSConfigured() && (
+                    <Alert variant="destructive" className="mb-6">
+                      <AlertTitle>Email Configuration Required</AlertTitle>
+                      <AlertDescription>
+                        <p className="mb-2">Your contact forms will not work until you set up EmailJS. Follow these steps:</p>
+                        <ol className="list-decimal pl-4 space-y-2">
+                          <li>Create a free account at <a href="https://www.emailjs.com/" target="_blank" rel="noopener noreferrer" className="underline">EmailJS.com</a></li>
+                          <li>Create an email service (Gmail, Outlook, etc.)</li>
+                          <li>Create two email templates: one for the contact form and one for consultation requests</li>
+                          <li>Enter the credentials below and save them</li>
+                        </ol>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  <div className="p-4 bg-blue-50 rounded-lg">
+                    <h3 className="font-medium text-blue-800 mb-2">Quick EmailJS Setup Guide</h3>
+                    <ol className="list-decimal pl-4 space-y-1 text-sm">
+                      <li>
+                        <ExternalLinkWithTooltip 
+                          href="https://dashboard.emailjs.com/sign-up" 
+                          label="Sign up for EmailJS" 
+                          tooltip="Create a free account"
+                        />
+                      </li>
+                      <li>
+                        <ExternalLinkWithTooltip 
+                          href="https://dashboard.emailjs.com/admin/services" 
+                          label="Add Email Service" 
+                          tooltip="Connect Gmail, Outlook, or other email provider"
+                        />
+                      </li>
+                      <li>
+                        <ExternalLinkWithTooltip 
+                          href="https://dashboard.emailjs.com/admin/templates" 
+                          label="Create Email Templates" 
+                          tooltip="Create templates for contact and consultation forms"
+                        />
+                      </li>
+                      <li>
+                        <ExternalLinkWithTooltip 
+                          href="https://dashboard.emailjs.com/admin/account" 
+                          label="Get Your Public Key" 
+                          tooltip="Find your API keys in account settings"
+                        />
+                      </li>
+                    </ol>
+                  </div>
+                  
+                  <div className="p-4 bg-purple-50 rounded-lg">
+                    <h3 className="font-medium text-purple-800 mb-2">Template Variables to Include</h3>
+                    <p className="text-sm mb-2">Make sure your email templates include these variables:</p>
+                    <ul className="list-disc pl-4 space-y-1 text-sm">
+                      <li>from_name - Sender's name</li>
+                      <li>from_email - Sender's email</li>
+                      <li>to_email - Your notification email</li>
+                      <li>subject - Email subject</li>
+                      <li>message - The message content</li>
+                      <li>company - Company name (optional)</li>
+                      <li>website - Website URL (optional)</li>
+                      <li>phone - Phone number (optional)</li>
+                    </ul>
                   </div>
                 </div>
                 
@@ -334,9 +430,21 @@ const SettingsPage = () => {
                       name="emailjsServiceId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>EmailJS Service ID</FormLabel>
+                          <FormLabel className="flex items-center">
+                            EmailJS Service ID
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <HelpCircle className="ml-1 h-4 w-4 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-sm">
+                                  <p>Find this in your EmailJS dashboard under "Email Services". Looks like: service_xxxxxxx</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input placeholder="service_xxxxxxx" {...field} />
                           </FormControl>
                           <FormDescription>
                             Get this from your EmailJS dashboard under "Email Services"
@@ -351,9 +459,21 @@ const SettingsPage = () => {
                       name="emailjsContactTemplateId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Contact Form Template ID</FormLabel>
+                          <FormLabel className="flex items-center">
+                            Contact Form Template ID
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <HelpCircle className="ml-1 h-4 w-4 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-sm">
+                                  <p>Find this in your EmailJS dashboard under "Email Templates". Looks like: template_xxxxxxx</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input placeholder="template_xxxxxxx" {...field} />
                           </FormControl>
                           <FormDescription>
                             Template ID for contact form submissions
@@ -368,9 +488,21 @@ const SettingsPage = () => {
                       name="emailjsConsultationTemplateId"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Consultation Form Template ID</FormLabel>
+                          <FormLabel className="flex items-center">
+                            Consultation Form Template ID
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <HelpCircle className="ml-1 h-4 w-4 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-sm">
+                                  <p>Find this in your EmailJS dashboard under "Email Templates". Looks like: template_xxxxxxx</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input placeholder="template_xxxxxxx" {...field} />
                           </FormControl>
                           <FormDescription>
                             Template ID for consultation form submissions
@@ -385,9 +517,21 @@ const SettingsPage = () => {
                       name="emailjsPublicKey"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>EmailJS Public Key</FormLabel>
+                          <FormLabel className="flex items-center">
+                            EmailJS Public Key
+                            <TooltipProvider>
+                              <Tooltip>
+                                <TooltipTrigger>
+                                  <HelpCircle className="ml-1 h-4 w-4 text-gray-400" />
+                                </TooltipTrigger>
+                                <TooltipContent className="max-w-sm">
+                                  <p>Find this in your EmailJS dashboard under "Account" → "API Keys". Looks like: xxxxxxxxxxxx</p>
+                                </TooltipContent>
+                              </Tooltip>
+                            </TooltipProvider>
+                          </FormLabel>
                           <FormControl>
-                            <Input {...field} />
+                            <Input placeholder="xxxxxxxxxxxx" {...field} />
                           </FormControl>
                           <FormDescription>
                             Get this from your EmailJS dashboard under "Account" → "API Keys"
@@ -397,10 +541,18 @@ const SettingsPage = () => {
                       )}
                     />
                     
-                    <Button type="submit">Save Email Settings</Button>
+                    <Button type="submit" className="w-full">Save Email Settings</Button>
                   </form>
                 </Form>
               </CardContent>
+              <CardFooter className="bg-gray-50 border-t p-4">
+                <div className="text-sm text-gray-600">
+                  <p className="font-medium mb-1">Need help setting up EmailJS?</p>
+                  <p>
+                    Refer to the <a href="https://www.emailjs.com/docs/sdk/installation/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">EmailJS documentation</a> or contact support for assistance.
+                  </p>
+                </div>
+              </CardFooter>
             </Card>
           </TabsContent>
           
@@ -455,3 +607,4 @@ const SettingsPage = () => {
 };
 
 export default SettingsPage;
+

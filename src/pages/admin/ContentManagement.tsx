@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/admin/AdminLayout";
@@ -660,7 +659,7 @@ const ContentManagement = () => {
           ogDescription: post.ogDescription || "",
           twitterTitle: post.twitterTitle || "",
           twitterDescription: post.twitterDescription || "",
-          schemaType: post.schemaType || "Article",
+          schemaType: post.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
           aiDescription: post.aiDescription || "",
         });
       }
@@ -685,7 +684,7 @@ const ContentManagement = () => {
           ogDescription: faq.ogDescription || "",
           twitterTitle: faq.twitterTitle || "",
           twitterDescription: faq.twitterDescription || "",
-          schemaType: faq.schemaType || "FAQ",
+          schemaType: faq.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
           aiDescription: faq.aiDescription || "",
         });
       }
@@ -719,7 +718,7 @@ const ContentManagement = () => {
           ogDescription: metadata?.ogDescription || "",
           twitterTitle: metadata?.twitterTitle || "",
           twitterDescription: metadata?.twitterDescription || "",
-          schemaType: metadata?.schemaType || (page.type === "service" ? "Service" : "None"),
+          schemaType: metadata?.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
           aiDescription: metadata?.aiDescription || "",
         });
         toast.info("System pages can only be partially edited. Some fields may be read-only.");
@@ -757,7 +756,7 @@ const ContentManagement = () => {
                   ogDescription: values.ogDescription,
                   twitterTitle: values.twitterTitle,
                   twitterDescription: values.twitterDescription,
-                  schemaType: values.schemaType,
+                  schemaType: values.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
                   aiDescription: values.aiDescription,
                 }
               : post
@@ -784,7 +783,7 @@ const ContentManagement = () => {
                   ogDescription: values.ogDescription,
                   twitterTitle: values.twitterTitle,
                   twitterDescription: values.twitterDescription,
-                  schemaType: values.schemaType,
+                  schemaType: values.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
                   aiDescription: values.aiDescription,
                 }
               : faq
@@ -817,7 +816,7 @@ const ContentManagement = () => {
           ogDescription: values.ogDescription,
           twitterTitle: values.twitterTitle,
           twitterDescription: values.twitterDescription,
-          schemaType: values.schemaType,
+          schemaType: values.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
           aiDescription: values.aiDescription,
         };
         setBlogPosts(prev => [...prev, newBlogPost]);
@@ -840,7 +839,7 @@ const ContentManagement = () => {
           ogDescription: values.ogDescription,
           twitterTitle: values.twitterTitle,
           twitterDescription: values.twitterDescription,
-          schemaType: values.schemaType,
+          schemaType: values.schemaType as "FAQ" | "Article" | "None" | "Organization" | "Service" | "Product" | "LocalBusiness" | "WebPage",
           aiDescription: values.aiDescription,
         };
         setFaqs(prev => [...prev, newFaq]);
