@@ -30,7 +30,7 @@ const SEOCTASection = () => {
               Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
             </p>
             <Button asChild size="lg" variant="white" className="shadow-lg text-indigo-700 hover:bg-gray-100">
-              <Link to="/contact">
+              <Link to="/contact" className="text-indigo-700">
                 Schedule a Consultation
               </Link>
             </Button>

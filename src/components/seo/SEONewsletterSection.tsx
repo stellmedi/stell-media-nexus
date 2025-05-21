@@ -16,7 +16,7 @@ const SEONewsletterSection = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-16 bg-purple-50">
       <div className="container mx-auto px-4">
         <div className="max-w-xl mx-auto text-center">
           <h2 className="text-2xl font-bold mb-4 text-gray-900">Subscribe to Our SEO Newsletter</h2>

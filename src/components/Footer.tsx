@@ -42,8 +42,8 @@ const Footer = () => {
               We help e-commerce brands optimize product discovery and boost conversions, especially for those with large and complex catalogs.
             </p>
             
-            {/* Newsletter subscription - Added */}
-            <div className="mt-4 pt-4 border-t border-indigo-100">
+            {/* Newsletter subscription - Fixed spacing issues */}
+            <div className="mt-6 pt-4 border-t border-indigo-100">
               <form className="flex flex-col sm:flex-row gap-2">
                 <input 
                   type="email" 
@@ -55,7 +55,7 @@ const Footer = () => {
                   type="submit" 
                   className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition-colors font-medium"
                 >
-                  Subscribe Now
+                  Subscribe
                 </button>
               </form>
             </div>

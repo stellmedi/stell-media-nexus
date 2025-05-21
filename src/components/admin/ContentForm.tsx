@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -18,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Eye, Edit } from "lucide-react";
+import { Eye, Edit, BarChart, Search } from "lucide-react";
 
 // Content form schema with validation
 const formSchema = z.object({
@@ -41,6 +40,10 @@ const formSchema = z.object({
   twitterTitle: z.string().optional(),
   twitterDescription: z.string().optional(),
   schemaType: z.enum(["Article", "Product", "FAQ", "Service", "LocalBusiness", "None"]).default("None"),
+  
+  // Analytics Fields
+  googleAnalyticsId: z.string().optional(),
+  googleSearchConsoleId: z.string().optional(),
 });
 
 export type ContentFormValues = z.infer<typeof formSchema>;
@@ -115,10 +118,11 @@ export default function ContentForm({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs defaultValue="basic" className="w-full">
-          <TabsList className="grid grid-cols-4 mb-4">
+          <TabsList className="grid grid-cols-5 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="seo">SEO</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="advanced">Advanced</TabsTrigger>
           </TabsList>
           
@@ -491,6 +495,75 @@ export default function ContentForm({
                 </FormItem>
               )}
             />
+          </TabsContent>
+          
+          {/* Analytics Tab - NEW */}
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="border rounded-md p-6 bg-white">
+              <div className="flex items-center space-x-2 mb-4">
+                <BarChart className="text-indigo-600" />
+                <h3 className="font-medium text-lg">Google Analytics Integration</h3>
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="googleAnalyticsId"
+                render={({ field }) => (
+                  <FormItem className="mb-4">
+                    <FormLabel>Google Analytics ID</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="G-XXXXXXXXXX or UA-XXXXXXXX-X" 
+                        {...field}
+                        value={field.value || ""} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Enter your Google Analytics 4 (G-XXXXXXXXXX) or Universal Analytics (UA-XXXXXXXX-X) tracking ID
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="mt-8 mb-4">
+                <div className="flex items-center space-x-2 mb-4">
+                  <Search className="text-indigo-600" />
+                  <h3 className="font-medium text-lg">Google Search Console</h3>
+                </div>
+                
+                <FormField
+                  control={form.control}
+                  name="googleSearchConsoleId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Search Console Verification HTML Tag</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="<meta name='google-site-verification' content='VERIFICATION_CODE' />" 
+                          {...field}
+                          value={field.value || ""} 
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Enter the HTML verification meta tag from Google Search Console
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <div className="bg-blue-50 p-4 rounded-lg mt-6">
+                <h4 className="text-sm font-medium text-blue-800 mb-2">Analytics Best Practices</h4>
+                <ul className="text-sm text-blue-700 list-disc pl-5 space-y-1">
+                  <li>Set up both Google Analytics and Search Console for comprehensive insights</li>
+                  <li>Create custom events to track user interactions specific to your business</li>
+                  <li>Set up conversion goals to measure and optimize performance</li>
+                  <li>Regularly review data to identify optimization opportunities</li>
+                </ul>
+              </div>
+            </div>
           </TabsContent>
           
           {/* Advanced Tab */}
