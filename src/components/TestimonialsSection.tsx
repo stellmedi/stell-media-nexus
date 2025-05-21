@@ -11,13 +11,14 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 
+// Abstract client logos/representations
 const clients = [
-  { name: "Tech Retailer", industry: "Electronics", logo: "T" },
-  { name: "Fashion Market", industry: "Apparel", logo: "F" },
-  { name: "Home Goods", industry: "Home & Garden", logo: "H" },
-  { name: "Outdoor Supply", industry: "Sports & Recreation", logo: "O" },
-  { name: "Beauty Brand", industry: "Cosmetics", logo: "B" },
-  { name: "Auto Parts", industry: "Automotive", logo: "A" },
+  { name: "Tech Retailer", industry: "Electronics", gradient: "from-blue-400 to-indigo-500" },
+  { name: "Fashion Market", industry: "Apparel", gradient: "from-indigo-400 to-purple-500" },
+  { name: "Home Goods", industry: "Home & Garden", gradient: "from-purple-400 to-pink-500" },
+  { name: "Outdoor Supply", industry: "Sports & Recreation", gradient: "from-blue-400 to-teal-500" },
+  { name: "Beauty Brand", industry: "Cosmetics", gradient: "from-pink-400 to-purple-500" },
+  { name: "Auto Parts", industry: "Automotive", gradient: "from-blue-400 to-cyan-500" },
 ];
 
 const testimonials = [
@@ -49,7 +50,11 @@ const testimonials = [
 
 const TestimonialsSection = () => {
   return (
-    <section id="testimonials" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+    <section id="testimonials" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden">
+      {/* Abstract background elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
+      
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Trusted by Leading Brands</h2>
@@ -58,12 +63,18 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* Client Logos */}
+        {/* Client Abstract Logos/Representations */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
           {clients.map((client, index) => (
-            <div key={index} className="flex flex-col items-center justify-center p-4 grayscale hover:grayscale-0 transition-all duration-300">
-              <div className="w-16 h-16 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full mb-3 flex items-center justify-center text-white">
-                <span className="text-2xl font-bold">{client.logo}</span>
+            <div key={index} className="flex flex-col items-center justify-center p-4 hover:opacity-80 transition-all duration-300">
+              <div className={`w-16 h-16 bg-gradient-to-r ${client.gradient} rounded-full mb-3 flex items-center justify-center text-white relative overflow-hidden`}>
+                <div className="absolute inset-0 opacity-20">
+                  <div className="absolute top-1/3 left-0 w-full h-px bg-white/30"></div>
+                  <div className="absolute top-2/3 left-0 w-full h-px bg-white/20"></div>
+                  <div className="absolute top-0 left-1/3 h-full w-px bg-white/30"></div>
+                  <div className="absolute top-0 left-2/3 h-full w-px bg-white/20"></div>
+                </div>
+                <span className="relative z-10 text-2xl font-bold">{client.name.charAt(0)}</span>
               </div>
               <p className="font-medium text-gray-700">{client.name}</p>
               <p className="text-sm text-gray-500">{client.industry}</p>
@@ -71,24 +82,31 @@ const TestimonialsSection = () => {
           ))}
         </div>
 
-        {/* Testimonials Carousel */}
+        {/* Testimonials Auto-Scrolling Carousel */}
         <div className="relative px-12 max-w-5xl mx-auto mb-10">
           <Carousel
             opts={{
               align: "start",
               loop: true,
+              dragFree: true,
             }}
             className="w-full"
+            autoplay={true}
+            autoplayTimeout={5000}
           >
             <CarouselContent>
               {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2">
-                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full">
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2 transition-all duration-500">
+                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full hover:shadow-lg transition-all duration-300">
                     <div className="text-indigo-500 mb-4 text-4xl font-serif">"</div>
                     <p className="text-gray-700 mb-6 italic">{testimonial.quote}</p>
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3">
-                        <span className="font-bold">{testimonial.author.charAt(0)}</span>
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3 relative overflow-hidden">
+                        <div className="absolute inset-0 opacity-20">
+                          <div className="absolute top-1/2 left-0 w-full h-px bg-white/30"></div>
+                          <div className="absolute top-0 left-1/2 h-full w-px bg-white/30"></div>
+                        </div>
+                        <span className="font-bold relative z-10">{testimonial.author.charAt(0)}</span>
                       </div>
                       <div>
                         <p className="font-medium text-gray-900">{testimonial.author}</p>

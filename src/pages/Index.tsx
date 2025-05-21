@@ -21,35 +21,39 @@ const stats = [
   { value: "99%", label: "Client retention rate" }
 ];
 
-// Updated case studies with IDs that match route params
+// Updated case studies with abstract images and IDs that match route params
 const caseStudies = [
   {
     id: "electronics-search",
     title: "Advanced Electronics Search Optimization",
     description: "How we implemented strategic algorithms with Elastic Search to increase search conversion by 42% and reduced no-results searches by 68%.",
     category: "Product Discovery Optimization",
-    image: "https://images.unsplash.com/photo-1550009158-9ebf69173e03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8ZWxlY3Ryb25pY3N8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60"
+    image: "bg-gradient-to-br from-blue-100 via-indigo-50 to-white",
+    pattern: "electronics-pattern"
   },
   {
     id: "search-platform-migration",
     title: "Search Platform Migration Success",
     description: "Our algorithm optimization during migration from Elastic Search to Coveo transformed search performance and improved customer satisfaction by 38%.",
     category: "Search Platform Migration",
-    image: "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZmFzaGlvbiUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+    image: "bg-gradient-to-br from-indigo-100 via-purple-50 to-white",
+    pattern: "migration-pattern"
   },
   {
     id: "amazon-marketplace",
     title: "Amazon Marketplace Optimization",
     description: "Complete overhaul of product listing and SEO strategy resulted in 62% increase in organic visibility and 47% higher conversion rate.",
     category: "Marketpulse",
-    image: "https://images.unsplash.com/photo-1583947581924-860bda6a26df?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHJldGFpbCUyMHN0b3JlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+    image: "bg-gradient-to-br from-purple-100 via-pink-50 to-white",
+    pattern: "marketplace-pattern"
   },
   {
     id: "performance-marketing",
     title: "Performance Marketing Campaign",
     description: "Strategic performance marketing for an online retailer resulted in 85% ROAS improvement and 39% reduction in customer acquisition costs.",
     category: "Performance Marketing",
-    image: "https://images.unsplash.com/photo-1565084888279-aca607ecce0c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8ZWNvbW1lcmNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60"
+    image: "bg-gradient-to-br from-blue-100 via-cyan-50 to-white",
+    pattern: "performance-pattern"
   }
 ];
 
@@ -112,12 +116,40 @@ const Index = () => {
             <div className="grid md:grid-cols-2 gap-8">
               {caseStudies.slice(0, 2).map((study, index) => (
                 <Card key={index} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
-                  <div className="relative h-64">
-                    <img 
-                      src={study.image} 
-                      alt={`${study.title} - ${study.category} case study showing ${study.description.substring(0, 50)}...`}
-                      className="w-full h-full object-cover" 
-                    />
+                  <div className={`relative h-64 ${study.image}`}>
+                    {/* Abstract pattern specific to each case study */}
+                    <div className={`absolute inset-0 ${study.pattern}`}>
+                      {study.pattern === 'electronics-pattern' && (
+                        <div className="absolute inset-0">
+                          <div className="absolute left-1/4 top-1/2 w-64 h-32 border border-blue-300 rounded-lg opacity-20 transform -rotate-12"></div>
+                          <div className="absolute right-1/4 bottom-1/3 w-48 h-24 border border-indigo-300 rounded-lg opacity-20 transform rotate-12"></div>
+                          <div className="absolute top-1/4 left-1/2 transform -translate-x-1/2">
+                            <svg width="120" height="60" viewBox="0 0 120 60" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M20,10 L100,10 M20,20 L80,20 M20,30 L90,30 M20,40 L70,40 M20,50 L60,50" 
+                                    stroke="#4f46e5" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="1 3" opacity="0.4" />
+                            </svg>
+                          </div>
+                          <div className="absolute bottom-1/4 right-1/3">
+                            <div className="w-20 h-20 rounded-full border-2 border-blue-200 opacity-20"></div>
+                          </div>
+                        </div>
+                      )}
+                      
+                      {study.pattern === 'migration-pattern' && (
+                        <div className="absolute inset-0">
+                          <div className="absolute left-1/3 top-1/3 opacity-20">
+                            <svg width="240" height="60" viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M10,30 C50,10 70,50 120,30 C170,10 190,50 230,30" 
+                                    stroke="#6366f1" strokeWidth="2" fill="none" opacity="0.7" />
+                              <path d="M10,30 C50,50 70,10 120,30 C170,50 190,10 230,30" 
+                                    stroke="#8b5cf6" strokeWidth="1" fill="none" opacity="0.4" />
+                            </svg>
+                          </div>
+                          <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-indigo-100 opacity-20"></div>
+                          <div className="absolute bottom-1/4 left-1/4 w-12 h-12 rounded-full bg-purple-100 opacity-20"></div>
+                        </div>
+                      )}
+                    </div>
                     <div className="absolute top-4 left-4">
                       <span className="bg-white/90 backdrop-blur-sm text-indigo-600 py-1 px-3 rounded-full text-sm font-medium">
                         {study.category}

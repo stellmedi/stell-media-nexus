@@ -6,7 +6,11 @@ import { Link } from "react-router-dom";
 
 const SEOHeroSection = () => {
   return (
-    <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50" aria-label="E-commerce SEO Services">
+    <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden" aria-label="E-commerce SEO Services">
+      {/* Abstract background elements */}
+      <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
+      
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
@@ -29,15 +33,54 @@ const SEOHeroSection = () => {
               </Button>
             </div>
           </div>
-          <div>
-            <img 
-              src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60" 
-              alt="E-commerce SEO optimization dashboard showing improved rankings and metrics" 
-              className="rounded-lg shadow-lg w-full"
-              loading="eager"
-              width="800"
-              height="600"
-            />
+          <div className="relative">
+            <div className="rounded-lg shadow-lg w-full h-80 overflow-hidden bg-white">
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-blue-50 to-white">
+                {/* Abstract SEO visualization */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Search ranking visualization */}
+                  <div className="w-3/4 h-3/4 relative">
+                    {/* Abstract search visualization */}
+                    <div className="absolute top-1/4 left-0 w-full">
+                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-indigo-400 rounded-full w-3/4 mb-4"></div>
+                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-indigo-300 rounded-full w-2/3 mb-4"></div>
+                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full w-1/2 mb-4"></div>
+                      
+                      {/* Keywords/tags visualization */}
+                      <div className="flex flex-wrap mt-8 gap-2">
+                        {["SEO", "Analytics", "Keywords", "Traffic", "Ranking"].map((tag, i) => (
+                          <div key={i} className="px-3 py-1 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full text-xs text-indigo-600 font-medium">
+                            {tag}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Abstract chart */}
+                    <svg className="absolute bottom-0 left-0" width="100%" height="100" viewBox="0 0 300 100" preserveAspectRatio="none">
+                      <path d="M0,80 C30,70 60,90 90,70 C120,50 150,70 180,50 C210,30 240,50 270,30 C285,20 300,10 300,10 L300,100 L0,100 Z" 
+                        fill="url(#blue-gradient)" opacity="0.2" />
+                      <defs>
+                        <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                          <stop offset="0%" stopColor="#818cf8" />
+                          <stop offset="100%" stopColor="#6366f1" />
+                        </linearGradient>
+                      </defs>
+                    </svg>
+                    
+                    {/* Growth indicator */}
+                    <div className="absolute top-2 right-2 flex items-center justify-center">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
+                          <path d="M23 6l-9.5 9.5-5-5L1 18" />
+                          <path d="M17 6h6v6" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

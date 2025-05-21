@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden">
+    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden bg-abstract-pattern">
       {/* Abstract background shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl -z-10"></div>
@@ -50,14 +50,31 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Added floating device mockups */}
-          <div className="relative h-64 mt-16 hidden md:block">
+          {/* Abstract visualization instead of device mockup */}
+          <div className="relative h-80 mt-16 hidden md:block">
             <div className="absolute left-1/2 transform -translate-x-1/2 -translate-y-1/4 w-full">
-              <img 
-                src="https://images.unsplash.com/photo-1539186607619-df476afe6ff1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                alt="Dashboard interface with product discovery analytics" 
-                className="mx-auto rounded-lg shadow-2xl border border-gray-200 w-3/4"
-              />
+              <div className="mx-auto rounded-lg shadow-2xl border border-gray-100 w-4/5 h-64 bg-white overflow-hidden">
+                <div className="w-full h-full bg-gradient-to-br from-indigo-50 via-blue-50 to-white relative">
+                  {/* Abstract data visualization elements */}
+                  <div className="absolute top-1/4 left-1/4 w-1/2 h-1/2">
+                    <svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg" className="w-full h-full opacity-70">
+                      <path fill="none" stroke="#6366f1" strokeWidth="1.5" d="M0,50 C20,30 40,70 60,50 C80,30 100,70 120,50 C140,30 160,70 180,50 C200,30 220,70 240,50" />
+                      <path fill="none" stroke="#818cf8" strokeWidth="1" d="M0,60 C20,40 40,80 60,60 C80,40 100,80 120,60 C140,40 160,80 180,60 C200,40 220,80 240,60" />
+                      <path fill="none" stroke="#a5b4fc" strokeWidth="0.5" d="M0,70 C20,50 40,90 60,70 C80,50 100,90 120,70 C140,50 160,90 180,70 C200,50 220,90 240,70" />
+                    </svg>
+                  </div>
+                  <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="grid grid-cols-3 gap-3 p-4 opacity-70">
+                      {Array.from({length: 9}).map((_, i) => (
+                        <div key={i} className="bg-gradient-to-br from-indigo-100 to-blue-50 rounded h-8 w-full"></div>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Circular elements */}
+                  <div className="absolute top-1/4 right-1/4 w-16 h-16 rounded-full bg-gradient-to-br from-indigo-200 to-purple-100 opacity-40"></div>
+                  <div className="absolute bottom-1/4 left-1/4 w-12 h-12 rounded-full bg-gradient-to-br from-blue-200 to-indigo-100 opacity-40"></div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
