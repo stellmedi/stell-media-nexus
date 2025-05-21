@@ -7,10 +7,11 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import FAQSchemaMarkup from './FAQSchemaMarkup';
+import { Link } from "react-router-dom";
 
 interface FAQItem {
   question: string;
-  answer: string;
+  answer: string | React.ReactNode;
 }
 
 interface FAQSectionProps {
@@ -26,7 +27,10 @@ const FAQSection: React.FC<FAQSectionProps> = ({
 }) => {
   return (
     <div className="mb-16">
-      {includeSchemaMeta && <FAQSchemaMarkup items={items} />}
+      {includeSchemaMeta && <FAQSchemaMarkup items={items.map(item => ({
+        question: item.question,
+        answer: typeof item.answer === 'string' ? item.answer : 'See our detailed answer'
+      }))} />}
       <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">{title}</h3>
       <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-100 shadow-sm">
         <Accordion type="single" collapsible className="w-full">

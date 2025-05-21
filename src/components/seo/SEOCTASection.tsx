@@ -27,7 +27,7 @@ const SEOCTASection = () => {
           <div className="relative z-10">
             <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to improve your organic visibility?</h2>
             <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-              Let's talk about how our SEO services can help grow your e-commerce business through improved search rankings and organic traffic.
+              Let's talk about how our <Link to="/services/seo" className="text-white hover:text-blue-100 underline">SEO services</Link> can help grow your e-commerce business through improved search rankings and organic traffic. View our <Link to="/case-studies" className="text-white hover:text-blue-100 underline">case studies</Link> to see our proven results.
             </p>
             <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-gray-100 shadow-lg">
               <Link to="/contact">
