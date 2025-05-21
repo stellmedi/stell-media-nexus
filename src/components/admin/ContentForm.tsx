@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,9 +17,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Eye, Edit, BarChart, Search } from "lucide-react";
+import { Eye, Edit, BarChart, Search, Copy, FileText, Link, Settings } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
-// Content form schema with validation
+// Enhanced Content form schema with expanded SEO validation
 const formSchema = z.object({
   title: z.string().min(2, { message: "Title must be at least 2 characters." }),
   type: z.enum(["page", "blog", "faq", "service"]),
@@ -29,17 +30,30 @@ const formSchema = z.object({
   language: z.string().default("en"),
   author: z.string().optional(),
   
-  // SEO Fields
-  metaTitle: z.string().optional(),
-  metaDescription: z.string().optional(),
+  // Enhanced SEO Fields
+  metaTitle: z.string().max(60, { message: "Meta title should be 60 characters or less" }).optional(),
+  metaDescription: z.string().max(160, { message: "Meta description should be 160 characters or less" }).optional(),
   canonicalUrl: z.string().url().optional().or(z.literal("")),
   noIndex: z.boolean().default(false),
   noFollow: z.boolean().default(false),
-  ogTitle: z.string().optional(),
-  ogDescription: z.string().optional(),
-  twitterTitle: z.string().optional(),
-  twitterDescription: z.string().optional(),
-  schemaType: z.enum(["Article", "Product", "FAQ", "Service", "LocalBusiness", "None"]).default("None"),
+  
+  // Social media
+  ogTitle: z.string().max(60, { message: "Open Graph title should be 60 characters or less" }).optional(),
+  ogDescription: z.string().max(160, { message: "Open Graph description should be 160 characters or less" }).optional(),
+  ogImage: z.string().optional(),
+  twitterTitle: z.string().max(60, { message: "Twitter title should be 60 characters or less" }).optional(),
+  twitterDescription: z.string().max(160, { message: "Twitter description should be 160 characters or less" }).optional(),
+  twitterImage: z.string().optional(),
+  
+  // AI-specific metadata
+  aiDescription: z.string().max(200, { message: "AI description should be 200 characters or less" }).optional(),
+  aiKeywords: z.string().optional(),
+  aiExpertise: z.string().optional(),
+  aiServices: z.string().optional(),
+  
+  // Schema markup
+  schemaType: z.enum(["Article", "Product", "FAQ", "Service", "LocalBusiness", "Organization", "WebPage", "None"]).default("None"),
+  schemaProperties: z.string().optional(),
   
   // Analytics Fields
   googleAnalyticsId: z.string().optional(),
@@ -64,11 +78,23 @@ export default function ContentForm({
   isSystemPage
 }: ContentFormProps) {
   const [contentMode, setContentMode] = useState<'edit' | 'preview'>('edit');
+  const [metaTitleCount, setMetaTitleCount] = useState(0);
+  const [metaDescCount, setMetaDescCount] = useState(0);
+  const [showCurrentMetadata, setShowCurrentMetadata] = useState(false);
   
   const form = useForm<ContentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
+
+  // Update character counts for meta fields
+  useEffect(() => {
+    const titleValue = form.watch('metaTitle') || '';
+    const descValue = form.watch('metaDescription') || '';
+    
+    setMetaTitleCount(titleValue.length);
+    setMetaDescCount(descValue.length);
+  }, [form.watch('metaTitle'), form.watch('metaDescription')]);
 
   // Generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +109,12 @@ export default function ContentForm({
         .replace(/\s+/g, '-');
       form.setValue("slug", slug);
     }
+    
+    // Suggest meta title if not set
+    if (!form.getValues("metaTitle")) {
+      form.setValue("metaTitle", title);
+      setMetaTitleCount(title.length);
+    }
   };
 
   // Get current content value for preview
@@ -91,6 +123,38 @@ export default function ContentForm({
   // Toggle between edit and preview mode
   const toggleContentMode = () => {
     setContentMode(mode => mode === 'edit' ? 'preview' : 'edit');
+  };
+
+  // Toggle current metadata view
+  const toggleCurrentMetadata = () => {
+    setShowCurrentMetadata(!showCurrentMetadata);
+  };
+
+  // Copy meta tags to clipboard
+  const copyMetaTags = () => {
+    const metaTitle = form.getValues("metaTitle");
+    const metaDesc = form.getValues("metaDescription");
+    
+    const metaTagsHtml = `
+<title>${metaTitle || defaultValues.title || ''}</title>
+<meta name="description" content="${metaDesc || ''}">
+<link rel="canonical" href="${form.getValues("canonicalUrl") || ''}">
+<meta property="og:title" content="${metaTitle || form.getValues("ogTitle") || ''}">
+<meta property="og:description" content="${metaDesc || form.getValues("ogDescription") || ''}">
+<meta property="og:image" content="${form.getValues("ogImage") || ''}">
+<meta name="twitter:title" content="${metaTitle || form.getValues("twitterTitle") || ''}">
+<meta name="twitter:description" content="${metaDesc || form.getValues("twitterDescription") || ''}">
+<meta name="ai:description" content="${form.getValues("aiDescription") || ''}">
+<meta name="ai:keywords" content="${form.getValues("aiKeywords") || ''}">
+<meta name="ai:services" content="${form.getValues("aiServices") || ''}">
+<meta name="ai:expertise" content="${form.getValues("aiExpertise") || ''}">
+${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form.watch("noFollow") ? '<meta name="robots" content="nofollow">\n' : ''}`;
+    
+    navigator.clipboard.writeText(metaTagsHtml.trim());
+    toast({
+      title: "Meta tags copied",
+      description: "Meta tags have been copied to clipboard",
+    });
   };
 
   // Render markdown-like content for the preview
@@ -403,52 +467,132 @@ export default function ContentForm({
             </div>
           </TabsContent>
           
-          {/* SEO Tab - Enhanced with schema markup editor */}
+          {/* SEO Tab - Enhanced with current metadata viewer and improved editing */}
           <TabsContent value="seo" className="space-y-4">
-            <FormField
-              control={form.control}
-              name="metaTitle"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Meta Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter meta title for SEO" {...field} />
-                  </FormControl>
-                  <FormDescription>
-                    Title shown in search engine results. Recommended length: 50-60 characters.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
+            {/* Current metadata viewer */}
+            <div className="border rounded-md p-4 bg-blue-50 mb-6">
+              <div className="flex justify-between items-center">
+                <h3 className="font-medium text-blue-800 flex items-center">
+                  <FileText className="mr-2 h-4 w-4" />
+                  Current Metadata
+                </h3>
+                <div className="flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={toggleCurrentMetadata}
+                  >
+                    {showCurrentMetadata ? "Hide" : "View"} Metadata
+                  </Button>
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={copyMetaTags}
+                  >
+                    <Copy className="mr-2 h-4 w-4" />
+                    Copy Tags
+                  </Button>
+                </div>
+              </div>
+              
+              {showCurrentMetadata && (
+                <div className="mt-4 p-4 bg-white rounded-md border overflow-x-auto">
+                  <pre className="text-xs text-gray-600 whitespace-pre-wrap">
+                    {`<title>${form.watch("metaTitle") || defaultValues.title || ''}</title>
+<meta name="description" content="${form.watch("metaDescription") || ''}">
+<link rel="canonical" href="${form.watch("canonicalUrl") || ''}">
+<meta property="og:title" content="${form.watch("ogTitle") || form.watch("metaTitle") || ''}">
+<meta property="og:description" content="${form.watch("ogDescription") || form.watch("metaDescription") || ''}">
+<meta property="og:image" content="${form.watch("ogImage") || ''}">
+<meta name="twitter:title" content="${form.watch("twitterTitle") || form.watch("metaTitle") || ''}">
+<meta name="twitter:description" content="${form.watch("twitterDescription") || form.watch("metaDescription") || ''}">
+<meta name="ai:description" content="${form.watch("aiDescription") || ''}">
+<meta name="ai:keywords" content="${form.watch("aiKeywords") || ''}">
+<meta name="ai:services" content="${form.watch("aiServices") || ''}">
+<meta name="ai:expertise" content="${form.watch("aiExpertise") || ''}">
+${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form.watch("noFollow") ? '<meta name="robots" content="nofollow">\n' : ''}`}
+                  </pre>
+                </div>
               )}
-            />
+            </div>
             
-            <FormField
-              control={form.control}
-              name="metaDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Meta Description</FormLabel>
-                  <FormControl>
-                    <Textarea 
-                      placeholder="Enter meta description" 
-                      className="min-h-[100px]" 
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormDescription>
-                    Description shown in search engine results. Recommended length: 150-160 characters.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="grid md:grid-cols-2 gap-4 mb-6">
+              <FormField
+                control={form.control}
+                name="metaTitle"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Meta Title</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input 
+                          placeholder="Enter meta title for SEO" 
+                          {...field} 
+                          onChange={e => {
+                            field.onChange(e);
+                            setMetaTitleCount(e.target.value.length);
+                          }}
+                          className={`${metaTitleCount > 60 ? 'border-red-300' : metaTitleCount > 50 ? 'border-yellow-300' : 'border-green-300'}`}
+                        />
+                        <span className={`absolute right-3 top-1/2 -translate-y-1/2 text-xs ${
+                          metaTitleCount > 60 ? 'text-red-500' : metaTitleCount > 50 ? 'text-yellow-500' : 'text-green-500'
+                        }`}>
+                          {metaTitleCount}/60
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      Title shown in search engine results. Optimal length: 50-60 characters.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="metaDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Meta Description</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Textarea 
+                          placeholder="Enter meta description" 
+                          className={`min-h-[80px] ${metaDescCount > 160 ? 'border-red-300' : metaDescCount > 145 ? 'border-yellow-300' : 'border-green-300'}`} 
+                          {...field} 
+                          onChange={e => {
+                            field.onChange(e);
+                            setMetaDescCount(e.target.value.length);
+                          }}
+                        />
+                        <span className={`absolute right-3 bottom-3 text-xs ${
+                          metaDescCount > 160 ? 'text-red-500' : metaDescCount > 145 ? 'text-yellow-500' : 'text-green-500'
+                        }`}>
+                          {metaDescCount}/160
+                        </span>
+                      </div>
+                    </FormControl>
+                    <FormDescription>
+                      Description shown in search engine results. Optimal length: 140-160 characters.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
             
             <FormField
               control={form.control}
               name="canonicalUrl"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Canonical URL</FormLabel>
+                  <FormLabel className="flex items-center">
+                    <Link className="mr-2 h-4 w-4" />
+                    Canonical URL
+                  </FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="https://example.com/canonical-page" 
@@ -514,35 +658,69 @@ export default function ContentForm({
               />
             </div>
             
-            <div className="border rounded-md p-4 space-y-4">
-              <h3 className="font-medium">Open Graph / Social Sharing</h3>
+            {/* Social Media metadata section */}
+            <div className="border rounded-md p-4 space-y-4 mt-6">
+              <h3 className="font-medium flex items-center">
+                <FileText className="mr-2 h-4 w-4" />
+                Social Media / Open Graph
+              </h3>
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="ogTitle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Title</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Title for social sharing" {...field} value={field.value || ""} />
+                      </FormControl>
+                      <FormDescription>
+                        Leave blank to use Meta Title
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="ogDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>OG Description</FormLabel>
+                      <FormControl>
+                        <Textarea 
+                          placeholder="Description for social sharing" 
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Leave blank to use Meta Description
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               
               <FormField
                 control={form.control}
-                name="ogTitle"
+                name="ogImage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>OG Title</FormLabel>
+                    <FormLabel>OG Image URL</FormLabel>
                     <FormControl>
-                      <Input placeholder="Title for social sharing" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="ogDescription"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>OG Description</FormLabel>
-                    <FormControl>
-                      <Textarea 
-                        placeholder="Description for social sharing" 
-                        {...field} 
+                      <Input 
+                        placeholder="https://example.com/image.jpg" 
+                        {...field}
+                        value={field.value || ""}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Image URL for social media sharing (1200×630 pixels recommended)
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -554,9 +732,147 @@ export default function ContentForm({
                   <Button type="button" variant="outline" size="sm">Select Image</Button>
                 </div>
               </div>
+              
+              <div className="pt-4 border-t border-gray-200">
+                <h4 className="font-medium text-sm mb-3">Twitter Card</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="twitterTitle"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Twitter Title</FormLabel>
+                        <FormControl>
+                          <Input placeholder="Twitter card title" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormDescription>
+                          Leave blank to use OG Title
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="twitterDescription"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Twitter Description</FormLabel>
+                        <FormControl>
+                          <Textarea placeholder="Twitter card description" {...field} value={field.value || ""} />
+                        </FormControl>
+                        <FormDescription>
+                          Leave blank to use OG Description
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
             </div>
             
-            <div className="border rounded-md p-4 space-y-4">
+            {/* AI-specific metadata section */}
+            <div className="border rounded-md p-4 space-y-4 mt-6 bg-purple-50">
+              <h3 className="font-medium flex items-center text-purple-800">
+                <Settings className="mr-2 h-4 w-4" />
+                AI Platform Optimization
+              </h3>
+              <p className="text-sm text-purple-700">
+                These fields help AI platforms like Perplexity, ChatGPT, and Claude better understand your content.
+              </p>
+              
+              <FormField
+                control={form.control}
+                name="aiDescription"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>AI Description</FormLabel>
+                    <FormControl>
+                      <Textarea 
+                        placeholder="Detailed description for AI platforms" 
+                        {...field}
+                        value={field.value || ""}
+                        className="min-h-[80px]"
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      More detailed than meta description, helps AI platforms understand the content better
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <div className="grid md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="aiKeywords"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>AI Keywords</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="ai-optimization, chatgpt, perplexity" 
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Comma-separated keywords for AI relevance
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="aiServices"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>AI Services</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="SEO, Content Creation, Analytics" 
+                          {...field}
+                          value={field.value || ""}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Comma-separated list of services
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              
+              <FormField
+                control={form.control}
+                name="aiExpertise"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>AI Expertise</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="E-commerce optimization, search algorithms, product data management" 
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Comma-separated areas of expertise
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            {/* Schema markup section */}
+            <div className="border rounded-md p-4 space-y-4 mt-6">
               <h3 className="font-medium">Schema Markup</h3>
               
               <FormField
@@ -587,37 +903,70 @@ export default function ContentForm({
                 )}
               />
               
-              <div className="p-4 bg-gray-50 rounded-md">
-                <h4 className="text-sm font-medium mb-2">Schema Properties</h4>
-                
-                {/* Dynamic schema properties based on selected type */}
-                <div className="space-y-3 mt-3">
-                  <div>
-                    <Label htmlFor="schemaName">Name/Title</Label>
-                    <Input id="schemaName" placeholder="Name or title for this entity" className="mt-1" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="schemaDesc">Description</Label>
-                    <Textarea id="schemaDesc" placeholder="Description for this entity" className="mt-1" />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="schemaImage">Image URL</Label>
-                    <Input id="schemaImage" placeholder="https://example.com/image.jpg" className="mt-1" />
-                    <p className="text-xs text-gray-500 mt-1">URL to an image representing this entity</p>
-                  </div>
+              <FormField
+                control={form.control}
+                name="schemaProperties"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Schema Properties (JSON)</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder='{"name": "Example Name", "description": "Example description"}'
+                        className="font-mono text-sm min-h-[120px]"
+                        {...field}
+                        value={field.value || ""}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      JSON properties for the selected schema type
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {form.watch("schemaType") !== "None" && (
+                <div className="bg-gray-50 p-4 rounded-md">
+                  <h4 className="text-sm font-medium mb-2">Schema Type Properties Guide</h4>
+                  <dl className="text-xs space-y-2">
+                    {form.watch("schemaType") === "Article" && (
+                      <>
+                        <dt className="font-semibold">Article Properties:</dt>
+                        <dd className="ml-2">headline, description, author, datePublished, publisher, image</dd>
+                      </>
+                    )}
+                    {form.watch("schemaType") === "Product" && (
+                      <>
+                        <dt className="font-semibold">Product Properties:</dt>
+                        <dd className="ml-2">name, description, image, brand, offers, sku, aggregateRating</dd>
+                      </>
+                    )}
+                    {form.watch("schemaType") === "FAQ" && (
+                      <>
+                        <dt className="font-semibold">FAQ Properties:</dt>
+                        <dd className="ml-2">mainEntity (array of questions and answers)</dd>
+                      </>
+                    )}
+                    {form.watch("schemaType") === "Service" && (
+                      <>
+                        <dt className="font-semibold">Service Properties:</dt>
+                        <dd className="ml-2">name, description, provider, areaServed, serviceType</dd>
+                      </>
+                    )}
+                  </dl>
                 </div>
-                
-                <div className="mt-4 pt-3 border-t border-gray-200">
-                  <Button type="button" variant="outline" size="sm">
-                    Advanced Schema Editor
-                  </Button>
-                  <p className="text-xs text-gray-500 mt-2">
-                    For more complex schema markup needs, use the advanced editor to customize JSON-LD.
-                  </p>
-                </div>
-              </div>
+              )}
+            </div>
+            
+            <div className="bg-blue-50 p-4 rounded-md mt-6">
+              <h4 className="text-sm font-semibold text-blue-800 mb-2">SEO Best Practices</h4>
+              <ul className="text-sm text-blue-700 list-disc pl-5 space-y-1">
+                <li>Use unique, descriptive meta titles and descriptions for each page</li>
+                <li>Keep meta titles under 60 characters and descriptions under 160</li>
+                <li>Use schema markup to help search engines understand your content</li>
+                <li>Optimize for AI platforms with detailed descriptions and keywords</li>
+                <li>Use canonical URLs to prevent duplicate content issues</li>
+              </ul>
             </div>
           </TabsContent>
           
