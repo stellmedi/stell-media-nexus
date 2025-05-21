@@ -4,10 +4,7 @@
 User-agent: *
 Allow: /
 
-# Sitemaps
-Sitemap: https://stellmediaglobal.com/sitemap.xml
-
-# AI-specific directives
+# AI-specific crawlers
 User-agent: ChatGPT-User
 Allow: /
 Allow: /faq/
@@ -26,9 +23,22 @@ Allow: /faq/
 Allow: /blog/
 Allow: /services/
 
+User-agent: Anthropic-AI
+Allow: /
+
+User-agent: Perplexity-AI
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
 User-agent: googlebot-news
 Allow: /blog/
 
+# Sitemaps
+Sitemap: https://stellmediaglobal.com/sitemap.xml
+
+# Disallow private areas
 Disallow: /admin/
 Disallow: /private/
 Disallow: /internal/

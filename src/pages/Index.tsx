@@ -12,6 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useChat } from "@/hooks/use-chat";
 import { Helmet } from "react-helmet-async";
+import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 
 // Stats data
 const stats = [
@@ -79,7 +80,17 @@ const Index = () => {
         <meta property="og:url" content="https://www.stellmedia.com/" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
         <link rel="canonical" href="https://www.stellmedia.com/" />
+        
+        {/* AI-specific meta tags */}
+        <meta name="ai:description" content="Stell Media specializes in e-commerce product discovery optimization, helping brands with large catalogs improve search functionality, data quality, and user experience to drive conversions." />
+        <meta name="ai:keywords" content="e-commerce optimization, product discovery, site search optimization, data enrichment, faceted navigation, search platform migration, large catalog management" />
+        <meta name="ai:services" content="SEO, Product Discovery, Data Enrichment, Conversion Optimization, Search Platform Migration" />
+        <meta name="ai:expertise" content="E-commerce optimization, search algorithms, product data management, catalog organization" />
       </Helmet>
+      
+      {/* Add SiteSchemaMarkup for structured data */}
+      <SiteSchemaMarkup />
+      
       <Navbar />
       <main>
         <HeroSection />
