@@ -9,6 +9,7 @@
 .bg-abstract-pattern {
   position: relative;
   overflow: hidden;
+  background-color: #f9faff;  /* Very light blue background */
 }
 
 .bg-abstract-pattern::before {
@@ -19,14 +20,41 @@
   width: 200%;
   height: 200%;
   background: 
-    radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 70% 60%, rgba(168, 85, 247, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 90% 10%, rgba(14, 165, 233, 0.03) 0%, transparent 40%);
+    radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(168, 85, 247, 0.08) 0%, transparent 60%),
+    radial-gradient(circle at 90% 10%, rgba(14, 165, 233, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.05) 0%, transparent 50%);
   z-index: -1;
   animation: slow-rotate 60s linear infinite;
+}
+
+.bg-abstract-pattern::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    linear-gradient(135deg, rgba(224, 231, 255, 0.3) 0%, transparent 80%),
+    linear-gradient(225deg, rgba(224, 242, 254, 0.4) 0%, transparent 80%);
+  z-index: -2;
 }
 
 @keyframes slow-rotate {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Enhanced subtle pattern overlays */
+.pattern-dots {
+  background-image: radial-gradient(rgba(99, 102, 241, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.pattern-lines {
+  background-image: 
+    repeating-linear-gradient(90deg, rgba(199, 210, 254, 0.05), rgba(199, 210, 254, 0.05) 1px, transparent 1px, transparent 20px),
+    repeating-linear-gradient(0deg, rgba(199, 210, 254, 0.05), rgba(199, 210, 254, 0.05) 1px, transparent 1px, transparent 20px);
+  background-size: 20px 20px;
 }
