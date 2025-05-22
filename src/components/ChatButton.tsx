@@ -13,12 +13,29 @@ const WhatsAppButton = () => {
     const button = buttonRef.current;
     if (!button) return;
     
-    // Simple animation that makes the button pulse and move slightly
+    // Enhanced animation that makes the button pulse, float, and rotate slightly
     const animation = `
-      @keyframes float-pulse {
-        0% { transform: translateY(0) scale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        50% { transform: translateY(-5px) scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        100% { transform: translateY(0) scale(1); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+      @keyframes float-pulse-rotate {
+        0% { 
+          transform: translateY(0) scale(1) rotate(0deg); 
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
+        25% {
+          transform: translateY(-5px) scale(1.05) rotate(1deg);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        50% { 
+          transform: translateY(-7px) scale(1.07) rotate(0deg); 
+          box-shadow: 0 12px 24px rgba(0,0,0,0.18); 
+        }
+        75% {
+          transform: translateY(-5px) scale(1.05) rotate(-1deg);
+          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        100% { 
+          transform: translateY(0) scale(1) rotate(0deg); 
+          box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+        }
       }
     `;
     
@@ -28,7 +45,7 @@ const WhatsAppButton = () => {
     document.head.appendChild(style);
     
     // Apply the animation to the button
-    button.style.animation = 'float-pulse 3s ease-in-out infinite';
+    button.style.animation = 'float-pulse-rotate 3s ease-in-out infinite';
     
     // Clean up
     return () => {
@@ -56,7 +73,7 @@ const WhatsAppButton = () => {
         onClick={handleWhatsAppClick}
         aria-label="Contact us on WhatsApp"
       >
-        <MessageCircle size={24} />
+        <MessageCircle size={24} className="text-white" />
       </Button>
     </div>
   );

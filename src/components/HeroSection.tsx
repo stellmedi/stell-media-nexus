@@ -1,10 +1,27 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { MessageSquare, Phone } from "lucide-react";
+import { toast } from "sonner";
 
 const HeroSection = () => {
+  const phoneNumber = "919877100369";
+  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+
+  const handleWhatsAppClick = () => {
+    toast.success("Opening WhatsApp", {
+      description: "Connecting you to our support team"
+    });
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleCallClick = () => {
+    toast.success("Initiating call", {
+      description: "Connecting you to our team"
+    });
+    window.open(`tel:${phoneNumber}`, '_blank');
+  };
+
   return (
     <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden bg-abstract-pattern" aria-labelledby="hero-heading">
       {/* Abstract background shapes */}
@@ -33,11 +50,21 @@ const HeroSection = () => {
           <p className="text-xl md:text-2xl text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto animate-fade-in delay-100">
             We combine technology and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive real results.
           </p>
-          <div className="flex justify-center animate-fade-in delay-200" role="group">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100 text-white text-lg px-8 py-6">
-              <Link to="/contact">
-                Learn More <ArrowRight className="ml-2" size={18} aria-hidden="true" />
-              </Link>
+          <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in delay-200" role="group">
+            <Button 
+              onClick={handleWhatsAppClick}
+              size="lg" 
+              className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 active:opacity-100 text-white text-lg px-8 py-6"
+            >
+              <MessageSquare className="mr-2" size={18} aria-hidden="true" /> WhatsApp Us
+            </Button>
+            <Button 
+              onClick={handleCallClick}
+              variant="secondary"
+              size="lg" 
+              className="text-lg px-8 py-6"
+            >
+              <Phone className="mr-2" size={18} aria-hidden="true" /> Call Us
             </Button>
           </div>
         </div>

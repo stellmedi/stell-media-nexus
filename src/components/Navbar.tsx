@@ -1,12 +1,15 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Menu, ChevronDown, ChevronUp } from "lucide-react";
+import { X, Menu, ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
 
 const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const phoneNumber = "919877100369";
+  const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -14,6 +17,13 @@ const Navbar = () => {
 
   const toggleServicesMenu = () => {
     setServicesOpen(!servicesOpen);
+  };
+
+  const handleWhatsAppClick = () => {
+    toast.success("Opening WhatsApp", {
+      description: "Connecting you to our support team"
+    });
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -112,6 +122,16 @@ const Navbar = () => {
           <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors">
             FAQ
           </Link>
+          
+          {/* WhatsApp Us button on desktop */}
+          <Button 
+            onClick={handleWhatsAppClick}
+            className="flex items-center gap-2"
+            variant="default"
+            size="sm"
+          >
+            <MessageSquare className="h-4 w-4" /> WhatsApp Us
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -223,6 +243,15 @@ const Navbar = () => {
             >
               FAQ
             </Link>
+            
+            {/* WhatsApp Us button on mobile */}
+            <Button 
+              onClick={handleWhatsAppClick}
+              className="flex items-center justify-center gap-2 mt-2"
+              variant="default"
+            >
+              <MessageSquare className="h-4 w-4" /> WhatsApp Us
+            </Button>
           </div>
         </div>
       )}
