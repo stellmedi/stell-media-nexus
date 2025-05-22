@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
@@ -18,6 +17,7 @@ interface BlogPostProps {
     image?: string;
   };
   categories: string[];
+  url: string; // Added the missing url property to the interface
 }
 
 // Map of categories to their corresponding service pages
@@ -120,9 +120,10 @@ const BlogPost: React.FC<BlogPostProps> = ({
   publishDate,
   modifiedDate,
   author,
-  categories
+  categories,
+  url
 }) => {
-  const blogUrl = `https://stellmediaglobal.com/blog/${id}`;
+  const blogUrl = url; // Use the passed url prop instead of hardcoding
   // Extract text for schema without truncating the display content
   const articleBody = content.replace(/<[^>]*>/g, '').substring(0, 500) + '...';
   
@@ -165,7 +166,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
         <meta property="og:title" content={`${title} | Stell Media Blog`} />
         <meta property="og:description" content={description} />
         <meta property="og:type" content="article" />
-        <meta property="og:url" content={blogUrl} />
+        <meta property="og:url" content={url} />
         <meta property="og:image" content={image} />
         <meta property="article:published_time" content={publishDate} />
         {modifiedDate && <meta property="article:modified_time" content={modifiedDate} />}
@@ -173,7 +174,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
         {categories.map((category, index) => (
           <meta key={index} property="article:tag" content={category} />
         ))}
-        <link rel="canonical" href={blogUrl} />
+        <link rel="canonical" href={url} />
       </Helmet>
 
       <BlogPostSchema
@@ -183,7 +184,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
         datePublished={publishDate}
         dateModified={modifiedDate}
         authorName={author.name}
-        url={blogUrl}
+        url={url}
         keywords={categories}
         articleBody={articleBody}
         articleSection={categories[0] || "Blog"}
@@ -446,7 +447,7 @@ const BlogPost: React.FC<BlogPostProps> = ({
                 <meta itemProp="height" content="60" />
               </span>
             </span>
-            <meta itemProp="mainEntityOfPage" content={blogUrl} />
+            <meta itemProp="mainEntityOfPage" content={url} />
           </div>
         </div>
       </div>
