@@ -27,6 +27,7 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
   articleBody = "",
   articleSection = "Blog"
 }) => {
+  // Enhanced article data with more extensive properties
   const articleData = {
     '@context': 'https://schema.org',
     '@type': 'Article',
@@ -37,7 +38,8 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
     dateModified,
     author: {
       '@type': 'Person',
-      name: authorName
+      name: authorName,
+      url: 'https://stellmediaglobal.com/about'
     },
     publisher: {
       '@type': 'Organization',
@@ -45,25 +47,46 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
       logo: {
         '@type': 'ImageObject',
         url: 'https://stellmediaglobal.com/logo.png'
-      }
+      },
+      url: 'https://stellmediaglobal.com'
     },
-    mainEntityOfPage: url,
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': url
+    },
     keywords: keywords.join(', '),
     articleBody,
-    articleSection
+    articleSection,
+    // Add more specific metadata
+    isAccessibleForFree: true,
+    isPartOf: {
+      '@type': 'Blog',
+      name: 'Stell Media Blog',
+      url: 'https://stellmediaglobal.com/blog'
+    }
   };
 
-  // Breadcrumb data
-  const breadcrumbData = [
+  // Enhanced breadcrumb data
+  const breadcrumbItems = [
     { name: "Home", url: "https://stellmediaglobal.com/" },
-    { name: "Blog", url: "https://stellmediaglobal.com/blog" },
-    { name: title, url }
+    { name: "Blog", url: "https://stellmediaglobal.com/blog" }
   ];
-
+  
+  // Add category to breadcrumb if available
+  if (keywords.length > 0) {
+    breadcrumbItems.push({ 
+      name: keywords[0], 
+      url: `https://stellmediaglobal.com/blog?category=${encodeURIComponent(keywords[0])}` 
+    });
+  }
+  
+  // Add current page to breadcrumb
+  breadcrumbItems.push({ name: title, url });
+  
   return (
     <>
       <SchemaMarkup type="article" data={articleData} />
-      <SchemaMarkup type="breadcrumb" data={breadcrumbData} />
+      <SchemaMarkup type="breadcrumb" data={breadcrumbItems} />
     </>
   );
 };
