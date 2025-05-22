@@ -112,9 +112,6 @@ const Navbar = () => {
           <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors">
             FAQ
           </Link>
-          <Button asChild variant="default" className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 text-white">
-            <Link to="/contact">Book a Consultation</Link>
-          </Button>
         </div>
 
         {/* Mobile Menu Button */}
@@ -226,14 +223,6 @@ const Navbar = () => {
             >
               FAQ
             </Link>
-            <Button
-              asChild
-              variant="default"
-              className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 w-full"
-              onClick={toggleMobileMenu}
-            >
-              <Link to="/contact">Book a Consultation</Link>
-            </Button>
           </div>
         </div>
       )}
