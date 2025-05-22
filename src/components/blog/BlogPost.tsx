@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
 import BlogPostSchema from './BlogPostSchema';
 
 interface BlogPostProps {
@@ -18,6 +20,17 @@ interface BlogPostProps {
   categories: string[];
 }
 
+// Map of categories to their corresponding service pages
+const categoryServiceMap: Record<string, string> = {
+  'SEO': '/services/seo',
+  'Product Discovery': '/services/product-discovery',
+  'Data Enrichment': '/services/data-enrichment',
+  'SEM': '/services/sem',
+  'Conversion Optimization': '/services/conversion-optimization',
+  'E-commerce': '/services',
+  'Search': '/services/product-discovery',
+};
+
 const BlogPost: React.FC<BlogPostProps> = ({
   id,
   title,
@@ -32,6 +45,14 @@ const BlogPost: React.FC<BlogPostProps> = ({
   const blogUrl = `https://stellmediaglobal.com/blog/${id}`;
   // Extract text for schema without truncating the display content
   const articleBody = content.replace(/<[^>]*>/g, '').substring(0, 500) + '...';
+  
+  // Get related service page links based on categories
+  const relatedServiceLinks = categories
+    .filter(category => categoryServiceMap[category])
+    .map(category => ({
+      name: category,
+      link: categoryServiceMap[category]
+    }));
   
   return (
     <article className="max-w-3xl mx-auto" itemScope itemType="https://schema.org/BlogPosting">
@@ -81,16 +102,23 @@ const BlogPost: React.FC<BlogPostProps> = ({
         </div>
         
         <div className="p-6">
+          {/* Topic Categories with Links - ENHANCED */}
           <div className="flex items-center gap-2 mb-4">
             {categories.map((category, index) => (
-              <span key={index} className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded" itemProp="keywords">
+              <Link 
+                key={index} 
+                to={categoryServiceMap[category] || '/blog'} 
+                className="bg-indigo-100 text-indigo-800 text-xs px-2 py-1 rounded hover:bg-indigo-200 transition-colors" 
+                itemProp="keywords"
+              >
                 {category}
-              </span>
+              </Link>
             ))}
           </div>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-4" itemProp="headline">{title}</h1>
           
+          {/* Author with Link to About Page - ENHANCED */}
           <div className="flex items-center mb-6">
             <div itemProp="author" itemScope itemType="https://schema.org/Person">
               {author.image && (
@@ -102,7 +130,9 @@ const BlogPost: React.FC<BlogPostProps> = ({
                 />
               )}
               <div>
-                <p className="font-medium text-gray-900" itemProp="name">{author.name}</p>
+                <Link to="/about" className="font-medium text-gray-900 hover:text-indigo-700" itemProp="name">
+                  {author.name}
+                </Link>
                 <p className="text-gray-500 text-sm">
                   <meta itemProp="datePublished" content={publishDate} />
                   Published on <time dateTime={publishDate}>{new Date(publishDate).toLocaleDateString()}</time>
@@ -119,6 +149,54 @@ const BlogPost: React.FC<BlogPostProps> = ({
           </div>
           
           <div className="prose max-w-none" itemProp="articleBody" dangerouslySetInnerHTML={{ __html: content }} />
+
+          {/* Related Services Section - NEW */}
+          {relatedServiceLinks.length > 0 && (
+            <div className="mt-8 border-t border-gray-100 pt-6">
+              <h3 className="text-lg font-bold mb-3">Related Services</h3>
+              <div className="flex flex-wrap gap-2">
+                {relatedServiceLinks.map((service, index) => (
+                  <Link 
+                    key={index}
+                    to={service.link}
+                    className="bg-indigo-50 text-indigo-700 px-3 py-1 rounded-md text-sm hover:bg-indigo-100 transition-colors"
+                  >
+                    {service.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+          
+          {/* Call to Action - NEW */}
+          <div className="mt-8 bg-indigo-50 p-4 rounded-lg">
+            <h3 className="font-bold text-gray-900 mb-2">Need help with {categories[0] || 'digital optimization'}?</h3>
+            <p className="text-gray-600 mb-3">
+              Our team of experts can help you implement these strategies and achieve measurable results.
+            </p>
+            <Link 
+              to="/consultation" 
+              className="inline-flex items-center text-indigo-700 font-medium hover:text-indigo-900"
+            >
+              Book a free consultation <ArrowRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+          
+          {/* Explore More Section - NEW */}
+          <div className="mt-8 flex justify-between border-t border-gray-100 pt-6">
+            <Link 
+              to="/blog" 
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              ← Back to all articles
+            </Link>
+            <Link 
+              to="/case-studies" 
+              className="text-indigo-600 hover:text-indigo-800"
+            >
+              Browse case studies →
+            </Link>
+          </div>
 
           {/* Structured machine-readable section */}
           <div className="hidden" aria-hidden="true">
