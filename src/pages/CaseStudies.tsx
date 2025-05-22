@@ -80,7 +80,7 @@ const CaseStudies = () => {
         <meta property="og:title" content="Case Studies | Stell Media" />
         <meta property="og:description" content="Real results from our e-commerce optimization strategies." />
         <meta property="og:type" content="website" />
-        <link rel="canonical" href="https://stellmediaglobal.com/case-studies" />
+        <link rel="canonical" href="https://stellmedia.com/case-studies" />
       </Helmet>
       
       <Navbar />

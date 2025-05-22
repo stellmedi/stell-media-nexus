@@ -125,7 +125,7 @@ const CaseStudyDetail = () => {
         <meta property="og:description" content={caseStudy.description} />
         <meta property="og:type" content="article" />
         <meta property="og:image" content={caseStudy.image} />
-        <link rel="canonical" href={`https://stellmediaglobal.com/case-studies/${studyId}`} />
+        <link rel="canonical" href={`https://stellmedia.com/case-studies/${studyId}`} />
       </Helmet>
       
       <Navbar />

@@ -153,9 +153,9 @@ const Services = () => {
         <meta property="og:title" content="E-commerce Optimization Services | Stell Media" />
         <meta property="og:description" content="Transform your e-commerce experience with our specialized product discovery and optimization services." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmediaglobal.com/services" />
+        <meta property="og:url" content="https://stellmedia.com/services" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmediaglobal.com/services" />
+        <link rel="canonical" href="https://stellmedia.com/services" />
       </Helmet>
       <Navbar />
       <main>

@@ -58,9 +58,9 @@ const FAQ = () => {
         <meta property="og:title" content="Frequently Asked Questions | Stell Media" />
         <meta property="og:description" content="Find comprehensive answers about our e-commerce optimization services and technologies." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmediaglobal.com/faq" />
+        <meta property="og:url" content="https://stellmedia.com/faq" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmediaglobal.com/faq" />
+        <link rel="canonical" href="https://stellmedia.com/faq" />
       </Helmet>
       <Navbar />
       <main>
