@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -77,9 +76,9 @@ const Index = () => {
         <meta property="og:title" content="Stell Media | E-Commerce Product Discovery Experts" />
         <meta property="og:description" content="Optimize your e-commerce product discovery experience and boost conversions with Stell Media's specialized solutions." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://www.stellmedia.com/" />
+        <meta property="og:url" content="https://stellmedia.com/" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://www.stellmedia.com/" />
+        <link rel="canonical" href="https://stellmedia.com/" />
         
         {/* AI-specific meta tags */}
         <meta name="ai:description" content="Stell Media specializes in e-commerce product discovery optimization, helping brands with large catalogs improve search functionality, data quality, and user experience to drive conversions." />

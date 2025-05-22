@@ -8,18 +8,18 @@ const SiteSchemaMarkup: React.FC = () => {
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "@id": "https://stellmediaglobal.com/#organization",
+      "@id": "https://stellmedia.com/#organization",
       "name": "Stell Media",
-      "url": "https://stellmediaglobal.com",
+      "url": "https://stellmedia.com",
       "logo": {
         "@type": "ImageObject",
-        "@id": "https://stellmediaglobal.com/#logo",
-        "url": "https://stellmediaglobal.com/logo.png",
-        "contentUrl": "https://stellmediaglobal.com/logo.png",
+        "@id": "https://stellmedia.com/#logo",
+        "url": "https://stellmedia.com/logo.png",
+        "contentUrl": "https://stellmedia.com/logo.png",
         "width": "600",
         "height": "60"
       },
-      "image": "https://stellmediaglobal.com/logo.png",
+      "image": "https://stellmedia.com/logo.png",
       "sameAs": [
         "https://www.facebook.com/StellMedia",
         "https://twitter.com/StellMedia",
@@ -31,7 +31,7 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "ContactPoint",
           "telephone": "+919877100369",
           "contactType": "customer service",
-          "email": "contact@stellmediaglobal.com",
+          "email": "contact@stellmedia.com",
           "availableLanguage": "English",
           "contactOption": "TollFree",
           "areaServed": "Worldwide"
@@ -40,7 +40,7 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "ContactPoint",
           "telephone": "+919877100369",
           "contactType": "technical support",
-          "email": "support@stellmediaglobal.com",
+          "email": "support@stellmedia.com",
           "availableLanguage": "English",
           "areaServed": "Worldwide"
         }
@@ -84,12 +84,12 @@ const SiteSchemaMarkup: React.FC = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": "https://stellmediaglobal.com/#website",
-      "url": "https://stellmediaglobal.com",
+      "@id": "https://stellmedia.com/#website",
+      "url": "https://stellmedia.com",
       "name": "Stell Media",
       "description": "E-Commerce Product Discovery Experts",
       "publisher": {
-        "@id": "https://stellmediaglobal.com/#organization"
+        "@id": "https://stellmedia.com/#organization"
       },
       "inLanguage": "en-US",
       "copyrightYear": "2023",
@@ -98,7 +98,7 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://stellmediaglobal.com/search?q={search_term_string}"
+            "urlTemplate": "https://stellmedia.com/search?q={search_term_string}"
           },
           "query-input": "required name=search_term_string"
         },
@@ -106,14 +106,14 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "ReadAction",
           "target": {
             "@type": "EntryPoint", 
-            "urlTemplate": "https://stellmediaglobal.com/blog"
+            "urlTemplate": "https://stellmedia.com/blog"
           }
         },
         {
           "@type": "ViewAction",
           "target": {
             "@type": "EntryPoint", 
-            "urlTemplate": "https://stellmediaglobal.com/services"
+            "urlTemplate": "https://stellmedia.com/services"
           }
         }
       ]

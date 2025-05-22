@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -29,7 +28,7 @@ const SEOServices = () => {
           "@type": "Service",
           "name": "Technical SEO Audits",
           "description": "Comprehensive analysis of your e-commerce site structure, crawlability, and indexation.",
-          "url": "https://stellmediaglobal.com/services/seo#technical"
+          "url": "https://stellmedia.com/services/seo#technical"
         }
       },
       {
@@ -38,7 +37,7 @@ const SEOServices = () => {
           "@type": "Service",
           "name": "Product Page Optimization",
           "description": "Automated optimization of product pages for better search visibility.",
-          "url": "https://stellmediaglobal.com/services/seo#product-pages"
+          "url": "https://stellmedia.com/services/seo#product-pages"
         }
       },
       {
@@ -47,7 +46,7 @@ const SEOServices = () => {
           "@type": "Service",
           "name": "Schema Markup Implementation",
           "description": "Structured data implementation to enhance rich snippets in search results.",
-          "url": "https://stellmediaglobal.com/services/seo#schema"
+          "url": "https://stellmedia.com/services/seo#schema"
         }
       }
     ]
@@ -55,9 +54,9 @@ const SEOServices = () => {
 
   // Breadcrumb data
   const breadcrumbData = [
-    { name: "Home", url: "https://stellmediaglobal.com/" },
-    { name: "Services", url: "https://stellmediaglobal.com/services" },
-    { name: "SEO Services", url: "https://stellmediaglobal.com/services/seo" }
+    { name: "Home", url: "https://stellmedia.com/" },
+    { name: "Services", url: "https://stellmedia.com/services" },
+    { name: "SEO Services", url: "https://stellmedia.com/services/seo" }
   ];
 
   // Related case studies for SEO services
@@ -124,15 +123,15 @@ const SEOServices = () => {
         <meta property="og:title" content="Expert E-commerce SEO Services | Stell Media" />
         <meta property="og:description" content="Boost your e-commerce visibility with data-driven SEO strategies tailored for large product catalogs." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmediaglobal.com/services/seo" />
+        <meta property="og:url" content="https://stellmedia.com/services/seo" />
         <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmediaglobal.com/services/seo" />
+        <link rel="canonical" href="https://stellmedia.com/services/seo" />
       </Helmet>
       
       {/* Schema markup for this page */}
       <SchemaMarkup type="service" data={seoServiceData} />
       <SchemaMarkup type="breadcrumb" data={breadcrumbData} />
-      <FAQSchemaMarkup items={faqItems} />
+      <FAQSchemaMarkup items={faqItems} mainEntity="https://stellmedia.com/services/seo#faq" />
       
       <Navbar />
       <main>

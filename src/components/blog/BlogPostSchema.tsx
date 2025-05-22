@@ -39,16 +39,16 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
     author: {
       '@type': 'Person',
       name: authorName,
-      url: 'https://stellmediaglobal.com/about'
+      url: 'https://stellmedia.com/about'
     },
     publisher: {
       '@type': 'Organization',
       name: 'Stell Media',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://stellmediaglobal.com/logo.png'
+        url: 'https://stellmedia.com/logo.png'
       },
-      url: 'https://stellmediaglobal.com'
+      url: 'https://stellmedia.com'
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
@@ -62,21 +62,21 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
     isPartOf: {
       '@type': 'Blog',
       name: 'Stell Media Blog',
-      url: 'https://stellmediaglobal.com/blog'
+      url: 'https://stellmedia.com/blog'
     }
   };
 
   // Enhanced breadcrumb data
   const breadcrumbItems = [
-    { name: "Home", url: "https://stellmediaglobal.com/" },
-    { name: "Blog", url: "https://stellmediaglobal.com/blog" }
+    { name: "Home", url: "https://stellmedia.com/" },
+    { name: "Blog", url: "https://stellmedia.com/blog" }
   ];
   
   // Add category to breadcrumb if available
   if (keywords.length > 0) {
     breadcrumbItems.push({ 
       name: keywords[0], 
-      url: `https://stellmediaglobal.com/blog?category=${encodeURIComponent(keywords[0])}` 
+      url: `https://stellmedia.com/blog?category=${encodeURIComponent(keywords[0])}` 
     });
   }
   

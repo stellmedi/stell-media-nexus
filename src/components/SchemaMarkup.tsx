@@ -12,13 +12,13 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const organizationSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "@id": "https://stellmediaglobal.com/#organization",
+    "@id": "https://stellmedia.com/#organization",
     "name": "Stell Media",
-    "url": "https://stellmediaglobal.com",
+    "url": "https://stellmedia.com",
     "logo": {
       "@type": "ImageObject",
-      "@id": "https://stellmediaglobal.com/#logo",
-      "url": "https://stellmediaglobal.com/logo.png", // Replace with actual logo URL
+      "@id": "https://stellmedia.com/#logo",
+      "url": "https://stellmedia.com/logo.png", // Replace with actual logo URL
       "width": "600",
       "height": "60"
     },
@@ -32,7 +32,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
       "@type": "ContactPoint",
       "telephone": "+1-555-123-4567", // Replace with actual phone number
       "contactType": "customer service",
-      "email": "contact@stellmediaglobal.com", // Replace with actual email
+      "email": "contact@stellmedia.com", // Replace with actual email
       "availableLanguage": "English"
     },
     "address": {
@@ -49,12 +49,12 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const websiteSchema = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    "@id": "https://stellmediaglobal.com/#website",
+    "@id": "https://stellmedia.com/#website",
     "name": "Stell Media",
-    "url": "https://stellmediaglobal.com",
+    "url": "https://stellmedia.com",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://stellmediaglobal.com/search?q={search_term_string}",
+      "target": "https://stellmedia.com/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -63,12 +63,12 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
   const serviceSchema = data ? {
     "@context": "https://schema.org",
     "@type": "Service",
-    "@id": `https://stellmediaglobal.com/services/${data.serviceType?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
+    "@id": `https://stellmedia.com/services/${data.serviceType?.toLowerCase().replace(/\s+/g, '-') || 'default'}`,
     "serviceType": data.serviceType || "Digital Marketing Service",
     "name": data.name || "Stell Media Services",
     "provider": {
       "@type": "Organization",
-      "@id": "https://stellmediaglobal.com/#organization"
+      "@id": "https://stellmedia.com/#organization"
     },
     "description": data.description || "Professional digital marketing services for e-commerce businesses.",
     "areaServed": data.areaServed || "Worldwide",
@@ -86,7 +86,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
             "@type": "Service",
             "name": "SEO Services",
             "description": "Improve organic visibility with data-driven SEO strategies tailored for e-commerce.",
-            "url": "https://stellmediaglobal.com/services/seo"
+            "url": "https://stellmedia.com/services/seo"
           }
         },
         {
@@ -95,7 +95,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
             "@type": "Service",
             "name": "SEM Services",
             "description": "Drive measurable traffic through AI-optimized search marketing campaigns.",
-            "url": "https://stellmediaglobal.com/services/sem"
+            "url": "https://stellmedia.com/services/sem"
           }
         },
         {
@@ -104,7 +104,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
             "@type": "Service",
             "name": "Performance Marketing",
             "description": "Strategic performance marketing to improve ROAS and reduce customer acquisition costs.",
-            "url": "https://stellmediaglobal.com/services/performance-marketing"
+            "url": "https://stellmedia.com/services/performance-marketing"
           }
         }
       ]
@@ -151,7 +151,7 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
     "headline": data.title || "Article Title",
     "name": data.title || "Article Title",
     "description": data.description || "Article description text goes here",
-    "image": data.image ? [data.image] : ["https://stellmediaglobal.com/article-image.jpg"],
+    "image": data.image ? [data.image] : ["https://stellmedia.com/article-image.jpg"],
     "datePublished": data.datePublished || "2023-01-01T08:00:00+08:00",
     "dateModified": data.dateModified || "2023-01-01T08:00:00+08:00",
     "author": {
@@ -160,16 +160,16 @@ const SchemaMarkup: React.FC<SchemaMarkupProps> = ({ type, data }) => {
     },
     "publisher": {
       "@type": "Organization",
-      "@id": "https://stellmediaglobal.com/#organization",
+      "@id": "https://stellmedia.com/#organization",
       "name": "Stell Media",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://stellmediaglobal.com/logo.png"
+        "url": "https://stellmedia.com/logo.png"
       }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": data.url || "https://stellmediaglobal.com/blog/article-url"
+      "@id": data.url || "https://stellmedia.com/blog/article-url"
     },
     "keywords": data.keywords || ["e-commerce", "product discovery", "SEO"],
     "articleBody": data.articleBody || "",

@@ -12,7 +12,7 @@ interface FAQSchemaMarkupProps {
   mainEntity?: string;
 }
 
-const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity = "https://stellmediaglobal.com/faq" }) => {
+const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity = "https://stellmedia.com/faq" }) => {
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

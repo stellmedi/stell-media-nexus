@@ -10,6 +10,11 @@ const Privacy = () => {
       <Helmet>
         <title>Privacy Policy | Stell Media</title>
         <meta name="description" content="Privacy policy and data protection practices of Stell Media." />
+        <meta property="og:title" content="Privacy Policy | Stell Media" />
+        <meta property="og:description" content="Privacy policy and data protection practices of Stell Media." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmedia.com/privacy" />
+        <link rel="canonical" href="https://stellmedia.com/privacy" />
       </Helmet>
       <Navbar />
       <main className="pt-32 pb-16">
