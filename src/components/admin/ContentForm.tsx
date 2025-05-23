@@ -19,6 +19,8 @@ import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Eye, Edit, BarChart, Search, Copy, FileText, Link, Settings } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useEffect as useEffectFromReact } from "react";
+import SiteSchemaMarkup from "../SiteSchemaMarkup";
 
 // Enhanced Content form schema with expanded SEO validation
 const formSchema = z.object({
@@ -81,20 +83,52 @@ export default function ContentForm({
   const [metaTitleCount, setMetaTitleCount] = useState(0);
   const [metaDescCount, setMetaDescCount] = useState(0);
   const [showCurrentMetadata, setShowCurrentMetadata] = useState(false);
+  const [seoChanged, setSeoChanged] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
   
   const form = useForm<ContentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  // Update character counts for meta fields
+  // Set initial character counts for meta fields
   useEffect(() => {
-    const titleValue = form.watch('metaTitle') || '';
-    const descValue = form.watch('metaDescription') || '';
+    const titleValue = defaultValues.metaTitle || '';
+    const descValue = defaultValues.metaDescription || '';
     
     setMetaTitleCount(titleValue.length);
     setMetaDescCount(descValue.length);
-  }, [form.watch('metaTitle'), form.watch('metaDescription')]);
+    
+    // Generate preview URL
+    updatePreviewUrl(defaultValues.slug || '');
+  }, [defaultValues]);
+
+  // Update character counts when meta fields change
+  useEffect(() => {
+    const titleSubscription = form.watch((value, { name }) => {
+      if (name === 'metaTitle') {
+        setMetaTitleCount(value.metaTitle?.length || 0);
+        setSeoChanged(true);
+      } else if (name === 'metaDescription') {
+        setMetaDescCount(value.metaDescription?.length || 0);
+        setSeoChanged(true);
+      } else if (name === 'canonicalUrl' || name === 'ogTitle' || name === 'ogDescription' || 
+                name === 'twitterTitle' || name === 'twitterDescription' || 
+                name === 'noIndex' || name === 'noFollow') {
+        setSeoChanged(true);
+      } else if (name === 'slug') {
+        updatePreviewUrl(value.slug || '');
+      }
+    });
+    
+    return () => titleSubscription.unsubscribe();
+  }, [form.watch]);
+
+  // Update preview URL based on slug
+  const updatePreviewUrl = (slug: string) => {
+    const baseUrl = "https://stellmedia.com/";
+    setPreviewUrl(baseUrl + (slug || ''));
+  };
 
   // Generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -108,13 +142,41 @@ export default function ContentForm({
         .replace(/[^\w\s]/gi, '')
         .replace(/\s+/g, '-');
       form.setValue("slug", slug);
+      updatePreviewUrl(slug);
     }
     
     // Suggest meta title if not set
     if (!form.getValues("metaTitle")) {
       form.setValue("metaTitle", title);
       setMetaTitleCount(title.length);
+      setSeoChanged(true);
     }
+  };
+
+  // Handle form submission with SEO data
+  const handleFormSubmit = (values: ContentFormValues) => {
+    // Make sure canonical URL starts with https:// if provided but doesn't include protocol
+    if (values.canonicalUrl && values.canonicalUrl.trim() !== "" && !values.canonicalUrl.startsWith("http")) {
+      values.canonicalUrl = "https://" + values.canonicalUrl;
+    }
+    
+    // Prepare the final form data
+    const formData = {
+      ...values,
+      // Ensure consistent URL format for canonical URLs
+      canonicalUrl: values.canonicalUrl ? values.canonicalUrl.replace("stellmediaglobal.com", "stellmedia.com") : ""
+    };
+    
+    // Show confirmation if SEO data was changed
+    if (seoChanged) {
+      toast({
+        title: "SEO data updated",
+        description: "Your changes to SEO metadata will be applied.",
+      });
+    }
+    
+    // Submit the form with updated values
+    onSubmit(formData);
   };
 
   // Get current content value for preview
@@ -138,7 +200,7 @@ export default function ContentForm({
     const metaTagsHtml = `
 <title>${metaTitle || defaultValues.title || ''}</title>
 <meta name="description" content="${metaDesc || ''}">
-<link rel="canonical" href="${form.getValues("canonicalUrl") || ''}">
+<link rel="canonical" href="${form.getValues("canonicalUrl") || previewUrl}">
 <meta property="og:title" content="${metaTitle || form.getValues("ogTitle") || ''}">
 <meta property="og:description" content="${metaDesc || form.getValues("ogDescription") || ''}">
 <meta property="og:image" content="${form.getValues("ogImage") || ''}">
@@ -180,7 +242,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <Tabs defaultValue="basic" className="w-full">
           <TabsList className="grid grid-cols-6 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
@@ -222,11 +284,14 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                     <FormControl>
                       <div className="flex items-center">
                         <span className="text-sm text-gray-500 mr-1">/</span>
-                        <Input placeholder="url-path" {...field} />
+                        <Input placeholder="url-path" {...field} onChange={(e) => {
+                          field.onChange(e);
+                          updatePreviewUrl(e.target.value);
+                        }} />
                       </div>
                     </FormControl>
                     <FormDescription>
-                      The URL path for this content
+                      The URL path for this content: {previewUrl}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -502,7 +567,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                   <pre className="text-xs text-gray-600 whitespace-pre-wrap">
                     {`<title>${form.watch("metaTitle") || defaultValues.title || ''}</title>
 <meta name="description" content="${form.watch("metaDescription") || ''}">
-<link rel="canonical" href="${form.watch("canonicalUrl") || ''}">
+<link rel="canonical" href="${form.watch("canonicalUrl") || previewUrl}">
 <meta property="og:title" content="${form.watch("ogTitle") || form.watch("metaTitle") || ''}">
 <meta property="og:description" content="${form.watch("ogDescription") || form.watch("metaDescription") || ''}">
 <meta property="og:image" content="${form.watch("ogImage") || ''}">
@@ -533,6 +598,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           onChange={e => {
                             field.onChange(e);
                             setMetaTitleCount(e.target.value.length);
+                            setSeoChanged(true);
                           }}
                           className={`${metaTitleCount > 60 ? 'border-red-300' : metaTitleCount > 50 ? 'border-yellow-300' : 'border-green-300'}`}
                         />
@@ -566,6 +632,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           onChange={e => {
                             field.onChange(e);
                             setMetaDescCount(e.target.value.length);
+                            setSeoChanged(true);
                           }}
                         />
                         <span className={`absolute right-3 bottom-3 text-xs ${
@@ -595,13 +662,17 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                   </FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="https://example.com/canonical-page" 
+                      placeholder="https://stellmedia.com/your-page" 
                       {...field} 
                       value={field.value || ""}
+                      onChange={(e) => {
+                        field.onChange(e);
+                        setSeoChanged(true);
+                      }}
                     />
                   </FormControl>
                   <FormDescription>
-                    Used to prevent duplicate content issues. Leave blank to use the default URL.
+                    Used to prevent duplicate content issues. Leave blank to use the default URL: {previewUrl}
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
@@ -624,7 +695,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <input
                         type="checkbox"
                         checked={field.value}
-                        onChange={field.onChange}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                         className="ml-2 h-4 w-4"
                       />
                     </FormControl>
@@ -648,7 +722,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <input
                         type="checkbox"
                         checked={field.value}
-                        onChange={field.onChange}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                         className="ml-2 h-4 w-4"
                       />
                     </FormControl>
@@ -673,7 +750,15 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                     <FormItem>
                       <FormLabel>OG Title</FormLabel>
                       <FormControl>
-                        <Input placeholder="Title for social sharing" {...field} value={field.value || ""} />
+                        <Input 
+                          placeholder="Title for social sharing" 
+                          {...field} 
+                          value={field.value || ""} 
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setSeoChanged(true);
+                          }}
+                        />
                       </FormControl>
                       <FormDescription>
                         Leave blank to use Meta Title
@@ -694,6 +779,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="Description for social sharing" 
                           {...field}
                           value={field.value || ""}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setSeoChanged(true);
+                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -713,9 +802,13 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                     <FormLabel>OG Image URL</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="https://example.com/image.jpg" 
+                        placeholder="https://stellmedia.com/image.jpg" 
                         {...field}
                         value={field.value || ""}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -743,7 +836,15 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <FormItem>
                         <FormLabel>Twitter Title</FormLabel>
                         <FormControl>
-                          <Input placeholder="Twitter card title" {...field} value={field.value || ""} />
+                          <Input 
+                            placeholder="Twitter card title" 
+                            {...field} 
+                            value={field.value || ""} 
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setSeoChanged(true);
+                            }}
+                          />
                         </FormControl>
                         <FormDescription>
                           Leave blank to use OG Title
@@ -760,7 +861,15 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <FormItem>
                         <FormLabel>Twitter Description</FormLabel>
                         <FormControl>
-                          <Textarea placeholder="Twitter card description" {...field} value={field.value || ""} />
+                          <Textarea 
+                            placeholder="Twitter card description" 
+                            {...field} 
+                            value={field.value || ""} 
+                            onChange={(e) => {
+                              field.onChange(e);
+                              setSeoChanged(true);
+                            }}
+                          />
                         </FormControl>
                         <FormDescription>
                           Leave blank to use OG Description
@@ -795,6 +904,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         {...field}
                         value={field.value || ""}
                         className="min-h-[80px]"
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -817,6 +930,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="ai-optimization, chatgpt, perplexity" 
                           {...field}
                           value={field.value || ""}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setSeoChanged(true);
+                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -838,6 +955,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="SEO, Content Creation, Analytics" 
                           {...field}
                           value={field.value || ""}
+                          onChange={(e) => {
+                            field.onChange(e);
+                            setSeoChanged(true);
+                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -860,6 +981,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         placeholder="E-commerce optimization, search algorithms, product data management" 
                         {...field}
                         value={field.value || ""}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -882,7 +1007,14 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                   <FormItem>
                     <FormLabel>Schema Markup Type</FormLabel>
                     <FormControl>
-                      <select className="w-full p-2 border rounded-md" {...field}>
+                      <select 
+                        className="w-full p-2 border rounded-md" 
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
+                      >
                         <option value="None">None</option>
                         <option value="Article">Article</option>
                         <option value="Product">Product</option>
@@ -915,6 +1047,10 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         className="font-mono text-sm min-h-[120px]"
                         {...field}
                         value={field.value || ""}
+                        onChange={(e) => {
+                          field.onChange(e);
+                          setSeoChanged(true);
+                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -968,6 +1104,16 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                 <li>Use canonical URLs to prevent duplicate content issues</li>
               </ul>
             </div>
+
+            {/* Structured Data Preview */}
+            {form.watch("schemaType") !== "None" && (
+              <div className="border rounded-md p-4 mt-6 bg-gray-50">
+                <h3 className="font-medium mb-2">Structured Data Preview</h3>
+                <div className="bg-slate-100 p-4 rounded">
+                  <SiteSchemaMarkup />
+                </div>
+              </div>
+            )}
           </TabsContent>
           
           {/* Analytics Tab - Enhanced with Google tools integration */}
@@ -1121,8 +1267,12 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
           <Button variant="outline" type="button" onClick={onCancel}>
             Cancel
           </Button>
-          <Button type="submit">
+          <Button 
+            type="submit" 
+            className={seoChanged ? "bg-gradient-to-r from-indigo-600 to-purple-600" : ""}
+          >
             {isEditMode ? "Update" : "Create"}
+            {seoChanged && " with SEO changes"}
           </Button>
         </DialogFooter>
       </form>
