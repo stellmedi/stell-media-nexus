@@ -3,23 +3,25 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SiteSchemaMarkup: React.FC = () => {
+  const websiteUrl = "https://stellmedia.com"; // Consistent URL across all schema
+  
   const schemas = [
     // Organization schema with comprehensive contact info
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "@id": "https://stellmedia.com/#organization",
+      "@id": `${websiteUrl}/#organization`,
       "name": "Stell Media",
-      "url": "https://stellmedia.com",
+      "url": websiteUrl,
       "logo": {
         "@type": "ImageObject",
-        "@id": "https://stellmedia.com/#logo",
-        "url": "https://stellmedia.com/logo.png",
-        "contentUrl": "https://stellmedia.com/logo.png",
+        "@id": `${websiteUrl}/#logo`,
+        "url": `${websiteUrl}/logo.png`,
+        "contentUrl": `${websiteUrl}/logo.png`,
         "width": "600",
         "height": "60"
       },
-      "image": "https://stellmedia.com/logo.png",
+      "image": `${websiteUrl}/logo.png`,
       "sameAs": [
         "https://www.facebook.com/StellMedia",
         "https://twitter.com/StellMedia",
@@ -84,12 +86,12 @@ const SiteSchemaMarkup: React.FC = () => {
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "@id": "https://stellmedia.com/#website",
-      "url": "https://stellmedia.com",
+      "@id": `${websiteUrl}/#website`,
+      "url": websiteUrl,
       "name": "Stell Media",
       "description": "E-Commerce Product Discovery Experts",
       "publisher": {
-        "@id": "https://stellmedia.com/#organization"
+        "@id": `${websiteUrl}/#organization`
       },
       "inLanguage": "en-US",
       "copyrightYear": "2023",
@@ -98,7 +100,7 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "SearchAction",
           "target": {
             "@type": "EntryPoint",
-            "urlTemplate": "https://stellmedia.com/search?q={search_term_string}"
+            "urlTemplate": `${websiteUrl}/search?q={search_term_string}`
           },
           "query-input": "required name=search_term_string"
         },
@@ -106,14 +108,14 @@ const SiteSchemaMarkup: React.FC = () => {
           "@type": "ReadAction",
           "target": {
             "@type": "EntryPoint", 
-            "urlTemplate": "https://stellmedia.com/blog"
+            "urlTemplate": `${websiteUrl}/blog`
           }
         },
         {
           "@type": "ViewAction",
           "target": {
             "@type": "EntryPoint", 
-            "urlTemplate": "https://stellmedia.com/services"
+            "urlTemplate": `${websiteUrl}/services`
           }
         }
       ]

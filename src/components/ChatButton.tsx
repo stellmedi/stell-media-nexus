@@ -13,7 +13,7 @@ const WhatsAppButton = () => {
     const button = buttonRef.current;
     if (!button) return;
     
-    // Enhanced animation that makes the button pulse, float, and rotate slightly
+    // Enhanced animation with floating, pulsing, and subtle rotation effects
     const animation = `
       @keyframes float-pulse-rotate {
         0% { 
@@ -69,7 +69,7 @@ const WhatsAppButton = () => {
         ref={buttonRef}
         variant="default" 
         size="icon" 
-        className="h-14 w-14 rounded-full shadow-lg transition-all duration-300"
+        className="h-14 w-14 rounded-full shadow-lg bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 transition-all duration-300"
         onClick={handleWhatsAppClick}
         aria-label="Contact us on WhatsApp"
       >

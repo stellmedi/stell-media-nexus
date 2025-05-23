@@ -32,6 +32,19 @@ const Contact = () => {
     setEmailConfigured(isEmailJSConfigured());
   }, []);
 
+  // Set up event listener for form submissions
+  useEffect(() => {
+    const handleFormSubmission = (event: CustomEvent) => {
+      console.log("Contact form submission detected:", event.detail);
+      // You could add additional handling here if needed
+    };
+    
+    window.addEventListener("formSubmitted", handleFormSubmission as EventListener);
+    return () => {
+      window.removeEventListener("formSubmitted", handleFormSubmission as EventListener);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
@@ -46,22 +59,23 @@ const Contact = () => {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <section className="pt-32 pb-16 bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
+        <section className="pt-32 pb-12 md:pb-16 bg-gradient-to-br from-indigo-50 via-white to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Get In Touch
               </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Have questions or ready to transform your e-commerce experience? Our team is here to help you succeed.
+              <p className="text-xl text-gray-600 mb-6 md:mb-8">
+                Have questions or ready to transform your <Link to="/services" className="text-indigo-600 hover:underline">e-commerce experience</Link>? Our team is here to help you succeed with <Link to="/services/product-discovery" className="text-indigo-600 hover:underline">product discovery</Link> and <Link to="/services/seo" className="text-indigo-600 hover:underline">optimization</Link>.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
-                <Button asChild size="lg">
-                  <Link to="/consultation">
-                    Book a Consultation <ArrowRight className="ml-2" size={18} />
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline">
+                <Button asChild size="lg" onClick={() => {
+                  // Dispatch form submission event when user clicks
+                  const event = new CustomEvent("formSubmitted", { 
+                    detail: { formData: { name: "Test User", email: "test@example.com" } } 
+                  });
+                  window.dispatchEvent(event);
+                }}>
                   <a href="tel:+919877100369">
                     <Phone className="mr-2" size={18} />
                     Call Us Directly
@@ -96,16 +110,16 @@ const Contact = () => {
         )}
 
         {/* Contact Details & Form */}
-        <section className="py-16">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-start">
               <div>
                 <h2 className="text-3xl font-bold mb-6 text-gray-900">Contact Information</h2>
-                <p className="text-lg text-gray-600 mb-8">
-                  Fill out the form and we'll get back to you within 24 hours. For urgent inquiries, please call us directly.
+                <p className="text-lg text-gray-600 mb-6 md:mb-8">
+                  Fill out the form and we'll get back to you within 24 hours. Our <Link to="/services" className="text-indigo-600 hover:underline">digital services</Link> team is ready to help with your <Link to="/services/product-discovery" className="text-indigo-600 hover:underline">product discovery</Link> and <Link to="/services/data-enrichment" className="text-indigo-600 hover:underline">data enrichment</Link> needs.
                 </p>
                 
-                <div className="space-y-8">
+                <div className="space-y-6 md:space-y-8">
                   <ContactInfo icon={Mail} title="Email">
                     <p className="text-gray-600">
                       <a href="mailto:info@stellmedia.com" className="hover:text-indigo-600 transition-colors">
@@ -143,32 +157,35 @@ const Contact = () => {
                   </ContactInfo>
                 </div>
                 
-                <div className="mt-12">
-                  <h3 className="text-xl font-semibold mb-4">Need a consultation?</h3>
+                <div className="mt-8 md:mt-10">
+                  <h3 className="text-xl font-semibold mb-4">Explore Our Services</h3>
                   <p className="text-gray-600 mb-4">
-                    If you're looking for a more detailed conversation about your e-commerce needs, 
-                    book a consultation with our experts.
+                    Learn more about our <Link to="/services/seo" className="text-indigo-600 hover:underline">SEO services</Link>, 
+                    <Link to="/services/data-enrichment" className="text-indigo-600 hover:underline"> data enrichment</Link>, and 
+                    <Link to="/services/search-migration" className="text-indigo-600 hover:underline"> search platform migration</Link> expertise.
                   </p>
-                  <Button asChild className="mt-2">
-                    <Link to="/consultation">
-                      Schedule a Consultation <ArrowRight className="ml-2" size={16} />
-                    </Link>
-                  </Button>
                 </div>
               </div>
               
               <NewContactForm 
                 templateId={TEMPLATES.CONTACT}
                 className="md:mt-4"
+                onSuccessCallback={(formData) => {
+                  // Dispatch custom event with form data
+                  const event = new CustomEvent("formSubmitted", { 
+                    detail: { formData } 
+                  });
+                  window.dispatchEvent(event);
+                }}
               />
             </div>
           </div>
         </section>
 
         {/* FAQ Section */}
-        <section className="py-16 bg-indigo-50">
+        <section className="py-12 md:py-16 bg-indigo-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-10 text-center text-gray-900">Frequently Asked Questions</h2>
+            <h2 className="text-3xl font-bold mb-8 md:mb-10 text-center text-gray-900">Frequently Asked Questions</h2>
             <div className="max-w-3xl mx-auto grid gap-6">
               {[
                 {
@@ -177,15 +194,15 @@ const Contact = () => {
                 },
                 {
                   q: "Do you offer free consultations?",
-                  a: "Yes, we offer a free initial consultation to understand your needs and determine how we can best help your e-commerce business."
+                  a: "Yes, we offer a free initial consultation to understand your needs and determine how we can best help your e-commerce business with product discovery and data enrichment solutions."
                 },
                 {
                   q: "What areas do you serve?",
-                  a: "As a digital service provider, we work with clients worldwide. Our team operates remotely and can accommodate different time zones."
+                  a: "As a digital service provider, we work with clients worldwide. Our team operates remotely and can accommodate different time zones for our product discovery and SEO services."
                 },
                 {
                   q: "What information should I provide for the best response?",
-                  a: "Including details about your business, website URL, specific challenges you're facing, and your goals will help us provide the most relevant assistance."
+                  a: "Including details about your business, website URL, specific challenges you're facing with product discovery or search, and your goals will help us provide the most relevant assistance."
                 }
               ].map((faq, index) => (
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md">
@@ -198,7 +215,7 @@ const Contact = () => {
         </section>
 
         {/* Map Section */}
-        <section className="py-16">
+        <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl font-bold mb-6 text-center text-gray-900">Our Location</h2>
             <div className="h-96 rounded-lg overflow-hidden shadow-lg">

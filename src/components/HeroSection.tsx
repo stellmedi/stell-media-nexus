@@ -23,7 +23,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden bg-abstract-pattern" aria-labelledby="hero-heading">
+    <section className="pt-32 pb-16 md:pt-40 md:pb-24 relative overflow-hidden bg-abstract-pattern" aria-labelledby="hero-heading">
       {/* Abstract background shapes */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl -z-10"></div>
@@ -47,7 +47,7 @@ const HeroSection = () => {
               </svg>
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto animate-fade-in delay-100">
+          <p className="text-xl md:text-2xl text-gray-600 mb-6 md:mb-8 max-w-3xl mx-auto animate-fade-in delay-100">
             We combine technology and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive real results.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in delay-200" role="group">

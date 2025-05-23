@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -94,8 +95,8 @@ const Index = () => {
       <main>
         <HeroSection />
         
-        {/* Stats Section - Light Blue Background */}
-        <section className="py-16 bg-blue-50">
+        {/* Stats Section - Light Blue Background with consistent spacing */}
+        <section className="py-12 md:py-16 bg-blue-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
               {stats.map((stat, index) => (
@@ -116,13 +117,13 @@ const Index = () => {
           <TestimonialsSection />
         </section>
         
-        {/* Case Studies Preview - White Background */}
-        <section className="py-20 bg-white">
+        {/* Case Studies Preview - White Background with consistent spacing */}
+        <section className="py-12 md:py-16 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
+            <div className="text-center mb-8 md:mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                See how our innovative solutions for product discovery, search platform migration, and marketplace management have helped e-commerce brands achieve measurable results.
+                See how our innovative solutions for <Link to="/services/product-discovery" className="text-indigo-600 hover:underline">product discovery</Link>, <Link to="/services/search-migration" className="text-indigo-600 hover:underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-indigo-600 hover:underline">marketplace management</Link> have helped e-commerce brands achieve measurable results.
               </p>
             </div>
             
@@ -152,7 +153,7 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="text-center mt-12">
+            <div className="text-center mt-8 md:mt-10">
               <Button asChild variant="outline" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Case Studies <ArrowRight className="ml-2 h-4 w-4" />
@@ -162,25 +163,23 @@ const Index = () => {
           </div>
         </section>
         
-        {/* CTA Section - Deep Blue/Indigo Background */}
-        <section className="py-16 bg-indigo-100">
+        {/* CTA Section - Deep Blue/Indigo Background with consistent spacing */}
+        <section className="py-12 md:py-16 bg-indigo-100">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
-              <p className="max-w-2xl mx-auto mb-8 text-white/90">
-                Let's talk about how our product discovery solutions, search platform migration, and marketplace management can boost your conversions.
+              <p className="max-w-2xl mx-auto mb-6 md:mb-8 text-white/90">
+                Let's talk about how our <Link to="/services/product-discovery" className="text-white hover:text-blue-100 underline">product discovery solutions</Link>, <Link to="/services/search-migration" className="text-white hover:text-blue-100 underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-white hover:text-blue-100 underline">marketplace management</Link> can boost your conversions.
               </p>
               <Button asChild size="lg" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
-                <Link to="/contact">Book Your Free Consultation</Link>
+                <Link to="/contact">Get In Touch</Link>
               </Button>
             </div>
           </div>
         </section>
         
         {/* Contact Section - Soft Blue Background */}
-        <section className="bg-blue-50">
-          <ContactSection />
-        </section>
+        <ContactSection />
       </main>
       <Footer />
     </div>
