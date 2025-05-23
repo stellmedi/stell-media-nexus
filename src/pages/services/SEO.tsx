@@ -1,6 +1,4 @@
-
-import React from "react";
-import { Helmet } from "react-helmet-async";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -12,10 +10,19 @@ import SEONewsletterSection from "@/components/seo/SEONewsletterSection";
 import SEOFAQSection from "@/components/seo/SEOFAQSection";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import FAQSchemaMarkup from "@/components/FAQSchemaMarkup";
+import SEOMetadata from "@/components/SEOMetadata";
+import { useMetadata } from "@/context/MetadataContext";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const SEOServices = () => {
+  const { setCurrentPage } = useMetadata();
+  
+  useEffect(() => {
+    // Set the current page to load metadata
+    setCurrentPage("/services/seo");
+  }, [setCurrentPage]);
+  
   // SEO Service Schema data
   const seoServiceData = {
     serviceType: "SEO Service",
@@ -113,21 +120,8 @@ const SEOServices = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
-      <Helmet>
-        <title>Expert E-commerce SEO Services | Data-Driven Results | Stell Media</title>
-        <meta 
-          name="description" 
-          content="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
-        />
-        <meta name="keywords" content="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility" />
-        <meta name="author" content="Stell Media" />
-        <meta property="og:title" content="Expert E-commerce SEO Services | Stell Media" />
-        <meta property="og:description" content="Boost your e-commerce visibility with data-driven SEO strategies tailored for large product catalogs." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmedia.com/services/seo" />
-        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmedia.com/services/seo" />
-      </Helmet>
+      {/* Use SEOMetadata component instead of direct Helmet usage */}
+      <SEOMetadata path="/services/seo" />
       
       {/* Schema markup for this page */}
       <SchemaMarkup type="service" data={seoServiceData} />
@@ -172,7 +166,7 @@ const SEOServices = () => {
           </div>
         </section>
         
-        {/* Related Services Section - With consistent spacing */}
+        {/* Related Services Section */}
         <section className="py-12 md:py-16 bg-indigo-50">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Complementary Services</h2>
@@ -196,7 +190,7 @@ const SEOServices = () => {
           </div>
         </section>
         
-        {/* Educational Resources Section - With consistent spacing */}
+        {/* Educational Resources Section */}
         <section className="py-12 md:py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">SEO Resources & Insights</h2>
