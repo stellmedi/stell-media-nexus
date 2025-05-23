@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +28,7 @@ export interface ContactFormProps {
   buttonText?: string;
   successMessage?: string;
   className?: string;
+  onSuccessfulSubmit?: (formData: any) => void;
 }
 
 // Define dynamic form schema based on config
@@ -90,6 +90,7 @@ const ContactFormComponent = ({
   buttonText = "Send Message",
   successMessage = "Thank you for your message. We'll get back to you soon!",
   className = "",
+  onSuccessfulSubmit,
 }: ContactFormProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -183,6 +184,11 @@ const ContactFormComponent = ({
         title: "Message Sent",
         description: finalSuccessMessage,
       });
+      
+      // Call the success callback if provided
+      if (onSuccessfulSubmit) {
+        onSuccessfulSubmit(data);
+      }
       
       // Reset form
       form.reset();

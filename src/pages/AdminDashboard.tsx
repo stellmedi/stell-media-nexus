@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -41,8 +40,7 @@ const AdminDashboard: React.FC = () => {
     const isAuthenticated = localStorage.getItem("stell_admin_authenticated") === "true";
     if (!isAuthenticated) {
       navigate("/admin");
-      toast({
-        title: "Authentication required",
+      toast.error("Authentication required", {
         description: "Please login to access the admin dashboard"
       });
     }
@@ -97,8 +95,7 @@ const AdminDashboard: React.FC = () => {
       setRecentSubmissions(prev => [newSubmission, ...prev.slice(0, 9)]);
       
       // Show toast notification
-      toast({
-        title: "New Form Submission",
+      toast.info("New Form Submission", {
         description: `${newSubmission.name} submitted a ${newSubmission.type.toLowerCase()} form`
       });
     };
@@ -113,24 +110,21 @@ const AdminDashboard: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("stell_admin_authenticated");
     navigate("/admin");
-    toast({
-      title: "Logged out",
+    toast.success("Logged out", {
       description: "You have been successfully logged out"
     });
   };
 
   const handleGASubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Google Analytics Connected",
+    toast.success("Google Analytics Connected", {
       description: "Your tracking ID has been saved successfully"
     });
   };
 
   const handleGSCSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Search Console Connected",
+    toast.success("Search Console Connected", {
       description: "Verification file uploaded successfully"
     });
   };
@@ -141,15 +135,12 @@ const AdminDashboard: React.FC = () => {
       setNotificationsEnabled(permission === "granted");
       
       if (permission === "granted") {
-        toast({
-          title: "Notifications enabled",
+        toast.success("Notifications enabled", {
           description: "You will now receive notifications for new form submissions"
         });
       } else {
-        toast({
-          title: "Notifications disabled",
-          description: "Please enable notifications in your browser settings for form submission alerts",
-          variant: "destructive"
+        toast.error("Notifications disabled", {
+          description: "Please enable notifications in your browser settings for form submission alerts"
         });
       }
     }
