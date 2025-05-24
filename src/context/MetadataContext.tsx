@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
@@ -191,17 +190,16 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
     });
   }, [normalizeUrl]);
 
-  // Set the current page metadata based on path
+  // Set the current page metadata based on path - FIXED to prevent infinite loop
   const setCurrentPage = useCallback((path: string) => {
-    setPagesMetadata(prevMetadata => {
-      const pageMetadata = prevMetadata.find(page => page.path === path) || null;
-      setCurrentPageMetadata(pageMetadata);
-      return prevMetadata; // Don't modify the array, just find the metadata
-    });
-  }, []);
+    console.log("Setting current page to:", path);
+    const pageMetadata = pagesMetadata.find(page => page.path === path) || null;
+    setCurrentPageMetadata(pageMetadata);
+  }, [pagesMetadata]);
 
-  // Auto-update current page when location changes - removed pagesMetadata dependency to prevent infinite loop
+  // Auto-update current page when location changes
   useEffect(() => {
+    console.log("Location changed to:", location.pathname);
     setCurrentPage(location.pathname);
   }, [location.pathname, setCurrentPage]);
 
