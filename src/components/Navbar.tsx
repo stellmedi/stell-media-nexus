@@ -123,7 +123,7 @@ const Navbar = () => {
             FAQ
           </Link>
           
-          {/* WhatsApp Us button on desktop - Replaced Book a Consultation */}
+          {/* WhatsApp Us button on desktop */}
           <Button 
             onClick={handleWhatsAppClick}
             className="flex items-center gap-2"
@@ -244,7 +244,7 @@ const Navbar = () => {
               FAQ
             </Link>
             
-            {/* WhatsApp Us button on mobile - Replaced Book a Consultation */}
+            {/* WhatsApp Us button on mobile */}
             <Button 
               onClick={handleWhatsAppClick}
               className="flex items-center justify-center gap-2 mt-2"

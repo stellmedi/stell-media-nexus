@@ -14,7 +14,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
+import { toast } from "@/hooks/use-toast";
 import {
   Form,
   FormControl,
@@ -73,29 +73,10 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       // Log application for tracking
       console.log("Job application submitted for:", jobTitle, "by", data.fullName);
       
-      // Create application data object
-      const applicationData = {
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone || "Not provided",
-        linkedin: data.linkedin || "Not provided",
-        jobTitle: jobTitle,
-        applicationDate: new Date().toISOString(),
-      };
-      
-      // Dispatch form submission event for tracking/notifications
-      const event = new CustomEvent("formSubmitted", { 
-        detail: { 
-          formData: applicationData,
-          formType: "jobApplication" 
-        } 
-      });
-      window.dispatchEvent(event);
-      
       // Show success message
-      toast.success("Application Submitted", {
+      toast({
+        title: "Application Submitted",
         description: `Thank you for applying to the ${jobTitle} position. We'll review your application and get back to you soon.`,
-        duration: 5000,
       });
       
       // Reset form and close dialog
@@ -118,7 +99,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl">Apply for {jobTitle}</DialogTitle>
           <DialogDescription>
-            Complete this form to apply for this position. Join our team of <a href="/about" className="text-indigo-600 hover:underline">e-commerce optimization experts</a>.
+            Complete this form to apply for this position.
           </DialogDescription>
         </DialogHeader>
         

@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -10,19 +11,10 @@ import SEONewsletterSection from "@/components/seo/SEONewsletterSection";
 import SEOFAQSection from "@/components/seo/SEOFAQSection";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import FAQSchemaMarkup from "@/components/FAQSchemaMarkup";
-import SEOMetadata from "@/components/SEOMetadata";
-import { useMetadata } from "@/context/MetadataContext";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 const SEOServices = () => {
-  const { setCurrentPage } = useMetadata();
-  
-  useEffect(() => {
-    // Set the current page to load metadata
-    setCurrentPage("/services/seo");
-  }, [setCurrentPage]);
-  
   // SEO Service Schema data
   const seoServiceData = {
     serviceType: "SEO Service",
@@ -120,8 +112,21 @@ const SEOServices = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
-      {/* Use SEOMetadata component instead of direct Helmet usage */}
-      <SEOMetadata path="/services/seo" />
+      <Helmet>
+        <title>Expert E-commerce SEO Services | Data-Driven Results | Stell Media</title>
+        <meta 
+          name="description" 
+          content="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
+        />
+        <meta name="keywords" content="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility" />
+        <meta name="author" content="Stell Media" />
+        <meta property="og:title" content="Expert E-commerce SEO Services | Stell Media" />
+        <meta property="og:description" content="Boost your e-commerce visibility with data-driven SEO strategies tailored for large product catalogs." />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://stellmedia.com/services/seo" />
+        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
+        <link rel="canonical" href="https://stellmedia.com/services/seo" />
+      </Helmet>
       
       {/* Schema markup for this page */}
       <SchemaMarkup type="service" data={seoServiceData} />
@@ -134,11 +139,11 @@ const SEOServices = () => {
         <SEOFeaturesSection />
         <SEOProcessSection />
         
-        {/* Related Case Studies Section - With consistent spacing */}
-        <section className="py-12 md:py-16 bg-white">
+        {/* Related Case Studies Section - NEW */}
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">SEO Success Stories</h2>
-            <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">SEO Success Stories</h2>
+            <p className="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
               See how our data-driven SEO strategies have helped e-commerce brands achieve measurable results.
               Learn from these <Link to="/case-studies" className="text-indigo-600 hover:underline">real-world examples</Link> of our work.
             </p>
@@ -166,11 +171,11 @@ const SEOServices = () => {
           </div>
         </section>
         
-        {/* Related Services Section */}
-        <section className="py-12 md:py-16 bg-indigo-50">
+        {/* Related Services Section - NEW */}
+        <section className="py-16 bg-indigo-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">Complementary Services</h2>
-            <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+            <h2 className="text-2xl md:text-3xl font-bold mb-8 text-center">Complementary Services</h2>
+            <p className="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
               Enhance your SEO results with these complementary services. Our integrated approach ensures all aspects of your 
               <Link to="/services" className="text-indigo-600 hover:underline mx-1">digital strategy</Link> 
               work together for maximum impact.
@@ -190,11 +195,11 @@ const SEOServices = () => {
           </div>
         </section>
         
-        {/* Educational Resources Section */}
-        <section className="py-12 md:py-16 bg-white">
+        {/* Educational Resources Section - NEW */}
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 text-center">SEO Resources & Insights</h2>
-            <p className="text-center text-gray-600 mb-8 max-w-3xl mx-auto">
+            <p className="text-center text-gray-600 mb-10 max-w-3xl mx-auto">
               Explore our comprehensive resources to deepen your understanding of e-commerce SEO best practices.
               Check out our <Link to="/blog" className="text-indigo-600 hover:underline">blog</Link> for the latest insights.
             </p>
@@ -225,8 +230,12 @@ const SEOServices = () => {
               </div>
             </div>
             
-            <div className="text-center mt-8">
-              <p className="mb-4">Have questions about our SEO services? Visit our <Link to="/faq" className="text-indigo-600 hover:underline">FAQ page</Link> or <Link to="/contact" className="text-indigo-600 hover:underline">contact us</Link> directly.</p>
+            <div className="text-center mt-10">
+              <p className="mb-6">Have questions about our SEO services? Visit our <Link to="/faq" className="text-indigo-600 hover:underline">FAQ page</Link> or <Link to="/contact" className="text-indigo-600 hover:underline">contact us</Link> directly.</p>
+              
+              <Link to="/consultation" className="inline-flex items-center text-white bg-indigo-600 px-6 py-3 rounded-lg font-medium hover:bg-indigo-700 transition-colors">
+                Schedule an SEO consultation <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
             </div>
           </div>
         </section>

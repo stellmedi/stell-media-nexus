@@ -75,10 +75,9 @@ const createContactFormSchema = (config: any) => {
 interface NewContactFormProps {
   templateId: string;
   className?: string;
-  onSuccessCallback?: (formData: any) => void;
 }
 
-const NewContactForm = ({ templateId, className = "", onSuccessCallback }: NewContactFormProps) => {
+const NewContactForm = ({ templateId, className = "" }: NewContactFormProps) => {
   const { toast: hookToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
@@ -147,11 +146,6 @@ const NewContactForm = ({ templateId, className = "", onSuccessCallback }: NewCo
       toast.success("Message sent successfully!", {
         description: "We'll respond to your inquiry within 24 hours.",
       });
-      
-      // Call the success callback if provided
-      if (onSuccessCallback) {
-        onSuccessCallback(data);
-      }
       
       // Reset form
       form.reset();

@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { useMetadata } from '@/context/MetadataContext';
 
 interface FAQItem {
   question: string;
@@ -13,16 +12,11 @@ interface FAQSchemaMarkupProps {
   mainEntity?: string;
 }
 
-const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity }) => {
-  const { normalizeUrl } = useMetadata();
-  
-  // Normalize the mainEntity URL to ensure it uses stellmedia.com
-  const normalizedMainEntity = normalizeUrl(mainEntity || "https://stellmedia.com/faq");
-  
+const FAQSchemaMarkup: React.FC<FAQSchemaMarkupProps> = ({ items, mainEntity = "https://stellmedia.com/faq" }) => {
   const schemaData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "@id": normalizedMainEntity,
+    "@id": mainEntity,
     "mainEntity": items.map(item => ({
       "@type": "Question",
       "name": item.question,

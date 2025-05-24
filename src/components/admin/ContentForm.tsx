@@ -17,11 +17,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Eye, Edit, BarChart, Search, Copy, FileText, Link, Settings, AlertTriangle, Save, CheckCircle2 } from "lucide-react";
+import { Eye, Edit, BarChart, Search, Copy, FileText, Link, Settings } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
-import { useMetadata } from "@/context/MetadataContext";
-import SiteSchemaMarkup from "../SiteSchemaMarkup";
-import SEOMetadata from "../SEOMetadata";
 
 // Enhanced Content form schema with expanded SEO validation
 const formSchema = z.object({
@@ -84,58 +81,20 @@ export default function ContentForm({
   const [metaTitleCount, setMetaTitleCount] = useState(0);
   const [metaDescCount, setMetaDescCount] = useState(0);
   const [showCurrentMetadata, setShowCurrentMetadata] = useState(false);
-  const [seoChanged, setSeoChanged] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState("");
-  const [showLivePreview, setShowLivePreview] = useState(false);
-  
-  const { updatePageMetadata, normalizeUrl } = useMetadata();
   
   const form = useForm<ContentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  // Set initial character counts for meta fields
+  // Update character counts for meta fields
   useEffect(() => {
-    const titleValue = defaultValues.metaTitle || '';
-    const descValue = defaultValues.metaDescription || '';
+    const titleValue = form.watch('metaTitle') || '';
+    const descValue = form.watch('metaDescription') || '';
     
     setMetaTitleCount(titleValue.length);
     setMetaDescCount(descValue.length);
-    
-    // Generate preview URL
-    updatePreviewUrl(defaultValues.slug || '');
-  }, [defaultValues]);
-
-  // Update character counts when meta fields change
-  useEffect(() => {
-    const titleSubscription = form.watch((value, { name }) => {
-      if (name === 'metaTitle') {
-        setMetaTitleCount(value.metaTitle?.length || 0);
-        setSeoChanged(true);
-      } else if (name === 'metaDescription') {
-        setMetaDescCount(value.metaDescription?.length || 0);
-        setSeoChanged(true);
-      } else if (name === 'canonicalUrl' || name === 'ogTitle' || name === 'ogDescription' || 
-                name === 'twitterTitle' || name === 'twitterDescription' || 
-                name === 'noIndex' || name === 'noFollow' ||
-                name === 'aiDescription' || name === 'aiKeywords' ||
-                name === 'aiExpertise' || name === 'aiServices' ||
-                name === 'schemaType' || name === 'schemaProperties') {
-        setSeoChanged(true);
-      } else if (name === 'slug') {
-        updatePreviewUrl(value.slug || '');
-      }
-    });
-    
-    return () => titleSubscription.unsubscribe();
-  }, [form.watch]);
-
-  // Update preview URL based on slug
-  const updatePreviewUrl = (slug: string) => {
-    const baseUrl = "https://stellmedia.com/";
-    setPreviewUrl(baseUrl + (slug || ''));
-  };
+  }, [form.watch('metaTitle'), form.watch('metaDescription')]);
 
   // Generate slug from title
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,65 +108,13 @@ export default function ContentForm({
         .replace(/[^\w\s]/gi, '')
         .replace(/\s+/g, '-');
       form.setValue("slug", slug);
-      updatePreviewUrl(slug);
     }
     
     // Suggest meta title if not set
     if (!form.getValues("metaTitle")) {
       form.setValue("metaTitle", title);
       setMetaTitleCount(title.length);
-      setSeoChanged(true);
     }
-  };
-
-  // Handle form submission with SEO data
-  const handleFormSubmit = (values: ContentFormValues) => {
-    // Normalize canonical URL format
-    let formattedValues = { ...values };
-    
-    // Normalize the canonical URL
-    formattedValues.canonicalUrl = normalizeUrl(formattedValues.canonicalUrl || "");
-    
-    // Update the metadata context with the new values
-    if (formattedValues.slug) {
-      const path = `/${formattedValues.slug}`;
-      
-      updatePageMetadata(path, {
-        title: formattedValues.title,
-        metaTitle: formattedValues.metaTitle || formattedValues.title,
-        metaDescription: formattedValues.metaDescription || "",
-        canonicalUrl: formattedValues.canonicalUrl || `https://stellmedia.com${path}`,
-        ogTitle: formattedValues.ogTitle || formattedValues.metaTitle || formattedValues.title,
-        ogDescription: formattedValues.ogDescription || formattedValues.metaDescription,
-        ogImage: formattedValues.ogImage || "",
-        twitterTitle: formattedValues.twitterTitle || formattedValues.ogTitle || formattedValues.metaTitle,
-        twitterDescription: formattedValues.twitterDescription || formattedValues.ogDescription || formattedValues.metaDescription,
-        twitterImage: formattedValues.twitterImage || formattedValues.ogImage,
-        noIndex: formattedValues.noIndex,
-        noFollow: formattedValues.noFollow,
-        schemaType: formattedValues.schemaType,
-        schemaProperties: formattedValues.schemaProperties || "",
-        aiDescription: formattedValues.aiDescription || "",
-        aiKeywords: formattedValues.aiKeywords || "",
-        aiExpertise: formattedValues.aiExpertise || "",
-        aiServices: formattedValues.aiServices || "",
-        isSystemPage
-      });
-      
-      // Show confirmation for SEO changes
-      if (seoChanged) {
-        toast({
-          title: "SEO data updated",
-          description: isSystemPage 
-            ? "System page metadata has been saved. Note: Some changes may require developer assistance to fully apply."
-            : "Your SEO metadata changes have been successfully applied.",
-          variant: "default"
-        });
-      }
-    }
-    
-    // Submit the form with updated values
-    onSubmit(formattedValues);
   };
 
   // Get current content value for preview
@@ -223,74 +130,27 @@ export default function ContentForm({
     setShowCurrentMetadata(!showCurrentMetadata);
   };
 
-  // Toggle live SEO preview
-  const toggleLivePreview = () => {
-    setShowLivePreview(!showLivePreview);
-  };
-
-  // Save metadata changes immediately without submitting the form
-  const saveMetadataOnly = () => {
-    const formValues = form.getValues();
-    
-    if (formValues.slug) {
-      const path = `/${formValues.slug}`;
-      
-      updatePageMetadata(path, {
-        title: formValues.title,
-        metaTitle: formValues.metaTitle || formValues.title,
-        metaDescription: formValues.metaDescription || "",
-        canonicalUrl: normalizeUrl(formValues.canonicalUrl || ""),
-        ogTitle: formValues.ogTitle || "",
-        ogDescription: formValues.ogDescription || "",
-        ogImage: formValues.ogImage || "",
-        twitterTitle: formValues.twitterTitle || "",
-        twitterDescription: formValues.twitterDescription || "",
-        twitterImage: formValues.twitterImage || "",
-        noIndex: formValues.noIndex,
-        noFollow: formValues.noFollow,
-        schemaType: formValues.schemaType,
-        schemaProperties: formValues.schemaProperties || "",
-        aiDescription: formValues.aiDescription || "",
-        aiKeywords: formValues.aiKeywords || "",
-        aiExpertise: formValues.aiExpertise || "",
-        aiServices: formValues.aiServices || "",
-        isSystemPage
-      });
-      
-      toast({
-        title: "SEO data saved",
-        description: isSystemPage 
-          ? "System page metadata has been saved. Note: Some changes may require developer assistance to fully apply."
-          : "Your SEO metadata changes have been saved successfully.",
-        variant: "default"
-      });
-      
-      setSeoChanged(false);
-    }
-  };
-
   // Copy meta tags to clipboard
   const copyMetaTags = () => {
-    const formValues = form.getValues();
-    const canonicalUrlValue = normalizeUrl(formValues.canonicalUrl || previewUrl);
+    const metaTitle = form.getValues("metaTitle");
+    const metaDesc = form.getValues("metaDescription");
     
     const metaTagsHtml = `
-<title>${formValues.metaTitle || formValues.title || ''}</title>
-<meta name="description" content="${formValues.metaDescription || ''}">
-<link rel="canonical" href="${canonicalUrlValue}">
-<meta property="og:title" content="${formValues.ogTitle || formValues.metaTitle || ''}">
-<meta property="og:description" content="${formValues.ogDescription || formValues.metaDescription || ''}">
-<meta property="og:image" content="${formValues.ogImage || ''}">
-<meta name="twitter:title" content="${formValues.twitterTitle || formValues.ogTitle || formValues.metaTitle || ''}">
-<meta name="twitter:description" content="${formValues.twitterDescription || formValues.ogDescription || formValues.metaDescription || ''}">
-<meta name="ai:description" content="${formValues.aiDescription || ''}">
-<meta name="ai:keywords" content="${formValues.aiKeywords || ''}">
-<meta name="ai:services" content="${formValues.aiServices || ''}">
-<meta name="ai:expertise" content="${formValues.aiExpertise || ''}">
-${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formValues.noFollow ? '<meta name="robots" content="nofollow">\n' : ''}`;
+<title>${metaTitle || defaultValues.title || ''}</title>
+<meta name="description" content="${metaDesc || ''}">
+<link rel="canonical" href="${form.getValues("canonicalUrl") || ''}">
+<meta property="og:title" content="${metaTitle || form.getValues("ogTitle") || ''}">
+<meta property="og:description" content="${metaDesc || form.getValues("ogDescription") || ''}">
+<meta property="og:image" content="${form.getValues("ogImage") || ''}">
+<meta name="twitter:title" content="${metaTitle || form.getValues("twitterTitle") || ''}">
+<meta name="twitter:description" content="${metaDesc || form.getValues("twitterDescription") || ''}">
+<meta name="ai:description" content="${form.getValues("aiDescription") || ''}">
+<meta name="ai:keywords" content="${form.getValues("aiKeywords") || ''}">
+<meta name="ai:services" content="${form.getValues("aiServices") || ''}">
+<meta name="ai:expertise" content="${form.getValues("aiExpertise") || ''}">
+${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form.watch("noFollow") ? '<meta name="robots" content="nofollow">\n' : ''}`;
     
     navigator.clipboard.writeText(metaTagsHtml.trim());
-    
     toast({
       title: "Meta tags copied",
       description: "Meta tags have been copied to clipboard",
@@ -320,15 +180,13 @@ ${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formVal
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <Tabs defaultValue="basic" className="w-full">
           <TabsList className="grid grid-cols-6 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
             <TabsTrigger value="content">Content</TabsTrigger>
             <TabsTrigger value="media">Media</TabsTrigger>
-            <TabsTrigger value="seo" className={seoChanged ? "text-indigo-700 font-bold" : ""}>
-              SEO {seoChanged && "•"}
-            </TabsTrigger>
+            <TabsTrigger value="seo">SEO</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="advanced">Advanced</TabsTrigger>
           </TabsList>
@@ -364,14 +222,11 @@ ${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formVal
                     <FormControl>
                       <div className="flex items-center">
                         <span className="text-sm text-gray-500 mr-1">/</span>
-                        <Input placeholder="url-path" {...field} onChange={(e) => {
-                          field.onChange(e);
-                          updatePreviewUrl(e.target.value);
-                        }} />
+                        <Input placeholder="url-path" {...field} />
                       </div>
                     </FormControl>
                     <FormDescription>
-                      The URL path for this content: {previewUrl}
+                      The URL path for this content
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -612,147 +467,8 @@ ${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formVal
             </div>
           </TabsContent>
           
-          {/* SEO Tab - Enhanced with live preview, warnings, and improved editing */}
+          {/* SEO Tab - Enhanced with current metadata viewer and improved editing */}
           <TabsContent value="seo" className="space-y-4">
-            {/* SEO actions toolbar */}
-            <div className="flex justify-between items-center mb-2">
-              <div className="flex items-center">
-                <h3 className="font-medium text-lg">SEO & Metadata</h3>
-                {seoChanged && (
-                  <span className="ml-2 text-xs bg-amber-100 text-amber-700 py-1 px-2 rounded-full flex items-center">
-                    <AlertTriangle className="h-3 w-3" />
-                    Unsaved changes
-                  </span>
-                )}
-              </div>
-              <div className="flex gap-2">
-                {seoChanged && (
-                  <Button 
-                    type="button" 
-                    variant="secondary" 
-                    size="sm" 
-                    onClick={saveMetadataOnly}
-                    className="flex items-center gap-1"
-                  >
-                    <Save className="h-4 w-4" />
-                    Save metadata
-                  </Button>
-                )}
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={toggleLivePreview}
-                >
-                  {showLivePreview ? "Hide Preview" : "SEO Preview"}
-                </Button>
-              </div>
-            </div>
-            
-            {/* SEO preview */}
-            {showLivePreview && (
-              <div className="border rounded-md p-4 bg-white mb-6 overflow-hidden">
-                <div className="flex justify-between items-center mb-3">
-                  <h4 className="text-sm font-medium">Live SEO Preview</h4>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={toggleLivePreview}
-                  >
-                    Close
-                  </Button>
-                </div>
-                
-                <div className="mb-4">
-                  <h5 className="text-xs font-medium text-gray-500 mb-1">GOOGLE SEARCH RESULT PREVIEW</h5>
-                  <div className="border rounded p-3 bg-gray-50">
-                    <div className="text-blue-600 text-lg truncate">
-                      {form.watch("metaTitle") || form.watch("title") || "Page Title"}
-                    </div>
-                    <div className="text-green-700 text-sm">
-                      {normalizeUrl(form.watch("canonicalUrl") || previewUrl)}
-                    </div>
-                    <div className="text-gray-600 text-sm mt-1 line-clamp-2">
-                      {form.watch("metaDescription") || "No meta description provided. Search engines will use text from your page instead."}
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="mb-4">
-                  <h5 className="text-xs font-medium text-gray-500 mb-1">SOCIAL SHARING PREVIEW</h5>
-                  <div className="border rounded p-3 bg-gray-50">
-                    <div className="h-32 bg-gray-200 flex items-center justify-center text-gray-500 mb-2">
-                      {form.watch("ogImage") ? "Image Preview" : "No OG image set"}
-                    </div>
-                    <div className="font-medium">
-                      {form.watch("ogTitle") || form.watch("metaTitle") || form.watch("title") || "Social Title"}
-                    </div>
-                    <div className="text-gray-600 text-sm mt-1 line-clamp-3">
-                      {form.watch("ogDescription") || form.watch("metaDescription") || "No social description provided."}
-                    </div>
-                    <div className="text-gray-500 text-sm mt-2">
-                      stellmedia.com
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Issues and warnings */}
-                <div>
-                  <h5 className="text-xs font-medium text-gray-500 mb-1">SEO ISSUES & WARNINGS</h5>
-                  <ul className="text-sm space-y-2">
-                    {!form.watch("metaTitle") && (
-                      <li className="flex items-start gap-2 text-amber-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>Meta title is missing</span>
-                      </li>
-                    )}
-                    {(form.watch("metaTitle")?.length || 0) > 60 && (
-                      <li className="flex items-start gap-2 text-amber-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>Meta title is too long ({form.watch("metaTitle")?.length} characters)</span>
-                      </li>
-                    )}
-                    {!form.watch("metaDescription") && (
-                      <li className="flex items-start gap-2 text-amber-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>Meta description is missing</span>
-                      </li>
-                    )}
-                    {(form.watch("metaDescription")?.length || 0) > 160 && (
-                      <li className="flex items-start gap-2 text-amber-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>Meta description is too long ({form.watch("metaDescription")?.length} characters)</span>
-                      </li>
-                    )}
-                    {form.watch("canonicalUrl") && form.watch("canonicalUrl").includes("stellmediaglobal.com") && (
-                      <li className="flex items-start gap-2 text-red-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>Canonical URL contains "stellmediaglobal.com" instead of "stellmedia.com"</span>
-                      </li>
-                    )}
-                    {form.watch("noIndex") && (
-                      <li className="flex items-start gap-2 text-red-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>This page is set to "noindex" and won't appear in search results</span>
-                      </li>
-                    )}
-                    {!form.watch("ogImage") && (
-                      <li className="flex items-start gap-2 text-amber-600">
-                        <AlertTriangle className="h-4 w-4 flex-shrink-0 mt-0.5" />
-                        <span>No Open Graph image set for social sharing</span>
-                      </li>
-                    )}
-                    {!form.watch("metaTitle") && !form.watch("metaDescription") && !form.watch("ogTitle") && !form.watch("ogDescription") && !form.watch("canonicalUrl") ? (
-                      <li className="flex items-center gap-2 text-green-600">
-                        <CheckCircle2 className="h-4 w-4" />
-                        <span>No SEO issues detected</span>
-                      </li>
-                    ) : null}
-                  </ul>
-                </div>
-              </div>
-            )}
-            
             {/* Current metadata viewer */}
             <div className="border rounded-md p-4 bg-blue-50 mb-6">
               <div className="flex justify-between items-center">
@@ -786,7 +502,7 @@ ${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formVal
                   <pre className="text-xs text-gray-600 whitespace-pre-wrap">
                     {`<title>${form.watch("metaTitle") || defaultValues.title || ''}</title>
 <meta name="description" content="${form.watch("metaDescription") || ''}">
-<link rel="canonical" href="${normalizeUrl(form.watch("canonicalUrl") || previewUrl)}">
+<link rel="canonical" href="${form.watch("canonicalUrl") || ''}">
 <meta property="og:title" content="${form.watch("ogTitle") || form.watch("metaTitle") || ''}">
 <meta property="og:description" content="${form.watch("ogDescription") || form.watch("metaDescription") || ''}">
 <meta property="og:image" content="${form.watch("ogImage") || ''}">
@@ -798,18 +514,6 @@ ${formValues.noIndex ? '<meta name="robots" content="noindex">\n' : ''}${formVal
 <meta name="ai:expertise" content="${form.watch("aiExpertise") || ''}">
 ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form.watch("noFollow") ? '<meta name="robots" content="nofollow">\n' : ''}`}
                   </pre>
-                </div>
-              )}
-              
-              {isSystemPage && (
-                <div className="mt-3 p-3 bg-amber-50 border border-amber-200 rounded text-sm flex items-start">
-                  <AlertTriangle className="h-4 w-4 text-amber-500 mr-2 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <strong className="font-medium text-amber-800">System Page Notice:</strong>
-                    <p className="text-amber-700">
-                      This is a system page. Some metadata might require developer assistance to be fully updated on the live site.
-                    </p>
-                  </div>
                 </div>
               )}
             </div>
@@ -829,7 +533,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           onChange={e => {
                             field.onChange(e);
                             setMetaTitleCount(e.target.value.length);
-                            setSeoChanged(true);
                           }}
                           className={`${metaTitleCount > 60 ? 'border-red-300' : metaTitleCount > 50 ? 'border-yellow-300' : 'border-green-300'}`}
                         />
@@ -863,7 +566,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           onChange={e => {
                             field.onChange(e);
                             setMetaDescCount(e.target.value.length);
-                            setSeoChanged(true);
                           }}
                         />
                         <span className={`absolute right-3 bottom-3 text-xs ${
@@ -893,29 +595,14 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                   </FormLabel>
                   <FormControl>
                     <Input 
-                      placeholder="https://stellmedia.com/your-page" 
+                      placeholder="https://example.com/canonical-page" 
                       {...field} 
                       value={field.value || ""}
-                      onChange={(e) => {
-                        let value = e.target.value;
-                        // Auto-correct stellmediaglobal.com to stellmedia.com as the user types
-                        if (value.includes("stellmediaglobal.com")) {
-                          value = value.replace(/stellmediaglobal\.com/g, "stellmedia.com");
-                        }
-                        field.onChange(value);
-                        setSeoChanged(true);
-                      }}
-                      className={field.value && field.value.includes("stellmediaglobal.com") ? "border-red-300" : ""}
                     />
                   </FormControl>
                   <FormDescription>
-                    Used to prevent duplicate content issues. Leave blank to use the default URL: {previewUrl}
+                    Used to prevent duplicate content issues. Leave blank to use the default URL.
                   </FormDescription>
-                  {field.value && field.value.includes("stellmediaglobal.com") && (
-                    <div className="text-red-500 text-sm mt-1">
-                      Please use "stellmedia.com" instead of "stellmediaglobal.com"
-                    </div>
-                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -937,10 +624,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <input
                         type="checkbox"
                         checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
+                        onChange={field.onChange}
                         className="ml-2 h-4 w-4"
                       />
                     </FormControl>
@@ -964,10 +648,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <input
                         type="checkbox"
                         checked={field.value}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
+                        onChange={field.onChange}
                         className="ml-2 h-4 w-4"
                       />
                     </FormControl>
@@ -992,15 +673,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                     <FormItem>
                       <FormLabel>OG Title</FormLabel>
                       <FormControl>
-                        <Input 
-                          placeholder="Title for social sharing" 
-                          {...field} 
-                          value={field.value || ""} 
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setSeoChanged(true);
-                          }}
-                        />
+                        <Input placeholder="Title for social sharing" {...field} value={field.value || ""} />
                       </FormControl>
                       <FormDescription>
                         Leave blank to use Meta Title
@@ -1021,10 +694,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="Description for social sharing" 
                           {...field}
                           value={field.value || ""}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setSeoChanged(true);
-                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -1044,13 +713,9 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                     <FormLabel>OG Image URL</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="https://stellmedia.com/image.jpg" 
+                        placeholder="https://example.com/image.jpg" 
                         {...field}
                         value={field.value || ""}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -1078,15 +743,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <FormItem>
                         <FormLabel>Twitter Title</FormLabel>
                         <FormControl>
-                          <Input 
-                            placeholder="Twitter card title" 
-                            {...field} 
-                            value={field.value || ""} 
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setSeoChanged(true);
-                            }}
-                          />
+                          <Input placeholder="Twitter card title" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormDescription>
                           Leave blank to use OG Title
@@ -1103,15 +760,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                       <FormItem>
                         <FormLabel>Twitter Description</FormLabel>
                         <FormControl>
-                          <Textarea 
-                            placeholder="Twitter card description" 
-                            {...field} 
-                            value={field.value || ""} 
-                            onChange={(e) => {
-                              field.onChange(e);
-                              setSeoChanged(true);
-                            }}
-                          />
+                          <Textarea placeholder="Twitter card description" {...field} value={field.value || ""} />
                         </FormControl>
                         <FormDescription>
                           Leave blank to use OG Description
@@ -1146,10 +795,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         {...field}
                         value={field.value || ""}
                         className="min-h-[80px]"
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -1172,10 +817,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="ai-optimization, chatgpt, perplexity" 
                           {...field}
                           value={field.value || ""}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setSeoChanged(true);
-                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -1197,10 +838,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                           placeholder="SEO, Content Creation, Analytics" 
                           {...field}
                           value={field.value || ""}
-                          onChange={(e) => {
-                            field.onChange(e);
-                            setSeoChanged(true);
-                          }}
                         />
                       </FormControl>
                       <FormDescription>
@@ -1223,10 +860,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         placeholder="E-commerce optimization, search algorithms, product data management" 
                         {...field}
                         value={field.value || ""}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -1249,14 +882,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                   <FormItem>
                     <FormLabel>Schema Markup Type</FormLabel>
                     <FormControl>
-                      <select 
-                        className="w-full p-2 border rounded-md" 
-                        {...field}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
-                      >
+                      <select className="w-full p-2 border rounded-md" {...field}>
                         <option value="None">None</option>
                         <option value="Article">Article</option>
                         <option value="Product">Product</option>
@@ -1289,10 +915,6 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                         className="font-mono text-sm min-h-[120px]"
                         {...field}
                         value={field.value || ""}
-                        onChange={(e) => {
-                          field.onChange(e);
-                          setSeoChanged(true);
-                        }}
                       />
                     </FormControl>
                     <FormDescription>
@@ -1346,19 +968,9 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
                 <li>Use canonical URLs to prevent duplicate content issues</li>
               </ul>
             </div>
-
-            {/* Structured Data Preview */}
-            {form.watch("schemaType") !== "None" && (
-              <div className="border rounded-md p-4 mt-6 bg-gray-50">
-                <h3 className="font-medium mb-2">Structured Data Preview</h3>
-                <div className="bg-slate-100 p-4 rounded">
-                  <SiteSchemaMarkup />
-                </div>
-              </div>
-            )}
           </TabsContent>
           
-          {/* Analytics Tab */}
+          {/* Analytics Tab - Enhanced with Google tools integration */}
           <TabsContent value="analytics" className="space-y-6">
             <div className="border rounded-md p-6 bg-white">
               <div className="flex items-center space-x-2 mb-4">
@@ -1509,12 +1121,8 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
           <Button variant="outline" type="button" onClick={onCancel}>
             Cancel
           </Button>
-          <Button 
-            type="submit" 
-            className={seoChanged ? "bg-gradient-to-r from-indigo-600 to-purple-600" : ""}
-          >
+          <Button type="submit">
             {isEditMode ? "Update" : "Create"}
-            {seoChanged && " with SEO changes"}
           </Button>
         </DialogFooter>
       </form>

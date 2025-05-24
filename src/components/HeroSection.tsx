@@ -23,18 +23,23 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden bg-gradient-to-br from-indigo-50 via-blue-50 to-purple-50" aria-labelledby="hero-heading">
+    <section className="pt-32 pb-20 md:pt-40 md:pb-28 relative overflow-hidden bg-abstract-pattern" aria-labelledby="hero-heading">
       {/* Abstract background shapes */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl -z-10 animate-pulse"></div>
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/20 rounded-full blur-3xl -z-10"></div>
-      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-indigo-200/15 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-blue-200/30 rounded-full blur-3xl -z-10 animate-pulse"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-200/30 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute top-1/2 left-1/4 w-64 h-64 bg-indigo-200/20 rounded-full blur-3xl -z-10"></div>
+      
+      {/* Enhanced background patterns */}
+      <div className="pattern-overlay"></div>
+      <div className="hexagon-overlay"></div>
+      <div className="wave-overlay"></div>
       
       {/* Background grid pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-[0.015] -z-10"></div>
       
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-5xl mx-auto text-center">
-          <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8 leading-tight animate-fade-in">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 id="hero-heading" className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-fade-in">
             <span className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent relative">
               Smarter Product Discovery for Growing E-Commerce Brands
               <svg className="absolute -bottom-2 left-0 w-full hidden md:block" height="10" viewBox="0 0 400 10" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -42,7 +47,7 @@ const HeroSection = () => {
               </svg>
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-600 mb-10 max-w-4xl mx-auto animate-fade-in delay-100 leading-relaxed">
+          <p className="text-xl md:text-2xl text-gray-600 mb-8 md:mb-12 max-w-3xl mx-auto animate-fade-in delay-100">
             We combine technology and human expertise to optimize site search, navigation, content, and product data—helping brands with large catalogs deliver better shopping experiences and drive real results.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in delay-200" role="group">
@@ -65,7 +70,7 @@ const HeroSection = () => {
         </div>
 
         {/* Abstract data visualization as background element */}
-        <div className="absolute inset-0 -z-10 opacity-15" aria-hidden="true">
+        <div className="absolute inset-0 -z-10 opacity-20" aria-hidden="true">
           <div className="w-full h-full flex items-center justify-center overflow-hidden">
             {/* Abstract data visualization */}
             <svg viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -91,8 +96,11 @@ const HeroSection = () => {
         </div>
       </div>
       
-      {/* Bottom gradient blend */}
-      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-blue-50/80 to-transparent -z-10"></div>
+      {/* Abstract background elements */}
+      <div className="absolute top-20 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-full blur-3xl -z-10"></div>
+      <div className="absolute bottom-10 left-10 w-96 h-96 bg-gradient-to-r from-purple-500/10 to-indigo-500/10 rounded-full blur-3xl -z-10"></div>
+      
+      <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-indigo-50/80 to-transparent -z-10"></div>
     </section>
   );
 };
