@@ -193,9 +193,13 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
   // Set the current page metadata based on path - FIXED to prevent infinite loop
   const setCurrentPage = useCallback((path: string) => {
     console.log("Setting current page to:", path);
-    const pageMetadata = pagesMetadata.find(page => page.path === path) || null;
-    setCurrentPageMetadata(pageMetadata);
-  }, [pagesMetadata]);
+    // Access pagesMetadata directly from state instead of making it a dependency
+    setPagesMetadata(currentMetadata => {
+      const pageMetadata = currentMetadata.find(page => page.path === path) || null;
+      setCurrentPageMetadata(pageMetadata);
+      return currentMetadata; // Return unchanged to avoid triggering updates
+    });
+  }, []); // Empty dependency array to prevent infinite loops
 
   // Auto-update current page when location changes
   useEffect(() => {
@@ -203,7 +207,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
     setCurrentPage(location.pathname);
   }, [location.pathname, setCurrentPage]);
 
-  // Load metadata from localStorage on initial mount only - removed normalizeUrl dependency
+  // Load metadata from localStorage on initial mount only
   useEffect(() => {
     const savedMetadata = localStorage.getItem('stellMedia_pagesMetadata');
     if (savedMetadata) {
@@ -221,7 +225,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
         setPagesMetadata(initialMetadata);
       }
     }
-  }, []); // Remove normalizeUrl dependency to prevent infinite loop
+  }, []);
 
   const value = {
     pagesMetadata,
