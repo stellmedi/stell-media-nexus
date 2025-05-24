@@ -70,41 +70,41 @@ const Index = () => {
       <main>
         <HeroSection />
         
-        {/* Stats Section - consistent py-16 spacing */}
-        <section className="py-16 bg-blue-50">
+        {/* Stats Section */}
+        <section className="py-20 bg-blue-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
               {stats.map((stat, index) => (
                 <div key={index} className="text-center">
                   <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">{stat.value}</div>
-                  <div className="text-gray-600">{stat.label}</div>
+                  <div className="text-gray-600 text-sm md:text-base">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </section>
         
-        {/* Services Section - consistent py-16 spacing */}
-        <section className="py-16 bg-white">
+        {/* Services Section */}
+        <section className="py-20 bg-white">
           <ServicesSection />
         </section>
         
-        {/* Testimonials Section - consistent py-16 spacing */}
-        <section className="py-16 bg-purple-50">
+        {/* Testimonials Section */}
+        <section className="py-20 bg-purple-50">
           <TestimonialsSection />
         </section>
         
-        {/* Case Studies Preview - consistent py-16 spacing */}
-        <section className="py-16 bg-white">
+        {/* Case Studies Preview */}
+        <section className="py-20 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
+            <div className="text-center mb-16">
+              <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 See how our innovative solutions for <Link to="/services/product-discovery" className="text-indigo-600 hover:underline">product discovery</Link>, <Link to="/services/search-migration" className="text-indigo-600 hover:underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-indigo-600 hover:underline">marketplace management</Link> have helped e-commerce brands achieve measurable results.
               </p>
             </div>
             
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
               {caseStudies.slice(0, 2).map((study, index) => (
                 <Card key={index} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-shadow">
                   <div className="relative h-64">
@@ -120,8 +120,8 @@ const Index = () => {
                     </div>
                   </div>
                   <CardContent className="p-6">
-                    <h3 className="text-xl font-bold mb-2">{study.title}</h3>
-                    <p className="text-gray-600 mb-4">{study.description}</p>
+                    <h3 className="text-xl font-bold mb-3 text-gray-900">{study.title}</h3>
+                    <p className="text-gray-600 mb-4 leading-relaxed">{study.description}</p>
                     <Link to={`/case-studies/${study.id}`} className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900">
                       Read case study <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -130,7 +130,7 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="text-center mt-10">
+            <div className="text-center mt-12">
               <Button asChild variant="outline" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Case Studies <ArrowRight className="ml-2 h-4 w-4" />
@@ -140,12 +140,12 @@ const Index = () => {
           </div>
         </section>
         
-        {/* CTA Section - consistent py-16 spacing */}
-        <section className="py-16 bg-indigo-100">
+        {/* CTA Section */}
+        <section className="py-20 bg-indigo-100">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
-              <p className="max-w-2xl mx-auto mb-8 text-white/90">
+            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl max-w-4xl mx-auto">
+              <h2 className="text-2xl md:text-3xl font-bold mb-6">Ready to transform your e-commerce experience?</h2>
+              <p className="max-w-2xl mx-auto mb-8 text-white/90 leading-relaxed">
                 Let's talk about how our <Link to="/services/product-discovery" className="text-white hover:text-blue-100 underline">product discovery solutions</Link>, <Link to="/services/search-migration" className="text-white hover:text-blue-100 underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-white hover:text-blue-100 underline">marketplace management</Link> can boost your conversions.
               </p>
               <Button asChild size="lg" variant="secondary" className="font-bold text-lg shadow-md text-indigo-700 bg-white hover:bg-gray-100">
@@ -155,8 +155,8 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Contact Section - consistent py-16 spacing */}
-        <section className="py-16 bg-indigo-50">
+        {/* Contact Section */}
+        <section className="py-20 bg-indigo-50">
           <ContactSection />
         </section>
       </main>

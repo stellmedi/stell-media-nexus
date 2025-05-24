@@ -6,22 +6,22 @@ import { Link } from "react-router-dom";
 
 const SEOHeroSection = () => {
   return (
-    <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden" aria-label="E-commerce SEO Services">
+    <section className="pt-32 pb-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden" aria-label="E-commerce SEO Services">
       {/* Abstract background elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
       
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <div className="grid lg:grid-cols-2 gap-12 items-center max-w-7xl mx-auto">
+          <div className="order-2 lg:order-1">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent leading-tight">
               Strategic E-commerce SEO Services
             </h1>
             <p className="text-xl text-gray-600 mb-8 leading-relaxed">
               Drive sustainable growth with our data-driven, technology-enhanced SEO strategies tailored specifically for e-commerce sites with large product catalogs.
             </p>
-            <div className="space-y-4">
-              <ul className="list-disc list-inside text-gray-700 space-y-2 mb-6">
+            <div className="space-y-6">
+              <ul className="list-disc list-inside text-gray-700 space-y-3 mb-8">
                 <li>Structured data implementation for product-rich results</li>
                 <li>AI-friendly content optimization for modern search</li>
                 <li>Technical SEO focused on crawlability and indexation</li>
@@ -33,18 +33,18 @@ const SEOHeroSection = () => {
               </Button>
             </div>
           </div>
-          <div className="relative">
-            <div className="rounded-lg shadow-lg w-full h-80 overflow-hidden bg-white">
+          <div className="relative order-1 lg:order-2">
+            <div className="rounded-lg shadow-xl w-full h-96 overflow-hidden bg-white">
               <div className="absolute inset-0 bg-gradient-to-br from-indigo-50 via-blue-50 to-white">
                 {/* Abstract SEO visualization */}
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center p-8">
                   {/* Search ranking visualization */}
-                  <div className="w-3/4 h-3/4 relative">
+                  <div className="w-full h-full relative">
                     {/* Abstract search visualization */}
                     <div className="absolute top-1/4 left-0 w-full">
-                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-indigo-400 rounded-full w-3/4 mb-4"></div>
-                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-indigo-300 rounded-full w-2/3 mb-4"></div>
-                      <div className="h-1.5 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full w-1/2 mb-4"></div>
+                      <div className="h-2 bg-gradient-to-r from-blue-300 to-indigo-400 rounded-full w-3/4 mb-4"></div>
+                      <div className="h-2 bg-gradient-to-r from-blue-300 to-indigo-300 rounded-full w-2/3 mb-4"></div>
+                      <div className="h-2 bg-gradient-to-r from-blue-300 to-purple-300 rounded-full w-1/2 mb-4"></div>
                       
                       {/* Keywords/tags visualization */}
                       <div className="flex flex-wrap mt-8 gap-2">
@@ -57,9 +57,9 @@ const SEOHeroSection = () => {
                     </div>
                     
                     {/* Abstract chart */}
-                    <svg className="absolute bottom-0 left-0" width="100%" height="100" viewBox="0 0 300 100" preserveAspectRatio="none">
-                      <path d="M0,80 C30,70 60,90 90,70 C120,50 150,70 180,50 C210,30 240,50 270,30 C285,20 300,10 300,10 L300,100 L0,100 Z" 
-                        fill="url(#blue-gradient)" opacity="0.2" />
+                    <svg className="absolute bottom-8 left-0" width="100%" height="120" viewBox="0 0 300 120" preserveAspectRatio="none">
+                      <path d="M0,80 C30,70 60,90 90,70 C120,50 150,70 180,50 C210,30 240,50 270,30 C285,20 300,10 300,10 L300,120 L0,120 Z" 
+                        fill="url(#blue-gradient)" opacity="0.3" />
                       <defs>
                         <linearGradient id="blue-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                           <stop offset="0%" stopColor="#818cf8" />
@@ -69,7 +69,7 @@ const SEOHeroSection = () => {
                     </svg>
                     
                     {/* Growth indicator */}
-                    <div className="absolute top-2 right-2 flex items-center justify-center">
+                    <div className="absolute top-4 right-4 flex items-center justify-center">
                       <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
                           <path d="M23 6l-9.5 9.5-5-5L1 18" />
