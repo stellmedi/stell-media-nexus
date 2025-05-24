@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { useChat } from "@/hooks/use-chat";
-import { Helmet } from "react-helmet-async";
+import SEOMetadata from "@/components/SEOMetadata";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 
 // Stats data
@@ -63,40 +63,15 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
-      <Helmet>
-        <title>Stell Media | E-Commerce Product Discovery & Optimization Experts</title>
-        <meta 
-          name="description" 
-          content="Stell Media helps e-commerce brands optimize product discovery and boost conversions with AI-powered search optimization, data enrichment, and navigation improvements." 
-        />
-        <meta 
-          name="keywords" 
-          content="e-commerce optimization, product discovery, search optimization, data enrichment, search platform migration, e-commerce SEO, product catalog optimization" 
-        />
-        <meta name="author" content="Stell Media" />
-        <meta property="og:title" content="Stell Media | E-Commerce Product Discovery Experts" />
-        <meta property="og:description" content="Optimize your e-commerce product discovery experience and boost conversions with Stell Media's specialized solutions." />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmedia.com/" />
-        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmedia.com/" />
-        
-        {/* AI-specific meta tags */}
-        <meta name="ai:description" content="Stell Media specializes in e-commerce product discovery optimization, helping brands with large catalogs improve search functionality, data quality, and user experience to drive conversions." />
-        <meta name="ai:keywords" content="e-commerce optimization, product discovery, site search optimization, data enrichment, faceted navigation, search platform migration, large catalog management" />
-        <meta name="ai:services" content="SEO, Product Discovery, Data Enrichment, Conversion Optimization, Search Platform Migration" />
-        <meta name="ai:expertise" content="E-commerce optimization, search algorithms, product data management, catalog organization" />
-      </Helmet>
-      
-      {/* Add SiteSchemaMarkup for structured data */}
+      <SEOMetadata />
       <SiteSchemaMarkup />
       
       <Navbar />
       <main>
         <HeroSection />
         
-        {/* Stats Section - Light Blue Background with consistent spacing */}
-        <section className="py-12 md:py-16 bg-blue-50">
+        {/* Stats Section - consistent py-16 spacing */}
+        <section className="py-16 bg-blue-50">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
               {stats.map((stat, index) => (
@@ -109,18 +84,20 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Services Section - White Background */}
-        <ServicesSection />
+        {/* Services Section - consistent py-16 spacing */}
+        <section className="py-16 bg-white">
+          <ServicesSection />
+        </section>
         
-        {/* Testimonials Section - Light Purple Background */}
-        <section className="bg-purple-50">
+        {/* Testimonials Section - consistent py-16 spacing */}
+        <section className="py-16 bg-purple-50">
           <TestimonialsSection />
         </section>
         
-        {/* Case Studies Preview - White Background with consistent spacing */}
-        <section className="py-12 md:py-16 bg-white">
+        {/* Case Studies Preview - consistent py-16 spacing */}
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-8 md:mb-12">
+            <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">Case Studies</h2>
               <p className="text-lg text-gray-600 max-w-2xl mx-auto">
                 See how our innovative solutions for <Link to="/services/product-discovery" className="text-indigo-600 hover:underline">product discovery</Link>, <Link to="/services/search-migration" className="text-indigo-600 hover:underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-indigo-600 hover:underline">marketplace management</Link> have helped e-commerce brands achieve measurable results.
@@ -153,7 +130,7 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="text-center mt-8 md:mt-10">
+            <div className="text-center mt-10">
               <Button asChild variant="outline" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Case Studies <ArrowRight className="ml-2 h-4 w-4" />
@@ -163,23 +140,25 @@ const Index = () => {
           </div>
         </section>
         
-        {/* CTA Section - Deep Blue/Indigo Background with consistent spacing */}
-        <section className="py-12 md:py-16 bg-indigo-100">
+        {/* CTA Section - consistent py-16 spacing */}
+        <section className="py-16 bg-indigo-100">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
-              <p className="max-w-2xl mx-auto mb-6 md:mb-8 text-white/90">
+              <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's talk about how our <Link to="/services/product-discovery" className="text-white hover:text-blue-100 underline">product discovery solutions</Link>, <Link to="/services/search-migration" className="text-white hover:text-blue-100 underline">search platform migration</Link>, and <Link to="/services/marketpulse" className="text-white hover:text-blue-100 underline">marketplace management</Link> can boost your conversions.
               </p>
-              <Button asChild size="lg" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
+              <Button asChild size="lg" variant="secondary" className="font-bold text-lg shadow-md text-indigo-700 bg-white hover:bg-gray-100">
                 <Link to="/contact">Get In Touch</Link>
               </Button>
             </div>
           </div>
         </section>
         
-        {/* Contact Section - Soft Blue Background */}
-        <ContactSection />
+        {/* Contact Section - consistent py-16 spacing */}
+        <section className="py-16 bg-indigo-50">
+          <ContactSection />
+        </section>
       </main>
       <Footer />
     </div>

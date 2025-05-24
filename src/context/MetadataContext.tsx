@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useLocation } from 'react-router-dom';
 
 export interface PageMetadata {
   id: string;
@@ -118,35 +119,37 @@ interface MetadataProviderProps {
 export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) => {
   const [pagesMetadata, setPagesMetadata] = useState<PageMetadata[]>(initialMetadata);
   const [currentPageMetadata, setCurrentPageMetadata] = useState<PageMetadata | null>(null);
+  const location = useLocation();
 
-  // Normalize URLs to ensure consistency
+  // Normalize URLs to ensure consistency and remove old domain references
   const normalizeUrl = (url: string): string => {
     if (!url) return "";
     
-    // Replace stellmediaglobal.com with stellmedia.com
+    // Remove old domain references
     let normalizedUrl = url.replace(/stellmediaglobal\.com/g, "stellmedia.com");
     
     // Ensure URLs start with https:// if they don't have a protocol
     if (normalizedUrl && !normalizedUrl.startsWith('http') && normalizedUrl !== "") {
-      normalizedUrl = `https://${normalizedUrl}`;
+      normalizedUrl = `https://stellmedia.com${normalizedUrl.startsWith('/') ? normalizedUrl : '/' + normalizedUrl}`;
     }
     
     return normalizedUrl;
   };
 
-  // Update metadata for a specific page
+  // Update metadata for a specific page with auto-save
   const updatePageMetadata = (path: string, metadata: Partial<PageMetadata>) => {
     setPagesMetadata(prevState => {
       const updatedMetadata = [...prevState];
       const pageIndex = updatedMetadata.findIndex(page => page.path === path);
+      
+      const normalizedCanonicalUrl = normalizeUrl(metadata.canonicalUrl || `https://stellmedia.com${path}`);
       
       if (pageIndex >= 0) {
         // Update existing page metadata
         updatedMetadata[pageIndex] = {
           ...updatedMetadata[pageIndex],
           ...metadata,
-          // Normalize canonical URL
-          canonicalUrl: normalizeUrl(metadata.canonicalUrl || updatedMetadata[pageIndex].canonicalUrl),
+          canonicalUrl: normalizedCanonicalUrl,
           lastUpdated: new Date().toISOString()
         };
       } else {
@@ -158,7 +161,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
           title: metadata.title || `Page ${path}`,
           metaTitle: metadata.metaTitle || metadata.title || `Page ${path}`,
           metaDescription: metadata.metaDescription || "",
-          canonicalUrl: normalizeUrl(metadata.canonicalUrl || `https://stellmedia.com${path}`),
+          canonicalUrl: normalizedCanonicalUrl,
           ogTitle: metadata.ogTitle || metadata.metaTitle || metadata.title || "",
           ogDescription: metadata.ogDescription || metadata.metaDescription || "",
           ogImage: metadata.ogImage || "",
@@ -178,7 +181,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
         });
       }
       
-      // Update localStorage to persist changes
+      // Auto-save to localStorage
       localStorage.setItem('stellMedia_pagesMetadata', JSON.stringify(updatedMetadata));
       return updatedMetadata;
     });
@@ -190,13 +193,23 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
     setCurrentPageMetadata(pageMetadata);
   };
 
+  // Auto-update current page when location changes
+  useEffect(() => {
+    setCurrentPage(location.pathname);
+  }, [location.pathname, pagesMetadata]);
+
   // Load metadata from localStorage on initial mount
   useEffect(() => {
     const savedMetadata = localStorage.getItem('stellMedia_pagesMetadata');
     if (savedMetadata) {
       try {
         const parsedMetadata = JSON.parse(savedMetadata);
-        setPagesMetadata(parsedMetadata);
+        // Clean up any old domain references from saved data
+        const cleanedMetadata = parsedMetadata.map((page: PageMetadata) => ({
+          ...page,
+          canonicalUrl: normalizeUrl(page.canonicalUrl)
+        }));
+        setPagesMetadata(cleanedMetadata);
       } catch (error) {
         console.error("Error parsing saved metadata:", error);
       }

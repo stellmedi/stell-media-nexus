@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useMetadata } from '../context/MetadataContext';
 import { useLocation } from 'react-router-dom';
@@ -16,13 +16,18 @@ interface SEOMetadataProps {
 
 const SEOMetadata: React.FC<SEOMetadataProps> = ({ path: propPath, overrides = {} }) => {
   const location = useLocation();
-  const { pagesMetadata, normalizeUrl } = useMetadata();
+  const { currentPageMetadata, normalizeUrl, setCurrentPage } = useMetadata();
   
   // Use either the provided path or the current location path
   const currentPath = propPath || location.pathname;
   
-  // Find metadata for the current path or use defaults
-  const metadata = pagesMetadata.find(page => page.path === currentPath) || {
+  // Set current page in context when component mounts or path changes
+  useEffect(() => {
+    setCurrentPage(currentPath);
+  }, [currentPath, setCurrentPage]);
+
+  // Use current page metadata from context or defaults
+  const metadata = currentPageMetadata || {
     title: "Stell Media",
     metaTitle: "Stell Media | Data-Driven E-commerce Solutions",
     metaDescription: "Innovative e-commerce solutions powered by data science and AI",
