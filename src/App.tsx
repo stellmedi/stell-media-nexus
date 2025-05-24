@@ -35,48 +35,51 @@ import { Toaster as SonnerToaster } from 'sonner';
 import SiteSchemaMarkup from './components/SiteSchemaMarkup';
 import { MetadataProvider } from './context/MetadataContext';
 import { ChatProvider } from './hooks/use-chat';
+import { AuthProvider } from './hooks/use-auth';
 
 function App() {
   return (
     <HelmetProvider>
-      <ChatProvider>
-        <Router>
-          <MetadataProvider>
-            <ScrollToTop />
-            <SiteSchemaMarkup />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/seo" element={<SEOServices />} />
-              <Route path="/services/product-discovery" element={<ProductDiscovery />} />
-              <Route path="/services/data-enrichment" element={<DataEnrichment />} />
-              <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
-              <Route path="/services/sem" element={<SEM />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/case-studies" element={<CaseStudies />} />
-              <Route path="/case-studies/:id" element={<CaseStudyDetail />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/sitemap" element={<Sitemap />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/admin" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/content" element={<ContentManagement />} />
-              <Route path="/admin/email" element={<EmailManagement />} />
-              <Route path="/admin/settings" element={<SettingsPage />} />
-              <Route path="/admin/users" element={<UsersManagement />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-            <SonnerToaster position="top-right" />
-          </MetadataProvider>
-        </Router>
-      </ChatProvider>
+      <AuthProvider>
+        <ChatProvider>
+          <Router>
+            <MetadataProvider>
+              <ScrollToTop />
+              <SiteSchemaMarkup />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/seo" element={<SEOServices />} />
+                <Route path="/services/product-discovery" element={<ProductDiscovery />} />
+                <Route path="/services/data-enrichment" element={<DataEnrichment />} />
+                <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+                <Route path="/services/sem" element={<SEM />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/case-studies" element={<CaseStudies />} />
+                <Route path="/case-studies/:id" element={<CaseStudyDetail />} />
+                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/sitemap" element={<Sitemap />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/admin" element={<AdminLogin />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/content" element={<ContentManagement />} />
+                <Route path="/admin/email" element={<EmailManagement />} />
+                <Route path="/admin/settings" element={<SettingsPage />} />
+                <Route path="/admin/users" element={<UsersManagement />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <Toaster />
+              <SonnerToaster position="top-right" />
+            </MetadataProvider>
+          </Router>
+        </ChatProvider>
+      </AuthProvider>
     </HelmetProvider>
   );
 }
