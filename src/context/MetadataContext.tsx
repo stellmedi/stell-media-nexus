@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 
 export interface PageMetadata {
@@ -122,7 +122,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
   const location = useLocation();
 
   // Normalize URLs to ensure consistency and remove old domain references
-  const normalizeUrl = (url: string): string => {
+  const normalizeUrl = useCallback((url: string): string => {
     if (!url) return "";
     
     // Remove old domain references
@@ -134,10 +134,10 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
     }
     
     return normalizedUrl;
-  };
+  }, []);
 
   // Update metadata for a specific page with auto-save
-  const updatePageMetadata = (path: string, metadata: Partial<PageMetadata>) => {
+  const updatePageMetadata = useCallback((path: string, metadata: Partial<PageMetadata>) => {
     setPagesMetadata(prevState => {
       const updatedMetadata = [...prevState];
       const pageIndex = updatedMetadata.findIndex(page => page.path === path);
@@ -182,23 +182,30 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
       }
       
       // Auto-save to localStorage
-      localStorage.setItem('stellMedia_pagesMetadata', JSON.stringify(updatedMetadata));
+      try {
+        localStorage.setItem('stellMedia_pagesMetadata', JSON.stringify(updatedMetadata));
+      } catch (error) {
+        console.error("Error saving metadata to localStorage:", error);
+      }
       return updatedMetadata;
     });
-  };
+  }, [normalizeUrl]);
 
   // Set the current page metadata based on path
-  const setCurrentPage = (path: string) => {
-    const pageMetadata = pagesMetadata.find(page => page.path === path) || null;
-    setCurrentPageMetadata(pageMetadata);
-  };
+  const setCurrentPage = useCallback((path: string) => {
+    setPagesMetadata(prevMetadata => {
+      const pageMetadata = prevMetadata.find(page => page.path === path) || null;
+      setCurrentPageMetadata(pageMetadata);
+      return prevMetadata; // Don't modify the array, just find the metadata
+    });
+  }, []);
 
-  // Auto-update current page when location changes
+  // Auto-update current page when location changes - removed pagesMetadata dependency to prevent infinite loop
   useEffect(() => {
     setCurrentPage(location.pathname);
-  }, [location.pathname, pagesMetadata]);
+  }, [location.pathname, setCurrentPage]);
 
-  // Load metadata from localStorage on initial mount
+  // Load metadata from localStorage on initial mount only
   useEffect(() => {
     const savedMetadata = localStorage.getItem('stellMedia_pagesMetadata');
     if (savedMetadata) {
@@ -212,9 +219,11 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
         setPagesMetadata(cleanedMetadata);
       } catch (error) {
         console.error("Error parsing saved metadata:", error);
+        // If there's an error, fall back to initial metadata
+        setPagesMetadata(initialMetadata);
       }
     }
-  }, []);
+  }, [normalizeUrl]);
 
   const value = {
     pagesMetadata,
