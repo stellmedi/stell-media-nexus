@@ -205,7 +205,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
     setCurrentPage(location.pathname);
   }, [location.pathname, setCurrentPage]);
 
-  // Load metadata from localStorage on initial mount only
+  // Load metadata from localStorage on initial mount only - removed normalizeUrl dependency
   useEffect(() => {
     const savedMetadata = localStorage.getItem('stellMedia_pagesMetadata');
     if (savedMetadata) {
@@ -214,7 +214,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
         // Clean up any old domain references from saved data
         const cleanedMetadata = parsedMetadata.map((page: PageMetadata) => ({
           ...page,
-          canonicalUrl: normalizeUrl(page.canonicalUrl)
+          canonicalUrl: page.canonicalUrl ? page.canonicalUrl.replace(/stellmediaglobal\.com/g, "stellmedia.com") : ""
         }));
         setPagesMetadata(cleanedMetadata);
       } catch (error) {
@@ -223,7 +223,7 @@ export const MetadataProvider: React.FC<MetadataProviderProps> = ({ children }) 
         setPagesMetadata(initialMetadata);
       }
     }
-  }, [normalizeUrl]);
+  }, []); // Remove normalizeUrl dependency to prevent infinite loop
 
   const value = {
     pagesMetadata,
