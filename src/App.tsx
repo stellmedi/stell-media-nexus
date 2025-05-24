@@ -39,9 +39,9 @@ import { ChatProvider } from './hooks/use-chat';
 function App() {
   return (
     <HelmetProvider>
-      <MetadataProvider>
-        <ChatProvider>
-          <Router>
+      <ChatProvider>
+        <Router>
+          <MetadataProvider>
             <ScrollToTop />
             <SiteSchemaMarkup />
             <Routes>
@@ -74,9 +74,9 @@ function App() {
             </Routes>
             <Toaster />
             <SonnerToaster position="top-right" />
-          </Router>
-        </ChatProvider>
-      </MetadataProvider>
+          </MetadataProvider>
+        </Router>
+      </ChatProvider>
     </HelmetProvider>
   );
 }
