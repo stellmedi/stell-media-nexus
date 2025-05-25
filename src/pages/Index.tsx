@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
@@ -17,66 +16,60 @@ import { Helmet } from "react-helmet-async";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 
 // Stats data with enhanced metrics
-const stats = [
-  { value: "85%", label: "Average ROAS improvement for our clients" },
-  { value: "2.4x", label: "Organic traffic growth in 6 months" },
-  { value: "200+", label: "Successful e-commerce projects delivered" },
-  { value: "99%", label: "Client retention rate" }
-];
+const stats = [{
+  value: "85%",
+  label: "Average ROAS improvement for our clients"
+}, {
+  value: "2.4x",
+  label: "Organic traffic growth in 6 months"
+}, {
+  value: "200+",
+  label: "Successful e-commerce projects delivered"
+}, {
+  value: "99%",
+  label: "Client retention rate"
+}];
 
 // Updated case studies with real HD images and enhanced descriptions
-const caseStudies = [
-  {
-    id: "electronics-search",
-    title: "Electronics Giant Search Transformation",
-    description: "How we implemented advanced Elasticsearch algorithms to increase search conversion by 42% and reduced zero-result searches by 68% for a major electronics retailer.",
-    category: "Search Optimization",
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&w=800&q=85",
-    alt: "Advanced electronics search interface optimization",
-    results: "42% conversion increase"
-  },
-  {
-    id: "search-platform-migration",
-    title: "Seamless Coveo Migration Success", 
-    description: "Complete search platform migration from Elasticsearch to Coveo with zero downtime, resulting in 38% faster product discovery and improved customer satisfaction.",
-    category: "Platform Migration",
-    image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&w=800&q=85",
-    alt: "Search platform migration dashboard",
-    results: "Zero downtime migration"
-  },
-  {
-    id: "amazon-marketplace",
-    title: "Amazon Marketplace Domination",
-    description: "Strategic marketplace optimization resulting in 62% increase in organic visibility, 47% higher conversion rate, and significant reduction in advertising costs.",
-    category: "Marketplace Optimization", 
-    image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&w=800&q=85",
-    alt: "Amazon marketplace analytics dashboard",
-    results: "62% visibility boost"
-  },
-  {
-    id: "performance-marketing",
-    title: "Performance Marketing Excellence",
-    description: "Data-driven performance marketing campaign delivered 85% ROAS improvement and 39% reduction in customer acquisition costs for online fashion retailer.",
-    category: "Performance Marketing",
-    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&w=800&q=85",
-    alt: "Performance marketing analytics and ROI dashboard",
-    results: "85% ROAS improvement"
-  }
-];
-
+const caseStudies = [{
+  id: "electronics-search",
+  title: "Electronics Giant Search Transformation",
+  description: "How we implemented advanced Elasticsearch algorithms to increase search conversion by 42% and reduced zero-result searches by 68% for a major electronics retailer.",
+  category: "Search Optimization",
+  image: "https://images.unsplash.com/photo-1518770660439-4636190af475?ixlib=rb-4.0.3&w=800&q=85",
+  alt: "Advanced electronics search interface optimization",
+  results: "42% conversion increase"
+}, {
+  id: "search-platform-migration",
+  title: "Seamless Coveo Migration Success",
+  description: "Complete search platform migration from Elasticsearch to Coveo with zero downtime, resulting in 38% faster product discovery and improved customer satisfaction.",
+  category: "Platform Migration",
+  image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?ixlib=rb-4.0.3&w=800&q=85",
+  alt: "Search platform migration dashboard",
+  results: "Zero downtime migration"
+}, {
+  id: "amazon-marketplace",
+  title: "Amazon Marketplace Domination",
+  description: "Strategic marketplace optimization resulting in 62% increase in organic visibility, 47% higher conversion rate, and significant reduction in advertising costs.",
+  category: "Marketplace Optimization",
+  image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?ixlib=rb-4.0.3&w=800&q=85",
+  alt: "Amazon marketplace analytics dashboard",
+  results: "62% visibility boost"
+}, {
+  id: "performance-marketing",
+  title: "Performance Marketing Excellence",
+  description: "Data-driven performance marketing campaign delivered 85% ROAS improvement and 39% reduction in customer acquisition costs for online fashion retailer.",
+  category: "Performance Marketing",
+  image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?ixlib=rb-4.0.3&w=800&q=85",
+  alt: "Performance marketing analytics and ROI dashboard",
+  results: "85% ROAS improvement"
+}];
 const Index = () => {
-  return (
-    <div className="min-h-screen bg-indigo-50">
+  return <div className="min-h-screen bg-indigo-50">
       <Helmet>
         <title>Stell Media | E-Commerce Product Discovery & Search Optimization Experts</title>
-        <meta 
-          name="description" 
-          content="Leading e-commerce optimization agency specializing in product discovery, search platform migration, and conversion optimization. 200+ successful projects, 99% client retention." 
-        />
-        <meta 
-          name="keywords" 
-          content="e-commerce optimization, product discovery, search optimization, Elasticsearch, Coveo migration, Amazon marketplace, conversion optimization, performance marketing" 
-        />
+        <meta name="description" content="Leading e-commerce optimization agency specializing in product discovery, search platform migration, and conversion optimization. 200+ successful projects, 99% client retention." />
+        <meta name="keywords" content="e-commerce optimization, product discovery, search optimization, Elasticsearch, Coveo migration, Amazon marketplace, conversion optimization, performance marketing" />
         <meta name="author" content="Stell Media" />
         <meta property="og:title" content="Stell Media | E-Commerce Product Discovery Experts" />
         <meta property="og:description" content="Transform your e-commerce product discovery with our proven optimization strategies. 85% average ROAS improvement, 200+ successful projects." />
@@ -124,14 +117,12 @@ const Index = () => {
               </p>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center group">
+              {stats.map((stat, index) => <div key={index} className="text-center group">
                   <div className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform duration-300">
                     {stat.value}
                   </div>
                   <div className="text-gray-600 text-sm md:text-base">{stat.label}</div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </div>
         </section>
@@ -157,15 +148,9 @@ const Index = () => {
             </div>
             
             <div className="grid md:grid-cols-2 gap-8">
-              {caseStudies.slice(0, 2).map((study, index) => (
-                <Card key={index} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
+              {caseStudies.slice(0, 2).map((study, index) => <Card key={index} className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
                   <div className="relative h-64 overflow-hidden">
-                    <OptimizedImage 
-                      src={study.image} 
-                      alt={study.alt}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      priority={index === 0}
-                    />
+                    <OptimizedImage src={study.image} alt={study.alt} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" priority={index === 0} />
                     <div className="absolute top-4 left-4">
                       <span className="bg-white/95 backdrop-blur-sm text-indigo-600 py-1 px-3 rounded-full text-sm font-medium">
                         {study.category}
@@ -182,15 +167,11 @@ const Index = () => {
                       {study.title}
                     </h3>
                     <p className="text-gray-600 mb-4 leading-relaxed">{study.description}</p>
-                    <Link 
-                      to={`/case-studies/${study.id}`} 
-                      className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900 group-hover:gap-3 transition-all"
-                    >
+                    <Link to={`/case-studies/${study.id}`} className="text-indigo-600 font-medium inline-flex items-center hover:text-indigo-800 active:text-indigo-900 group-hover:gap-3 transition-all">
                       Read case study <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                     </Link>
                   </CardContent>
-                </Card>
-              ))}
+                </Card>)}
             </div>
             
             <div className="text-center mt-12">
@@ -204,40 +185,7 @@ const Index = () => {
         </section>
         
         {/* Enhanced CTA Section */}
-        <section className="py-16 bg-indigo-100">
-          <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl relative overflow-hidden">
-              {/* Abstract background pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="cta-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
-                      <circle cx="30" cy="30" r="2" fill="white" opacity="0.3" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#cta-pattern)" />
-                </svg>
-              </div>
-              
-              <div className="relative z-10">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                  Ready to Transform Your E-commerce Experience?
-                </h2>
-                <p className="max-w-2xl mx-auto mb-8 text-white/90 text-lg">
-                  Join 200+ successful e-commerce brands that trust Stell Media with their product discovery optimization. Let's discuss your growth goals.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Button asChild size="lg" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
-                    <Link to="/contact">Book Free Consultation</Link>
-                  </Button>
-                  <Button asChild size="lg" variant="ghost" className="font-bold text-lg text-white border-white hover:bg-white hover:text-indigo-700">
-                    <Link to="/case-studies">View Success Stories</Link>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        
         
         {/* Contact Section */}
         <section className="bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600">
@@ -246,8 +194,6 @@ const Index = () => {
       </main>
       
       <Footer />
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
