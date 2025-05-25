@@ -9,54 +9,54 @@ const EnhancedTestimonials = () => {
       name: "Sarah Chen",
       title: "VP of E-commerce",
       company: "TechVantage Solutions",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Stell Media transformed our product discovery experience. Our search conversion rate improved by 42% within 3 months. Their technical expertise in Elasticsearch optimization is unmatched.",
+      text: "Stell Media transformed our product discovery experience through expert search optimization. Our search conversion rate improved by 42% within 3 months. Their technical expertise in Elasticsearch optimization is unmatched.",
       results: "42% increase in search conversions"
     },
     {
       name: "Michael Rodriguez",
       title: "Director of Digital Strategy",
       company: "GlobalMart Industries",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "The search platform migration to Coveo was seamless. Zero downtime, improved performance, and our customers can now find products 60% faster. Exceptional project management.",
+      text: "The search platform optimization and configuration for Coveo was seamless. Zero downtime, improved performance, and our customers can now find products 60% faster. Exceptional optimization expertise.",
       results: "60% faster product discovery"
     },
     {
       name: "Emily Thompson",
       title: "Head of Product",
       company: "StyleForward",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Our Amazon marketplace optimization campaign exceeded all expectations. Organic visibility increased by 62% and our conversion rates improved dramatically. ROI was incredible.",
+      text: "Our Amazon marketplace optimization campaign exceeded all expectations. Organic visibility increased by 62% and our conversion rates improved dramatically through their expert configuration. ROI was incredible.",
       results: "62% increase in organic visibility"
     },
     {
       name: "David Park",
       title: "E-commerce Manager",
       company: "TechGear Hub",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "The data enrichment project cleaned up our entire product catalog. Search accuracy improved by 75% and our zero-result searches dropped to almost nothing. Outstanding work.",
+      text: "The data optimization project cleaned up our entire product catalog. Search accuracy improved by 75% and our zero-result searches dropped to almost nothing. Outstanding optimization work.",
       results: "75% improvement in search accuracy"
     },
     {
       name: "Lisa Wang",
       title: "Marketing Director",
       company: "FashionFirst",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Performance marketing campaigns delivered 85% ROAS improvement. The team's strategic approach and data-driven insights made all the difference. Highly recommend.",
+      text: "Performance marketing optimization campaigns delivered 85% ROAS improvement. The team's strategic optimization approach and data-driven insights made all the difference. Highly recommend.",
       results: "85% ROAS improvement"
     },
     {
       name: "James Wilson",
       title: "CTO",
       company: "ElectroMart",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Technical SEO audit revealed critical issues we didn't know existed. After implementation, our organic traffic grew 2.4x in 6 months. The team's expertise is phenomenal.",
+      text: "Technical SEO optimization audit revealed critical issues we didn't know existed. After optimization implementation, our organic traffic grew 2.4x in 6 months. The team's optimization expertise is phenomenal.",
       results: "2.4x organic traffic growth"
     }
   ];
@@ -66,10 +66,10 @@ const EnhancedTestimonials = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            What Our Clients Say
+            What Our Optimization Clients Say
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Real results from real businesses. See how we've helped e-commerce brands optimize their product discovery and boost conversions.
+            Real optimization results from real businesses. See how we've helped e-commerce brands optimize their product discovery and boost conversions through expert configuration and strategy.
           </p>
         </div>
 
@@ -89,7 +89,7 @@ const EnhancedTestimonials = () => {
                 
                 <div className="bg-green-50 p-3 rounded-lg mb-4">
                   <div className="text-sm font-semibold text-green-800">
-                    Key Result: {testimonial.results}
+                    Optimization Result: {testimonial.results}
                   </div>
                 </div>
                 
@@ -118,7 +118,7 @@ const EnhancedTestimonials = () => {
               <span>4.9/5 average rating</span>
             </div>
             <span>•</span>
-            <span>200+ successful projects</span>
+            <span>200+ successful optimization projects</span>
             <span>•</span>
             <span>99% client retention</span>
           </div>
