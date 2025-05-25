@@ -19,9 +19,9 @@ import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 
 // Stats data with enhanced metrics
 const stats = [
-  { value: "85%", label: "Average ROAS improvement for our clients" },
+  { value: "18%", label: "Reduction in Dead End Zero Results " },
   { value: "2.4x", label: "Organic traffic growth in 6 months" },
-  { value: "200+", label: "Successful e-commerce optimization projects delivered" },
+  { value: "60+", label: "Successful e-commerce optimization projects delivered" },
   { value: "99%", label: "Client retention rate" }
 ];
 
