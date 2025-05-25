@@ -1,5 +1,5 @@
 // src/components/Navbar.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -7,12 +7,13 @@ import { toast } from "sonner";
 import MobileNav from "@/components/MobileNav";
 
 const Navbar: React.FC = () => {
+  const [servicesOpen, setServicesOpen] = useState(false);
   const phoneNumber = "919877100369";
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
   const handleWhatsAppClick = () => {
     toast.success("Opening WhatsApp", { description: "Connecting you to our support team" });
-    window.open(whatsappUrl, "_blank");
+    window.open(whatsappUrl, '_blank');
   };
 
   return (
@@ -44,67 +45,76 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown (CSS-only) */}
-          <div className="relative group">
+          {/* Services Dropdown (JS-powered) */}
+          <div
+            className="relative"
+            onMouseEnter={() => setServicesOpen(true)}
+            onMouseLeave={() => setServicesOpen(false)}
+          >
             <button
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium"
+              onClick={() => setServicesOpen(open => !open)}
+              aria-expanded={servicesOpen}
               aria-haspopup="true"
             >
               Services <ChevronDown className="ml-1 h-4 w-4" />
             </button>
-            <div
-              className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200"
-              role="menu"
-            >
-              <Link
-                to="/services/product-discovery"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
+
+            {servicesOpen && (
+              <div
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
+                role="menu"
               >
-                <div className="font-medium">Product Discovery</div>
-                <div className="text-xs text-gray-500">Optimize search &amp; navigation</div>
-              </Link>
-              <Link
-                to="/services/data-enrichment"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
-              >
-                <div className="font-medium">Data Enrichment</div>
-                <div className="text-xs text-gray-500">Clean &amp; enhance product data</div>
-              </Link>
-              <Link
-                to="/services/seo"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
-              >
-                <div className="font-medium">SEO Services</div>
-                <div className="text-xs text-gray-500">Boost organic visibility</div>
-              </Link>
-              <Link
-                to="/services/sem"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
-              >
-                <div className="font-medium">SEM Management</div>
-                <div className="text-xs text-gray-500">Optimize paid campaigns</div>
-              </Link>
-              <Link
-                to="/services/conversion-optimization"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
-              >
-                <div className="font-medium">Conversion Optimization</div>
-                <div className="text-xs text-gray-500">Increase conversion rates</div>
-              </Link>
-              <Link
-                to="/services/search-migration"
-                className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                role="menuitem"
-              >
-                <div className="font-medium">Search Platform Migration</div>
-                <div className="text-xs text-gray-500">Seamless platform transitions</div>
-              </Link>
-            </div>
+                <Link
+                  to="/services/product-discovery"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">Product Discovery</div>
+                  <div className="text-xs text-gray-500">Optimize search &amp; navigation</div>
+                </Link>
+                <Link
+                  to="/services/data-enrichment"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">Data Enrichment</div>
+                  <div className="text-xs text-gray-500">Clean &amp; enhance product data</div>
+                </Link>
+                <Link
+                  to="/services/seo"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">SEO Services</div>
+                  <div className="text-xs text-gray-500">Boost organic visibility</div>
+                </Link>
+                <Link
+                  to="/services/sem"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">SEM Management</div>
+                  <div className="text-xs text-gray-500">Optimize paid campaigns</div>
+                </Link>
+                <Link
+                  to="/services/conversion-optimization"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">Conversion Optimization</div>
+                  <div className="text-xs text-gray-500">Increase conversion rates</div>
+                </Link>
+                <Link
+                  to="/services/search-migration"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
+                >
+                  <div className="font-medium">Search Platform Migration</div>
+                  <div className="text-xs text-gray-500">Seamless platform transitions</div>
+                </Link>
+              </div>
+            )}
           </div>
 
           <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
