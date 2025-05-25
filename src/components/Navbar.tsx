@@ -122,3 +122,41 @@ const Navbar: React.FC = () => {
                 </Link>
                 {/* Add more service links as needed */}
               </div>
+            )}
+          </div>
+
+          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+            About
+          </Link>
+          <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+            Blog
+          </Link>
+          <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
+            FAQ
+          </Link>
+
+          {/* Desktop CTA Buttons */}
+          <div className="flex items-center gap-3">
+            <Link to="/contact">
+              <Button variant="outline" size="sm" className="font-medium">
+                Get Quote
+              </Button>
+            </Link>
+            <Button
+              onClick={handleWhatsAppClick}
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+              size="sm"
+            >
+              <MessageSquare className="h-4 w-4" /> WhatsApp
+            </Button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        <MobileNav />
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
