@@ -31,9 +31,7 @@ const ClientLogos = () => {
           <h2 className="text-3xl font-bold text-gray-900 mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
             Trusted by Leading E-commerce Brands
           </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Join 200+ companies that trust Stell Media with their product discovery optimization and e-commerce growth strategies
-          </p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Join 50+ companies that trust Stell Media with their product discovery optimization and e-commerce growth strategies</p>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
@@ -51,7 +49,7 @@ const ClientLogos = () => {
             <span className="text-gray-300">•</span>
             <span>50+ successful optimization projects</span>
             <span className="text-gray-300">•</span>
-            <span>15+ years of expertise</span>
+            <span>Backed by 15+ years of expertise</span>
           </div>
         </div>
       </div>
