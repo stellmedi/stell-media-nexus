@@ -11,10 +11,8 @@ const Navbar: React.FC = () => {
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
   const handleWhatsAppClick = () => {
-    toast.success("Opening WhatsApp", {
-      description: "Connecting you to our support team",
-    });
-    window.open(whatsappUrl, '_blank');
+    toast.success("Opening WhatsApp", { description: "Connecting you to our support team" });
+    window.open(whatsappUrl, "_blank");
   };
 
   return (
@@ -52,14 +50,10 @@ const Navbar: React.FC = () => {
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium"
               aria-haspopup="true"
             >
-              Services
-              <ChevronDown className="ml-1 h-4 w-4" />
+              Services <ChevronDown className="ml-1 h-4 w-4" />
             </button>
-
             <div
-              className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100
-                             opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto
-                             transition-opacity duration-200"
+              className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-opacity duration-200"
               role="menu"
             >
               <Link
@@ -68,7 +62,7 @@ const Navbar: React.FC = () => {
                 role="menuitem"
               >
                 <div className="font-medium">Product Discovery</div>
-                <div className="text-xs text-gray-500">Optimize search & navigation</div>
+                <div className="text-xs text-gray-500">Optimize search &amp; navigation</div>
               </Link>
               <Link
                 to="/services/data-enrichment"
@@ -76,7 +70,7 @@ const Navbar: React.FC = () => {
                 role="menuitem"
               >
                 <div className="font-medium">Data Enrichment</div>
-                <div className="text-xs text-gray-500">Clean & enhance product data</div>
+                <div className="text-xs text-gray-500">Clean &amp; enhance product data</div>
               </Link>
               <Link
                 to="/services/seo"
