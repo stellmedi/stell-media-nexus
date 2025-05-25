@@ -19,9 +19,9 @@ import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 
 // Stats data with enhanced metrics
 const stats = [
-  { value: "18%", label: "Reduction in Dead End Zero Results " },
-  { value: "2.4x", label: "Organic traffic growth in 6 months" },
-  { value: "21%", label: "Search to Purchase Conversion rate improvement" },
+  { value: "15%", label: "Avg. Reduction in Dead End Zero Results " },
+  { value: "2.4x", label: "Avg. Organic traffic growth in 6 months" },
+  { value: "12%", label: "Avg. Search to Purchase Conversion rate improvement" },
   { value: "99%", label: "Client retention rate" }
 ];
 
