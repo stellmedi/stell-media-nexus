@@ -1,19 +1,15 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Menu, ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
+import { ChevronDown, ChevronUp, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
+import MobileNav from "@/components/MobileNav";
 
 const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const phoneNumber = "919877100369";
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
 
   const toggleServicesMenu = () => {
     setServicesOpen(!servicesOpen);
@@ -27,15 +23,17 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-50 shadow-sm">
+    <nav className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-50 shadow-sm" role="navigation" aria-label="Main navigation">
       <div className="container mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center" aria-label="Stell Media home">
             <img 
               src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" 
               alt="Stell Media Logo" 
               className="h-10 w-auto mr-3" 
+              width="120"
+              height="40"
             />
             <span className="text-xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
               Stell Media
@@ -43,19 +41,21 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Desktop Navigation with Services Dropdown */}
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <Link to="/" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
             Home
           </Link>
           
           {/* Services Dropdown */}
           <div className="relative">
             <button 
-              className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors"
+              className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium"
               onClick={toggleServicesMenu}
               onMouseEnter={() => setServicesOpen(true)}
               onMouseLeave={() => setServicesOpen(false)}
+              aria-expanded={servicesOpen}
+              aria-haspopup="true"
             >
               Services
               {servicesOpen ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
@@ -63,198 +63,101 @@ const Navbar = () => {
             
             {servicesOpen && (
               <div 
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-lg rounded-md py-2 z-50"
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
                 onMouseEnter={() => setServicesOpen(true)}
                 onMouseLeave={() => setServicesOpen(false)}
+                role="menu"
               >
                 <Link 
                   to="/services/product-discovery" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  Product Discovery
+                  <div className="font-medium">Product Discovery</div>
+                  <div className="text-xs text-gray-500 mt-1">Optimize search & navigation</div>
                 </Link>
                 <Link 
                   to="/services/data-enrichment" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  Data Enrichment
+                  <div className="font-medium">Data Enrichment</div>
+                  <div className="text-xs text-gray-500 mt-1">Clean & enhance product data</div>
                 </Link>
                 <Link 
                   to="/services/seo" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  SEO Services
+                  <div className="font-medium">SEO Services</div>
+                  <div className="text-xs text-gray-500 mt-1">Boost organic visibility</div>
                 </Link>
                 <Link 
                   to="/services/sem" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  SEM Management
+                  <div className="font-medium">SEM Management</div>
+                  <div className="text-xs text-gray-500 mt-1">Optimize paid campaigns</div>
                 </Link>
                 <Link 
                   to="/services/conversion-optimization" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  Conversion Optimization
+                  <div className="font-medium">Conversion Optimization</div>
+                  <div className="text-xs text-gray-500 mt-1">Increase conversion rates</div>
                 </Link>
                 <Link 
                   to="/services/search-migration" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  Search Platform Migration
+                  <div className="font-medium">Search Platform Migration</div>
+                  <div className="text-xs text-gray-500 mt-1">Seamless platform transitions</div>
                 </Link>
                 <Link 
                   to="/services/marketpulse" 
-                  className="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                  role="menuitem"
                 >
-                  Marketpulse
+                  <div className="font-medium">Marketpulse</div>
+                  <div className="text-xs text-gray-500 mt-1">Marketplace optimization</div>
                 </Link>
               </div>
             )}
           </div>
           
-          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
             About
           </Link>
-          <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
             Blog
           </Link>
-          <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors">
+          <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
             FAQ
           </Link>
           
-          {/* WhatsApp Us button on desktop */}
-          <Button 
-            onClick={handleWhatsAppClick}
-            className="flex items-center gap-2"
-            variant="default"
-            size="sm"
-          >
-            <MessageSquare className="h-4 w-4" /> WhatsApp Us
-          </Button>
-        </div>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden">
-          <button
-            onClick={toggleMobileMenu}
-            className="p-2 rounded-md text-gray-600 hover:text-indigo-600 focus:outline-none"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="md:hidden bg-indigo-50 border-t border-gray-100">
-          <div className="container mx-auto px-4 py-4 flex flex-col space-y-4">
-            <Link
-              to="/"
-              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
-              onClick={toggleMobileMenu}
-            >
-              Home
+          {/* Desktop CTA Buttons */}
+          <div className="flex items-center gap-3">
+            <Link to="/contact">
+              <Button variant="outline" size="sm" className="font-medium">
+                Get Quote
+              </Button>
             </Link>
-            
-            {/* Mobile Services Dropdown */}
-            <div className="relative">
-              <button 
-                className="flex items-center w-full text-left text-gray-600 hover:text-indigo-600 transition-colors py-2"
-                onClick={toggleServicesMenu}
-              >
-                Services
-                {servicesOpen ? <ChevronUp className="ml-1 h-4 w-4" /> : <ChevronDown className="ml-1 h-4 w-4" />}
-              </button>
-              
-              {servicesOpen && (
-                <div className="pl-4 mt-2 space-y-2 border-l-2 border-indigo-200">
-                  <Link 
-                    to="/services/product-discovery" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    Product Discovery
-                  </Link>
-                  <Link 
-                    to="/services/data-enrichment" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    Data Enrichment
-                  </Link>
-                  <Link 
-                    to="/services/seo" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    SEO Services
-                  </Link>
-                  <Link 
-                    to="/services/sem" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    SEM Management
-                  </Link>
-                  <Link 
-                    to="/services/conversion-optimization" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    Conversion Optimization
-                  </Link>
-                  <Link 
-                    to="/services/search-migration" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    Search Migration
-                  </Link>
-                  <Link 
-                    to="/services/marketpulse" 
-                    className="block py-2 text-gray-600 hover:text-indigo-600"
-                    onClick={toggleMobileMenu}
-                  >
-                    Marketpulse
-                  </Link>
-                </div>
-              )}
-            </div>
-            
-            <Link
-              to="/about"
-              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
-              onClick={toggleMobileMenu}
-            >
-              About
-            </Link>
-            <Link
-              to="/blog"
-              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
-              onClick={toggleMobileMenu}
-            >
-              Blog
-            </Link>
-            <Link
-              to="/faq"
-              className="text-gray-600 hover:text-indigo-600 transition-colors py-2"
-              onClick={toggleMobileMenu}
-            >
-              FAQ
-            </Link>
-            
-            {/* WhatsApp Us button on mobile */}
             <Button 
               onClick={handleWhatsAppClick}
-              className="flex items-center justify-center gap-2 mt-2"
-              variant="default"
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+              size="sm"
             >
-              <MessageSquare className="h-4 w-4" /> WhatsApp Us
+              <MessageSquare className="h-4 w-4" /> WhatsApp
             </Button>
           </div>
         </div>
-      )}
+
+        {/* Mobile Navigation */}
+        <MobileNav />
+      </div>
     </nav>
   );
 };
