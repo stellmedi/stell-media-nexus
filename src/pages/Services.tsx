@@ -12,130 +12,98 @@ const services = [
   {
     icon: <Search className="h-12 w-12 text-indigo-500" />,
     title: "Smarter Product Discovery Solutions",
-    description: "Enhance search performance with advanced algorithms, intelligent integrations with Elastic Search, Coveo, Algolia, and Bloomreach to create intuitive product discovery experiences.",
+    description: "Optimize search performance with advanced algorithms and strategic enhancements to create intuitive product discovery experiences that drive conversions.",
     features: [
       "Strategic search relevance optimization",
       "Smart behavioral insights integration",
       "Intelligent navigation restructuring",
-      "Product data cleanup and enrichment",
-      "Advanced faceted filtering implementation",
+      "Product data optimization and enrichment",
+      "Advanced faceted filtering optimization",
       "Real-time search analytics and insights",
-      "Relevance algorithm enhancements",
-      "Personalized product recommendation engines"
+      "Relevance algorithm enhancement strategies",
+      "Personalized product recommendation optimization"
     ],
     link: "/services/product-discovery"
   },
   {
     icon: <Database className="h-12 w-12 text-indigo-500" />,
     title: "Automated Data Enrichment",
-    description: "Our technology-powered automation tools transform messy product data into clean, structured information that improves both customer experience and backend operations.",
+    description: "Transform messy product data into clean, structured information through technology-powered optimization strategies that improve customer experience and business operations.",
     features: [
-      "Automated data cleansing and standardization",
-      "Smart attribute mapping solutions",
-      "Product tagging automation",
-      "Intelligent taxonomy development",
-      "Real-time data quality assessment",
-      "Automated master data management",
+      "Automated data cleansing strategies",
+      "Smart attribute mapping optimization",
+      "Product tagging automation strategies",
+      "Intelligent taxonomy optimization",
+      "Real-time data quality optimization",
+      "Automated master data optimization",
       "Strategic product categorization",
-      "Streamlined legacy data migration"
+      "Legacy data optimization strategies"
     ],
     link: "/services/data-enrichment"
   },
   {
     icon: <Code className="h-12 w-12 text-indigo-500" />,
     title: "Search Platform Migration Support",
-    description: "Expert migration assistance and optimization of your e-commerce search capabilities between Elastic Search, Coveo, Algolia, and Bloomreach with minimal disruption to your business.",
+    description: "Expert migration consultation and optimization strategies for your e-commerce search capabilities with focus on performance optimization and minimal business disruption.",
     features: [
-      "Search platform migration expertise",
-      "Algorithm optimization services",
-      "Seamless data transition strategies",
+      "Search platform migration consultation",
+      "Algorithm optimization strategies",
+      "Data transition optimization",
       "Performance optimization strategies",
-      "Headless commerce architecture",
-      "E-commerce platform integration",
-      "Custom search configuration",
-      "Search relevance fine-tuning"
+      "Architecture optimization consulting",
+      "E-commerce platform optimization",
+      "Search configuration optimization",
+      "Search relevance optimization"
     ],
     link: "/services/search-migration"
   },
   {
     icon: <Globe className="h-12 w-12 text-indigo-500" />,
     title: "Strategic SEO Services",
-    description: "Improve organic visibility with data-driven, technology-enhanced SEO strategies tailored for e-commerce sites with large product catalogs.",
+    description: "Improve organic visibility with data-driven, technology-enhanced SEO optimization strategies tailored for e-commerce sites with large product catalogs.",
     features: [
-      "Comprehensive technical SEO audits",
+      "Comprehensive technical SEO optimization",
       "Automated product page optimization",
-      "Strategic category structure enhancement",
-      "Predictive content gap analysis",
-      "Automated keyword research and mapping",
+      "Strategic category structure optimization",
+      "Predictive content gap optimization",
+      "Automated keyword optimization strategies",
       "Mobile optimization strategies",
       "Strategic URL structure optimization",
-      "Automated schema markup implementation"
+      "Schema markup optimization"
     ],
     link: "/services/seo"
   },
   {
     icon: <BarChart className="h-12 w-12 text-indigo-500" />,
     title: "SEM Services",
-    description: "Drive measurable traffic and conversions through optimized search marketing campaigns for e-commerce products.",
+    description: "Drive measurable traffic and conversions through optimized search marketing campaigns and strategic optimization for e-commerce products.",
     features: [
       "AI-powered Google Shopping optimization",
-      "Performance-based campaigns",
-      "Dynamic product feed management",
+      "Performance-based campaign optimization",
+      "Dynamic product feed optimization",
       "Conversion tracking optimization",
-      "AI-driven bid management strategies",
+      "AI-driven bid optimization strategies",
       "ML audience targeting optimization",
-      "Creative A/B testing",
-      "ROAS optimization through AI"
+      "Creative optimization and testing",
+      "ROAS optimization through AI strategies"
     ],
     link: "/services/sem"
   },
   {
     icon: <Layout className="h-12 w-12 text-indigo-500" />,
     title: "Conversion Optimization",
-    description: "Transform more of your website visitors into customers with data-driven optimization strategies that enhance user experience and drive conversions.",
+    description: "Transform more website visitors into customers with data-driven optimization strategies that enhance user experience and drive conversions.",
     features: [
       "Product page optimization",
-      "Checkout flow enhancement",
-      "Mobile optimization",
-      "Trust & credibility enhancements",
-      "Personalization strategies",
-      "Value proposition clarity",
-      "A/B testing implementation",
-      "User behavior analysis"
+      "Checkout flow optimization",
+      "Mobile experience optimization",
+      "Trust & credibility optimization",
+      "Personalization optimization strategies",
+      "Value proposition optimization",
+      "A/B testing optimization",
+      "User behavior optimization analysis"
     ],
     link: "/services/conversion-optimization"
-  },
-  {
-    icon: <Network className="h-12 w-12 text-indigo-500" />,
-    title: "Custom AI Solutions",
-    description: "Tailored artificial intelligence solutions designed specifically for your e-commerce business challenges and opportunities.",
-    features: [
-      "Computer vision for product recognition",
-      "NLP for customer service automation",
-      "Predictive inventory management",
-      "Fraud detection algorithms",
-      "Customer behavior prediction models",
-      "Price optimization algorithms",
-      "Visual search implementation",
-      "Voice commerce integration"
-    ],
-    link: "/services/ai-solutions"
-  },
-  {
-    icon: <ServerIcon className="h-12 w-12 text-indigo-500" />,
-    title: "E-commerce Automation",
-    description: "Streamline operations and reduce manual tasks with our comprehensive automation solutions for online retailers.",
-    features: [
-      "Marketing automation workflows",
-      "Inventory update automation",
-      "Order processing automation",
-      "Customer service chatbots",
-      "Email marketing automation",
-      "Product data syndication",
-      "Reporting and analytics automation",
-      "Cross-platform data synchronization"
-    ],
-    link: "/services/ecommerce-automation"
   }
 ];
 
@@ -146,9 +114,9 @@ const Services = () => {
         <title>E-commerce Optimization Services | Product Discovery & Search Solutions | Stell Media</title>
         <meta 
           name="description" 
-          content="Transform your e-commerce experience with Stell Media's specialized services including product discovery solutions, data enrichment, search platform migration, SEO, and SEM services." 
+          content="Transform your e-commerce experience with Stell Media's specialized optimization services including product discovery solutions, data enrichment, search optimization, SEO, and SEM services." 
         />
-        <meta name="keywords" content="e-commerce services, product discovery, data enrichment, search platform migration, e-commerce SEO, search optimization, SEM services" />
+        <meta name="keywords" content="e-commerce optimization, product discovery optimization, data enrichment, search optimization, e-commerce SEO, SEM optimization" />
         <meta name="author" content="Stell Media" />
         <meta property="og:title" content="E-commerce Optimization Services | Stell Media" />
         <meta property="og:description" content="Transform your e-commerce experience with our specialized product discovery and optimization services." />
@@ -159,26 +127,26 @@ const Services = () => {
       </Helmet>
       <Navbar />
       <main>
-        {/* Hero Section - Updated subheader */}
-        <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+        {/* Hero Section */}
+        <section className="pt-32 pb-12 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Our Services
               </h1>
               <p className="text-xl text-gray-600 mb-8">
-                Explore our comprehensive range of technology-powered services designed to optimize your e-commerce experience, enhance product discovery, and create meaningful customer connections.
+                Explore our comprehensive range of technology-powered optimization services designed to enhance your e-commerce experience, improve product discovery, and create meaningful customer connections.
               </p>
             </div>
           </div>
         </section>
 
         {/* Services List */}
-        <section className="py-16">
+        <section className="py-12">
           <div className="container mx-auto px-4">
-            <div className="space-y-16">
-              {services.slice(0, 6).map((service, index) => (
-                <div key={index} className="grid md:grid-cols-2 gap-8 items-center py-8">
+            <div className="space-y-12">
+              {services.map((service, index) => (
+                <div key={index} className="grid md:grid-cols-2 gap-8 items-center py-6">
                   <div className={`${index % 2 === 1 ? 'md:order-2' : ''}`}>
                     <div className="mb-6">{service.icon}</div>
                     <h2 className="text-3xl font-bold mb-4 text-gray-900">{service.title}</h2>
@@ -212,13 +180,13 @@ const Services = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated button style to white variant */}
-        <section className="py-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+        {/* CTA Section */}
+        <section className="py-12 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to transform your e-commerce experience?</h2>
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to optimize your e-commerce experience?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-indigo-100">
-                Let's talk about how our technology-powered solutions, automation tools, and hybrid commerce strategies can help optimize your product discovery and boost your conversions.
+                Let's talk about how our technology-powered optimization strategies and data-driven approaches can help enhance your product discovery and boost your conversions.
               </p>
               <Button asChild size="xl" variant="white" className="font-bold shadow-xl">
                 <Link to="/contact">Book Your Free Consultation</Link>

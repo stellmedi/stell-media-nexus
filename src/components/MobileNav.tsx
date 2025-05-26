@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { X, Menu, ChevronDown, MessageSquare, Phone } from "lucide-react";
@@ -206,7 +207,7 @@ const MobileNav = () => {
                 {servicesOpen && (
                   <div 
                     id="mobile-services-menu"
-                    className="pl-4 space-y-1 bg-gray-50 rounded-lg py-2 animate-fade-in"
+                    className="pl-4 space-y-1 bg-indigo-50 rounded-lg py-2 animate-fade-in"
                     role="menu"
                   >
                     {services.map((service) => (
