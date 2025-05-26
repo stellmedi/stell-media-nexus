@@ -10,6 +10,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Navbar: React.FC = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
   const isMobile = useIsMobile();
   const phoneNumber = "919877100369";
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
@@ -55,18 +56,35 @@ const Navbar: React.FC = () => {
     }
   };
 
-  // Desktop hover handlers (only for non-mobile)
+  // Desktop hover handlers with delay
   const handleMouseEnter = () => {
     if (!isMobile) {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
       setServicesOpen(true);
     }
   };
 
   const handleMouseLeave = () => {
     if (!isMobile) {
-      setServicesOpen(false);
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+      hoverTimeoutRef.current = setTimeout(() => {
+        setServicesOpen(false);
+      }, 150); // Small delay to prevent flickering
     }
   };
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (hoverTimeoutRef.current) {
+        clearTimeout(hoverTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <nav
@@ -97,7 +115,7 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown - Fixed with device-aware interaction */}
+          {/* Services Dropdown - Clean implementation */}
           <div
             ref={dropdownRef}
             className="relative"
@@ -119,8 +137,6 @@ const Navbar: React.FC = () => {
               <div
                 className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
                 role="menu"
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
               >
                 <Link
                   to="/services/product-discovery"
