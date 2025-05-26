@@ -8,7 +8,8 @@ import {
   FileText, 
   Settings, 
   Mail, 
-  LogOut
+  LogOut,
+  Search
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -72,6 +73,15 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
             >
               <FileText className="mr-2" />
               Content
+            </Button>
+            
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start"
+              onClick={() => navigate("/admin/seo")}
+            >
+              <Search className="mr-2" />
+              SEO
             </Button>
             
             <Button 

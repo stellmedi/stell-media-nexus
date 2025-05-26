@@ -26,6 +26,7 @@ import UsersManagement from "./pages/admin/UsersManagement";
 import ContentManagement from "./pages/admin/ContentManagement";
 import EmailManagement from "./pages/admin/EmailManagement";
 import SettingsPage from "./pages/admin/SettingsPage";
+import SEOManagement from "./pages/admin/SEOManagement";
 import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
 import ScrollToTop from "./components/ScrollToTop";
 import CaseStudies from "./pages/CaseStudies";
@@ -68,7 +69,7 @@ const App = () => {
             <ChatProvider>
               <SiteSchemaMarkup />
               <Toaster />
-              <Sonner position="bottom-right" expand={true} closeButton /> {/* Configured Sonner with proper positioning */}
+              <Sonner position="bottom-right" expand={true} closeButton />
               <BrowserRouter>
                 <ScrollToTop />
                 <Routes>
@@ -96,6 +97,7 @@ const App = () => {
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/users" element={<UsersManagement />} />
                   <Route path="/admin/content" element={<ContentManagement />} />
+                  <Route path="/admin/seo" element={<SEOManagement />} />
                   <Route path="/admin/emails" element={<EmailManagement />} />
                   <Route path="/admin/settings" element={<SettingsPage />} />
                   
@@ -105,8 +107,8 @@ const App = () => {
                   <Route path="/services/seo" element={<SEO />} />
                   <Route path="/services/sem" element={<SEM />} />
                   <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
-                  <Route path="/services/search-migration" element={<ProductDiscovery />} /> {/* Temporarily point to ProductDiscovery until a dedicated page is created */}
-                  <Route path="/services/marketpulse" element={<DataEnrichment />} /> {/* Temporarily point to DataEnrichment until a dedicated page is created */}
+                  <Route path="/services/search-migration" element={<ProductDiscovery />} />
+                  <Route path="/services/marketpulse" element={<DataEnrichment />} />
                   
                   {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                   <Route path="*" element={<NotFound />} />
