@@ -68,8 +68,9 @@ const MobileNav = () => {
   }, [isOpen, servicesOpen]);
 
   const toggleServices = useCallback(() => {
+    console.log('Services toggle - current state:', servicesOpen, '-> new state:', !servicesOpen);
     setServicesOpen(!servicesOpen);
-  }, []);
+  }, [servicesOpen]);
 
   const closeMenu = useCallback(() => {
     console.log('Mobile menu closing');
