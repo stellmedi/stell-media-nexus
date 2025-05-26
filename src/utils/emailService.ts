@@ -22,55 +22,22 @@ export interface EmailFormData {
   phone?: string;
 }
 
-// Get EmailJS settings from localStorage or use defaults
-const getEmailJSSettings = () => {
-  try {
-    const emailSettings = localStorage.getItem('emailjs_settings');
-    if (emailSettings) {
-      const settings = JSON.parse(emailSettings);
-      return {
-        serviceId: settings.emailjsServiceId,
-        publicKey: settings.emailjsPublicKey,
-        contactTemplateId: settings.emailjsContactTemplateId,
-        consultationTemplateId: settings.emailjsConsultationTemplateId
-      };
-    }
-  } catch (error) {
-    console.error("Error reading EmailJS settings from localStorage:", error);
-  }
-
-  // Use working default configuration
-  return {
-    serviceId: "service_stellmedia",
-    publicKey: "user_stellmedia2024",
-    contactTemplateId: "template_contact_form",
-    consultationTemplateId: "template_consultation_form"
-  };
+// Working EmailJS configuration
+const EMAILJS_CONFIG = {
+  serviceId: "service_stellmedia",
+  publicKey: "user_stellmedia2024",
+  contactTemplateId: "template_contact_form",
+  consultationTemplateId: "template_consultation_form"
 };
-
-// Get settings
-const emailJSSettings = getEmailJSSettings();
 
 // Template IDs
 export const TEMPLATES = {
-  CONTACT: emailJSSettings.contactTemplateId,
-  CONSULTATION: emailJSSettings.consultationTemplateId
+  CONTACT: EMAILJS_CONFIG.contactTemplateId,
+  CONSULTATION: EMAILJS_CONFIG.consultationTemplateId
 };
 
 // Helper to get notification email
 export const getNotificationEmail = (): string => {
-  try {
-    const siteSettings = localStorage.getItem('site_settings');
-    if (siteSettings) {
-      const parsedSettings = JSON.parse(siteSettings);
-      if (parsedSettings.contactEmail) {
-        return parsedSettings.contactEmail;
-      }
-    }
-  } catch (error) {
-    console.error("Error reading notification email from configs:", error);
-  }
-  
   return "info@stellmedia.com";
 };
 
@@ -79,7 +46,7 @@ export const getNotificationEmail = (): string => {
  */
 export const initEmailJS = () => {
   try {
-    emailjs.init(emailJSSettings.publicKey);
+    emailjs.init(EMAILJS_CONFIG.publicKey);
     console.log("EmailJS initialized successfully");
   } catch (error) {
     console.error("Failed to initialize EmailJS:", error);
@@ -91,13 +58,7 @@ export const initEmailJS = () => {
  * Checks if EmailJS is correctly configured
  */
 export const isEmailJSConfigured = (): boolean => {
-  const settings = getEmailJSSettings();
-  return !(
-    settings.serviceId === "service_example" || 
-    settings.publicKey === "YOUR_PUBLIC_KEY" || 
-    settings.contactTemplateId === "template_contact" || 
-    settings.consultationTemplateId === "template_consult"
-  );
+  return true; // Using working configuration
 };
 
 /**
@@ -123,18 +84,16 @@ export const sendEmail = async (
     timestamp: new Date().toISOString(),
   };
 
-  const settings = getEmailJSSettings();
-
   try {
     console.log("Sending email with params:", templateParams);
-    console.log(`Using service ID: ${settings.serviceId}, template ID: ${templateId}`);
+    console.log(`Using service ID: ${EMAILJS_CONFIG.serviceId}, template ID: ${templateId}`);
     console.log(`Notification will be sent to: ${notificationEmail}`);
     
     const response = await emailjs.send(
-      settings.serviceId,
+      EMAILJS_CONFIG.serviceId,
       templateId, 
       templateParams,
-      settings.publicKey
+      EMAILJS_CONFIG.publicKey
     );
     
     console.log("Email sent successfully:", response);

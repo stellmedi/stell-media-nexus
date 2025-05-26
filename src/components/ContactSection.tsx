@@ -1,6 +1,6 @@
 
 import React from "react";
-import ContactFormComponent from "@/components/forms/ContactFormComponent";
+import SimpleContactForm from "@/components/contact/SimpleContactForm";
 import { TEMPLATES } from "@/utils/emailService";
 
 const ContactSection = () => {
@@ -36,7 +36,7 @@ const ContactSection = () => {
           </div>
           
           <div className="md:col-span-1">
-            <ContactFormComponent 
+            <SimpleContactForm 
               templateId={TEMPLATES.CONSULTATION}
               title="Book a Consultation"
               showCompany={true}

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import NewContactForm from "@/components/contact/NewContactForm";
+import SimpleContactForm from "@/components/contact/SimpleContactForm";
 import { TEMPLATES, isEmailJSConfigured } from "@/utils/emailService";
 import { Mail, Phone, MapPin, Clock, ArrowRight, AlertTriangle } from "lucide-react";
 import { Helmet } from "react-helmet-async";
@@ -106,41 +106,65 @@ const Contact = () => {
                 </p>
                 
                 <div className="space-y-8">
-                  <ContactInfo icon={Mail} title="Email">
-                    <p className="text-gray-600">
-                      <a href="mailto:info@stellmedia.com" className="hover:text-indigo-600 transition-colors">
-                        info@stellmedia.com
-                      </a>
-                    </p>
-                  </ContactInfo>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                      <Mail size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Email</h3>
+                      <p className="text-gray-600">
+                        <a href="mailto:info@stellmedia.com" className="hover:text-indigo-600 transition-colors">
+                          info@stellmedia.com
+                        </a>
+                      </p>
+                    </div>
+                  </div>
                   
-                  <ContactInfo icon={Phone} title="Phone">
-                    <p className="text-gray-600">
-                      <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">
-                        +91 98771 00369
-                      </a>
-                    </p>
-                    <p className="text-gray-600 mt-1">
-                      <a href="https://wa.me/919877100369" className="hover:text-indigo-600 transition-colors flex items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
-                          <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
-                          <path d="M9 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
-                          <path d="M14 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
-                        </svg>
-                        WhatsApp: +91 98771 00369
-                      </a>
-                    </p>
-                  </ContactInfo>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                      <Phone size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Phone</h3>
+                      <p className="text-gray-600">
+                        <a href="tel:+919877100369" className="hover:text-indigo-600 transition-colors">
+                          +91 98771 00369
+                        </a>
+                      </p>
+                      <p className="text-gray-600 mt-1">
+                        <a href="https://wa.me/919877100369" className="hover:text-indigo-600 transition-colors flex items-center">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-1">
+                            <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21" />
+                            <path d="M9 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
+                            <path d="M14 10a.5.5 0 0 1 1 0v4a.5.5 0 0 1-1 0v-4Z" />
+                          </svg>
+                          WhatsApp: +91 98771 00369
+                        </a>
+                      </p>
+                    </div>
+                  </div>
                   
-                  <ContactInfo icon={MapPin} title="Office">
-                    <p className="text-gray-600">Zirakpur, SAS Nagar (Mohali),</p>
-                    <p className="text-gray-600">Punjab, India</p>
-                  </ContactInfo>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                      <MapPin size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Office</h3>
+                      <p className="text-gray-600">Zirakpur, SAS Nagar (Mohali),</p>
+                      <p className="text-gray-600">Punjab, India</p>
+                    </div>
+                  </div>
                   
-                  <ContactInfo icon={Clock} title="Business Hours">
-                    <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
-                    <p className="text-gray-600">Saturday - Sunday: Closed</p>
-                  </ContactInfo>
+                  <div className="flex items-start">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 mr-4 flex-shrink-0">
+                      <Clock size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold mb-1 text-gray-900">Business Hours</h3>
+                      <p className="text-gray-600">Monday - Friday: 9:00 AM - 5:00 PM</p>
+                      <p className="text-gray-600">Saturday - Sunday: Closed</p>
+                    </div>
+                  </div>
                 </div>
                 
                 <div className="mt-12">
@@ -157,7 +181,7 @@ const Contact = () => {
                 </div>
               </div>
               
-              <NewContactForm 
+              <SimpleContactForm 
                 templateId={TEMPLATES.CONTACT}
                 className="md:mt-4"
               />

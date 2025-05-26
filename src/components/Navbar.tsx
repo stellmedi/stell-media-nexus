@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  const handleServicesClick = () => {
+  const toggleServices = () => {
     setServicesOpen(!servicesOpen);
   };
 
@@ -54,19 +54,20 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown - Simplified with only hover for desktop */}
+          {/* Services Dropdown - Fixed with both hover and click */}
           <div
             className="relative"
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            <div
+            <button
+              onClick={toggleServices}
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer"
               aria-expanded={servicesOpen}
               aria-haspopup="true"
             >
               Services <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
-            </div>
+            </button>
 
             {servicesOpen && (
               <div
