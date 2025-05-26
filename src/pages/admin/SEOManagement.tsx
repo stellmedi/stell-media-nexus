@@ -1,24 +1,23 @@
 
-import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import React from "react";
+import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { toast } from "sonner";
 import AdminLayout from "@/components/admin/AdminLayout";
 import SEOManager from "@/components/admin/SEOManager";
+import { useAuth } from "@/hooks/use-auth";
 
 const SEOManagement: React.FC = () => {
-  const navigate = useNavigate();
+  const { isAuthenticated, isLoading } = useAuth();
 
-  useEffect(() => {
-    // Check if user is authenticated
-    const isAuthenticated = localStorage.getItem("stell_admin_authenticated") === "true";
-    if (!isAuthenticated) {
-      navigate("/admin");
-      toast.error("Authentication required", {
-        description: "Please login to access the admin dashboard"
-      });
-    }
-  }, [navigate]);
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  // Redirect to login if not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <>
