@@ -96,15 +96,13 @@ const MobileNav = () => {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black bg-opacity-50 !important"
+            className="fixed inset-0 bg-black/50 z-[998]"
             style={{ 
-              zIndex: 998,
-              position: 'fixed !important',
+              position: 'fixed',
               top: 0,
               left: 0,
               right: 0,
-              bottom: 0,
-              backgroundColor: 'rgba(0, 0, 0, 0.5) !important'
+              bottom: 0
             }}
             onClick={closeMenu}
             role="button"
@@ -115,16 +113,14 @@ const MobileNav = () => {
           
           {/* Menu Panel */}
           <div 
-            className="fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl transform translate-x-0"
+            className="fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl transform translate-x-0 z-[999]"
             style={{ 
-              zIndex: 999,
               height: '100vh',
-              height: '100dvh',
               paddingTop: 'env(safe-area-inset-top)',
               paddingBottom: 'env(safe-area-inset-bottom)',
               paddingLeft: 'env(safe-area-inset-left)',
               paddingRight: 'env(safe-area-inset-right)',
-              position: 'fixed !important'
+              position: 'fixed'
             }}
             role="dialog"
             aria-modal="true"
@@ -160,7 +156,6 @@ const MobileNav = () => {
               className="p-4 space-y-2 overflow-y-auto"
               style={{ 
                 height: 'calc(100vh - 80px)',
-                height: 'calc(100dvh - 80px)',
                 paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))'
               }}
               role="navigation"
