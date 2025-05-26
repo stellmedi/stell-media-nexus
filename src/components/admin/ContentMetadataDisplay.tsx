@@ -42,13 +42,13 @@ export default function ContentMetadataDisplay() {
     const seoData = getAllPageSEO();
     console.log('ContentMetadataDisplay: Retrieved SEO data:', seoData);
     
-    const content = availablePages.map(page => {
+    const content: ContentMetadata[] = availablePages.map(page => {
       const pageSEO = seoData[page.path];
       return {
         title: page.name,
         description: pageSEO?.metaDescription || `Default description for ${page.name}`,
         lastModified: pageSEO ? 'Recently updated' : 'No SEO data',
-        status: pageSEO ? 'published' : 'draft' as const,
+        status: (pageSEO ? 'published' : 'draft') as 'published' | 'draft',
         path: page.path,
         seoData: pageSEO ? {
           metaTitle: pageSEO.metaTitle,
