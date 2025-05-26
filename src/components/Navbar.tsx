@@ -1,14 +1,16 @@
 
-// src/components/Navbar.tsx
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import MobileNav from "@/components/MobileNav";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navbar: React.FC = () => {
   const [servicesOpen, setServicesOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const isMobile = useIsMobile();
   const phoneNumber = "919877100369";
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
@@ -25,9 +27,50 @@ const Navbar: React.FC = () => {
     setServicesOpen(false);
   };
 
+  // Handle click outside to close dropdown
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setServicesOpen(false);
+      }
+    };
+
+    if (servicesOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [servicesOpen]);
+
+  // Handle keyboard navigation
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      setServicesOpen(false);
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      toggleServices();
+    }
+  };
+
+  // Desktop hover handlers (only for non-mobile)
+  const handleMouseEnter = () => {
+    if (!isMobile) {
+      setServicesOpen(true);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (!isMobile) {
+      setServicesOpen(false);
+    }
+  };
+
   return (
     <nav
-      className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-50 shadow-sm"
+      className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-40 shadow-sm"
       role="navigation"
       aria-label="Main navigation"
     >
@@ -54,25 +97,30 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown - Fixed with both hover and click */}
+          {/* Services Dropdown - Fixed with device-aware interaction */}
           <div
+            ref={dropdownRef}
             className="relative"
-            onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
           >
             <button
-              onClick={toggleServices}
-              className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer"
+              onClick={isMobile ? toggleServices : undefined}
+              onKeyDown={handleKeyDown}
+              className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md px-2 py-1"
               aria-expanded={servicesOpen}
               aria-haspopup="true"
+              type="button"
             >
               Services <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {servicesOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-[60] border border-gray-100"
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
                 role="menu"
+                onMouseEnter={handleMouseEnter}
+                onMouseLeave={handleMouseLeave}
               >
                 <Link
                   to="/services/product-discovery"
