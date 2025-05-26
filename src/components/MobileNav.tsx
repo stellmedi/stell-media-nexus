@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { X, Menu, ChevronDown, MessageSquare, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,21 +8,37 @@ import { toast } from "sonner";
 const MobileNav = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [scrollPosition, setScrollPosition] = useState(0);
   const phoneNumber = "919877100369";
   const whatsappUrl = `https://wa.me/${phoneNumber}`;
 
-  // Body scroll lock effect
+  // Enhanced body scroll lock with position saving
   useEffect(() => {
     if (isOpen) {
-      const originalStyle = window.getComputedStyle(document.body).overflow;
+      // Save current scroll position
+      const currentScrollY = window.scrollY;
+      setScrollPosition(currentScrollY);
+      
+      // Apply scroll lock
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${currentScrollY}px`;
+      document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
+      document.body.style.touchAction = 'none'; // Prevent iOS bounce
+      
       return () => {
-        document.body.style.overflow = originalStyle;
+        // Restore scroll position and remove lock
+        document.body.style.position = '';
+        document.body.style.top = '';
+        document.body.style.width = '';
+        document.body.style.overflow = '';
+        document.body.style.touchAction = '';
+        window.scrollTo(0, currentScrollY);
       };
     }
   }, [isOpen]);
 
-  // Escape key handler
+  // Enhanced escape key handler
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape' && isOpen) {
@@ -36,37 +52,48 @@ const MobileNav = () => {
     }
   }, [isOpen]);
 
-  const toggleMenu = () => {
+  // Focus management
+  useEffect(() => {
+    if (isOpen) {
+      // Focus first interactive element when menu opens
+      const firstButton = document.querySelector('[role="dialog"] button, [role="dialog"] a');
+      if (firstButton instanceof HTMLElement) {
+        firstButton.focus();
+      }
+    }
+  }, [isOpen]);
+
+  const toggleMenu = useCallback(() => {
     console.log('Mobile menu toggle:', !isOpen);
     setIsOpen(!isOpen);
     if (servicesOpen) setServicesOpen(false);
-  };
+  }, [isOpen, servicesOpen]);
 
-  const toggleServices = () => {
+  const toggleServices = useCallback(() => {
     setServicesOpen(!servicesOpen);
-  };
+  }, []);
 
-  const closeMenu = () => {
+  const closeMenu = useCallback(() => {
     console.log('Mobile menu closing');
     setIsOpen(false);
     setServicesOpen(false);
-  };
+  }, []);
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = useCallback(() => {
     toast.success("Opening WhatsApp", {
       description: "Connecting you to our support team"
     });
     window.open(whatsappUrl, '_blank');
     closeMenu();
-  };
+  }, [whatsappUrl, closeMenu]);
 
-  const handleCallClick = () => {
+  const handleCallClick = useCallback(() => {
     toast.success("Initiating call", {
       description: "Connecting you to our team"
     });
     window.open(`tel:${phoneNumber}`, '_blank');
     closeMenu();
-  };
+  }, [phoneNumber, closeMenu]);
 
   const services = [
     { name: "Product Discovery", path: "/services/product-discovery" },
@@ -82,8 +109,7 @@ const MobileNav = () => {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMenu}
-        className="p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors touch-target min-h-[44px] min-w-[44px] flex items-center justify-center"
-        style={{ zIndex: 1000 }}
+        className="relative p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center z-[1001]"
         aria-label="Toggle mobile menu"
         aria-expanded={isOpen}
         type="button"
@@ -94,16 +120,11 @@ const MobileNav = () => {
       {/* Mobile Menu Overlay and Panel */}
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop with animation */}
           <div 
-            className="fixed inset-0 bg-black/50 z-[998]"
-            style={{ 
-              position: 'fixed',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0
-            }}
+            className={`fixed inset-0 bg-black/50 z-[998] transition-opacity duration-300 ${
+              isOpen ? 'opacity-100' : 'opacity-0'
+            }`}
             onClick={closeMenu}
             role="button"
             tabIndex={0}
@@ -111,16 +132,18 @@ const MobileNav = () => {
             aria-label="Close mobile menu"
           />
           
-          {/* Menu Panel */}
+          {/* Menu Panel with slide animation */}
           <div 
-            className="fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl transform translate-x-0 z-[999]"
+            className={`fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl z-[999] transition-transform duration-300 ease-in-out ${
+              isOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
             style={{ 
               height: '100vh',
-              paddingTop: 'env(safe-area-inset-top)',
-              paddingBottom: 'env(safe-area-inset-bottom)',
-              paddingLeft: 'env(safe-area-inset-left)',
-              paddingRight: 'env(safe-area-inset-right)',
-              position: 'fixed'
+              height: '100dvh',
+              paddingTop: 'max(env(safe-area-inset-top), 0px)',
+              paddingBottom: 'max(env(safe-area-inset-bottom), 0px)',
+              paddingLeft: 'max(env(safe-area-inset-left), 0px)',
+              paddingRight: 'max(env(safe-area-inset-right), 0px)',
             }}
             role="dialog"
             aria-modal="true"
@@ -156,7 +179,8 @@ const MobileNav = () => {
               className="p-4 space-y-2 overflow-y-auto"
               style={{ 
                 height: 'calc(100vh - 80px)',
-                paddingBottom: 'calc(2rem + env(safe-area-inset-bottom))'
+                height: 'calc(100dvh - 80px)',
+                paddingBottom: 'calc(2rem + max(env(safe-area-inset-bottom), 0px))'
               }}
               role="navigation"
               aria-label="Mobile navigation"
@@ -182,25 +206,25 @@ const MobileNav = () => {
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                {servicesOpen && (
-                  <div 
-                    id="mobile-services-menu"
-                    className="pl-4 space-y-1 bg-gray-50 rounded-lg py-2"
-                    role="menu"
-                  >
-                    {services.map((service) => (
-                      <Link
-                        key={service.path}
-                        to={service.path}
-                        className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-colors min-h-[44px] flex items-center"
-                        onClick={closeMenu}
-                        role="menuitem"
-                      >
-                        {service.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                <div 
+                  id="mobile-services-menu"
+                  className={`pl-4 space-y-1 bg-gray-50 rounded-lg py-2 transition-all duration-200 overflow-hidden ${
+                    servicesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+                  }`}
+                  role="menu"
+                >
+                  {services.map((service) => (
+                    <Link
+                      key={service.path}
+                      to={service.path}
+                      className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-colors min-h-[44px] flex items-center"
+                      onClick={closeMenu}
+                      role="menuitem"
+                    >
+                      {service.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
 
               <Link
@@ -239,7 +263,7 @@ const MobileNav = () => {
               <div className="pt-4 space-y-3 border-t border-gray-200 mt-4">
                 <Button
                   onClick={handleWhatsAppClick}
-                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg min-h-[44px]"
+                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg min-h-[44px] transition-colors"
                   type="button"
                 >
                   <MessageSquare className="h-4 w-4" />
@@ -249,7 +273,7 @@ const MobileNav = () => {
                 <Button
                   onClick={handleCallClick}
                   variant="outline"
-                  className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 py-3 rounded-lg min-h-[44px]"
+                  className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 py-3 rounded-lg min-h-[44px] transition-colors"
                   type="button"
                 >
                   <Phone className="h-4 w-4" />
