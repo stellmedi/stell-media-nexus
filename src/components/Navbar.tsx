@@ -1,3 +1,4 @@
+
 // src/components/Navbar.tsx
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -45,7 +46,7 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown (JS-powered) */}
+          {/* Services Dropdown - Fixed hover behavior */}
           <div
             className="relative"
             onMouseEnter={() => setServicesOpen(true)}
@@ -53,7 +54,6 @@ const Navbar: React.FC = () => {
           >
             <button
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium"
-              onClick={() => setServicesOpen(open => !open)}
               aria-expanded={servicesOpen}
               aria-haspopup="true"
             >
@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
 
             {servicesOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-[60] border border-gray-100"
                 role="menu"
               >
                 <Link

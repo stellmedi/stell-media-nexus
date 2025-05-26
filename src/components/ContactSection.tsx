@@ -15,10 +15,10 @@ const ContactSection = () => {
   }, [isLoaded]);
 
   return (
-    <section id="contact" className="py-20 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
+    <section id="contact" className="py-16 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
+        <div className="grid md:grid-cols-3 gap-8 items-start">
+          <div className="md:col-span-2">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your E-commerce Conversions?</h2>
             <p className="text-lg mb-8 text-indigo-100">
               Book a free consultation with our team and learn how we can help optimize your product discovery experience.
@@ -45,23 +45,27 @@ const ContactSection = () => {
             </div>
           </div>
           
-          {isConfigReady ? (
-            <ContactFormComponent 
-              templateId={config.templateId || TEMPLATES.CONSULTATION}
-              title={config.formTitle}
-              buttonText={config.buttonText}
-              successMessage={config.successMessage}
-            />
-          ) : (
-            <ContactFormComponent 
-              templateId={TEMPLATES.CONSULTATION}
-              title="Book a Consultation"
-              showCompany={true}
-              showWebsite={true}
-              buttonText="Request Consultation"
-              successMessage="Thank you! We'll get back to you shortly."
-            />
-          )}
+          <div className="md:col-span-1">
+            {isConfigReady ? (
+              <ContactFormComponent 
+                templateId={config.templateId || TEMPLATES.CONSULTATION}
+                title={config.formTitle}
+                buttonText={config.buttonText}
+                successMessage={config.successMessage}
+                className="max-w-md"
+              />
+            ) : (
+              <ContactFormComponent 
+                templateId={TEMPLATES.CONSULTATION}
+                title="Book a Consultation"
+                showCompany={true}
+                showWebsite={true}
+                buttonText="Request Consultation"
+                successMessage="Thank you! We'll get back to you shortly."
+                className="max-w-md"
+              />
+            )}
+          </div>
         </div>
       </div>
     </section>

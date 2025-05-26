@@ -53,31 +53,31 @@ const MobileNav = () => {
 
   return (
     <div className="md:hidden relative">
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button - Enhanced visibility */}
       <button
         onClick={toggleMenu}
-        className="p-2 rounded-md text-gray-600 hover:text-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 z-50 relative"
+        className="p-3 rounded-lg bg-white shadow-md border border-gray-200 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 z-[80] relative transition-all duration-200"
         aria-label="Toggle mobile menu"
         aria-expanded={isOpen}
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+        {isOpen ? <X size={24} className="text-indigo-600" /> : <Menu size={24} />}
       </button>
 
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Higher z-index */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-[60]" 
+          className="fixed inset-0 bg-black bg-opacity-60 z-[90]" 
           onClick={closeMenu}
           aria-hidden="true"
         />
       )}
 
-      {/* Mobile Menu Panel */}
-      <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl z-[70] transform transition-transform duration-300 ease-in-out ${
+      {/* Mobile Menu Panel - Highest z-index */}
+      <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl z-[100] transform transition-all duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-white">
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-blue-50">
           <Link to="/" onClick={closeMenu} className="flex items-center">
             <img 
               src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" 
@@ -90,18 +90,18 @@ const MobileNav = () => {
           </Link>
           <button 
             onClick={closeMenu} 
-            className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors"
             aria-label="Close menu"
           >
-            <X size={20} />
+            <X size={20} className="text-gray-600" />
           </button>
         </div>
 
         {/* Navigation Content */}
-        <nav className="p-4 space-y-2 overflow-y-auto h-full pb-20">
+        <nav className="p-6 space-y-2 overflow-y-auto h-full pb-24">
           <Link
             to="/"
-            className="block py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+            className="block py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
             onClick={closeMenu}
           >
             Home
@@ -111,20 +111,20 @@ const MobileNav = () => {
           <div className="space-y-1">
             <button
               onClick={toggleServices}
-              className="flex items-center justify-between w-full py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+              className="flex items-center justify-between w-full py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
               aria-expanded={servicesOpen}
             >
               Services
-              <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
+              <ChevronDown className={`h-4 w-4 transition-transform duration-300 ${servicesOpen ? 'rotate-180' : ''}`} />
             </button>
             
             {servicesOpen && (
-              <div className="pl-4 space-y-1 bg-gray-50 rounded-md py-2">
+              <div className="pl-4 space-y-1 bg-gray-50 rounded-lg py-3 border-l-2 border-indigo-200">
                 {services.map((service) => (
                   <Link
                     key={service.path}
                     to={service.path}
-                    className="block py-2 px-3 text-gray-600 hover:text-indigo-600 hover:bg-white rounded text-sm transition-colors"
+                    className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-all duration-200"
                     onClick={closeMenu}
                   >
                     {service.name}
@@ -136,7 +136,7 @@ const MobileNav = () => {
 
           <Link
             to="/about"
-            className="block py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+            className="block py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
             onClick={closeMenu}
           >
             About
@@ -144,7 +144,7 @@ const MobileNav = () => {
 
           <Link
             to="/blog"
-            className="block py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+            className="block py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
             onClick={closeMenu}
           >
             Blog
@@ -152,7 +152,7 @@ const MobileNav = () => {
 
           <Link
             to="/faq"
-            className="block py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+            className="block py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
             onClick={closeMenu}
           >
             FAQ
@@ -160,17 +160,17 @@ const MobileNav = () => {
 
           <Link
             to="/contact"
-            className="block py-3 px-2 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-md font-medium transition-colors"
+            className="block py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
             onClick={closeMenu}
           >
             Contact
           </Link>
 
           {/* Action Buttons */}
-          <div className="pt-6 space-y-3 border-t border-gray-200 mt-4">
+          <div className="pt-6 space-y-3 border-t border-gray-200 mt-6">
             <Button
               onClick={handleWhatsAppClick}
-              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white"
+              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg shadow-md"
             >
               <MessageSquare className="h-4 w-4" />
               WhatsApp Us
@@ -179,7 +179,7 @@ const MobileNav = () => {
             <Button
               onClick={handleCallClick}
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50"
+              className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 py-3 rounded-lg"
             >
               <Phone className="h-4 w-4" />
               Call Now

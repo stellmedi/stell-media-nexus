@@ -119,10 +119,10 @@ const Index = () => {
         {/* Client Logos Section */}
         <ClientLogos />
         
-        {/* Stats Section - Enhanced */}
-        <section className="py-16 bg-white" aria-label="Our proven optimization results">
+        {/* Stats Section - Reduced spacing */}
+        <section className="py-12 bg-white" aria-label="Our proven optimization results">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Proven Optimization Results That Drive Growth
               </h2>
@@ -151,10 +151,10 @@ const Index = () => {
         {/* Enhanced Testimonials */}
         <EnhancedTestimonials />
         
-        {/* Case Studies Preview - Enhanced */}
-        <section className="py-20 bg-white" aria-label="Our optimization success stories">
+        {/* Case Studies Preview - Reduced spacing */}
+        <section className="py-16 bg-white" aria-label="Our optimization success stories">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
+            <div className="text-center mb-12">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Optimization Success Stories
               </h2>
@@ -200,48 +200,12 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="text-center mt-12">
+            <div className="text-center mt-10">
               <Button asChild variant="outline" size="lg" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Optimization Case Studies <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
-            </div>
-          </div>
-        </section>
-        
-        {/* Enhanced CTA Section */}
-        <section className="py-16 bg-indigo-100">
-          <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-xl relative overflow-hidden">
-              {/* Abstract background pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="cta-pattern" width="60" height="60" patternUnits="userSpaceOnUse">
-                      <circle cx="30" cy="30" r="2" fill="white" opacity="0.3" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#cta-pattern)" />
-                </svg>
-              </div>
-              
-              <div className="relative z-10">
-                <h2 className="text-2xl md:text-3xl font-bold mb-4">
-                  Ready to Optimize Your E-commerce Experience?
-                </h2>
-                <p className="max-w-2xl mx-auto mb-8 text-white/90 text-lg">
-                  Join 200+ successful e-commerce brands that trust Stell Media with their product discovery optimization. Let's discuss your optimization goals.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-4">
-                  <Button asChild size="lg" variant="white" className="font-bold text-lg shadow-md text-indigo-700">
-                    <Link to="/contact">Book Free Optimization Consultation</Link>
-                  </Button>
-                  <Button asChild size="lg" variant="ghost" className="font-bold text-lg text-white border-white hover:bg-white hover:text-indigo-700">
-                    <Link to="/case-studies">View Optimization Success Stories</Link>
-                  </Button>
-                </div>
-              </div>
             </div>
           </div>
         </section>
