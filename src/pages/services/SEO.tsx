@@ -1,5 +1,4 @@
 import React from "react";
-import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -11,6 +10,7 @@ import SEONewsletterSection from "@/components/seo/SEONewsletterSection";
 import SEOFAQSection from "@/components/seo/SEOFAQSection";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import FAQSchemaMarkup from "@/components/FAQSchemaMarkup";
+import SEOHelmet from "@/components/SEOHelmet";
 import { ArrowRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -112,21 +112,16 @@ const SEOServices = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
-      <Helmet>
-        <title>Expert E-commerce SEO Services | Data-Driven Results | Stell Media</title>
-        <meta 
-          name="description" 
-          content="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
-        />
-        <meta name="keywords" content="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility" />
+      <SEOHelmet 
+        pagePath="/services/seo"
+        defaultTitle="Expert E-commerce SEO Services | Data-Driven Results | Stell Media"
+        defaultDescription="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
+        defaultKeywords="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility"
+        defaultOgImage="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png"
+      >
         <meta name="author" content="Stell Media" />
-        <meta property="og:title" content="Expert E-commerce SEO Services | Stell Media" />
-        <meta property="og:description" content="Boost your e-commerce visibility with data-driven SEO strategies tailored for large product catalogs." />
         <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://stellmedia.com/services/seo" />
-        <meta property="og:image" content="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png" />
-        <link rel="canonical" href="https://stellmedia.com/services/seo" />
-      </Helmet>
+      </SEOHelmet>
       
       {/* Schema markup for this page */}
       <SchemaMarkup type="service" data={seoServiceData} />

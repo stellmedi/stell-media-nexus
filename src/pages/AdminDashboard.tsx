@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import SEOManager from "@/components/admin/SEOManager";
 import {
   BarChart3,
   FileText,
@@ -111,8 +112,8 @@ const AdminDashboard: React.FC = () => {
           <Tabs defaultValue="dashboard">
             <TabsList className="mb-4">
               <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+              <TabsTrigger value="seo">SEO Management</TabsTrigger>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
-              <TabsTrigger value="seo">SEO</TabsTrigger>
             </TabsList>
             
             <TabsContent value="dashboard" className="space-y-6">
@@ -196,6 +197,10 @@ const AdminDashboard: React.FC = () => {
               </Card>
             </TabsContent>
             
+            <TabsContent value="seo" className="space-y-6">
+              <SEOManager />
+            </TabsContent>
+            
             <TabsContent value="analytics" className="space-y-6">
               <Card>
                 <CardHeader>
@@ -217,7 +222,7 @@ const AdminDashboard: React.FC = () => {
               </Card>
             </TabsContent>
             
-            <TabsContent value="seo" className="space-y-6">
+            <TabsContent value="analytics" className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Search Console Verification</CardTitle>
