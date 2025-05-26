@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -18,7 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Eye, Edit, BarChart, Search, Copy, FileText, Link, Settings } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 // Enhanced Content form schema with expanded SEO validation
 const formSchema = z.object({
@@ -81,6 +82,7 @@ export default function ContentForm({
   const [metaTitleCount, setMetaTitleCount] = useState(0);
   const [metaDescCount, setMetaDescCount] = useState(0);
   const [showCurrentMetadata, setShowCurrentMetadata] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const form = useForm<ContentFormValues>({
     resolver: zodResolver(formSchema),
@@ -114,6 +116,63 @@ export default function ContentForm({
     if (!form.getValues("metaTitle")) {
       form.setValue("metaTitle", title);
       setMetaTitleCount(title.length);
+    }
+  };
+
+  // Enhanced form submission with proper error handling
+  const handleFormSubmit = async (data: ContentFormValues) => {
+    console.log("Form submission started", { data, isEditMode, isSystemPage });
+    
+    setIsSubmitting(true);
+    
+    try {
+      // Validate form data
+      const validatedData = formSchema.parse(data);
+      console.log("Form validation successful", validatedData);
+      
+      // Call the parent onSubmit function
+      await onSubmit(validatedData);
+      
+      // Show success toast
+      toast.success(
+        isEditMode ? "Content updated successfully!" : "Content created successfully!",
+        {
+          description: `${data.type} has been ${isEditMode ? 'updated' : 'created'} and is now ${data.status}.`
+        }
+      );
+      
+      console.log("Form submission completed successfully");
+      
+    } catch (error) {
+      console.error("Form submission error:", error);
+      
+      if (error instanceof z.ZodError) {
+        // Handle validation errors
+        console.error("Validation errors:", error.errors);
+        toast.error("Validation Error", {
+          description: "Please check the form for errors and try again."
+        });
+        
+        // Set form errors
+        error.errors.forEach((err) => {
+          if (err.path.length > 0) {
+            form.setError(err.path[0] as keyof ContentFormValues, {
+              type: "manual",
+              message: err.message
+            });
+          }
+        });
+      } else if (error instanceof Error) {
+        toast.error("Submission Error", {
+          description: error.message || "An error occurred while saving. Please try again."
+        });
+      } else {
+        toast.error("Unknown Error", {
+          description: "An unexpected error occurred. Please try again."
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -151,10 +210,7 @@ export default function ContentForm({
 ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form.watch("noFollow") ? '<meta name="robots" content="nofollow">\n' : ''}`;
     
     navigator.clipboard.writeText(metaTagsHtml.trim());
-    toast({
-      title: "Meta tags copied",
-      description: "Meta tags have been copied to clipboard",
-    });
+    toast.success("Meta tags copied to clipboard!");
   };
 
   // Render markdown-like content for the preview
@@ -180,7 +236,7 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6">
         <Tabs defaultValue="basic" className="w-full">
           <TabsList className="grid grid-cols-6 mb-4">
             <TabsTrigger value="basic">Basic Info</TabsTrigger>
@@ -1118,11 +1174,27 @@ ${form.watch("noIndex") ? '<meta name="robots" content="noindex">\n' : ''}${form
         </Tabs>
         
         <DialogFooter>
-          <Button variant="outline" type="button" onClick={onCancel}>
+          <Button 
+            variant="outline" 
+            type="button" 
+            onClick={onCancel}
+            disabled={isSubmitting}
+          >
             Cancel
           </Button>
-          <Button type="submit">
-            {isEditMode ? "Update" : "Create"}
+          <Button 
+            type="submit"
+            disabled={isSubmitting}
+            className="min-w-[120px]"
+          >
+            {isSubmitting ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                {isEditMode ? "Updating..." : "Creating..."}
+              </>
+            ) : (
+              isEditMode ? "Update" : "Create"
+            )}
           </Button>
         </DialogFooter>
       </form>

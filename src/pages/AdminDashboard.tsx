@@ -1,8 +1,7 @@
-
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,10 +28,8 @@ const AdminDashboard: React.FC = () => {
     const isAuthenticated = localStorage.getItem("stell_admin_authenticated") === "true";
     if (!isAuthenticated) {
       navigate("/admin");
-      toast({
-        title: "Authentication required",
-        description: "Please login to access the admin dashboard",
-        variant: "destructive",
+      toast.error("Authentication required", {
+        description: "Please login to access the admin dashboard"
       });
     }
   }, [navigate]);
@@ -40,25 +37,20 @@ const AdminDashboard: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem("stell_admin_authenticated");
     navigate("/admin");
-    toast({
-      title: "Logged out",
-      description: "You have been successfully logged out",
-    });
+    toast.success("Logged out successfully");
   };
 
   const handleGASubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Google Analytics Connected",
-      description: "Your tracking ID has been saved successfully",
+    toast.success("Google Analytics Connected", {
+      description: "Your tracking ID has been saved successfully"
     });
   };
 
   const handleGSCSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast({
-      title: "Search Console Connected",
-      description: "Verification file uploaded successfully",
+    toast.success("Search Console Connected", {
+      description: "Verification file uploaded successfully"
     });
   };
 
