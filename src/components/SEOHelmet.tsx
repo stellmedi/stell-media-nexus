@@ -22,6 +22,10 @@ export default function SEOHelmet({
 }: SEOHelmetProps) {
   const { seoData } = usePageSEO(pagePath);
 
+  console.log('SEOHelmet: Rendering for page:', pagePath);
+  console.log('SEOHelmet: Saved SEO data:', seoData);
+  console.log('SEOHelmet: Default values:', { defaultTitle, defaultDescription, defaultKeywords, defaultOgImage });
+
   // Use saved SEO data if available, otherwise fall back to defaults
   const metaTitle = seoData?.metaTitle || defaultTitle;
   const metaDescription = seoData?.metaDescription || defaultDescription;
@@ -33,6 +37,19 @@ export default function SEOHelmet({
   const twitterTitle = seoData?.twitterTitle || ogTitle;
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;
+
+  console.log('SEOHelmet: Final values being used:', {
+    metaTitle,
+    metaDescription,
+    keywords,
+    canonicalUrl,
+    ogTitle,
+    ogDescription,
+    ogImage,
+    twitterTitle,
+    twitterDescription,
+    twitterImage
+  });
 
   // Generate robots content
   const robotsContent = [];

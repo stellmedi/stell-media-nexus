@@ -12,6 +12,29 @@ import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SEOHelmet from "@/components/SEOHelmet";
 
 const Index = () => {
+  const faqItems = [
+    {
+      question: "What e-commerce AI solutions do you offer?",
+      answer: "We provide comprehensive AI-powered solutions including product discovery optimization, search algorithm enhancement, data enrichment, and conversion rate optimization specifically designed for e-commerce platforms."
+    },
+    {
+      question: "How can AI improve my e-commerce search functionality?",
+      answer: "Our AI solutions enhance search by implementing advanced algorithms that understand user intent, provide personalized recommendations, and improve product discoverability through semantic search and machine learning."
+    },
+    {
+      question: "What's included in your SEO services for e-commerce?",
+      answer: "Our SEO services include technical optimization, product page optimization, category structure improvement, schema markup implementation, and content strategy specifically tailored for e-commerce platforms."
+    },
+    {
+      question: "How do you measure the success of AI implementations?",
+      answer: "We track key metrics including conversion rates, search result relevance, user engagement, cart abandonment reduction, and overall revenue impact to measure the effectiveness of our AI solutions."
+    },
+    {
+      question: "Can you integrate with existing e-commerce platforms?",
+      answer: "Yes, our solutions are designed to integrate seamlessly with major e-commerce platforms including Shopify, WooCommerce, Magento, and custom-built systems."
+    }
+  ];
+
   return (
     <div className="min-h-screen bg-indigo-50">
       <SEOHelmet 
@@ -29,7 +52,7 @@ const Index = () => {
         <ClientLogos />
         <ServicesSection />
         <EnhancedTestimonials />
-        <FAQSection />
+        <FAQSection items={faqItems} />
         <ContactSection />
       </main>
       <Footer />

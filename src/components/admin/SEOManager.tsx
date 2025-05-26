@@ -72,34 +72,44 @@ export default function SEOManager() {
 
   // Load SEO data from localStorage on component mount
   useEffect(() => {
+    console.log('SEOManager: Loading SEO data from localStorage...');
     const savedSEOData = localStorage.getItem('stellmedia_page_seo');
     if (savedSEOData) {
       try {
         const parsedData = JSON.parse(savedSEOData);
+        console.log('SEOManager: Loaded SEO data:', parsedData);
         setAllPagesSEO(parsedData);
         
         // Load data for currently selected page
         if (parsedData[selectedPage]) {
+          console.log('SEOManager: Setting data for selected page:', selectedPage, parsedData[selectedPage]);
           setSeoData(parsedData[selectedPage]);
         } else {
+          console.log('SEOManager: No data found for page:', selectedPage, 'using defaults');
           setSeoData(defaultSEOData);
         }
       } catch (error) {
-        console.error('Error loading SEO data:', error);
+        console.error('SEOManager: Error loading SEO data:', error);
       }
+    } else {
+      console.log('SEOManager: No saved SEO data found in localStorage');
     }
   }, []);
 
   // Update SEO data when selected page changes
   useEffect(() => {
+    console.log('SEOManager: Page changed to:', selectedPage);
     if (allPagesSEO[selectedPage]) {
+      console.log('SEOManager: Loading existing data for page:', selectedPage, allPagesSEO[selectedPage]);
       setSeoData(allPagesSEO[selectedPage]);
     } else {
+      console.log('SEOManager: No existing data for page:', selectedPage, 'using defaults');
       setSeoData(defaultSEOData);
     }
   }, [selectedPage, allPagesSEO]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
+    console.log('SEOManager: Field changed:', field, 'new value:', value);
     setSeoData(prev => ({
       ...prev,
       [field]: value
@@ -107,6 +117,8 @@ export default function SEOManager() {
   };
 
   const handleSave = () => {
+    console.log('SEOManager: Saving SEO data for page:', selectedPage);
+    console.log('SEOManager: Current seoData:', seoData);
     setIsLoading(true);
     
     try {
@@ -115,13 +127,19 @@ export default function SEOManager() {
         [selectedPage]: seoData
       };
       
+      console.log('SEOManager: Updated all pages SEO data:', updatedAllPagesSEO);
       setAllPagesSEO(updatedAllPagesSEO);
       localStorage.setItem('stellmedia_page_seo', JSON.stringify(updatedAllPagesSEO));
+      
+      // Verify the save by reading back from localStorage
+      const verifyData = localStorage.getItem('stellmedia_page_seo');
+      console.log('SEOManager: Verification - data saved to localStorage:', JSON.parse(verifyData || '{}'));
       
       toast.success("SEO settings saved successfully!", {
         description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`
       });
     } catch (error) {
+      console.error('SEOManager: Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
         description: "Please try again."
       });
@@ -131,6 +149,7 @@ export default function SEOManager() {
   };
 
   const handleReset = () => {
+    console.log('SEOManager: Resetting SEO data for page:', selectedPage);
     setSeoData(defaultSEOData);
     toast.info("SEO fields reset to default values");
   };

@@ -28,16 +28,26 @@ export function usePageSEO(pagePath: string) {
 
   useEffect(() => {
     const loadSEOData = () => {
+      console.log('usePageSEO: Loading SEO data for page:', pagePath);
       try {
         const savedSEOData = localStorage.getItem('stellmedia_page_seo');
         if (savedSEOData) {
           const parsedData: PageSEOData = JSON.parse(savedSEOData);
+          console.log('usePageSEO: All saved SEO data:', parsedData);
           if (parsedData[pagePath]) {
+            console.log('usePageSEO: Found SEO data for page:', pagePath, parsedData[pagePath]);
             setSeoData(parsedData[pagePath]);
+          } else {
+            console.log('usePageSEO: No SEO data found for page:', pagePath);
+            setSeoData(null);
           }
+        } else {
+          console.log('usePageSEO: No SEO data in localStorage');
+          setSeoData(null);
         }
       } catch (error) {
-        console.error('Error loading SEO data for page:', pagePath, error);
+        console.error('usePageSEO: Error loading SEO data for page:', pagePath, error);
+        setSeoData(null);
       } finally {
         setIsLoading(false);
       }
@@ -47,6 +57,7 @@ export function usePageSEO(pagePath: string) {
 
     // Listen for storage changes to update when SEO data is modified in admin
     const handleStorageChange = () => {
+      console.log('usePageSEO: Storage change detected, reloading data for page:', pagePath);
       loadSEOData();
     };
 
@@ -60,9 +71,11 @@ export function usePageSEO(pagePath: string) {
 export function getAllPageSEO(): PageSEOData {
   try {
     const savedSEOData = localStorage.getItem('stellmedia_page_seo');
-    return savedSEOData ? JSON.parse(savedSEOData) : {};
+    const data = savedSEOData ? JSON.parse(savedSEOData) : {};
+    console.log('getAllPageSEO: Retrieved all SEO data:', data);
+    return data;
   } catch (error) {
-    console.error('Error loading all SEO data:', error);
+    console.error('getAllPageSEO: Error loading all SEO data:', error);
     return {};
   }
 }
