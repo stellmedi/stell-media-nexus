@@ -7,7 +7,7 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-12 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8 items-start">
+        <div className="grid md:grid-cols-3 gap-8 items-center">
           <div className="md:col-span-2">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your E-commerce Conversions?</h2>
             <p className="text-lg mb-6 text-indigo-100">
@@ -40,7 +40,7 @@ const ContactSection = () => {
               templateId={TEMPLATES.CONSULTATION}
               title="Book a Consultation"
               showCompany={true}
-              showWebsite={true}
+              showWebsite={false}
               buttonText="Request Consultation"
               successMessage="Thank you! We'll get back to you shortly."
               className="max-w-md"
