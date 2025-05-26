@@ -116,13 +116,13 @@ const Index = () => {
       <main>
         <HeroSection />
         
-        {/* Client Logos Section */}
+        {/* Client Logos Section - Reduced spacing */}
         <ClientLogos />
         
-        {/* Stats Section - Reduced spacing */}
+        {/* Stats Section - Optimized spacing */}
         <section className="py-12 bg-white" aria-label="Our proven optimization results">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-10">
+            <div className="text-center mb-8">
               <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Proven Optimization Results That Drive Growth
               </h2>
@@ -143,18 +143,20 @@ const Index = () => {
           </div>
         </section>
         
-        {/* Services Section */}
-        <section className="bg-blue-50">
+        {/* Services Section - Optimized spacing */}
+        <section className="bg-blue-50 py-12">
           <ServicesSection />
         </section>
         
-        {/* Enhanced Testimonials */}
-        <EnhancedTestimonials />
+        {/* Enhanced Testimonials - Optimized spacing */}
+        <section className="py-12">
+          <EnhancedTestimonials />
+        </section>
         
-        {/* Case Studies Preview - Reduced spacing */}
-        <section className="py-16 bg-white" aria-label="Our optimization success stories">
+        {/* Case Studies Preview - Optimized spacing */}
+        <section className="py-12 bg-white" aria-label="Our optimization success stories">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-10">
               <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Optimization Success Stories
               </h2>
@@ -200,7 +202,7 @@ const Index = () => {
               ))}
             </div>
             
-            <div className="text-center mt-10">
+            <div className="text-center mt-8">
               <Button asChild variant="outline" size="lg" className="border-indigo-300 hover:bg-indigo-100 active:bg-indigo-200">
                 <Link to="/case-studies">
                   View All Optimization Case Studies <ArrowRight className="ml-2 h-4 w-4" />
@@ -211,9 +213,7 @@ const Index = () => {
         </section>
         
         {/* Contact Section */}
-        <section className="bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600">
-          <ContactSection />
-        </section>
+        <ContactSection />
       </main>
       
       <Footer />

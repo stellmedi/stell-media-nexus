@@ -47,32 +47,31 @@ const MobileNav = () => {
     { name: "SEO Services", path: "/services/seo" },
     { name: "SEM Management", path: "/services/sem" },
     { name: "Conversion Optimization", path: "/services/conversion-optimization" },
-    { name: "Search Migration", path: "/services/search-migration" },
-    { name: "Marketpulse", path: "/services/marketpulse" }
+    { name: "Search Migration", path: "/services/search-migration" }
   ];
 
   return (
     <div className="md:hidden relative">
-      {/* Mobile Menu Button - Enhanced visibility */}
+      {/* Enhanced Mobile Menu Button with better visibility */}
       <button
         onClick={toggleMenu}
-        className="p-3 rounded-lg bg-white shadow-md border border-gray-200 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 z-[80] relative transition-all duration-200"
+        className="p-3 rounded-lg bg-indigo-600 text-white shadow-lg border-2 border-indigo-700 hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300 z-[80] relative transition-all duration-200 min-w-[48px] min-h-[48px] flex items-center justify-center"
         aria-label="Toggle mobile menu"
         aria-expanded={isOpen}
       >
-        {isOpen ? <X size={24} className="text-indigo-600" /> : <Menu size={24} />}
+        {isOpen ? <X size={24} className="text-white" /> : <Menu size={24} className="text-white" />}
       </button>
 
-      {/* Mobile Menu Overlay - Higher z-index */}
+      {/* Mobile Menu Overlay with higher z-index */}
       {isOpen && (
         <div 
-          className="fixed inset-0 bg-black bg-opacity-60 z-[90]" 
+          className="fixed inset-0 bg-black bg-opacity-70 z-[95]" 
           onClick={closeMenu}
           aria-hidden="true"
         />
       )}
 
-      {/* Mobile Menu Panel - Highest z-index */}
+      {/* Mobile Menu Panel with highest z-index */}
       <div className={`fixed top-0 right-0 h-full w-80 max-w-[90vw] bg-white shadow-2xl z-[100] transform transition-all duration-300 ease-in-out ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
@@ -107,11 +106,11 @@ const MobileNav = () => {
             Home
           </Link>
 
-          {/* Services Dropdown */}
+          {/* Services Dropdown with better touch support */}
           <div className="space-y-1">
             <button
               onClick={toggleServices}
-              className="flex items-center justify-between w-full py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200"
+              className="flex items-center justify-between w-full py-3 px-4 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg font-medium transition-all duration-200 min-h-[48px]"
               aria-expanded={servicesOpen}
             >
               Services
@@ -119,12 +118,12 @@ const MobileNav = () => {
             </button>
             
             {servicesOpen && (
-              <div className="pl-4 space-y-1 bg-gray-50 rounded-lg py-3 border-l-2 border-indigo-200">
+              <div className="pl-4 space-y-1 bg-gray-50 rounded-lg py-3 border-l-2 border-indigo-200 animate-slide-up">
                 {services.map((service) => (
                   <Link
                     key={service.path}
                     to={service.path}
-                    className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-all duration-200"
+                    className="block py-3 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-all duration-200 min-h-[40px] flex items-center"
                     onClick={closeMenu}
                   >
                     {service.name}
@@ -170,7 +169,7 @@ const MobileNav = () => {
           <div className="pt-6 space-y-3 border-t border-gray-200 mt-6">
             <Button
               onClick={handleWhatsAppClick}
-              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg shadow-md"
+              className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-3 rounded-lg shadow-md min-h-[48px]"
             >
               <MessageSquare className="h-4 w-4" />
               WhatsApp Us
@@ -179,7 +178,7 @@ const MobileNav = () => {
             <Button
               onClick={handleCallClick}
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 py-3 rounded-lg"
+              className="w-full flex items-center justify-center gap-2 border-indigo-200 text-indigo-700 hover:bg-indigo-50 py-3 rounded-lg min-h-[48px]"
             >
               <Phone className="h-4 w-4" />
               Call Now

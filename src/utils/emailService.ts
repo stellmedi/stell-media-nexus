@@ -22,29 +22,6 @@ export interface EmailFormData {
   phone?: string;
 }
 
-/**
- * Configuration for EmailJS
- * 
- * IMPORTANT: How to set up EmailJS for this website:
- * 1. Create an account at https://www.emailjs.com/
- * 2. Create an email service (Gmail, Outlook, etc.)
- * 3. Create two email templates:
- *    - One for contact form (use template ID for CONTACT)
- *    - One for consultation form (use template ID for CONSULTATION)
- * 4. Make sure your templates include these parameters:
- *    - from_name (sender's name)
- *    - from_email (sender's email)
- *    - company (if applicable)
- *    - website (if applicable)
- *    - subject (if applicable)
- *    - message (the message content)
- *    - budget (if applicable for consultation)
- *    - timeline (if applicable for consultation)
- *    - phone (if applicable)
- *    - to_email (recipient's email)
- * 5. Replace the placeholder values below with your actual credentials
- */
-
 // Get EmailJS settings from various sources
 const getEmailJSSettings = () => {
   // First try to get from localStorage
@@ -81,7 +58,7 @@ const SERVICE_ID = emailJSSettings.serviceId;
 // Your EmailJS Public Key from dashboard.emailjs.com/admin/account
 const PUBLIC_KEY = emailJSSettings.publicKey;
 
-// Email where notifications will be sent
+// Email where notifications will be sent - Default to info@stellmedia.com
 let NOTIFICATION_EMAIL = "info@stellmedia.com"; 
 
 // Try to get configuration from localStorage
@@ -165,8 +142,8 @@ export const getNotificationEmail = (): string => {
     console.error("Error reading notification email from configs:", error);
   }
   
-  // Fall back to default
-  return NOTIFICATION_EMAIL;
+  // Fall back to default info@stellmedia.com
+  return "info@stellmedia.com";
 };
 
 /**
@@ -199,11 +176,6 @@ export const isEmailJSConfigured = (): boolean => {
 
 /**
  * Sends an email using EmailJS with retry capability
- * 
- * @param templateId - The EmailJS template ID
- * @param data - The form data
- * @param maxRetries - Maximum number of retries (default: 2)
- * @returns Promise that resolves with EmailJS response
  */
 export const sendEmail = async (
   templateId: string, 
@@ -251,6 +223,7 @@ export const sendEmail = async (
     try {
       console.log(`Sending email attempt ${retryCount + 1}/${maxRetries + 1} with params:`, templateParams);
       console.log(`Using service ID: ${serviceId}, template ID: ${templateId}`);
+      console.log(`Notification will be sent to: ${notificationEmail}`);
       
       const response = await emailjs.send(
         serviceId,
@@ -291,4 +264,3 @@ export const sendEmail = async (
   // This should never be reached due to the throw above, but TypeScript might complain without it
   throw lastError || new Error("Failed to send email for unknown reason");
 };
-
