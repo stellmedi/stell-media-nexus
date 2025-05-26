@@ -24,7 +24,7 @@ const MobileNav = () => {
       document.body.style.top = `-${currentScrollY}px`;
       document.body.style.width = '100%';
       document.body.style.overflow = 'hidden';
-      document.body.style.touchAction = 'none'; // Prevent iOS bounce
+      document.body.style.touchAction = 'none';
       
       return () => {
         // Restore scroll position and remove lock
@@ -55,7 +55,6 @@ const MobileNav = () => {
   // Focus management
   useEffect(() => {
     if (isOpen) {
-      // Focus first interactive element when menu opens
       const firstButton = document.querySelector('[role="dialog"] button, [role="dialog"] a');
       if (firstButton instanceof HTMLElement) {
         firstButton.focus();
@@ -109,7 +108,7 @@ const MobileNav = () => {
       {/* Mobile Menu Button */}
       <button
         onClick={toggleMenu}
-        className="relative p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center z-[1001]"
+        className="relative p-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center z-[1000]"
         aria-label="Toggle mobile menu"
         aria-expanded={isOpen}
         type="button"
@@ -122,7 +121,7 @@ const MobileNav = () => {
         <>
           {/* Backdrop with animation */}
           <div 
-            className={`fixed inset-0 bg-black/50 z-[998] transition-opacity duration-300 ${
+            className={`fixed inset-0 bg-black/50 z-[998] transition-opacity duration-300 ease-out ${
               isOpen ? 'opacity-100' : 'opacity-0'
             }`}
             onClick={closeMenu}
@@ -134,16 +133,15 @@ const MobileNav = () => {
           
           {/* Menu Panel with slide animation */}
           <div 
-            className={`fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl z-[999] transition-transform duration-300 ease-in-out ${
+            className={`fixed top-0 right-0 w-80 max-w-[90vw] bg-white shadow-xl z-[999] transition-transform duration-300 ease-out will-change-transform ${
               isOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             style={{ 
-              height: '100vh',
               height: '100dvh',
-              paddingTop: 'max(env(safe-area-inset-top), 0px)',
-              paddingBottom: 'max(env(safe-area-inset-bottom), 0px)',
-              paddingLeft: 'max(env(safe-area-inset-left), 0px)',
-              paddingRight: 'max(env(safe-area-inset-right), 0px)',
+              paddingTop: 'max(env(safe-area-inset-top, 0px), 0px)',
+              paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 0px)',
+              paddingLeft: 'max(env(safe-area-inset-left, 0px), 0px)',
+              paddingRight: 'max(env(safe-area-inset-right, 0px), 0px)',
             }}
             role="dialog"
             aria-modal="true"
@@ -178,9 +176,8 @@ const MobileNav = () => {
             <nav 
               className="p-4 space-y-2 overflow-y-auto"
               style={{ 
-                height: 'calc(100vh - 80px)',
                 height: 'calc(100dvh - 80px)',
-                paddingBottom: 'calc(2rem + max(env(safe-area-inset-bottom), 0px))'
+                paddingBottom: 'calc(2rem + max(env(safe-area-inset-bottom, 0px), 0px))'
               }}
               role="navigation"
               aria-label="Mobile navigation"
