@@ -17,6 +17,14 @@ const Navbar: React.FC = () => {
     window.open(whatsappUrl, '_blank');
   };
 
+  const handleServicesClick = () => {
+    setServicesOpen(!servicesOpen);
+  };
+
+  const closeServices = () => {
+    setServicesOpen(false);
+  };
+
   return (
     <nav
       className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-50 shadow-sm"
@@ -46,33 +54,30 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown - Enhanced with click support */}
+          {/* Services Dropdown - Simplified with only hover for desktop */}
           <div
             className="relative"
             onMouseEnter={() => setServicesOpen(true)}
             onMouseLeave={() => setServicesOpen(false)}
           >
-            <button
-              onClick={() => setServicesOpen(!servicesOpen)}
+            <div
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer"
               aria-expanded={servicesOpen}
               aria-haspopup="true"
             >
               Services <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
-            </button>
+            </div>
 
             {servicesOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-[60] border border-gray-100 animate-slide-up"
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-[60] border border-gray-100"
                 role="menu"
-                onMouseEnter={() => setServicesOpen(true)}
-                onMouseLeave={() => setServicesOpen(false)}
               >
                 <Link
                   to="/services/product-discovery"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">Product Discovery</div>
                   <div className="text-xs text-gray-500">Optimize search &amp; navigation</div>
@@ -81,7 +86,7 @@ const Navbar: React.FC = () => {
                   to="/services/data-enrichment"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">Data Enrichment</div>
                   <div className="text-xs text-gray-500">Clean &amp; enhance product data</div>
@@ -90,7 +95,7 @@ const Navbar: React.FC = () => {
                   to="/services/seo"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">SEO Services</div>
                   <div className="text-xs text-gray-500">Boost organic visibility</div>
@@ -99,7 +104,7 @@ const Navbar: React.FC = () => {
                   to="/services/sem"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">SEM Management</div>
                   <div className="text-xs text-gray-500">Optimize paid campaigns</div>
@@ -108,7 +113,7 @@ const Navbar: React.FC = () => {
                   to="/services/conversion-optimization"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">Conversion Optimization</div>
                   <div className="text-xs text-gray-500">Increase conversion rates</div>
@@ -117,7 +122,7 @@ const Navbar: React.FC = () => {
                   to="/services/search-migration"
                   className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
                   role="menuitem"
-                  onClick={() => setServicesOpen(false)}
+                  onClick={closeServices}
                 >
                   <div className="font-medium">Search Platform Migration</div>
                   <div className="text-xs text-gray-500">Seamless platform transitions</div>
