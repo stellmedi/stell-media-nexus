@@ -131,6 +131,13 @@ export default function SEOManager() {
       setAllPagesSEO(updatedAllPagesSEO);
       localStorage.setItem('stellmedia_page_seo', JSON.stringify(updatedAllPagesSEO));
       
+      // Dispatch custom event to notify usePageSEO hooks in the same tab
+      const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
+        detail: { updatedPage: selectedPage }
+      });
+      window.dispatchEvent(seoUpdateEvent);
+      console.log('SEOManager: Dispatched seoDataUpdated event for page:', selectedPage);
+      
       // Verify the save by reading back from localStorage
       const verifyData = localStorage.getItem('stellmedia_page_seo');
       console.log('SEOManager: Verification - data saved to localStorage:', JSON.parse(verifyData || '{}'));

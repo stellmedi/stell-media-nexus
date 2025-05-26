@@ -55,14 +55,25 @@ export function usePageSEO(pagePath: string) {
 
     loadSEOData();
 
-    // Listen for storage changes to update when SEO data is modified in admin
+    // Listen for storage changes to update when SEO data is modified in other tabs
     const handleStorageChange = () => {
       console.log('usePageSEO: Storage change detected, reloading data for page:', pagePath);
       loadSEOData();
     };
 
+    // Listen for custom seoDataUpdated event for same-tab updates
+    const handleSEODataUpdated = () => {
+      console.log('usePageSEO: Custom seoDataUpdated event detected, reloading data for page:', pagePath);
+      loadSEOData();
+    };
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('seoDataUpdated', handleSEODataUpdated);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('seoDataUpdated', handleSEODataUpdated);
+    };
   }, [pagePath]);
 
   return { seoData, isLoading };
