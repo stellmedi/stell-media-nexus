@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { X, Menu, ChevronDown, MessageSquare, Phone } from "lucide-react";
@@ -203,25 +202,25 @@ const MobileNav = () => {
                   <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
                 </button>
                 
-                <div 
-                  id="mobile-services-menu"
-                  className={`pl-4 space-y-1 bg-gray-50 rounded-lg py-2 transition-all duration-200 overflow-hidden ${
-                    servicesOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                  }`}
-                  role="menu"
-                >
-                  {services.map((service) => (
-                    <Link
-                      key={service.path}
-                      to={service.path}
-                      className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-colors min-h-[44px] flex items-center"
-                      onClick={closeMenu}
-                      role="menuitem"
-                    >
-                      {service.name}
-                    </Link>
-                  ))}
-                </div>
+                {servicesOpen && (
+                  <div 
+                    id="mobile-services-menu"
+                    className="pl-4 space-y-1 bg-gray-50 rounded-lg py-2 animate-fade-in"
+                    role="menu"
+                  >
+                    {services.map((service) => (
+                      <Link
+                        key={service.path}
+                        to={service.path}
+                        className="block py-2 px-4 text-gray-600 hover:text-indigo-600 hover:bg-white rounded-lg text-sm transition-colors min-h-[44px] flex items-center"
+                        onClick={closeMenu}
+                        role="menuitem"
+                      >
+                        {service.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <Link
