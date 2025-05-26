@@ -88,7 +88,8 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm z-40 shadow-sm"
+      className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm shadow-sm"
+      style={{ zIndex: 40 }}
       role="navigation"
       aria-label="Main navigation"
     >
@@ -135,7 +136,8 @@ const Navbar: React.FC = () => {
 
             {servicesOpen && (
               <div
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 z-50 border border-gray-100"
+                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 border border-gray-100"
+                style={{ zIndex: 50 }}
                 role="menu"
               >
                 <Link
