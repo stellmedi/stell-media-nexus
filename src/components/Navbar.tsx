@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, MessageSquare } from "lucide-react";
@@ -124,7 +123,7 @@ const Navbar: React.FC = () => {
             onMouseLeave={handleMouseLeave}
           >
             <button
-              onClick={isMobile ? toggleServices : undefined}
+              onClick={toggleServices}
               onKeyDown={handleKeyDown}
               className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md px-2 py-1"
               aria-expanded={servicesOpen}
