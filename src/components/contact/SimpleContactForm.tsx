@@ -22,47 +22,16 @@ const SimpleContactForm: React.FC<{ className?: string }> = ({ className }) => {
 
   return (
     <form ref={formRef} onSubmit={handleSubmit} className={className}>
-      {/* routes email to info@stellmedia.com */}
       <input type="hidden" name="to_email" value="info@stellmedia.com" />
-
       <div className="space-y-4">
-        <input
-          type="text"
-          name="from_name"
-          placeholder="Your name"
-          required
-          className="w-full px-4 py-2 border rounded"
-        />
-
-        <input
-          type="email"
-          name="reply_to"
-          placeholder="Your email"
-          required
-          className="w-full px-4 py-2 border rounded"
-        />
-
-        <textarea
-          name="message"
-          placeholder="Your message"
-          required
-          className="w-full px-4 py-2 border rounded h-32"
-        />
-
-        <button
-          type="submit"
-          disabled={status === 'sending'}
-          className="px-6 py-2 bg-indigo-600 text-white rounded disabled:opacity-50"
-        >
-          {status === 'sending' ? 'Sending…' : 'Send Message'}
+        <input name="from_name" type="text" placeholder="Your name" required className="w-full px-4 py-2 border rounded" />
+        <input name="reply_to" type="email" placeholder="Your email" required className="w-full px-4 py-2 border rounded" />
+        <textarea name="message" placeholder="Your message" required className="w-full px-4 py-2 border rounded h-32" />
+        <button type="submit" disabled={status==='sending'} className="px-6 py-2 bg-indigo-600 text-white rounded disabled:opacity-50">
+          {status==='sending' ? 'Sending…' : 'Send Message'}
         </button>
-
-        {status === 'success' && (
-          <p className="text-green-600">Your message was sent!</p>
-        )}
-        {status === 'error' && (
-          <p className="text-red-600">Something went wrong. Please try again.</p>
-        )}
+        {status==='success' && <p className="text-green-600">Your message was sent!</p>}
+        {status==='error'   && <p className="text-red-600">Something went wrong. Please try again.</p>}
       </div>
     </form>
   );
