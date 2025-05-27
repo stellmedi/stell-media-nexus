@@ -36,7 +36,7 @@ User-agent: googlebot-news
 Allow: /blog/
 
 # Sitemaps
-Sitemap: https://stellmediaglobal.com/sitemap.xml
+Sitemap: https://stellmedia.com/sitemap.xml
 
 # Disallow private areas
 Disallow: /admin/
