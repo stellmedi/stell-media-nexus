@@ -1,11 +1,11 @@
-
+// src/App.tsx
+import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import { useEffect } from "react";
 import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
 import { AuthProvider } from "@/hooks/use-auth";
 import { ChatProvider } from "@/hooks/use-chat";
@@ -25,22 +25,22 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersManagement from "./pages/admin/UsersManagement";
 import ContentManagement from "./pages/admin/ContentManagement";
 import EmailManagement from "./pages/admin/EmailManagement";
-import SettingsPage from "./pages/admin/SettingsPage";
-import SEOManagement from "./pages/admin/SEOManagement";
-import SiteSchemaMarkup from "./components/SiteSchemaMarkup";
-import ScrollToTop from "./components/ScrollToTop";
-import CaseStudies from "./pages/CaseStudies";
-import CaseStudyDetail from "./pages/CaseStudyDetail";
-import Privacy from "./pages/Privacy";
-import Terms from "./pages/Terms";
-import Sitemap from "./pages/Sitemap";
+import SettingsPage from "@/pages/admin/SettingsPage";
+import SEOManagement from "@/pages/admin/SEOManagement";
+import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
+import ScrollToTop from "@/components/ScrollToTop";
+import CaseStudies from "@/pages/CaseStudies";
+import CaseStudyDetail from "@/pages/CaseStudyDetail";
+import Privacy from "@/pages/Privacy";
+import Terms from "@/pages/Terms";
+import Sitemap from "@/pages/Sitemap";
 
 // Service pages
-import ProductDiscovery from "./pages/services/ProductDiscovery";
-import DataEnrichment from "./pages/services/DataEnrichment";
-import SEO from "./pages/services/SEO";
-import SEM from "./pages/services/SEM";
-import ConversionOptimization from "./pages/services/ConversionOptimization";
+import ProductDiscovery from "@/pages/services/ProductDiscovery";
+import DataEnrichment from "@/pages/services/DataEnrichment";
+import SEO from "@/pages/services/SEO";
+import SEM from "@/pages/services/SEM";
+import ConversionOptimization from "@/pages/services/ConversionOptimization";
 
 // Add CSS for the grid pattern
 import "./styles/grid-pattern.css";
@@ -48,15 +48,13 @@ import "./styles/grid-pattern.css";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Initialize EmailJS when the app starts
+  // Initialize EmailJS only if configured; otherwise warn
   useEffect(() => {
-    initEmailJS();
-    
-    // Display a warning if EmailJS isn't properly configured
-    if (!isEmailJSConfigured()) {
+    if (isEmailJSConfigured()) {
+      initEmailJS();
+    } else {
       console.warn(
-        "EmailJS environment variables not detected. " +
-        "Please set up EmailJS credentials in environment variables or directly in emailService.ts file."
+        "EmailJS credentials missing. Please configure SERVICE_ID, TEMPLATE_ID, and USER_ID in src/utils/emailService.ts"
       );
     }
   }, []);
@@ -82,17 +80,17 @@ const App = () => {
                   <Route path="/blog/:postId" element={<BlogPostPage />} />
                   <Route path="/careers" element={<Careers />} />
                   <Route path="/faq" element={<FAQ />} />
-                  
-                  {/* Legal and sitemap pages */}
+
+                  {/* Legal and sitemap */}
                   <Route path="/privacy" element={<Privacy />} />
                   <Route path="/terms" element={<Terms />} />
                   <Route path="/sitemap" element={<Sitemap />} />
-                  
-                  {/* Case Studies routes */}
+
+                  {/* Case Studies */}
                   <Route path="/case-studies" element={<CaseStudies />} />
                   <Route path="/case-studies/:studyId" element={<CaseStudyDetail />} />
-                  
-                  {/* Admin routes */}
+
+                  {/* Admin */}
                   <Route path="/admin" element={<AdminLogin />} />
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/users" element={<UsersManagement />} />
@@ -100,7 +98,7 @@ const App = () => {
                   <Route path="/admin/seo" element={<SEOManagement />} />
                   <Route path="/admin/emails" element={<EmailManagement />} />
                   <Route path="/admin/settings" element={<SettingsPage />} />
-                  
+
                   {/* Service pages */}
                   <Route path="/services/product-discovery" element={<ProductDiscovery />} />
                   <Route path="/services/data-enrichment" element={<DataEnrichment />} />
@@ -109,8 +107,8 @@ const App = () => {
                   <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
                   <Route path="/services/search-migration" element={<ProductDiscovery />} />
                   <Route path="/services/marketpulse" element={<DataEnrichment />} />
-                  
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+
+                  {/* Catch-all */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <WhatsAppButton />
