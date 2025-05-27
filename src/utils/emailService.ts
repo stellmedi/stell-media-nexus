@@ -1,15 +1,16 @@
-
+```typescript
+// src/utils/emailService.ts
 import emailjs from 'emailjs-com';
 import { toast } from 'sonner';
 
-// Add TypeScript declaration for gtag
+// TypeScript declaration for analytics
 declare global {
   interface Window {
     gtag: (command: string, action: string, params: object) => void;
   }
 }
 
-// Types for form submissions
+// Data shape for form submissions
 export interface EmailFormData {
   name: string;
   email: string;
@@ -22,93 +23,137 @@ export interface EmailFormData {
   phone?: string;
 }
 
-// Working EmailJS configuration
+// EmailJS configuration
 const EMAILJS_CONFIG = {
-  serviceId: "service_stellmedia",
-  publicKey: "user_stellmedia2024",
-  contactTemplateId: "template_contact_form",
-  consultationTemplateId: "template_consultation_form"
+  serviceId: 'service_xkel7zm',          // your Service ID
+  publicKey: '1lrNuoabQwmNT0aKU',        // your Public (User) Key
+  contactTemplateId: 'template_5ep34jd', // your Contact Template ID
 };
 
-// Template IDs
+// Template constants
 export const TEMPLATES = {
   CONTACT: EMAILJS_CONFIG.contactTemplateId,
-  CONSULTATION: EMAILJS_CONFIG.consultationTemplateId
 };
 
-// Helper to get notification email
-export const getNotificationEmail = (): string => {
-  return "info@stellmedia.com";
-};
+// Helper for the recipient address
+export const getNotificationEmail = (): string => 'info@stellmedia.com';
 
-/**
- * Initialize EmailJS with your public key
- */
-export const initEmailJS = () => {
+/** Initialize EmailJS SDK **/
+export const initEmailJS = (): void => {
   try {
     emailjs.init(EMAILJS_CONFIG.publicKey);
-    console.log("EmailJS initialized successfully");
+    console.log('EmailJS initialized');
   } catch (error) {
-    console.error("Failed to initialize EmailJS:", error);
-    toast.error("Email service initialization failed");
+    console.error('EmailJS init failed', error);
+    toast.error('Email service initialization failed');
   }
 };
 
-/**
- * Checks if EmailJS is correctly configured
- */
+/** Check configuration validity **/
 export const isEmailJSConfigured = (): boolean => {
-  return true; // Using working configuration
+  return Boolean(
+    EMAILJS_CONFIG.serviceId &&
+    EMAILJS_CONFIG.publicKey &&
+    EMAILJS_CONFIG.contactTemplateId
+  );
 };
 
-/**
- * Sends an email using EmailJS
- */
+/** Send an email using EmailJS **/
 export const sendEmail = async (
-  templateId: string, 
+  templateId: string,
   data: EmailFormData
 ): Promise<any> => {
-  const notificationEmail = getNotificationEmail();
-  
   const templateParams = {
     from_name: data.name,
     from_email: data.email,
-    company: data.company || "Not provided",
-    website: data.website || "Not provided",
+    company: data.company || 'Not provided',
+    website: data.website || 'Not provided',
     subject: data.subject || `Message from ${data.name}`,
-    budget: data.budget || "Not specified",
-    timeline: data.timeline || "Not specified",
+    budget: data.budget || 'Not specified',
+    timeline: data.timeline || 'Not specified',
     message: data.message,
-    phone: data.phone || "Not provided",
-    to_email: notificationEmail,
+    phone: data.phone || 'Not provided',
+    to_email: getNotificationEmail(),
     timestamp: new Date().toISOString(),
   };
 
   try {
-    console.log("Sending email with params:", templateParams);
-    console.log(`Using service ID: ${EMAILJS_CONFIG.serviceId}, template ID: ${templateId}`);
-    console.log(`Notification will be sent to: ${notificationEmail}`);
-    
     const response = await emailjs.send(
       EMAILJS_CONFIG.serviceId,
-      templateId, 
+      templateId,
       templateParams,
       EMAILJS_CONFIG.publicKey
     );
-    
-    console.log("Email sent successfully:", response);
+    console.log('Email sent:', response);
 
-    // Track successful submission for analytics if gtag is available
-    if (window && typeof window.gtag === 'function') {
+    // Analytics event
+    if (typeof window?.gtag === 'function') {
       window.gtag('event', 'form_submission', {
-        'event_category': templateId === TEMPLATES.CONTACT ? 'contact_form' : 'consultation_form',
-        'event_label': data.email,
+        event_category: 'contact_form',
+        event_label: data.email,
       });
     }
-    
+
     return response;
   } catch (error) {
-    console.error("Email send failed:", error);
-    throw new Error(`Failed to send email: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    console.error('Email send error:', error);
+    throw error;
   }
 };
+
+
+// src/components/contact/SimpleContactForm.tsx
+import React, { useState, useEffect } from 'react';
+import { initEmailJS, isEmailJSConfigured, sendEmail, TEMPLATES, EmailFormData } from '@/utils/emailService';
+
+const SimpleContactForm: React.FC<{ className?: string }> = ({ className }) => {
+  const [formData, setFormData] = useState<EmailFormData>({
+    name: '', email: '', company: '', website: '', subject: '', budget: '', timeline: '', message: '', phone: ''
+  });
+  const [status, setStatus] = useState<'idle'|'sending'|'success'|'error'>('idle');
+  const configured = isEmailJSConfigured();
+
+  useEffect(() => {
+    if (configured) initEmailJS();
+  }, [configured]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!configured) return;
+    setStatus('sending');
+    try {
+      await sendEmail(TEMPLATES.CONTACT, formData);
+      setStatus('success');
+      setFormData({ name: '', email: '', company: '', website: '', subject: '', budget: '', timeline: '', message: '', phone: '' });
+    } catch {
+      setStatus('error');
+    }
+  };
+
+  if (!configured) {
+    return <p className="text-red-600">Email service not configured.</p>;
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className={className}>
+      <div className="space-y-4">
+        <input name="name" value={formData.name} onChange={handleChange} placeholder="Your name" required className="w-full px-4 py-2 border rounded" />
+        <input name="email" type="email" value={formData.email} onChange={handleChange} placeholder="Your email" required className="w-full px-4 py-2 border rounded" />
+        <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Your phone (optional)" className="w-full px-4 py-2 border rounded" />
+        <textarea name="message" value={formData.message} onChange={handleChange} placeholder="Your message" required className="w-full px-4 py-2 border rounded h-32" />
+        <button type="submit" disabled={status === 'sending'} className="px-6 py-2 bg-indigo-600 text-white rounded disabled:opacity-50">
+          {status === 'sending' ? 'Sending…' : 'Send Message'}
+        </button>
+        {status === 'success' && <p className="text-green-600">Message sent!</p>}
+        {status === 'error' && <p className="text-red-600">Error sending message.</p>}
+      </div>
+    </form>
+  );
+};
+
+export default SimpleContactForm;
+```
