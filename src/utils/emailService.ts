@@ -136,4 +136,3 @@ const SimpleContactForm: React.FC<{ className?: string }> = ({ className }) => {
 
 export default SimpleContactForm;
 ```
-
