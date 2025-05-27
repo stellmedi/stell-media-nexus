@@ -1,0 +1,142 @@
+
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <!-- Homepage - Highest priority -->
+  <url>
+    <loc>https://stellmediaglobal.com/</loc>
+    <lastmod>2024-01-15T10:00:00+00:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+  
+  <!-- Main service pages - High priority -->
+  <url>
+    <loc>https://stellmediaglobal.com/services</loc>
+    <lastmod>2024-01-15T10:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/about</loc>
+    <lastmod>2024-01-10T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/contact</loc>
+    <lastmod>2024-01-12T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  
+  <!-- Individual service pages -->
+  <url>
+    <loc>https://stellmediaglobal.com/services/seo</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/sem</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/product-discovery</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/data-enrichment</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/conversion-optimization</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/search-migration</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/services/marketpulse</loc>
+    <lastmod>2024-01-14T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  
+  <!-- Blog and case studies -->
+  <url>
+    <loc>https://stellmediaglobal.com/blog</loc>
+    <lastmod>2024-01-13T10:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/case-studies</loc>
+    <lastmod>2024-01-11T10:00:00+00:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <!-- Business pages -->
+  <url>
+    <loc>https://stellmediaglobal.com/consultation</loc>
+    <lastmod>2024-01-12T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/careers</loc>
+    <lastmod>2024-01-08T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/faq</loc>
+    <lastmod>2024-01-09T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <!-- Legal and informational pages -->
+  <url>
+    <loc>https://stellmediaglobal.com/privacy</loc>
+    <lastmod>2024-01-01T10:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/terms</loc>
+    <lastmod>2024-01-01T10:00:00+00:00</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  
+  <url>
+    <loc>https://stellmediaglobal.com/sitemap</loc>
+    <lastmod>2024-01-15T10:00:00+00:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.4</priority>
+  </url>
+</urlset>
