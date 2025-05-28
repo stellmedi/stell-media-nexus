@@ -1,3 +1,4 @@
+
 // src/pages/Contact.tsx
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
@@ -148,7 +149,6 @@ const Contact: React.FC = () => {
                       <p className="text-gray-600">Saturday - Sunday: Closed</p>
                     </div>
                   </div>
-
                 </div>
 
                 <div className="mt-12">
@@ -158,3 +158,25 @@ const Contact: React.FC = () => {
                     book a consultation with our experts.
                   </p>
                   <Button asChild className="mt-2">
+                    <Link to="/consultation">
+                      Book a Consultation <ArrowRight className="ml-2" size={16} />
+                    </Link>
+                  </Button>
+                </div>
+              </div>
+
+              {/* Contact Form Column */}
+              <div>
+                <SimpleContactForm />
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Contact;
