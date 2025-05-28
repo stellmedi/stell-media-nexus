@@ -26,7 +26,9 @@ export interface EmailFormData {
 }
 
 // Initialize EmailJS
-emailjs.init(USER_ID);
+export function initEmailJS(): void {
+  emailjs.init(USER_ID);
+}
 
 // Check if EmailJS is configured
 export function isEmailJSConfigured(): boolean {

@@ -1,7 +1,6 @@
 
 import React from "react";
 import SimpleContactForm from "@/components/contact/SimpleContactForm";
-import { TEMPLATES } from "@/utils/emailService";
 
 const ContactSection = () => {
   return (
@@ -36,15 +35,7 @@ const ContactSection = () => {
           </div>
           
           <div className="md:col-span-1">
-            <SimpleContactForm 
-              templateId={TEMPLATES.CONSULTATION}
-              title="Book a Consultation"
-              showCompany={true}
-              showWebsite={false}
-              buttonText="Request Consultation"
-              successMessage="Thank you! We'll get back to you shortly."
-              className="max-w-md"
-            />
+            <SimpleContactForm className="max-w-md" />
           </div>
         </div>
       </div>

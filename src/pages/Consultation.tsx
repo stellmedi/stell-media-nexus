@@ -3,7 +3,6 @@ import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ConsultationForm from "@/components/contact/ConsultationForm";
-import { TEMPLATES } from "@/utils/emailService";
 import { Helmet } from "react-helmet-async";
 import { CheckCircle2 } from "lucide-react";
 
@@ -99,10 +98,7 @@ const Consultation = () => {
                 </div>
               </div>
               
-              <ConsultationForm 
-                templateId={TEMPLATES.CONSULTATION}
-                className="md:mt-0"
-              />
+              <ConsultationForm className="md:mt-0" />
             </div>
           </div>
         </section>

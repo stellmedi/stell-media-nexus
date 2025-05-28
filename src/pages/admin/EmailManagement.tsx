@@ -100,7 +100,7 @@ const EmailManagement = () => {
       };
       
       // Send email using the contact template
-      await sendEmail(TEMPLATES.CONTACT, emailData);
+      await sendEmail(TEMPLATES.contact, emailData);
       
       toast.success("Email sent successfully");
       form.reset();
