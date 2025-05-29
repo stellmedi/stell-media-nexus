@@ -52,10 +52,13 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log("SimpleContactForm: Starting form submission for:", data.email);
     setIsSubmitting(true);
     setFormError(null);
     
     try {
+      console.log("SimpleContactForm: Sending email with template:", TEMPLATES.contact);
+      
       await sendEmail(TEMPLATES.contact, {
         name: data.name,
         email: data.email,
@@ -63,6 +66,8 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
         message: data.message,
         company: data.company || "",
       });
+      
+      console.log("SimpleContactForm: Email sent successfully");
       
       // Show success message
       toast({
@@ -74,7 +79,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       form.reset();
       setIsSuccess(true);
       
-      console.log("Contact form submission successful for:", data.email);
+      console.log("SimpleContactForm: Form submission completed successfully");
       
       // Hide success message after 5 seconds
       setTimeout(() => {
@@ -82,7 +87,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       }, 5000);
       
     } catch (error) {
-      console.error("Error with contact form submission:", error);
+      console.error("SimpleContactForm: Error with form submission:", error);
       let errorMessage = "There was a problem sending your message. Please try again.";
       
       if (error instanceof Error) {

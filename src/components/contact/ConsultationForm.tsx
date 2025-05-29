@@ -25,7 +25,7 @@ const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   company: z.string().optional(),
   phone: z.string().min(5, { message: "Phone number is required" }),
-  website: z.string().url({ message: "Please enter a valid URL" }).optional(),
+  website: z.string().url({ message: "Please enter a valid URL" }).optional().or(z.literal("")),
   message: z.string().min(10, { message: "Please tell us a bit about your business and needs" }),
 });
 
@@ -54,10 +54,13 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
   });
 
   const onSubmit = async (data: FormValues) => {
+    console.log("ConsultationForm: Starting form submission for:", data.email);
     setIsSubmitting(true);
     setFormError(null);
     
     try {
+      console.log("ConsultationForm: Sending email with template:", TEMPLATES.consultation);
+      
       await sendEmail(TEMPLATES.consultation, {
         name: data.name,
         email: data.email,
@@ -67,6 +70,8 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
         message: data.message,
         subject: "Consultation Request",
       });
+      
+      console.log("ConsultationForm: Email sent successfully");
       
       // Show success message
       toast({
@@ -78,7 +83,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       form.reset();
       setIsSuccess(true);
       
-      console.log("Consultation form submission successful for:", data.email);
+      console.log("ConsultationForm: Form submission completed successfully");
       
       // Hide success message after 5 seconds
       setTimeout(() => {
@@ -86,7 +91,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       }, 5000);
       
     } catch (error) {
-      console.error("Error with consultation form submission:", error);
+      console.error("ConsultationForm: Error with form submission:", error);
       let errorMessage = "There was a problem sending your request. Please try again.";
       
       if (error instanceof Error) {

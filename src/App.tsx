@@ -1,3 +1,4 @@
+
 // src/App.tsx
 import React, { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
@@ -48,13 +49,16 @@ import "./styles/grid-pattern.css";
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Initialize EmailJS only if configured; otherwise warn
+  // Initialize EmailJS and log configuration status
   useEffect(() => {
+    console.log("App: Initializing EmailJS...");
+    
     if (isEmailJSConfigured()) {
       initEmailJS();
+      console.log("App: EmailJS initialized successfully");
     } else {
       console.warn(
-        "EmailJS credentials missing. Please configure SERVICE_ID, TEMPLATE_ID, and USER_ID in src/utils/emailService.ts"
+        "App: EmailJS credentials missing. Please configure SERVICE_ID, TEMPLATE_ID, and USER_ID in src/utils/emailService.ts"
       );
     }
   }, []);
