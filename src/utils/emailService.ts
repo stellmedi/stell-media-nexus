@@ -104,27 +104,18 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     throw new Error('EmailJS is not properly configured.');
   }
   
-  // Prepare template parameters - using simple field names that match most EmailJS templates
+  // Simple template parameters that match most EmailJS templates
   const templateParams = {
-    // Primary fields that should work with most templates
-    name: data.name || '',
-    email: data.email || '',
-    message: data.message || '',
+    from_name: data.name || 'Anonymous',
+    from_email: data.email || 'no-email@example.com',
+    message: data.message || 'No message provided',
+    to_name: 'Stell Media Team',
     subject: data.subject || 'Contact Form Submission',
-    
-    // Optional fields
-    company: data.company || '',
-    
-    // Alternative field names for different template configurations
-    from_name: data.name || '',
-    from_email: data.email || '',
-    user_name: data.name || '',
-    user_email: data.email || '',
-    user_message: data.message || '',
-    reply_to: data.email || '',
+    company: data.company || 'Not specified',
+    reply_to: data.email || 'no-reply@example.com',
   };
 
-  console.log('EmailJS: Template parameters being sent:', templateParams);
+  console.log('EmailJS: Sending with parameters:', templateParams);
   
   try {
     const response = await emailjs.send(
@@ -142,13 +133,15 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     let errorMessage = 'Failed to send email. ';
     
     if (error?.status === 400) {
-      errorMessage += 'Invalid request. Please check all required fields.';
+      errorMessage += 'Please check all required fields are filled correctly.';
     } else if (error?.status === 401) {
       errorMessage += 'Authentication failed. Please contact support.';
     } else if (error?.status === 404) {
       errorMessage += 'Email service configuration error. Please contact support.';
+    } else if (error?.text) {
+      errorMessage += `Error: ${error.text}`;
     } else {
-      errorMessage += 'Please try again or contact us directly.';
+      errorMessage += 'Please try again or contact us directly at +91 98771 00369.';
     }
     
     throw new Error(errorMessage);

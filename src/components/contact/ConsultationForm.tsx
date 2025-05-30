@@ -19,11 +19,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Simplified form schema with only essential fields
+// Simplified form schema - only 4 essential fields
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  company: z.string().min(2, { message: "Company name is required" }),
+  company: z.string().min(1, { message: "Company name is required" }),
   message: z.string().min(10, { message: "Please tell us about your project" }),
 });
 
@@ -74,8 +74,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    console.log("ConsultationForm: Form submission started");
-    console.log("ConsultationForm: Form data:", data);
+    console.log("ConsultationForm: Form submission started with data:", data);
     
     setIsSubmitting(true);
     setFormError(null);
@@ -86,22 +85,22 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
         throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
       }
       
-      console.log("ConsultationForm: Calling sendEmail with template:", TEMPLATES.consultation);
+      console.log("ConsultationForm: Sending email with template:", TEMPLATES.consultation);
       
       const response = await sendEmail(TEMPLATES.consultation, {
         name: data.name,
         email: data.email,
         company: data.company,
         message: data.message,
-        subject: "Consultation Request",
+        subject: "Consultation Request from " + data.company,
       });
       
       console.log("ConsultationForm: Email sent successfully:", response);
       
       // Show success message
       toast({
-        title: "Consultation Request Sent",
-        description: "We've received your consultation request and will contact you within 24 hours!",
+        title: "Consultation Request Sent!",
+        description: "We'll contact you within 24 hours to discuss your project!",
       });
       
       // Reset form and show success state
@@ -130,27 +129,20 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     }
   };
 
-  const getButtonState = () => {
-    if (isInitializing) return "Initializing...";
-    if (isSubmitting) return "Submitting...";
-    if (!emailJSReady) return "Service Unavailable";
-    return "Request Consultation";
-  };
-
   const isFormDisabled = isSubmitting || !emailJSReady || isInitializing;
 
   return (
-    <div className={`bg-white p-8 rounded-lg shadow-lg border border-gray-200 ${className}`}>
-      <h2 className="text-2xl font-bold mb-2 text-gray-900">Book Your Free Consultation</h2>
-      <p className="text-gray-600 mb-6">
-        Fill out the form below and our team will get back to you within 24 hours.
+    <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
+      <h2 className="text-xl font-bold mb-2 text-gray-900">Book Your Free Consultation</h2>
+      <p className="text-gray-600 mb-4 text-sm">
+        Fill out the form below and we'll contact you within 24 hours.
       </p>
       
       {/* Status indicators */}
       {isInitializing && (
         <Alert className="mb-4 bg-blue-50 text-blue-800 border-blue-200">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <AlertDescription>Initializing email service...</AlertDescription>
+          <AlertDescription>Initializing...</AlertDescription>
         </Alert>
       )}
       
@@ -158,7 +150,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
         <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Email service is currently unavailable. Please try calling us directly at +91 98771 00369 or refresh the page.
+            Service unavailable. Please call +91 98771 00369 or refresh the page.
           </AlertDescription>
         </Alert>
       )}
@@ -172,48 +164,46 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       {isSuccess && (
         <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
           <CheckCircle2 className="h-4 w-4" />
-          <AlertDescription>Thank you! Your consultation request has been submitted.</AlertDescription>
+          <AlertDescription>Consultation request submitted successfully!</AlertDescription>
         </Alert>
       )}
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Full Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Name</FormLabel>
+                <FormControl>
+                  <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
           <FormField
             control={form.control}
             name="company"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company Name</FormLabel>
+                <FormLabel>Company</FormLabel>
                 <FormControl>
                   <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
                 </FormControl>
@@ -227,11 +217,11 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tell Us About Your Project</FormLabel>
+                <FormLabel>Project Details</FormLabel>
                 <FormControl>
                   <Textarea 
-                    placeholder="What are your e-commerce goals and challenges?" 
-                    className="h-32" 
+                    placeholder="Tell us about your e-commerce project and goals" 
+                    className="h-24" 
                     {...field} 
                     disabled={isFormDisabled}
                   />
@@ -246,14 +236,12 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
             className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
             disabled={isFormDisabled}
           >
-            {(isSubmitting || isInitializing) && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {getButtonState()}
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isSubmitting ? "Submitting..." : "Request Consultation"}
           </Button>
           
-          <p className="text-xs text-gray-500 text-center mt-2">
-            We respect your privacy and will never share your information.
+          <p className="text-xs text-gray-500 text-center">
+            We'll respond within 24 hours.
           </p>
         </form>
       </Form>

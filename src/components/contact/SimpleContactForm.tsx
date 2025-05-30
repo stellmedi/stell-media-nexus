@@ -19,7 +19,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Simplified form schema with only essential fields
+// Simple form schema with only 3 essential fields
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -72,8 +72,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    console.log("SimpleContactForm: Form submission started");
-    console.log("SimpleContactForm: Form data:", data);
+    console.log("SimpleContactForm: Form submission started with data:", data);
     
     setIsSubmitting(true);
     setFormError(null);
@@ -84,21 +83,21 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
         throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
       }
       
-      console.log("SimpleContactForm: Calling sendEmail with template:", TEMPLATES.contact);
+      console.log("SimpleContactForm: Sending email with template:", TEMPLATES.contact);
       
       const response = await sendEmail(TEMPLATES.contact, {
         name: data.name,
         email: data.email,
         message: data.message,
-        subject: "Contact Form Message",
+        subject: "Website Contact Form Message",
       });
       
       console.log("SimpleContactForm: Email sent successfully:", response);
       
       // Show success message
       toast({
-        title: "Message Sent Successfully",
-        description: "We've received your message and will get back to you within 24 hours!",
+        title: "Message Sent Successfully!",
+        description: "Thank you for contacting us. We'll get back to you within 24 hours!",
       });
       
       // Reset form and show success state
@@ -127,24 +126,17 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     }
   };
 
-  const getButtonState = () => {
-    if (isInitializing) return "Initializing...";
-    if (isSubmitting) return "Sending...";
-    if (!emailJSReady) return "Service Unavailable";
-    return "Send Message";
-  };
-
   const isFormDisabled = isSubmitting || !emailJSReady || isInitializing;
 
   return (
-    <div className={`bg-white p-8 rounded-lg shadow-lg border border-gray-200 ${className}`}>
-      <h3 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h3>
+    <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
+      <h3 className="text-xl font-bold mb-4 text-gray-900">Send Us a Message</h3>
       
       {/* Status indicators */}
       {isInitializing && (
         <Alert className="mb-4 bg-blue-50 text-blue-800 border-blue-200">
           <Loader2 className="h-4 w-4 animate-spin" />
-          <AlertDescription>Initializing email service...</AlertDescription>
+          <AlertDescription>Initializing...</AlertDescription>
         </Alert>
       )}
       
@@ -152,7 +144,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
         <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Email service is currently unavailable. Please try calling us directly at +91 98771 00369 or refresh the page.
+            Service unavailable. Please call +91 98771 00369 or refresh the page.
           </AlertDescription>
         </Alert>
       )}
@@ -166,7 +158,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       {isSuccess && (
         <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
           <CheckCircle2 className="h-4 w-4" />
-          <AlertDescription>Thank you! Your message has been sent successfully.</AlertDescription>
+          <AlertDescription>Message sent successfully!</AlertDescription>
         </Alert>
       )}
 
@@ -209,7 +201,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                 <FormControl>
                   <Textarea 
                     placeholder="How can we help you?" 
-                    className="h-32" 
+                    className="h-24" 
                     {...field} 
                     disabled={isFormDisabled}
                   />
@@ -224,14 +216,12 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
             disabled={isFormDisabled}
           >
-            {(isSubmitting || isInitializing) && (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            )}
-            {getButtonState()}
+            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+            {isSubmitting ? "Sending..." : "Send Message"}
           </Button>
           
-          <p className="text-xs text-gray-500 text-center mt-2">
-            We respect your privacy and will never share your information.
+          <p className="text-xs text-gray-500 text-center">
+            We'll respond within 24 hours.
           </p>
         </form>
       </Form>
