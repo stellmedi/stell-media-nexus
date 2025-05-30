@@ -1,9 +1,9 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { sendEmail, TEMPLATES } from "@/utils/emailService";
+import { sendEmail, TEMPLATES, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { CheckCircle2, Loader2 } from "lucide-react";
+import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
 // Form schema
 const formSchema = z.object({
@@ -40,6 +40,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [emailJSReady, setEmailJSReady] = useState(false);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -53,15 +54,46 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     },
   });
 
+  // Check EmailJS status on component mount
+  useEffect(() => {
+    const checkEmailJSStatus = async () => {
+      console.log("ConsultationForm: Checking EmailJS status...");
+      
+      // Wait a bit for initialization
+      setTimeout(async () => {
+        const isInitialized = isEmailJSInitialized();
+        console.log("ConsultationForm: EmailJS initialized:", isInitialized);
+        
+        if (isInitialized) {
+          const canConnect = await testEmailJSConnection();
+          console.log("ConsultationForm: EmailJS connection test:", canConnect);
+          setEmailJSReady(canConnect);
+        } else {
+          setEmailJSReady(false);
+        }
+      }, 1000);
+    };
+
+    checkEmailJSStatus();
+  }, []);
+
   const onSubmit = async (data: FormValues) => {
-    console.log("ConsultationForm: Starting form submission for:", data.email);
+    console.log("ConsultationForm: Form submission started");
+    console.log("ConsultationForm: Form data:", data);
+    console.log("ConsultationForm: EmailJS ready:", emailJSReady);
+    
     setIsSubmitting(true);
     setFormError(null);
     
     try {
-      console.log("ConsultationForm: Sending email with template:", TEMPLATES.consultation);
+      // Double-check EmailJS status before sending
+      if (!isEmailJSInitialized()) {
+        throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
+      }
       
-      await sendEmail(TEMPLATES.consultation, {
+      console.log("ConsultationForm: Calling sendEmail with template:", TEMPLATES.consultation);
+      
+      const response = await sendEmail(TEMPLATES.consultation, {
         name: data.name,
         email: data.email,
         company: data.company || "",
@@ -71,7 +103,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
         subject: "Consultation Request",
       });
       
-      console.log("ConsultationForm: Email sent successfully");
+      console.log("ConsultationForm: Email sent successfully:", response);
       
       // Show success message
       toast({
@@ -91,14 +123,23 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       }, 5000);
       
     } catch (error) {
-      console.error("ConsultationForm: Error with form submission:", error);
+      console.error("ConsultationForm: Form submission failed:", error);
+      
       let errorMessage = "There was a problem sending your request. Please try again.";
       
       if (error instanceof Error) {
-        errorMessage += " Details: " + error.message;
+        errorMessage = error.message;
+        console.error("ConsultationForm: Detailed error:", error.message);
       }
       
       setFormError(errorMessage);
+      
+      // Show error toast with more details
+      toast({
+        title: "Failed to Send Request",
+        description: errorMessage,
+        variant: "destructive",
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -110,6 +151,16 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       <p className="text-gray-600 mb-6">
         Fill out the form below and our team will get back to you within 24 hours.
       </p>
+      
+      {/* EmailJS Status Indicator */}
+      {!emailJSReady && (
+        <Alert className="mb-4 bg-yellow-50 text-yellow-800 border-yellow-200">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertDescription>
+            Email service is initializing. If this persists, please try calling us directly at +91 98771 00369.
+          </AlertDescription>
+        </Alert>
+      )}
       
       {formError && (
         <Alert variant="destructive" className="mb-4">
@@ -221,14 +272,18 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
           <Button 
             type="submit" 
             className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
-            disabled={isSubmitting}
+            disabled={isSubmitting || !emailJSReady}
           >
             {isSubmitting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Submitting...
               </>
-            ) : "Request Consultation"}
+            ) : !emailJSReady ? (
+              "Initializing..."
+            ) : (
+              "Request Consultation"
+            )}
           </Button>
           
           <p className="text-xs text-gray-500 text-center mt-2">
