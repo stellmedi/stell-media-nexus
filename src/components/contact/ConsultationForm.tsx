@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { sendEmail, TEMPLATES, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
+import { sendEmail, TEMPLATES, initEmailJS, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +18,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Form schema
+// Form schema with proper validation
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -41,6 +40,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [emailJSReady, setEmailJSReady] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -54,39 +54,37 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     },
   });
 
-  // Check EmailJS status on component mount
+  // Initialize EmailJS on component mount
   useEffect(() => {
-    const checkEmailJSStatus = async () => {
-      console.log("ConsultationForm: Checking EmailJS status...");
+    const initializeEmailJS = async () => {
+      console.log("ConsultationForm: Initializing EmailJS...");
+      setIsInitializing(true);
       
-      // Wait a bit for initialization
-      setTimeout(async () => {
-        const isInitialized = isEmailJSInitialized();
-        console.log("ConsultationForm: EmailJS initialized:", isInitialized);
-        
-        if (isInitialized) {
-          const canConnect = await testEmailJSConnection();
-          console.log("ConsultationForm: EmailJS connection test:", canConnect);
-          setEmailJSReady(canConnect);
-        } else {
-          setEmailJSReady(false);
-        }
-      }, 1000);
+      try {
+        await initEmailJS();
+        const connectionTest = await testEmailJSConnection();
+        setEmailJSReady(connectionTest);
+        console.log("ConsultationForm: EmailJS ready:", connectionTest);
+      } catch (error) {
+        console.error("ConsultationForm: EmailJS initialization failed:", error);
+        setEmailJSReady(false);
+      } finally {
+        setIsInitializing(false);
+      }
     };
 
-    checkEmailJSStatus();
+    initializeEmailJS();
   }, []);
 
   const onSubmit = async (data: FormValues) => {
     console.log("ConsultationForm: Form submission started");
     console.log("ConsultationForm: Form data:", data);
-    console.log("ConsultationForm: EmailJS ready:", emailJSReady);
     
     setIsSubmitting(true);
     setFormError(null);
     
     try {
-      // Double-check EmailJS status before sending
+      // Ensure EmailJS is ready
       if (!isEmailJSInitialized()) {
         throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
       }
@@ -108,14 +106,12 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       // Show success message
       toast({
         title: "Consultation Request Sent",
-        description: "We've received your consultation request and will contact you soon!",
+        description: "We've received your consultation request and will contact you within 24 hours!",
       });
       
-      // Reset form
+      // Reset form and show success state
       form.reset();
       setIsSuccess(true);
-      
-      console.log("ConsultationForm: Form submission completed successfully");
       
       // Hide success message after 5 seconds
       setTimeout(() => {
@@ -125,16 +121,10 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     } catch (error) {
       console.error("ConsultationForm: Form submission failed:", error);
       
-      let errorMessage = "There was a problem sending your request. Please try again.";
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-        console.error("ConsultationForm: Detailed error:", error.message);
-      }
-      
+      const errorMessage = error instanceof Error ? error.message : "There was a problem sending your request. Please try again.";
       setFormError(errorMessage);
       
-      // Show error toast with more details
+      // Show error toast
       toast({
         title: "Failed to Send Request",
         description: errorMessage,
@@ -145,6 +135,15 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     }
   };
 
+  const getButtonState = () => {
+    if (isInitializing) return "Initializing...";
+    if (isSubmitting) return "Submitting...";
+    if (!emailJSReady) return "Service Unavailable";
+    return "Request Consultation";
+  };
+
+  const isFormDisabled = isSubmitting || !emailJSReady || isInitializing;
+
   return (
     <div className={`bg-white p-8 rounded-lg shadow-lg border border-gray-200 ${className}`}>
       <h2 className="text-2xl font-bold mb-2 text-gray-900">Book Your Free Consultation</h2>
@@ -152,12 +151,19 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
         Fill out the form below and our team will get back to you within 24 hours.
       </p>
       
-      {/* EmailJS Status Indicator */}
-      {!emailJSReady && (
-        <Alert className="mb-4 bg-yellow-50 text-yellow-800 border-yellow-200">
+      {/* Status indicators */}
+      {isInitializing && (
+        <Alert className="mb-4 bg-blue-50 text-blue-800 border-blue-200">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <AlertDescription>Initializing email service...</AlertDescription>
+        </Alert>
+      )}
+      
+      {!isInitializing && !emailJSReady && (
+        <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Email service is initializing. If this persists, please try calling us directly at +91 98771 00369.
+            Email service is currently unavailable. Please try calling us directly at +91 98771 00369 or refresh the page.
           </AlertDescription>
         </Alert>
       )}
@@ -170,7 +176,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       
       {isSuccess && (
         <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
-          <CheckCircle2 className="h-4 w-4 mr-2" />
+          <CheckCircle2 className="h-4 w-4" />
           <AlertDescription>Thank you! Your consultation request has been submitted.</AlertDescription>
         </Alert>
       )}
@@ -185,7 +191,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
                 <FormItem>
                   <FormLabel>Full Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your name" {...field} />
+                    <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -199,7 +205,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} />
+                    <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -215,7 +221,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
                 <FormItem>
                   <FormLabel>Company Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your company" {...field} />
+                    <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -229,7 +235,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
                 <FormItem>
                   <FormLabel>Phone Number</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your phone number" {...field} />
+                    <Input placeholder="Your phone number" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -244,7 +250,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
               <FormItem>
                 <FormLabel>Website URL (Optional)</FormLabel>
                 <FormControl>
-                  <Input type="url" placeholder="https://yourcompany.com" {...field} />
+                  <Input type="url" placeholder="https://yourcompany.com" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -262,6 +268,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
                     placeholder="What are your e-commerce goals and challenges?" 
                     className="h-32" 
                     {...field} 
+                    disabled={isFormDisabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -272,18 +279,12 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
           <Button 
             type="submit" 
             className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
-            disabled={isSubmitting || !emailJSReady}
+            disabled={isFormDisabled}
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Submitting...
-              </>
-            ) : !emailJSReady ? (
-              "Initializing..."
-            ) : (
-              "Request Consultation"
+            {(isSubmitting || isInitializing) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
+            {getButtonState()}
           </Button>
           
           <p className="text-xs text-gray-500 text-center mt-2">

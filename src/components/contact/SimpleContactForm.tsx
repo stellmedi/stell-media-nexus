@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { sendEmail, TEMPLATES, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
+import { sendEmail, TEMPLATES, initEmailJS, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,7 +18,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Form schema
+// Form schema with proper validation
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -40,6 +39,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
   const [formError, setFormError] = useState<string | null>(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [emailJSReady, setEmailJSReady] = useState(false);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -52,39 +52,37 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     },
   });
 
-  // Check EmailJS status on component mount
+  // Initialize EmailJS on component mount
   useEffect(() => {
-    const checkEmailJSStatus = async () => {
-      console.log("SimpleContactForm: Checking EmailJS status...");
+    const initializeEmailJS = async () => {
+      console.log("SimpleContactForm: Initializing EmailJS...");
+      setIsInitializing(true);
       
-      // Wait a bit for initialization
-      setTimeout(async () => {
-        const isInitialized = isEmailJSInitialized();
-        console.log("SimpleContactForm: EmailJS initialized:", isInitialized);
-        
-        if (isInitialized) {
-          const canConnect = await testEmailJSConnection();
-          console.log("SimpleContactForm: EmailJS connection test:", canConnect);
-          setEmailJSReady(canConnect);
-        } else {
-          setEmailJSReady(false);
-        }
-      }, 1000);
+      try {
+        await initEmailJS();
+        const connectionTest = await testEmailJSConnection();
+        setEmailJSReady(connectionTest);
+        console.log("SimpleContactForm: EmailJS ready:", connectionTest);
+      } catch (error) {
+        console.error("SimpleContactForm: EmailJS initialization failed:", error);
+        setEmailJSReady(false);
+      } finally {
+        setIsInitializing(false);
+      }
     };
 
-    checkEmailJSStatus();
+    initializeEmailJS();
   }, []);
 
   const onSubmit = async (data: FormValues) => {
     console.log("SimpleContactForm: Form submission started");
     console.log("SimpleContactForm: Form data:", data);
-    console.log("SimpleContactForm: EmailJS ready:", emailJSReady);
     
     setIsSubmitting(true);
     setFormError(null);
     
     try {
-      // Double-check EmailJS status before sending
+      // Ensure EmailJS is ready
       if (!isEmailJSInitialized()) {
         throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
       }
@@ -103,15 +101,13 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       
       // Show success message
       toast({
-        title: "Message Sent",
-        description: "We've received your message and will get back to you soon!",
+        title: "Message Sent Successfully",
+        description: "We've received your message and will get back to you within 24 hours!",
       });
       
-      // Reset form
+      // Reset form and show success state
       form.reset();
       setIsSuccess(true);
-      
-      console.log("SimpleContactForm: Form submission completed successfully");
       
       // Hide success message after 5 seconds
       setTimeout(() => {
@@ -121,16 +117,10 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     } catch (error) {
       console.error("SimpleContactForm: Form submission failed:", error);
       
-      let errorMessage = "There was a problem sending your message. Please try again.";
-      
-      if (error instanceof Error) {
-        errorMessage = error.message;
-        console.error("SimpleContactForm: Detailed error:", error.message);
-      }
-      
+      const errorMessage = error instanceof Error ? error.message : "There was a problem sending your message. Please try again.";
       setFormError(errorMessage);
       
-      // Show error toast with more details
+      // Show error toast
       toast({
         title: "Failed to Send Message",
         description: errorMessage,
@@ -141,16 +131,32 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     }
   };
 
+  const getButtonState = () => {
+    if (isInitializing) return "Initializing...";
+    if (isSubmitting) return "Sending...";
+    if (!emailJSReady) return "Service Unavailable";
+    return "Send Message";
+  };
+
+  const isFormDisabled = isSubmitting || !emailJSReady || isInitializing;
+
   return (
     <div className={`bg-white p-8 rounded-lg shadow-lg border border-gray-200 ${className}`}>
       <h3 className="text-2xl font-bold mb-6 text-gray-900">Send Us a Message</h3>
       
-      {/* EmailJS Status Indicator */}
-      {!emailJSReady && (
-        <Alert className="mb-4 bg-yellow-50 text-yellow-800 border-yellow-200">
+      {/* Status indicators */}
+      {isInitializing && (
+        <Alert className="mb-4 bg-blue-50 text-blue-800 border-blue-200">
+          <Loader2 className="h-4 w-4 animate-spin" />
+          <AlertDescription>Initializing email service...</AlertDescription>
+        </Alert>
+      )}
+      
+      {!isInitializing && !emailJSReady && (
+        <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Email service is initializing. If this persists, please try calling us directly at +91 98771 00369.
+            Email service is currently unavailable. Please try calling us directly at +91 98771 00369 or refresh the page.
           </AlertDescription>
         </Alert>
       )}
@@ -163,7 +169,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       
       {isSuccess && (
         <Alert className="mb-4 bg-green-50 text-green-800 border-green-200">
-          <CheckCircle2 className="h-4 w-4 mr-2" />
+          <CheckCircle2 className="h-4 w-4" />
           <AlertDescription>Thank you! Your message has been sent successfully.</AlertDescription>
         </Alert>
       )}
@@ -178,7 +184,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder="Your name" {...field} />
+                    <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -192,7 +198,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} />
+                    <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -207,7 +213,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
               <FormItem>
                 <FormLabel>Company (Optional)</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your company" {...field} />
+                  <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -221,7 +227,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
               <FormItem>
                 <FormLabel>Subject</FormLabel>
                 <FormControl>
-                  <Input placeholder="What's this about?" {...field} />
+                  <Input placeholder="What's this about?" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -239,6 +245,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                     placeholder="How can we help you?" 
                     className="h-32" 
                     {...field} 
+                    disabled={isFormDisabled}
                   />
                 </FormControl>
                 <FormMessage />
@@ -249,18 +256,12 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
           <Button 
             type="submit" 
             className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
-            disabled={isSubmitting || !emailJSReady}
+            disabled={isFormDisabled}
           >
-            {isSubmitting ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Sending...
-              </>
-            ) : !emailJSReady ? (
-              "Initializing..."
-            ) : (
-              "Send Message"
+            {(isSubmitting || isInitializing) && (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
+            {getButtonState()}
           </Button>
           
           <p className="text-xs text-gray-500 text-center mt-2">

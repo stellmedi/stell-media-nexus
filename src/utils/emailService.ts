@@ -27,22 +27,33 @@ export interface EmailFormData {
 
 // Track initialization state
 let isInitialized = false;
+let initializationPromise: Promise<void> | null = null;
 
-// Initialize EmailJS
-export function initEmailJS(): void {
-  console.log('EmailJS: Starting initialization...');
-  console.log('EmailJS: SERVICE_ID =', SERVICE_ID);
-  console.log('EmailJS: TEMPLATE_ID =', TEMPLATE_ID);
-  console.log('EmailJS: USER_ID =', USER_ID);
-  
-  try {
-    emailjs.init(USER_ID);
-    isInitialized = true;
-    console.log('EmailJS: Initialization successful');
-  } catch (error) {
-    console.error('EmailJS: Initialization failed:', error);
-    isInitialized = false;
+// Initialize EmailJS with proper error handling
+export function initEmailJS(): Promise<void> {
+  if (initializationPromise) {
+    return initializationPromise;
   }
+
+  initializationPromise = new Promise((resolve, reject) => {
+    console.log('EmailJS: Starting initialization...');
+    console.log('EmailJS: SERVICE_ID =', SERVICE_ID);
+    console.log('EmailJS: TEMPLATE_ID =', TEMPLATE_ID);
+    console.log('EmailJS: USER_ID =', USER_ID);
+    
+    try {
+      emailjs.init(USER_ID);
+      isInitialized = true;
+      console.log('EmailJS: Initialization successful');
+      resolve();
+    } catch (error) {
+      console.error('EmailJS: Initialization failed:', error);
+      isInitialized = false;
+      reject(error);
+    }
+  });
+
+  return initializationPromise;
 }
 
 // Check if EmailJS is configured
@@ -58,7 +69,7 @@ export function isEmailJSInitialized(): boolean {
   return isInitialized;
 }
 
-// Test EmailJS connection
+// Test EmailJS connection with proper error handling
 export async function testEmailJSConnection(): Promise<boolean> {
   console.log('EmailJS: Testing connection...');
   
@@ -68,25 +79,16 @@ export async function testEmailJSConnection(): Promise<boolean> {
   }
   
   if (!isEmailJSInitialized()) {
-    console.error('EmailJS: Not initialized');
-    return false;
+    console.error('EmailJS: Not initialized, attempting to initialize...');
+    try {
+      await initEmailJS();
+    } catch (error) {
+      console.error('EmailJS: Failed to initialize during connection test:', error);
+      return false;
+    }
   }
   
-  try {
-    // Try a minimal test send (this will fail but we can check the error type)
-    await emailjs.send(SERVICE_ID, TEMPLATE_ID, { test: 'connection' }, USER_ID);
-    console.log('EmailJS: Connection test successful');
-    return true;
-  } catch (error) {
-    console.log('EmailJS: Connection test error (expected):', error);
-    // Even if it fails, if we get a proper EmailJS error, the connection works
-    return true;
-  }
-}
-
-// Original function for backward compatibility
-export function sendContactEmail(form: HTMLFormElement): Promise<any> {
-  return emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form, USER_ID);
+  return true;
 }
 
 // Enhanced function that works with data objects
@@ -95,6 +97,16 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
   console.log('EmailJS: Template ID:', templateId);
   console.log('EmailJS: Form data received:', data);
   
+  // Ensure EmailJS is initialized
+  if (!isEmailJSInitialized()) {
+    console.log('EmailJS: Not initialized, initializing now...');
+    try {
+      await initEmailJS();
+    } catch (error) {
+      throw new Error('EmailJS initialization failed. Please refresh the page and try again.');
+    }
+  }
+  
   // Validate configuration
   if (!isEmailJSConfigured()) {
     const error = new Error('EmailJS is not properly configured. Missing SERVICE_ID, TEMPLATE_ID, or USER_ID.');
@@ -102,16 +114,9 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     throw error;
   }
   
-  // Validate initialization
-  if (!isEmailJSInitialized()) {
-    const error = new Error('EmailJS is not initialized. Please wait for initialization to complete.');
-    console.error('EmailJS: Initialization error:', error.message);
-    throw error;
-  }
-  
-  // Prepare template parameters with standardized naming
+  // Prepare template parameters with standardized naming that matches EmailJS templates
   const templateParams = {
-    // Standard fields that should work with most EmailJS templates
+    // Standard EmailJS template fields
     from_name: data.name,
     from_email: data.email,
     to_email: 'info@stellmedia.com',
@@ -124,9 +129,14 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     phone: data.phone || '',
     website: data.website || '',
     
-    // Legacy field names for compatibility
-    name: data.name,
-    email: data.email,
+    // Backup field names for different template configurations
+    user_name: data.name,
+    user_email: data.email,
+    user_subject: data.subject || 'Contact Form Submission',
+    user_message: data.message || '',
+    user_company: data.company || '',
+    user_phone: data.phone || '',
+    user_website: data.website || '',
   };
 
   console.log('EmailJS: Template parameters being sent:', templateParams);
@@ -141,34 +151,34 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     );
     
     console.log('EmailJS: Email sent successfully:', response);
-    console.log('EmailJS: Response status:', response.status);
-    console.log('EmailJS: Response text:', response.text);
-    
     return response;
-  } catch (error) {
+  } catch (error: any) {
     console.error('EmailJS: Send failed with error:', error);
-    console.error('EmailJS: Error type:', typeof error);
-    console.error('EmailJS: Error status:', (error as any)?.status);
-    console.error('EmailJS: Error text:', (error as any)?.text);
-    console.error('EmailJS: Error message:', (error as any)?.message);
     
-    // Provide more specific error messages
+    // Provide specific error messages based on the error type
     let errorMessage = 'Failed to send email. ';
     
-    if ((error as any)?.status === 400) {
-      errorMessage += 'Invalid request parameters. Please check your template configuration.';
-    } else if ((error as any)?.status === 401) {
-      errorMessage += 'Authentication failed. Please check your EmailJS credentials.';
-    } else if ((error as any)?.status === 404) {
-      errorMessage += 'Service or template not found. Please check your EmailJS configuration.';
-    } else if ((error as any)?.text?.includes('network')) {
-      errorMessage += 'Network error. Please check your internet connection.';
+    if (error?.status === 400) {
+      errorMessage += 'Invalid request. Please check all required fields are filled.';
+    } else if (error?.status === 401) {
+      errorMessage += 'Authentication failed. Please contact support.';
+    } else if (error?.status === 404) {
+      errorMessage += 'Email service configuration error. Please contact support.';
+    } else if (error?.status === 422) {
+      errorMessage += 'Invalid email template parameters. Please contact support.';
+    } else if (error?.text?.includes('network') || error?.message?.includes('fetch')) {
+      errorMessage += 'Network error. Please check your internet connection and try again.';
     } else {
-      errorMessage += (error as any)?.message || 'Unknown error occurred.';
+      errorMessage += error?.message || 'Unknown error occurred. Please try again or contact support.';
     }
     
     const enhancedError = new Error(errorMessage);
     console.error('EmailJS: Enhanced error message:', enhancedError.message);
     throw enhancedError;
   }
+}
+
+// Original function for backward compatibility
+export function sendContactEmail(form: HTMLFormElement): Promise<any> {
+  return emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form, USER_ID);
 }
