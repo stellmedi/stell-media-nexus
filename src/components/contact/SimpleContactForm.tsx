@@ -47,6 +47,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       email: "",
       message: "",
     },
+    mode: "onChange", // Enable real-time validation
   });
 
   // Initialize EmailJS on component mount
@@ -126,7 +127,8 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     }
   };
 
-  const isFormDisabled = isSubmitting || !emailJSReady || isInitializing;
+  // Only disable form if submitting or not initialized yet
+  const isFormDisabled = isSubmitting || isInitializing;
 
   return (
     <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
@@ -141,10 +143,10 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       )}
       
       {!isInitializing && !emailJSReady && (
-        <Alert className="mb-4 bg-red-50 text-red-800 border-red-200">
+        <Alert className="mb-4 bg-yellow-50 text-yellow-800 border-yellow-200">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            Service unavailable. Please call +91 98771 00369 or refresh the page.
+            Service temporarily unavailable. Please call +91 98771 00369 or try again.
           </AlertDescription>
         </Alert>
       )}
@@ -169,9 +171,14 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Name</FormLabel>
+                <FormLabel className="text-gray-700">Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
+                  <Input 
+                    placeholder="Your name" 
+                    {...field} 
+                    disabled={isFormDisabled}
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -183,9 +190,15 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-gray-700">Email</FormLabel>
                 <FormControl>
-                  <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
+                  <Input 
+                    type="email" 
+                    placeholder="your@email.com" 
+                    {...field} 
+                    disabled={isFormDisabled}
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -197,11 +210,11 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Message</FormLabel>
+                <FormLabel className="text-gray-700">How can we help you?</FormLabel>
                 <FormControl>
                   <Textarea 
-                    placeholder="How can we help you?" 
-                    className="h-24" 
+                    placeholder="Tell us about your project or how we can help..." 
+                    className="h-24 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
                     {...field} 
                     disabled={isFormDisabled}
                   />
