@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,13 +19,11 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Form schema with proper validation
+// Simplified form schema with only essential fields
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  subject: z.string().min(2, { message: "Subject is required" }),
   message: z.string().min(10, { message: "Message must be at least 10 characters" }),
-  company: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -46,9 +45,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     defaultValues: {
       name: "",
       email: "",
-      subject: "",
       message: "",
-      company: "",
     },
   });
 
@@ -92,9 +89,8 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       const response = await sendEmail(TEMPLATES.contact, {
         name: data.name,
         email: data.email,
-        subject: data.subject,
         message: data.message,
-        company: data.company || "",
+        subject: "Contact Form Message",
       });
       
       console.log("SimpleContactForm: Email sent successfully:", response);
@@ -176,44 +172,14 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
           <FormField
             control={form.control}
-            name="company"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Company (Optional)</FormLabel>
+                <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
+                  <Input placeholder="Your name" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -222,12 +188,12 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
           
           <FormField
             control={form.control}
-            name="subject"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Subject</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input placeholder="What's this about?" {...field} disabled={isFormDisabled} />
+                  <Input type="email" placeholder="your@email.com" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

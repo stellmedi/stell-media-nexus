@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,14 +19,12 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
-// Form schema with proper validation
+// Simplified form schema with only essential fields
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
-  company: z.string().optional(),
-  phone: z.string().min(5, { message: "Phone number is required" }),
-  website: z.string().url({ message: "Please enter a valid URL" }).optional().or(z.literal("")),
-  message: z.string().min(10, { message: "Please tell us a bit about your business and needs" }),
+  company: z.string().min(2, { message: "Company name is required" }),
+  message: z.string().min(10, { message: "Please tell us about your project" }),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -48,8 +47,6 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       name: "",
       email: "",
       company: "",
-      phone: "",
-      website: "",
       message: "",
     },
   });
@@ -94,9 +91,7 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
       const response = await sendEmail(TEMPLATES.consultation, {
         name: data.name,
         email: data.email,
-        company: data.company || "",
-        phone: data.phone,
-        website: data.website || "",
+        company: data.company,
         message: data.message,
         subject: "Consultation Request",
       });
@@ -213,44 +208,14 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
             />
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="company"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Company Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone Number</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Your phone number" {...field} disabled={isFormDisabled} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
           <FormField
             control={form.control}
-            name="website"
+            name="company"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Website URL (Optional)</FormLabel>
+                <FormLabel>Company Name</FormLabel>
                 <FormControl>
-                  <Input type="url" placeholder="https://yourcompany.com" {...field} disabled={isFormDisabled} />
+                  <Input placeholder="Your company" {...field} disabled={isFormDisabled} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -37,9 +37,6 @@ export function initEmailJS(): Promise<void> {
 
   initializationPromise = new Promise((resolve, reject) => {
     console.log('EmailJS: Starting initialization...');
-    console.log('EmailJS: SERVICE_ID =', SERVICE_ID);
-    console.log('EmailJS: TEMPLATE_ID =', TEMPLATE_ID);
-    console.log('EmailJS: USER_ID =', USER_ID);
     
     try {
       emailjs.init(USER_ID);
@@ -58,18 +55,15 @@ export function initEmailJS(): Promise<void> {
 
 // Check if EmailJS is configured
 export function isEmailJSConfigured(): boolean {
-  const configured = Boolean(SERVICE_ID && TEMPLATE_ID && USER_ID);
-  console.log('EmailJS: Configuration check:', { SERVICE_ID, TEMPLATE_ID, USER_ID, configured });
-  return configured;
+  return Boolean(SERVICE_ID && TEMPLATE_ID && USER_ID);
 }
 
 // Check if EmailJS is initialized
 export function isEmailJSInitialized(): boolean {
-  console.log('EmailJS: Initialization check:', isInitialized);
   return isInitialized;
 }
 
-// Test EmailJS connection with proper error handling
+// Test EmailJS connection
 export async function testEmailJSConnection(): Promise<boolean> {
   console.log('EmailJS: Testing connection...');
   
@@ -79,7 +73,6 @@ export async function testEmailJSConnection(): Promise<boolean> {
   }
   
   if (!isEmailJSInitialized()) {
-    console.error('EmailJS: Not initialized, attempting to initialize...');
     try {
       await initEmailJS();
     } catch (error) {
@@ -91,10 +84,9 @@ export async function testEmailJSConnection(): Promise<boolean> {
   return true;
 }
 
-// Enhanced function that works with data objects
+// Send email with proper template parameter mapping
 export async function sendEmail(templateId: string, data: EmailFormData): Promise<any> {
   console.log('EmailJS: Starting email send process...');
-  console.log('EmailJS: Template ID:', templateId);
   console.log('EmailJS: Form data received:', data);
   
   // Ensure EmailJS is initialized
@@ -109,40 +101,32 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
   
   // Validate configuration
   if (!isEmailJSConfigured()) {
-    const error = new Error('EmailJS is not properly configured. Missing SERVICE_ID, TEMPLATE_ID, or USER_ID.');
-    console.error('EmailJS: Configuration error:', error.message);
-    throw error;
+    throw new Error('EmailJS is not properly configured.');
   }
   
-  // Prepare template parameters with standardized naming that matches EmailJS templates
+  // Prepare template parameters - using simple field names that match most EmailJS templates
   const templateParams = {
-    // Standard EmailJS template fields
-    from_name: data.name,
-    from_email: data.email,
-    to_email: 'info@stellmedia.com',
-    reply_to: data.email,
-    subject: data.subject || 'Contact Form Submission',
+    // Primary fields that should work with most templates
+    name: data.name || '',
+    email: data.email || '',
     message: data.message || '',
+    subject: data.subject || 'Contact Form Submission',
     
-    // Additional fields
+    // Optional fields
     company: data.company || '',
-    phone: data.phone || '',
-    website: data.website || '',
     
-    // Backup field names for different template configurations
-    user_name: data.name,
-    user_email: data.email,
-    user_subject: data.subject || 'Contact Form Submission',
+    // Alternative field names for different template configurations
+    from_name: data.name || '',
+    from_email: data.email || '',
+    user_name: data.name || '',
+    user_email: data.email || '',
     user_message: data.message || '',
-    user_company: data.company || '',
-    user_phone: data.phone || '',
-    user_website: data.website || '',
+    reply_to: data.email || '',
   };
 
   console.log('EmailJS: Template parameters being sent:', templateParams);
   
   try {
-    console.log('EmailJS: Calling emailjs.send...');
     const response = await emailjs.send(
       SERVICE_ID,
       templateId || TEMPLATE_ID,
@@ -155,26 +139,19 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
   } catch (error: any) {
     console.error('EmailJS: Send failed with error:', error);
     
-    // Provide specific error messages based on the error type
     let errorMessage = 'Failed to send email. ';
     
     if (error?.status === 400) {
-      errorMessage += 'Invalid request. Please check all required fields are filled.';
+      errorMessage += 'Invalid request. Please check all required fields.';
     } else if (error?.status === 401) {
       errorMessage += 'Authentication failed. Please contact support.';
     } else if (error?.status === 404) {
       errorMessage += 'Email service configuration error. Please contact support.';
-    } else if (error?.status === 422) {
-      errorMessage += 'Invalid email template parameters. Please contact support.';
-    } else if (error?.text?.includes('network') || error?.message?.includes('fetch')) {
-      errorMessage += 'Network error. Please check your internet connection and try again.';
     } else {
-      errorMessage += error?.message || 'Unknown error occurred. Please try again or contact support.';
+      errorMessage += 'Please try again or contact us directly.';
     }
     
-    const enhancedError = new Error(errorMessage);
-    console.error('EmailJS: Enhanced error message:', enhancedError.message);
-    throw enhancedError;
+    throw new Error(errorMessage);
   }
 }
 
