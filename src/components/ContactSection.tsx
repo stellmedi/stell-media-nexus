@@ -6,7 +6,7 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-12 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
       <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-3 gap-8 items-center">
+        <div className="grid md:grid-cols-3 gap-8 items-start">
           <div className="md:col-span-2">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Boost Your E-commerce Conversions?</h2>
             <p className="text-lg mb-6 text-indigo-100">
@@ -35,7 +35,10 @@ const ContactSection = () => {
           </div>
           
           <div className="md:col-span-1">
-            <SimpleContactForm className="max-w-md" />
+            {/* Ensure the form has proper z-index and no pointer-events restrictions */}
+            <div className="relative z-10">
+              <SimpleContactForm className="max-w-md mx-auto" />
+            </div>
           </div>
         </div>
       </div>
