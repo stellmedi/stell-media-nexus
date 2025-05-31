@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -174,7 +173,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                     placeholder="Your name" 
                     {...field} 
                     disabled={isSubmitting}
-                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white"
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white text-gray-900 placeholder:text-gray-500"
                     autoComplete="name"
                   />
                 </FormControl>
@@ -195,7 +194,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                     placeholder="your@email.com" 
                     {...field} 
                     disabled={isSubmitting}
-                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white"
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white text-gray-900 placeholder:text-gray-500"
                     autoComplete="email"
                   />
                 </FormControl>
@@ -213,7 +212,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
                 <FormControl>
                   <Textarea 
                     placeholder="Tell us about your project or how we can help..." 
-                    className="h-24 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white resize-none" 
+                    className="h-24 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white text-gray-900 placeholder:text-gray-500 resize-none" 
                     {...field} 
                     disabled={isSubmitting}
                   />
