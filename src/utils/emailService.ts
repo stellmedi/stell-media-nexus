@@ -104,18 +104,42 @@ export async function sendEmail(templateId: string, data: EmailFormData): Promis
     throw new Error('EmailJS is not properly configured.');
   }
   
-  // Simple template parameters that match most EmailJS templates
+  // Enhanced template parameters with more comprehensive contact information
   const templateParams = {
+    // Primary contact information
     from_name: data.name || 'Anonymous',
     from_email: data.email || 'no-email@example.com',
+    user_name: data.name || 'Anonymous',
+    user_email: data.email || 'no-email@example.com',
+    
+    // Message content
     message: data.message || 'No message provided',
-    to_name: 'Stell Media Team',
+    user_message: data.message || 'No message provided',
+    
+    // Additional information
     subject: data.subject || 'Contact Form Submission',
     company: data.company || 'Not specified',
+    
+    // Recipient information
+    to_name: 'Stell Media Team',
     reply_to: data.email || 'no-reply@example.com',
+    
+    // Contact details formatted for easy reading
+    contact_info: `Name: ${data.name || 'Not provided'}\nEmail: ${data.email || 'Not provided'}\nCompany: ${data.company || 'Not specified'}`,
+    
+    // Full formatted message
+    full_message: `
+Contact Information:
+- Name: ${data.name || 'Not provided'}
+- Email: ${data.email || 'Not provided'}
+- Company: ${data.company || 'Not specified'}
+
+Message:
+${data.message || 'No message provided'}
+    `.trim(),
   };
 
-  console.log('EmailJS: Sending with parameters:', templateParams);
+  console.log('EmailJS: Sending with enhanced parameters:', templateParams);
   
   try {
     const response = await emailjs.send(
