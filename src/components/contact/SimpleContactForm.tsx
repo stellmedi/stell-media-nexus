@@ -47,7 +47,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       email: "",
       message: "",
     },
-    mode: "onChange", // Enable real-time validation
+    mode: "onChange",
   });
 
   // Initialize EmailJS on component mount
@@ -127,9 +127,6 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     }
   };
 
-  // Only disable form if submitting or not initialized yet
-  const isFormDisabled = isSubmitting || isInitializing;
-
   return (
     <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
       <h3 className="text-xl font-bold mb-4 text-gray-900">Send Us a Message</h3>
@@ -171,13 +168,14 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-700">Name</FormLabel>
+                <FormLabel className="text-gray-700 font-medium">Name</FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Your name" 
                     {...field} 
-                    disabled={isFormDisabled}
-                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                    disabled={isSubmitting}
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white"
+                    autoComplete="name"
                   />
                 </FormControl>
                 <FormMessage />
@@ -190,14 +188,15 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-700">Email</FormLabel>
+                <FormLabel className="text-gray-700 font-medium">Email</FormLabel>
                 <FormControl>
                   <Input 
                     type="email" 
                     placeholder="your@email.com" 
                     {...field} 
-                    disabled={isFormDisabled}
-                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                    disabled={isSubmitting}
+                    className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white"
+                    autoComplete="email"
                   />
                 </FormControl>
                 <FormMessage />
@@ -210,13 +209,13 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
             name="message"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-gray-700">How can we help you?</FormLabel>
+                <FormLabel className="text-gray-700 font-medium">How can we help you?</FormLabel>
                 <FormControl>
                   <Textarea 
                     placeholder="Tell us about your project or how we can help..." 
-                    className="h-24 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500" 
+                    className="h-24 border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white resize-none" 
                     {...field} 
-                    disabled={isFormDisabled}
+                    disabled={isSubmitting}
                   />
                 </FormControl>
                 <FormMessage />
@@ -226,8 +225,8 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90"
-            disabled={isFormDisabled}
+            className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 disabled:opacity-50"
+            disabled={isSubmitting || isInitializing}
           >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isSubmitting ? "Sending..." : "Send Message"}
