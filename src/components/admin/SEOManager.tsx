@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Search, Globe, FileText, Share2, Code, BarChart3 } from "lucide-react";
+import { usePageSEO, saveSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
   metaTitle: string;
@@ -25,10 +26,6 @@ interface SEOData {
   robotsFollow: boolean;
   schemaType: string;
   schemaData: string;
-}
-
-interface PageSEOData {
-  [pagePath: string]: SEOData;
 }
 
 const defaultSEOData: SEOData = {
@@ -67,46 +64,24 @@ const availablePages = [
 export default function SEOManager() {
   const [selectedPage, setSelectedPage] = useState("/");
   const [seoData, setSeoData] = useState<SEOData>(defaultSEOData);
-  const [allPagesSEO, setAllPagesSEO] = useState<PageSEOData>({});
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Use the hook to get SEO data for the selected page
+  const { seoData: pageSEOData, isLoading: dataLoading } = usePageSEO(selectedPage);
 
-  // Load SEO data from localStorage on component mount
+  // Update local state when page data loads or changes
   useEffect(() => {
-    console.log('SEOManager: Loading SEO data from localStorage...');
-    const savedSEOData = localStorage.getItem('stellmedia_page_seo');
-    if (savedSEOData) {
-      try {
-        const parsedData = JSON.parse(savedSEOData);
-        console.log('SEOManager: Loaded SEO data:', parsedData);
-        setAllPagesSEO(parsedData);
-        
-        // Load data for currently selected page
-        if (parsedData[selectedPage]) {
-          console.log('SEOManager: Setting data for selected page:', selectedPage, parsedData[selectedPage]);
-          setSeoData(parsedData[selectedPage]);
-        } else {
-          console.log('SEOManager: No data found for page:', selectedPage, 'using defaults');
-          setSeoData(defaultSEOData);
-        }
-      } catch (error) {
-        console.error('SEOManager: Error loading SEO data:', error);
-      }
+    console.log('SEOManager: Page SEO data changed for', selectedPage, pageSEOData);
+    if (pageSEOData) {
+      setSeoData(pageSEOData);
     } else {
-      console.log('SEOManager: No saved SEO data found in localStorage');
+      // Set defaults with page-specific canonical URL
+      setSeoData({
+        ...defaultSEOData,
+        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
+      });
     }
-  }, []);
-
-  // Update SEO data when selected page changes
-  useEffect(() => {
-    console.log('SEOManager: Page changed to:', selectedPage);
-    if (allPagesSEO[selectedPage]) {
-      console.log('SEOManager: Loading existing data for page:', selectedPage, allPagesSEO[selectedPage]);
-      setSeoData(allPagesSEO[selectedPage]);
-    } else {
-      console.log('SEOManager: No existing data for page:', selectedPage, 'using defaults');
-      setSeoData(defaultSEOData);
-    }
-  }, [selectedPage, allPagesSEO]);
+  }, [pageSEOData, selectedPage]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
     console.log('SEOManager: Field changed:', field, 'new value:', value);
@@ -122,29 +97,15 @@ export default function SEOManager() {
     setIsLoading(true);
     
     try {
-      const updatedAllPagesSEO = {
-        ...allPagesSEO,
-        [selectedPage]: seoData
-      };
+      const success = saveSEOData(selectedPage, seoData);
       
-      console.log('SEOManager: Updated all pages SEO data:', updatedAllPagesSEO);
-      setAllPagesSEO(updatedAllPagesSEO);
-      localStorage.setItem('stellmedia_page_seo', JSON.stringify(updatedAllPagesSEO));
-      
-      // Dispatch custom event to notify usePageSEO hooks in the same tab
-      const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
-        detail: { updatedPage: selectedPage }
-      });
-      window.dispatchEvent(seoUpdateEvent);
-      console.log('SEOManager: Dispatched seoDataUpdated event for page:', selectedPage);
-      
-      // Verify the save by reading back from localStorage
-      const verifyData = localStorage.getItem('stellmedia_page_seo');
-      console.log('SEOManager: Verification - data saved to localStorage:', JSON.parse(verifyData || '{}'));
-      
-      toast.success("SEO settings saved successfully!", {
-        description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`
-      });
+      if (success) {
+        toast.success("SEO settings saved successfully!", {
+          description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`
+        });
+      } else {
+        throw new Error('Failed to save SEO data');
+      }
     } catch (error) {
       console.error('SEOManager: Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
@@ -157,7 +118,10 @@ export default function SEOManager() {
 
   const handleReset = () => {
     console.log('SEOManager: Resetting SEO data for page:', selectedPage);
-    setSeoData(defaultSEOData);
+    setSeoData({
+      ...defaultSEOData,
+      canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
+    });
     toast.info("SEO fields reset to default values");
   };
 
@@ -197,6 +161,15 @@ export default function SEOManager() {
                 ))}
               </SelectContent>
             </Select>
+            {dataLoading && (
+              <p className="text-sm text-gray-500 mt-1">Loading SEO data...</p>
+            )}
+            {pageSEOData && (
+              <p className="text-sm text-green-600 mt-1">✓ SEO data found for this page</p>
+            )}
+            {!pageSEOData && !dataLoading && (
+              <p className="text-sm text-orange-600 mt-1">No SEO data saved for this page yet</p>
+            )}
           </div>
 
           <Tabs defaultValue="basic" className="w-full">
@@ -425,7 +398,7 @@ export default function SEOManager() {
               <Button variant="outline" onClick={() => window.open(selectedPage, '_blank')}>
                 Preview Page
               </Button>
-              <Button onClick={handleSave} disabled={isLoading}>
+              <Button onClick={handleSave} disabled={isLoading || dataLoading}>
                 {isLoading ? "Saving..." : "Save SEO Settings"}
               </Button>
             </div>
