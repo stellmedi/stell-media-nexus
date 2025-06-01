@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AdminLayout from "@/components/admin/AdminLayout";
 import SEOManager from "@/components/admin/SEOManager";
 import ContentMetadataDisplay from "@/components/admin/ContentMetadataDisplay";
+import SEOVerification from "@/components/admin/SEOVerification";
 import { useAuth } from "@/hooks/use-auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -35,13 +35,18 @@ const SEOManagement: React.FC = () => {
           </header>
           
           <Tabs defaultValue="seo-manager" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="seo-manager">SEO Editor</TabsTrigger>
+              <TabsTrigger value="verification">Verification</TabsTrigger>
               <TabsTrigger value="content-overview">Content Overview</TabsTrigger>
             </TabsList>
             
             <TabsContent value="seo-manager" className="mt-6">
               <SEOManager />
+            </TabsContent>
+            
+            <TabsContent value="verification" className="mt-6">
+              <SEOVerification />
             </TabsContent>
             
             <TabsContent value="content-overview" className="mt-6">

@@ -20,11 +20,23 @@ export default function SEOHelmet({
   defaultOgImage = '',
   children
 }: SEOHelmetProps) {
-  const { seoData } = usePageSEO(pagePath);
+  const { seoData, isLoading } = usePageSEO(pagePath);
 
   console.log('SEOHelmet: Rendering for page:', pagePath);
   console.log('SEOHelmet: Saved SEO data:', seoData);
+  console.log('SEOHelmet: Loading state:', isLoading);
   console.log('SEOHelmet: Default values:', { defaultTitle, defaultDescription, defaultKeywords, defaultOgImage });
+
+  // Show loading state briefly to prevent hydration issues
+  if (isLoading) {
+    return (
+      <Helmet>
+        {defaultTitle && <title>{defaultTitle}</title>}
+        {defaultDescription && <meta name="description" content={defaultDescription} />}
+        {children}
+      </Helmet>
+    );
+  }
 
   // Use saved SEO data if available, otherwise fall back to defaults
   const metaTitle = seoData?.metaTitle || defaultTitle;

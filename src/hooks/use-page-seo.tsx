@@ -56,23 +56,26 @@ export function usePageSEO(pagePath: string) {
     loadSEOData();
 
     // Listen for storage changes to update when SEO data is modified in other tabs
-    const handleStorageChange = () => {
-      console.log('usePageSEO: Storage change detected, reloading data for page:', pagePath);
-      loadSEOData();
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'stellmedia_page_seo') {
+        console.log('usePageSEO: Storage change detected for SEO data, reloading for page:', pagePath);
+        loadSEOData();
+      }
     };
 
     // Listen for custom seoDataUpdated event for same-tab updates
-    const handleSEODataUpdated = () => {
+    const handleSEODataUpdated = (e: CustomEvent) => {
       console.log('usePageSEO: Custom seoDataUpdated event detected, reloading data for page:', pagePath);
+      console.log('usePageSEO: Event details:', e.detail);
       loadSEOData();
     };
 
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('seoDataUpdated', handleSEODataUpdated);
+    window.addEventListener('seoDataUpdated', handleSEODataUpdated as EventListener);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('seoDataUpdated', handleSEODataUpdated);
+      window.removeEventListener('seoDataUpdated', handleSEODataUpdated as EventListener);
     };
   }, [pagePath]);
 
@@ -88,5 +91,32 @@ export function getAllPageSEO(): PageSEOData {
   } catch (error) {
     console.error('getAllPageSEO: Error loading all SEO data:', error);
     return {};
+  }
+}
+
+// Helper function to save SEO data (for use outside of SEOManager if needed)
+export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
+  try {
+    console.log('saveSEOData: Saving SEO data for page:', pagePath, seoData);
+    
+    const existingData = getAllPageSEO();
+    const updatedData = {
+      ...existingData,
+      [pagePath]: seoData
+    };
+    
+    localStorage.setItem('stellmedia_page_seo', JSON.stringify(updatedData));
+    
+    // Dispatch custom event to notify all usePageSEO hooks
+    const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
+      detail: { updatedPage: pagePath, seoData }
+    });
+    window.dispatchEvent(seoUpdateEvent);
+    
+    console.log('saveSEOData: Successfully saved and dispatched event for page:', pagePath);
+    return true;
+  } catch (error) {
+    console.error('saveSEOData: Error saving SEO data:', error);
+    return false;
   }
 }
