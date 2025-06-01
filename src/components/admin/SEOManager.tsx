@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -69,19 +68,26 @@ export default function SEOManager() {
   // Use the hook to get SEO data for the selected page
   const { seoData: pageSEOData, isLoading: dataLoading } = usePageSEO(selectedPage);
 
-  // Update local state when page data loads or changes
+  // Update local state when page changes or data loads
   useEffect(() => {
-    console.log('SEOManager: Page SEO data changed for', selectedPage, pageSEOData);
-    if (pageSEOData) {
-      setSeoData(pageSEOData);
-    } else {
-      // Set defaults with page-specific canonical URL
-      setSeoData({
-        ...defaultSEOData,
-        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
-      });
+    console.log('SEOManager: useEffect triggered for page:', selectedPage);
+    console.log('SEOManager: Page SEO data:', pageSEOData);
+    console.log('SEOManager: Data loading state:', dataLoading);
+    
+    if (!dataLoading) {
+      if (pageSEOData) {
+        console.log('SEOManager: Setting existing SEO data for page:', selectedPage);
+        setSeoData(pageSEOData);
+      } else {
+        console.log('SEOManager: Setting default SEO data for page:', selectedPage);
+        // Set defaults with page-specific canonical URL
+        setSeoData({
+          ...defaultSEOData,
+          canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
+        });
+      }
     }
-  }, [pageSEOData, selectedPage]);
+  }, [selectedPage, pageSEOData, dataLoading]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
     console.log('SEOManager: Field changed:', field, 'new value:', value);
@@ -89,6 +95,11 @@ export default function SEOManager() {
       ...prev,
       [field]: value
     }));
+  };
+
+  const handlePageChange = (newPage: string) => {
+    console.log('SEOManager: Page changed from', selectedPage, 'to', newPage);
+    setSelectedPage(newPage);
   };
 
   const handleSave = () => {
@@ -149,7 +160,7 @@ export default function SEOManager() {
         <CardContent>
           <div className="mb-6">
             <Label htmlFor="page-select">Select Page</Label>
-            <Select value={selectedPage} onValueChange={setSelectedPage}>
+            <Select value={selectedPage} onValueChange={handlePageChange}>
               <SelectTrigger className="w-full mt-1">
                 <SelectValue placeholder="Choose a page to edit" />
               </SelectTrigger>
@@ -164,7 +175,7 @@ export default function SEOManager() {
             {dataLoading && (
               <p className="text-sm text-gray-500 mt-1">Loading SEO data...</p>
             )}
-            {pageSEOData && (
+            {pageSEOData && !dataLoading && (
               <p className="text-sm text-green-600 mt-1">✓ SEO data found for this page</p>
             )}
             {!pageSEOData && !dataLoading && (
