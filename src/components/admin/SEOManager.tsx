@@ -6,8 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Globe, FileText, Share2, Code, BarChart3 } from "lucide-react";
+import { Search, Globe, FileText, Share2, Code, BarChart3, Info } from "lucide-react";
 import { usePageSEO, saveSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
@@ -66,20 +67,40 @@ export default function SEOManager() {
   const [isLoading, setIsLoading] = useState(false);
   
   // Use the hook to get SEO data for the selected page
-  const { seoData: pageSEOData, isLoading: dataLoading } = usePageSEO(selectedPage);
+  const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
 
   // Update local state when page changes or data loads
   useEffect(() => {
     console.log('SEOManager: useEffect triggered for page:', selectedPage);
     console.log('SEOManager: Page SEO data:', pageSEOData);
+    console.log('SEOManager: Page defaults:', pageDefaults);
     console.log('SEOManager: Data loading state:', dataLoading);
     
     if (!dataLoading) {
       if (pageSEOData) {
-        console.log('SEOManager: Setting existing SEO data for page:', selectedPage);
+        console.log('SEOManager: Setting existing saved SEO data for page:', selectedPage);
         setSeoData(pageSEOData);
+      } else if (pageDefaults) {
+        console.log('SEOManager: Setting page defaults for page:', selectedPage);
+        // Use page defaults as starting point
+        setSeoData({
+          metaTitle: pageDefaults.metaTitle || "",
+          metaDescription: pageDefaults.metaDescription || "",
+          canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
+          keywords: pageDefaults.keywords || "",
+          ogTitle: pageDefaults.metaTitle || "",
+          ogDescription: pageDefaults.metaDescription || "",
+          ogImage: pageDefaults.ogImage || "",
+          twitterTitle: pageDefaults.metaTitle || "",
+          twitterDescription: pageDefaults.metaDescription || "",
+          twitterImage: pageDefaults.ogImage || "",
+          robotsIndex: true,
+          robotsFollow: true,
+          schemaType: "WebPage",
+          schemaData: ""
+        });
       } else {
-        console.log('SEOManager: Setting default SEO data for page:', selectedPage);
+        console.log('SEOManager: No data or defaults, setting empty defaults for page:', selectedPage);
         // Set defaults with page-specific canonical URL
         setSeoData({
           ...defaultSEOData,
@@ -87,7 +108,7 @@ export default function SEOManager() {
         });
       }
     }
-  }, [selectedPage, pageSEOData, dataLoading]);
+  }, [selectedPage, pageSEOData, pageDefaults, dataLoading]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
     console.log('SEOManager: Field changed:', field, 'new value:', value);
@@ -129,11 +150,32 @@ export default function SEOManager() {
 
   const handleReset = () => {
     console.log('SEOManager: Resetting SEO data for page:', selectedPage);
-    setSeoData({
-      ...defaultSEOData,
-      canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
-    });
-    toast.info("SEO fields reset to default values");
+    if (pageDefaults) {
+      // Reset to page defaults
+      setSeoData({
+        metaTitle: pageDefaults.metaTitle || "",
+        metaDescription: pageDefaults.metaDescription || "",
+        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
+        keywords: pageDefaults.keywords || "",
+        ogTitle: pageDefaults.metaTitle || "",
+        ogDescription: pageDefaults.metaDescription || "",
+        ogImage: pageDefaults.ogImage || "",
+        twitterTitle: pageDefaults.metaTitle || "",
+        twitterDescription: pageDefaults.metaDescription || "",
+        twitterImage: pageDefaults.ogImage || "",
+        robotsIndex: true,
+        robotsFollow: true,
+        schemaType: "WebPage",
+        schemaData: ""
+      });
+      toast.info("SEO fields reset to page defaults");
+    } else {
+      setSeoData({
+        ...defaultSEOData,
+        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
+      });
+      toast.info("SEO fields reset to default values");
+    }
   };
 
   const getCharacterCount = (text: string, limit: number) => {
@@ -144,6 +186,9 @@ export default function SEOManager() {
       </span>
     );
   };
+
+  const isUsingDefaults = !pageSEOData && pageDefaults;
+  const isCustomized = !!pageSEOData;
 
   return (
     <div className="space-y-6">
@@ -172,15 +217,29 @@ export default function SEOManager() {
                 ))}
               </SelectContent>
             </Select>
-            {dataLoading && (
-              <p className="text-sm text-gray-500 mt-1">Loading SEO data...</p>
-            )}
-            {pageSEOData && !dataLoading && (
-              <p className="text-sm text-green-600 mt-1">✓ SEO data found for this page</p>
-            )}
-            {!pageSEOData && !dataLoading && (
-              <p className="text-sm text-orange-600 mt-1">No SEO data saved for this page yet</p>
-            )}
+            
+            {/* Status indicators */}
+            <div className="mt-2 flex items-center gap-2">
+              {dataLoading && (
+                <p className="text-sm text-gray-500">Loading SEO data...</p>
+              )}
+              {isCustomized && !dataLoading && (
+                <Badge variant="default" className="bg-blue-100 text-blue-700">
+                  <Info className="h-3 w-3 mr-1" />
+                  Custom SEO data saved
+                </Badge>
+              )}
+              {isUsingDefaults && !dataLoading && (
+                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                  Using page defaults
+                </Badge>
+              )}
+              {!pageDefaults && !pageSEOData && !dataLoading && (
+                <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
+                  No defaults configured
+                </Badge>
+              )}
+            </div>
           </div>
 
           <Tabs defaultValue="basic" className="w-full">
@@ -403,7 +462,7 @@ export default function SEOManager() {
 
           <div className="flex justify-between items-center mt-6 pt-6 border-t">
             <Button variant="outline" onClick={handleReset}>
-              Reset to Default
+              {pageDefaults ? "Reset to Page Defaults" : "Reset to Empty"}
             </Button>
             <div className="space-x-2">
               <Button variant="outline" onClick={() => window.open(selectedPage, '_blank')}>

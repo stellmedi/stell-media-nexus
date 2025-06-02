@@ -20,32 +20,32 @@ export default function SEOHelmet({
   defaultOgImage = '',
   children
 }: SEOHelmetProps) {
-  const { seoData, isLoading } = usePageSEO(pagePath);
+  const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
 
   console.log('SEOHelmet: Rendering for page:', pagePath);
   console.log('SEOHelmet: Saved SEO data:', seoData);
+  console.log('SEOHelmet: Page defaults:', pageDefaults);
   console.log('SEOHelmet: Loading state:', isLoading);
-  console.log('SEOHelmet: Default values:', { defaultTitle, defaultDescription, defaultKeywords, defaultOgImage });
 
   // Show loading state briefly to prevent hydration issues
   if (isLoading) {
     return (
       <Helmet>
-        {defaultTitle && <title>{defaultTitle}</title>}
-        {defaultDescription && <meta name="description" content={defaultDescription} />}
+        {(defaultTitle || pageDefaults?.metaTitle) && <title>{defaultTitle || pageDefaults?.metaTitle}</title>}
+        {(defaultDescription || pageDefaults?.metaDescription) && <meta name="description" content={defaultDescription || pageDefaults?.metaDescription} />}
         {children}
       </Helmet>
     );
   }
 
-  // Use saved SEO data if available, otherwise fall back to defaults
-  const metaTitle = seoData?.metaTitle || defaultTitle;
-  const metaDescription = seoData?.metaDescription || defaultDescription;
-  const keywords = seoData?.keywords || defaultKeywords;
+  // Priority: saved data > page defaults > component props
+  const metaTitle = seoData?.metaTitle || pageDefaults?.metaTitle || defaultTitle;
+  const metaDescription = seoData?.metaDescription || pageDefaults?.metaDescription || defaultDescription;
+  const keywords = seoData?.keywords || pageDefaults?.keywords || defaultKeywords;
   const canonicalUrl = seoData?.canonicalUrl || `https://stellmedia.com${pagePath === '/' ? '' : pagePath}`;
   const ogTitle = seoData?.ogTitle || metaTitle;
   const ogDescription = seoData?.ogDescription || metaDescription;
-  const ogImage = seoData?.ogImage || defaultOgImage;
+  const ogImage = seoData?.ogImage || pageDefaults?.ogImage || defaultOgImage;
   const twitterTitle = seoData?.twitterTitle || ogTitle;
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;

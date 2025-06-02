@@ -1,5 +1,6 @@
 
 import { useEffect, useState } from 'react';
+import { getPageDefaults } from '@/config/seoDefaults';
 
 interface SEOData {
   metaTitle: string;
@@ -25,24 +26,31 @@ interface PageSEOData {
 export function usePageSEO(pagePath: string) {
   const [seoData, setSeoData] = useState<SEOData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [pageDefaults, setPageDefaults] = useState<any>(null);
 
   useEffect(() => {
     const loadSEOData = () => {
       console.log('usePageSEO: Loading SEO data for page:', pagePath);
+      
+      // Get page defaults first
+      const defaults = getPageDefaults(pagePath);
+      setPageDefaults(defaults);
+      console.log('usePageSEO: Page defaults:', defaults);
+
       try {
         const savedSEOData = localStorage.getItem('stellmedia_page_seo');
         if (savedSEOData) {
           const parsedData: PageSEOData = JSON.parse(savedSEOData);
           console.log('usePageSEO: All saved SEO data:', parsedData);
           if (parsedData[pagePath]) {
-            console.log('usePageSEO: Found SEO data for page:', pagePath, parsedData[pagePath]);
+            console.log('usePageSEO: Found saved SEO data for page:', pagePath, parsedData[pagePath]);
             setSeoData(parsedData[pagePath]);
           } else {
-            console.log('usePageSEO: No SEO data found for page:', pagePath);
+            console.log('usePageSEO: No saved SEO data for page, will use defaults:', pagePath);
             setSeoData(null);
           }
         } else {
-          console.log('usePageSEO: No SEO data in localStorage');
+          console.log('usePageSEO: No SEO data in localStorage, will use defaults');
           setSeoData(null);
         }
       } catch (error) {
@@ -79,7 +87,7 @@ export function usePageSEO(pagePath: string) {
     };
   }, [pagePath]);
 
-  return { seoData, isLoading };
+  return { seoData, isLoading, pageDefaults };
 }
 
 export function getAllPageSEO(): PageSEOData {
