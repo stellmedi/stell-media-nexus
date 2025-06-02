@@ -1,9 +1,14 @@
-
 export interface PageSEODefaults {
   metaTitle: string;
   metaDescription: string;
   keywords: string;
   ogImage: string;
+}
+
+export interface GlobalSEOConfig {
+  googleAnalyticsId: string;
+  googleSearchConsoleVerification: string;
+  googleTagManagerId: string;
 }
 
 export const seoDefaults: Record<string, PageSEODefaults> = {
@@ -89,4 +94,39 @@ export const seoDefaults: Record<string, PageSEODefaults> = {
 
 export function getPageDefaults(pagePath: string): PageSEODefaults | null {
   return seoDefaults[pagePath] || null;
+}
+
+export function getGlobalSEOConfig(): GlobalSEOConfig {
+  try {
+    const savedConfig = localStorage.getItem('stellmedia_global_seo');
+    if (savedConfig) {
+      return JSON.parse(savedConfig);
+    }
+  } catch (error) {
+    console.error('Error loading global SEO config:', error);
+  }
+  
+  // Return defaults if no saved config
+  return {
+    googleAnalyticsId: '',
+    googleSearchConsoleVerification: '',
+    googleTagManagerId: ''
+  };
+}
+
+export function saveGlobalSEOConfig(config: GlobalSEOConfig): boolean {
+  try {
+    localStorage.setItem('stellmedia_global_seo', JSON.stringify(config));
+    
+    // Dispatch custom event to notify components
+    const configUpdateEvent = new CustomEvent('globalSEOConfigUpdated', {
+      detail: config
+    });
+    window.dispatchEvent(configUpdateEvent);
+    
+    return true;
+  } catch (error) {
+    console.error('Error saving global SEO config:', error);
+    return false;
+  }
 }

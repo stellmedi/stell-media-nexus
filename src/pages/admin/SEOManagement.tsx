@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -5,6 +6,7 @@ import AdminLayout from "@/components/admin/AdminLayout";
 import SEOManager from "@/components/admin/SEOManager";
 import ContentMetadataDisplay from "@/components/admin/ContentMetadataDisplay";
 import SEOVerification from "@/components/admin/SEOVerification";
+import GlobalSEOManager from "@/components/admin/GlobalSEOManager";
 import { useAuth } from "@/hooks/use-auth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -31,18 +33,23 @@ const SEOManagement: React.FC = () => {
         <div className="p-6">
           <header className="mb-6">
             <h1 className="text-2xl font-bold text-gray-900">SEO Management</h1>
-            <p className="text-gray-600">Manage SEO metadata and view content overview</p>
+            <p className="text-gray-600">Manage SEO metadata, analytics, and global settings</p>
           </header>
           
           <Tabs defaultValue="seo-manager" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="seo-manager">SEO Editor</TabsTrigger>
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="seo-manager">Page SEO</TabsTrigger>
+              <TabsTrigger value="global-settings">Global Settings</TabsTrigger>
               <TabsTrigger value="verification">Verification</TabsTrigger>
-              <TabsTrigger value="content-overview">Content Overview</TabsTrigger>
+              <TabsTrigger value="content-overview">Overview</TabsTrigger>
             </TabsList>
             
             <TabsContent value="seo-manager" className="mt-6">
               <SEOManager />
+            </TabsContent>
+            
+            <TabsContent value="global-settings" className="mt-6">
+              <GlobalSEOManager />
             </TabsContent>
             
             <TabsContent value="verification" className="mt-6">

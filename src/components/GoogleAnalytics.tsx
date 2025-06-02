@@ -1,30 +1,55 @@
 
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
+import { useGlobalSEO } from '@/hooks/use-global-seo';
 
-interface GoogleAnalyticsProps {
-  trackingId?: string;
-}
+const GoogleAnalytics: React.FC = () => {
+  const { config, isLoading } = useGlobalSEO();
 
-const GoogleAnalytics: React.FC<GoogleAnalyticsProps> = ({ 
-  trackingId = 'G-XXXXXXXXXX' // Default placeholder - to be configured in admin
-}) => {
+  console.log('GoogleAnalytics: Config loaded:', config);
+  console.log('GoogleAnalytics: Loading state:', isLoading);
+
+  // Don't render if loading or no tracking ID
+  if (isLoading || !config.googleAnalyticsId) {
+    return null;
+  }
+
   return (
     <Helmet>
       {/* Google Analytics 4 */}
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`} />
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`} />
       <script>
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${trackingId}', {
+          gtag('config', '${config.googleAnalyticsId}', {
             page_title: document.title,
             page_location: window.location.href
           });
         `}
       </script>
       
+      {/* Google Search Console Verification */}
+      {config.googleSearchConsoleVerification && (
+        <meta name="google-site-verification" content={config.googleSearchConsoleVerification} />
+      )}
+      
+      {/* Google Tag Manager */}
+      {config.googleTagManagerId && (
+        <>
+          <script>
+            {`
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer','${config.googleTagManagerId}');
+            `}
+          </script>
+        </>
+      )}
+
       {/* Enhanced SEO for AI Tools */}
       <meta name="ai-content-type" content="e-commerce optimization services" />
       <meta name="ai-expertise" content="product discovery, search optimization, conversion optimization, SEO, SEM, data enrichment" />
