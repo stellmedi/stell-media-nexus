@@ -4,16 +4,21 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useGlobalSEO } from '@/hooks/use-global-seo';
-import { Globe, BarChart3, Search } from 'lucide-react';
+import { Globe, BarChart3, Search, Bot, Brain } from 'lucide-react';
 
 const GlobalSEOManager: React.FC = () => {
   const { config, isLoading, updateConfig } = useGlobalSEO();
   const [formData, setFormData] = useState({
     googleAnalyticsId: '',
     googleSearchConsoleVerification: '',
-    googleTagManagerId: ''
+    googleTagManagerId: '',
+    enableAISEO: true,
+    aiCrawlerInstructions: '',
+    perplexityOptimization: true,
+    chatgptOptimization: true
   });
   const [isSaving, setIsSaving] = useState(false);
 
@@ -24,7 +29,7 @@ const GlobalSEOManager: React.FC = () => {
     }
   }, [config, isLoading]);
 
-  const handleInputChange = (field: string, value: string) => {
+  const handleInputChange = (field: string, value: string | boolean) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -150,6 +155,83 @@ const GlobalSEOManager: React.FC = () => {
             <p className="text-xs text-gray-500">
               Enter your Google Tag Manager container ID (starts with GTM-)
             </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Bot className="h-5 w-5" />
+            AI Search Engine Optimization
+          </CardTitle>
+          <CardDescription>
+            Configure global settings for AI-powered search engines like ChatGPT and Perplexity
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="enable-ai-seo"
+                checked={formData.enableAISEO}
+                onChange={(e) => handleInputChange('enableAISEO', e.target.checked)}
+                className="rounded"
+              />
+              <Label htmlFor="enable-ai-seo">Enable AI SEO optimization globally</Label>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="ai-crawler-instructions">Global AI Crawler Instructions</Label>
+              <Textarea
+                id="ai-crawler-instructions"
+                value={formData.aiCrawlerInstructions}
+                onChange={(e) => handleInputChange('aiCrawlerInstructions', e.target.value)}
+                placeholder="Global instructions for AI crawlers about your website content"
+                className="min-h-[80px]"
+              />
+              <p className="text-xs text-gray-500">
+                These instructions will be included globally for AI search engines
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Brain className="h-5 w-5" />
+            AI Platform Specific Settings
+          </CardTitle>
+          <CardDescription>
+            Enable or disable optimization for specific AI platforms
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="perplexity-optimization"
+                checked={formData.perplexityOptimization}
+                onChange={(e) => handleInputChange('perplexityOptimization', e.target.checked)}
+                className="rounded"
+              />
+              <Label htmlFor="perplexity-optimization">Enable Perplexity AI optimization</Label>
+            </div>
+            
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="chatgpt-optimization"
+                checked={formData.chatgptOptimization}
+                onChange={(e) => handleInputChange('chatgptOptimization', e.target.checked)}
+                className="rounded"
+              />
+              <Label htmlFor="chatgpt-optimization">Enable ChatGPT/OpenAI optimization</Label>
+            </div>
           </div>
         </CardContent>
       </Card>

@@ -50,13 +50,34 @@ const GoogleAnalytics: React.FC = () => {
         </>
       )}
 
-      {/* Enhanced SEO for AI Tools */}
-      <meta name="ai-content-type" content="e-commerce optimization services" />
-      <meta name="ai-expertise" content="product discovery, search optimization, conversion optimization, SEO, SEM, data enrichment" />
-      <meta name="ai-service-focus" content="e-commerce platform optimization and configuration" />
-      <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-      <meta name="googlebot" content="index, follow" />
-      
+      {/* AI SEO Meta Tags */}
+      {config.enableAISEO && (
+        <>
+          <meta name="ai-content-type" content="e-commerce optimization services" />
+          <meta name="ai-expertise" content="product discovery, search optimization, conversion optimization, SEO, SEM, data enrichment" />
+          <meta name="ai-service-focus" content="e-commerce platform optimization and configuration" />
+          <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+          <meta name="googlebot" content="index, follow" />
+          
+          {/* AI Crawler Instructions */}
+          {config.aiCrawlerInstructions && (
+            <meta name="ai-crawler-instructions" content={config.aiCrawlerInstructions} />
+          )}
+          
+          {/* AI Platform Specific Meta Tags */}
+          {config.chatgptOptimization && (
+            <>
+              <meta name="chatgpt-crawl" content="allowed" />
+              <meta name="openai-crawl" content="allowed" />
+            </>
+          )}
+          
+          {config.perplexityOptimization && (
+            <meta name="perplexity-crawl" content="allowed" />
+          )}
+        </>
+      )}
+
       {/* Enhanced Schema for AI Understanding */}
       <script type="application/ld+json">
         {`

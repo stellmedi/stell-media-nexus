@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Globe, FileText, Share2, Code, BarChart3, Info } from "lucide-react";
+import { Search, Globe, FileText, Share2, Code, BarChart3, Info, Bot, Brain } from "lucide-react";
 import { usePageSEO, saveSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
@@ -26,6 +26,15 @@ interface SEOData {
   robotsFollow: boolean;
   schemaType: string;
   schemaData: string;
+  // AI SEO fields
+  aiContentType: string;
+  aiExpertise: string;
+  aiServiceFocus: string;
+  aiTargetAudience: string;
+  aiContentFormat: string;
+  aiCrawlerInstructions: string;
+  enablePerplexityOptimization: boolean;
+  enableChatGPTOptimization: boolean;
 }
 
 const defaultSEOData: SEOData = {
@@ -42,7 +51,16 @@ const defaultSEOData: SEOData = {
   robotsIndex: true,
   robotsFollow: true,
   schemaType: "WebPage",
-  schemaData: ""
+  schemaData: "",
+  // AI SEO defaults
+  aiContentType: "",
+  aiExpertise: "",
+  aiServiceFocus: "",
+  aiTargetAudience: "",
+  aiContentFormat: "",
+  aiCrawlerInstructions: "",
+  enablePerplexityOptimization: true,
+  enableChatGPTOptimization: true
 };
 
 const availablePages = [
@@ -97,7 +115,16 @@ export default function SEOManager() {
           robotsIndex: true,
           robotsFollow: true,
           schemaType: "WebPage",
-          schemaData: ""
+          schemaData: "",
+          // AI SEO fields from defaults
+          aiContentType: pageDefaults.aiContentType || "",
+          aiExpertise: pageDefaults.aiExpertise || "",
+          aiServiceFocus: pageDefaults.aiServiceFocus || "",
+          aiTargetAudience: pageDefaults.aiTargetAudience || "",
+          aiContentFormat: pageDefaults.aiContentFormat || "",
+          aiCrawlerInstructions: "",
+          enablePerplexityOptimization: true,
+          enableChatGPTOptimization: true
         });
       } else {
         console.log('SEOManager: No data or defaults, setting empty defaults for page:', selectedPage);
@@ -166,7 +193,16 @@ export default function SEOManager() {
         robotsIndex: true,
         robotsFollow: true,
         schemaType: "WebPage",
-        schemaData: ""
+        schemaData: "",
+        // AI SEO fields from defaults
+        aiContentType: pageDefaults.aiContentType || "",
+        aiExpertise: pageDefaults.aiExpertise || "",
+        aiServiceFocus: pageDefaults.aiServiceFocus || "",
+        aiTargetAudience: pageDefaults.aiTargetAudience || "",
+        aiContentFormat: pageDefaults.aiContentFormat || "",
+        aiCrawlerInstructions: "",
+        enablePerplexityOptimization: true,
+        enableChatGPTOptimization: true
       });
       toast.info("SEO fields reset to page defaults");
     } else {
@@ -199,7 +235,7 @@ export default function SEOManager() {
             SEO Management
           </CardTitle>
           <CardDescription>
-            Manage SEO metadata for all pages on your website
+            Manage SEO metadata for all pages on your website, including AI SEO optimization
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -243,10 +279,11 @@ export default function SEOManager() {
           </div>
 
           <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-4">
+            <TabsList className="grid w-full grid-cols-5">
               <TabsTrigger value="basic">Basic SEO</TabsTrigger>
               <TabsTrigger value="social">Social Media</TabsTrigger>
               <TabsTrigger value="technical">Technical</TabsTrigger>
+              <TabsTrigger value="ai-seo">AI SEO</TabsTrigger>
               <TabsTrigger value="schema">Schema</TabsTrigger>
             </TabsList>
 
@@ -418,6 +455,132 @@ export default function SEOManager() {
                         className="rounded"
                       />
                       <Label htmlFor="robots-follow">Allow search engines to follow links on this page</Label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="ai-seo" className="space-y-4">
+              <div className="grid gap-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <Bot className="h-4 w-4" />
+                    AI Search Engine Optimization
+                  </h3>
+                  <p className="text-sm text-gray-600 mb-4">
+                    Optimize your content for AI-powered search engines like ChatGPT, Perplexity, and other AI crawlers.
+                  </p>
+                  
+                  <div className="grid gap-4">
+                    <div>
+                      <Label htmlFor="ai-content-type">AI Content Type</Label>
+                      <Input
+                        id="ai-content-type"
+                        value={seoData.aiContentType}
+                        onChange={(e) => handleInputChange('aiContentType', e.target.value)}
+                        placeholder="e.g., e-commerce services, educational content, product information"
+                        className="mt-1"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">Help AI understand what type of content this is</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ai-expertise">AI Expertise Areas</Label>
+                      <Input
+                        id="ai-expertise"
+                        value={seoData.aiExpertise}
+                        onChange={(e) => handleInputChange('aiExpertise', e.target.value)}
+                        placeholder="e.g., SEO, e-commerce optimization, product discovery"
+                        className="mt-1"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">Comma-separated list of expertise areas</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ai-service-focus">AI Service Focus</Label>
+                      <Input
+                        id="ai-service-focus"
+                        value={seoData.aiServiceFocus}
+                        onChange={(e) => handleInputChange('aiServiceFocus', e.target.value)}
+                        placeholder="e.g., improving conversion rates, optimizing product discovery"
+                        className="mt-1"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">What specific problems does this content solve?</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ai-target-audience">AI Target Audience</Label>
+                      <Input
+                        id="ai-target-audience"
+                        value={seoData.aiTargetAudience}
+                        onChange={(e) => handleInputChange('aiTargetAudience', e.target.value)}
+                        placeholder="e.g., e-commerce businesses, digital marketers, online retailers"
+                        className="mt-1"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">Who is this content intended for?</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ai-content-format">AI Content Format</Label>
+                      <Select value={seoData.aiContentFormat} onValueChange={(value) => handleInputChange('aiContentFormat', value)}>
+                        <SelectTrigger className="mt-1">
+                          <SelectValue placeholder="Select content format" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="service landing page">Service Landing Page</SelectItem>
+                          <SelectItem value="about page">About Page</SelectItem>
+                          <SelectItem value="service detail page">Service Detail Page</SelectItem>
+                          <SelectItem value="blog content">Blog Content</SelectItem>
+                          <SelectItem value="case study content">Case Study Content</SelectItem>
+                          <SelectItem value="FAQ page">FAQ Page</SelectItem>
+                          <SelectItem value="contact page">Contact Page</SelectItem>
+                          <SelectItem value="careers page">Careers Page</SelectItem>
+                          <SelectItem value="educational content">Educational Content</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <p className="text-sm text-gray-500 mt-1">Type of content format for AI understanding</p>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="ai-crawler-instructions">AI Crawler Instructions</Label>
+                      <Textarea
+                        id="ai-crawler-instructions"
+                        value={seoData.aiCrawlerInstructions}
+                        onChange={(e) => handleInputChange('aiCrawlerInstructions', e.target.value)}
+                        placeholder="Special instructions for AI crawlers about how to interpret this content"
+                        className="mt-1 min-h-[80px]"
+                      />
+                      <p className="text-sm text-gray-500 mt-1">Specific instructions for AI search engines</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                    <Brain className="h-4 w-4" />
+                    AI Platform Optimization
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="enable-perplexity"
+                        checked={seoData.enablePerplexityOptimization}
+                        onChange={(e) => handleInputChange('enablePerplexityOptimization', e.target.checked)}
+                        className="rounded"
+                      />
+                      <Label htmlFor="enable-perplexity">Enable Perplexity AI optimization</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="enable-chatgpt"
+                        checked={seoData.enableChatGPTOptimization}
+                        onChange={(e) => handleInputChange('enableChatGPTOptimization', e.target.checked)}
+                        className="rounded"
+                      />
+                      <Label htmlFor="enable-chatgpt">Enable ChatGPT optimization</Label>
                     </div>
                   </div>
                 </div>

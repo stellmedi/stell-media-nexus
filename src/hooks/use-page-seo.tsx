@@ -17,6 +17,15 @@ interface SEOData {
   robotsFollow: boolean;
   schemaType: string;
   schemaData: string;
+  // AI SEO fields
+  aiContentType: string;
+  aiExpertise: string;
+  aiServiceFocus: string;
+  aiTargetAudience: string;
+  aiContentFormat: string;
+  aiCrawlerInstructions: string;
+  enablePerplexityOptimization: boolean;
+  enableChatGPTOptimization: boolean;
 }
 
 interface PageSEOData {

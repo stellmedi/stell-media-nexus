@@ -2,6 +2,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { usePageSEO } from '@/hooks/use-page-seo';
+import { useGlobalSEO } from '@/hooks/use-global-seo';
 
 interface SEOHelmetProps {
   pagePath: string;
@@ -21,11 +22,13 @@ export default function SEOHelmet({
   children
 }: SEOHelmetProps) {
   const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
+  const { config: globalConfig } = useGlobalSEO();
 
   console.log('SEOHelmet: Rendering for page:', pagePath);
   console.log('SEOHelmet: Saved SEO data:', seoData);
   console.log('SEOHelmet: Page defaults:', pageDefaults);
   console.log('SEOHelmet: Loading state:', isLoading);
+  console.log('SEOHelmet: Global config:', globalConfig);
 
   // Show loading state briefly to prevent hydration issues
   if (isLoading) {
@@ -50,6 +53,14 @@ export default function SEOHelmet({
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;
 
+  // AI SEO fields
+  const aiContentType = seoData?.aiContentType || pageDefaults?.aiContentType;
+  const aiExpertise = seoData?.aiExpertise || pageDefaults?.aiExpertise;
+  const aiServiceFocus = seoData?.aiServiceFocus || pageDefaults?.aiServiceFocus;
+  const aiTargetAudience = seoData?.aiTargetAudience || pageDefaults?.aiTargetAudience;
+  const aiContentFormat = seoData?.aiContentFormat || pageDefaults?.aiContentFormat;
+  const aiCrawlerInstructions = seoData?.aiCrawlerInstructions || globalConfig?.aiCrawlerInstructions;
+
   console.log('SEOHelmet: Final values being used:', {
     metaTitle,
     metaDescription,
@@ -60,7 +71,12 @@ export default function SEOHelmet({
     ogImage,
     twitterTitle,
     twitterDescription,
-    twitterImage
+    twitterImage,
+    aiContentType,
+    aiExpertise,
+    aiServiceFocus,
+    aiTargetAudience,
+    aiContentFormat
   });
 
   // Generate robots content
@@ -89,6 +105,30 @@ export default function SEOHelmet({
       {twitterTitle && <meta name="twitter:title" content={twitterTitle} />}
       {twitterDescription && <meta name="twitter:description" content={twitterDescription} />}
       {twitterImage && <meta name="twitter:image" content={twitterImage} />}
+      
+      {/* AI SEO Meta Tags */}
+      {globalConfig?.enableAISEO && (
+        <>
+          {aiContentType && <meta name="ai-content-type" content={aiContentType} />}
+          {aiExpertise && <meta name="ai-expertise" content={aiExpertise} />}
+          {aiServiceFocus && <meta name="ai-service-focus" content={aiServiceFocus} />}
+          {aiTargetAudience && <meta name="ai-target-audience" content={aiTargetAudience} />}
+          {aiContentFormat && <meta name="ai-content-format" content={aiContentFormat} />}
+          {aiCrawlerInstructions && <meta name="ai-crawler-instructions" content={aiCrawlerInstructions} />}
+          
+          {/* AI Platform Specific Meta Tags */}
+          {(seoData?.enableChatGPTOptimization !== false && globalConfig?.chatgptOptimization) && (
+            <>
+              <meta name="chatgpt-crawl" content="allowed" />
+              <meta name="openai-crawl" content="allowed" />
+            </>
+          )}
+          
+          {(seoData?.enablePerplexityOptimization !== false && globalConfig?.perplexityOptimization) && (
+            <meta name="perplexity-crawl" content="allowed" />
+          )}
+        </>
+      )}
       
       {/* Additional custom meta tags from children */}
       {children}
