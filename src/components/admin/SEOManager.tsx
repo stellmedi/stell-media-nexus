@@ -8,8 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Globe, FileText, Share2, Code, BarChart3, Info, Bot, Brain } from "lucide-react";
-import { usePageSEO, saveSEOData } from "@/hooks/use-page-seo";
+import { Search, Globe, FileText, Share2, Code, BarChart3, Info, Bot, Brain, Save, RotateCcw } from "lucide-react";
+import { usePageSEO, saveSEOData, deleteSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
   metaTitle: string;
@@ -83,6 +83,7 @@ export default function SEOManager() {
   const [selectedPage, setSelectedPage] = useState("/");
   const [seoData, setSeoData] = useState<SEOData>(defaultSEOData);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
   // Use the hook to get SEO data for the selected page
   const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
@@ -98,6 +99,7 @@ export default function SEOManager() {
       if (pageSEOData) {
         console.log('SEOManager: Setting existing saved SEO data for page:', selectedPage);
         setSeoData(pageSEOData);
+        setHasUnsavedChanges(false);
       } else if (pageDefaults) {
         console.log('SEOManager: Setting page defaults for page:', selectedPage);
         // Use page defaults as starting point
@@ -126,6 +128,7 @@ export default function SEOManager() {
           enablePerplexityOptimization: true,
           enableChatGPTOptimization: true
         });
+        setHasUnsavedChanges(false);
       } else {
         console.log('SEOManager: No data or defaults, setting empty defaults for page:', selectedPage);
         // Set defaults with page-specific canonical URL
@@ -133,6 +136,7 @@ export default function SEOManager() {
           ...defaultSEOData,
           canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
         });
+        setHasUnsavedChanges(false);
       }
     }
   }, [selectedPage, pageSEOData, pageDefaults, dataLoading]);
@@ -143,32 +147,46 @@ export default function SEOManager() {
       ...prev,
       [field]: value
     }));
+    setHasUnsavedChanges(true);
   };
 
   const handlePageChange = (newPage: string) => {
+    if (hasUnsavedChanges) {
+      if (!confirm('You have unsaved changes. Are you sure you want to switch pages?')) {
+        return;
+      }
+    }
     console.log('SEOManager: Page changed from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
+    setHasUnsavedChanges(false);
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     console.log('SEOManager: Saving SEO data for page:', selectedPage);
     console.log('SEOManager: Current seoData:', seoData);
     setIsLoading(true);
     
     try {
+      // Add a small delay to ensure UI feedback
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
       const success = saveSEOData(selectedPage, seoData);
       
       if (success) {
+        setHasUnsavedChanges(false);
         toast.success("SEO settings saved successfully!", {
-          description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`
+          description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`,
+          duration: 3000
         });
+        console.log('SEOManager: Save completed successfully');
       } else {
         throw new Error('Failed to save SEO data');
       }
     } catch (error) {
       console.error('SEOManager: Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
-        description: "Please try again."
+        description: "Please try again. Check the console for more details.",
+        duration: 5000
       });
     } finally {
       setIsLoading(false);
@@ -176,6 +194,10 @@ export default function SEOManager() {
   };
 
   const handleReset = () => {
+    if (hasUnsavedChanges && !confirm('Are you sure you want to reset? This will lose your unsaved changes.')) {
+      return;
+    }
+    
     console.log('SEOManager: Resetting SEO data for page:', selectedPage);
     if (pageDefaults) {
       // Reset to page defaults
@@ -204,13 +226,36 @@ export default function SEOManager() {
         enablePerplexityOptimization: true,
         enableChatGPTOptimization: true
       });
+      setHasUnsavedChanges(false);
       toast.info("SEO fields reset to page defaults");
     } else {
       setSeoData({
         ...defaultSEOData,
         canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
       });
+      setHasUnsavedChanges(false);
       toast.info("SEO fields reset to default values");
+    }
+  };
+
+  const handleDeleteSavedData = () => {
+    if (!pageSEOData) {
+      toast.info("No saved data to delete for this page");
+      return;
+    }
+    
+    if (!confirm('Are you sure you want to delete the saved SEO data for this page? This will revert to using page defaults.')) {
+      return;
+    }
+    
+    console.log('SEOManager: Deleting saved SEO data for page:', selectedPage);
+    const success = deleteSEOData(selectedPage);
+    
+    if (success) {
+      toast.success("Saved SEO data deleted successfully");
+      // The useEffect will automatically reload the defaults
+    } else {
+      toast.error("Failed to delete saved SEO data");
     }
   };
 
@@ -233,6 +278,11 @@ export default function SEOManager() {
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
             SEO Management
+            {hasUnsavedChanges && (
+              <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                Unsaved Changes
+              </Badge>
+            )}
           </CardTitle>
           <CardDescription>
             Manage SEO metadata for all pages on your website, including AI SEO optimization
@@ -255,7 +305,7 @@ export default function SEOManager() {
             </Select>
             
             {/* Status indicators */}
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-2 flex items-center gap-2 flex-wrap">
               {dataLoading && (
                 <p className="text-sm text-gray-500">Loading SEO data...</p>
               )}
@@ -273,6 +323,11 @@ export default function SEOManager() {
               {!pageDefaults && !pageSEOData && !dataLoading && (
                 <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
                   No defaults configured
+                </Badge>
+              )}
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                  Has unsaved changes
                 </Badge>
               )}
             </div>
@@ -624,15 +679,28 @@ export default function SEOManager() {
           </Tabs>
 
           <div className="flex justify-between items-center mt-6 pt-6 border-t">
-            <Button variant="outline" onClick={handleReset}>
-              {pageDefaults ? "Reset to Page Defaults" : "Reset to Empty"}
-            </Button>
+            <div className="space-x-2">
+              <Button variant="outline" onClick={handleReset} disabled={isLoading || dataLoading}>
+                <RotateCcw className="h-4 w-4 mr-1" />
+                {pageDefaults ? "Reset to Page Defaults" : "Reset to Empty"}
+              </Button>
+              {isCustomized && (
+                <Button variant="outline" onClick={handleDeleteSavedData} disabled={isLoading || dataLoading}>
+                  Delete Saved Data
+                </Button>
+              )}
+            </div>
             <div className="space-x-2">
               <Button variant="outline" onClick={() => window.open(selectedPage, '_blank')}>
                 Preview Page
               </Button>
-              <Button onClick={handleSave} disabled={isLoading || dataLoading}>
-                {isLoading ? "Saving..." : "Save SEO Settings"}
+              <Button 
+                onClick={handleSave} 
+                disabled={isLoading || dataLoading || !hasUnsavedChanges}
+                className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+              >
+                <Save className="h-4 w-4 mr-1" />
+                {isLoading ? "Saving..." : hasUnsavedChanges ? "Save Changes" : "Saved"}
               </Button>
             </div>
           </div>
