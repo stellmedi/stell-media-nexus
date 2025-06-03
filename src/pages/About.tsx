@@ -18,30 +18,6 @@ import {
 } from "lucide-react";
 
 const About = () => {
-  const teamMembers = [
-    {
-      name: "Saurav Bansal",
-      position: "Founder & CEO",
-      bio: "18+ years in e-commerce optimization and digital transformation. Led initiatives at major retailers and technology companies.",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
-      linkedin: "#"
-    },
-    {
-      name: "Sarah Chen",
-      position: "Head of Product Discovery",
-      bio: "Expert in AI-powered search algorithms and machine learning. Former data scientist at leading e-commerce platforms.",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
-      linkedin: "#"
-    },
-    {
-      name: "Marcus Johnson",
-      position: "Technical Director",
-      bio: "Full-stack architect specializing in scalable e-commerce solutions. 15+ years building high-performance systems.",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=300&q=80",
-      linkedin: "#"
-    }
-  ];
-
   const values = [
     {
       icon: Target,
@@ -164,23 +140,19 @@ const About = () => {
         <section className="py-16 bg-indigo-50">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">Meet Our Team</h2>
-            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-              {teamMembers.map((member, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-square overflow-hidden">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <CardContent className="p-6">
-                    <h3 className="font-bold text-xl mb-1">{member.name}</h3>
-                    <p className="text-indigo-600 font-medium mb-3">{member.position}</p>
-                    <p className="text-gray-600 text-sm">{member.bio}</p>
-                  </CardContent>
-                </Card>
-              ))}
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="mb-8">
+                <img 
+                  src="/lovable-uploads/d1aeb466-efb1-4d25-900f-37414e5d0863.png" 
+                  alt="Stell Media Team - Our dedicated professionals working together to elevate your digital presence"
+                  className="w-full rounded-lg shadow-lg"
+                />
+              </div>
+              <p className="text-lg text-gray-600 leading-relaxed">
+                Our diverse team of experts brings together years of experience in e-commerce optimization, 
+                digital marketing, and technology. We're passionate about helping businesses achieve their 
+                full potential in the digital marketplace through innovative solutions and dedicated service.
+              </p>
             </div>
           </div>
         </section>
