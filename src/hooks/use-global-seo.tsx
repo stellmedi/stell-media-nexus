@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { getGlobalSEOConfig, saveGlobalSEOConfig, GlobalSEOConfig } from '@/config/seoDefaults';
 
@@ -6,7 +5,11 @@ export function useGlobalSEO() {
   const [config, setConfig] = useState<GlobalSEOConfig>({
     googleAnalyticsId: '',
     googleSearchConsoleVerification: '',
-    googleTagManagerId: ''
+    googleTagManagerId: '',
+    enableAISEO: true,
+    aiCrawlerInstructions: '',
+    perplexityOptimization: true,
+    chatgptOptimization: true
   });
   const [isLoading, setIsLoading] = useState(true);
 
