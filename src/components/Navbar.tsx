@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, MessageSquare } from "lucide-react";
@@ -116,7 +115,7 @@ const Navbar: React.FC = () => {
             Home
           </Link>
 
-          {/* Services Dropdown */}
+          {/* Services Dropdown - Clean implementation */}
           <div
             ref={dropdownRef}
             className="relative"
@@ -208,16 +207,16 @@ const Navbar: React.FC = () => {
             FAQ
           </Link>
 
-          {/* Desktop CTA Buttons - Fixed visibility */}
+          {/* Desktop CTA Buttons */}
           <div className="flex items-center gap-3">
             <Link to="/contact">
-              <Button variant="outline" size="sm" className="font-medium border-indigo-200 text-indigo-700 hover:bg-indigo-50">
+              <Button variant="outline" size="sm" className="font-medium">
                 Get Quote
               </Button>
             </Link>
             <Button
               onClick={handleWhatsAppClick}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white font-medium"
+              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
               size="sm"
             >
               <MessageSquare className="h-4 w-4" /> WhatsApp

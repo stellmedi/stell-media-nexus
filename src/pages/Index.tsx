@@ -10,7 +10,6 @@ import FAQSection from "@/components/FAQSection";
 import ClientLogos from "@/components/ClientLogos";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SEOHelmet from "@/components/SEOHelmet";
-import StickyHeader from "@/components/StickyHeader";
 
 const Index = () => {
   const faqItems = [
@@ -48,7 +47,6 @@ const Index = () => {
       
       <SiteSchemaMarkup />
       <Navbar />
-      <StickyHeader />
       <main>
         <HeroSection />
         <ClientLogos />
