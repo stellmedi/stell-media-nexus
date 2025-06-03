@@ -214,7 +214,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Fixed button visibility */}
         <section className="py-16 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-bold mb-6">Ready to Transform Your E-commerce Business?</h2>
@@ -223,7 +223,7 @@ const About = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/consultation">
-                <Button size="lg" variant="white" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold">
+                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold shadow-lg border-2 border-white">
                   <Briefcase className="mr-2 h-5 w-5" />
                   Get Started Today
                 </Button>

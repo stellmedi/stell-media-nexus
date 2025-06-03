@@ -53,14 +53,14 @@ const StickyHeader = () => {
           
           <div className="flex items-center gap-3">
             <Link to="/contact">
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" className="border-indigo-200 text-indigo-700 hover:bg-indigo-50">
                 Get Quote
               </Button>
             </Link>
             <Button 
               onClick={handleWhatsAppClick}
               size="sm"
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-green-600 hover:bg-green-700 text-white font-medium"
             >
               <MessageSquare className="h-4 w-4 mr-1" />
               Chat
