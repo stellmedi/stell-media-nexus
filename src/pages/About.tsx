@@ -6,6 +6,7 @@ import SEOHelmet from "@/components/SEOHelmet";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { 
   Users, 
   Target, 
@@ -221,14 +222,22 @@ const About = () => {
             <p className="text-xl mb-8 max-w-3xl mx-auto">
               Let's discuss how our expertise can help you achieve your optimization goals and drive sustainable growth.
             </p>
-            <div className="space-x-4">
-              <Button size="lg" variant="secondary" className="bg-white text-indigo-600 hover:bg-gray-100">
-                <Briefcase className="mr-2 h-5 w-5" />
-                Get Started Today
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-indigo-600">
-                Learn More <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link to="/consultation">
+                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold">
+                  <Briefcase className="mr-2 h-5 w-5" />
+                  Get Started Today
+                </Button>
+              </Link>
+              <Link to="/services">
+                <Button 
+                  size="lg" 
+                  variant="outline" 
+                  className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-indigo-600 font-semibold"
+                >
+                  Learn More <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
             </div>
           </div>
         </section>
