@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -224,7 +223,7 @@ const About = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <Link to="/consultation">
-                <Button size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold">
+                <Button size="lg" variant="white" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold">
                   <Briefcase className="mr-2 h-5 w-5" />
                   Get Started Today
                 </Button>
