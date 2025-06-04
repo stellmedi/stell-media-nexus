@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/form";
 import { Linkedin } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { sendEmail, EmailFormData, TEMPLATE_ID } from "@/utils/emailService";
 
 const formSchema = z.object({
   fullName: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -70,6 +71,36 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
     setFormError(null);
     
     try {
+      // Get resume file name for email
+      const resumeFile = data.resume[0];
+      const resumeFileName = resumeFile ? resumeFile.name : 'No resume uploaded';
+      
+      // Prepare email data for job application
+      const emailData: EmailFormData = {
+        name: data.fullName,
+        email: data.email,
+        phone: data.phone || "Not provided",
+        subject: `Job Application: ${jobTitle}`,
+        message: `
+New job application received for: ${jobTitle}
+
+Applicant Details:
+- Name: ${data.fullName}
+- Email: ${data.email}
+- Phone: ${data.phone || "Not provided"}
+- LinkedIn: ${data.linkedin || "Not provided"}
+- Resume: ${resumeFileName}
+
+Cover Letter:
+${data.coverLetter || "No cover letter provided"}
+
+Please review this application and contact the candidate if interested.
+        `.trim()
+      };
+      
+      // Send email to info@stellmedia.com
+      await sendEmail(TEMPLATE_ID, emailData);
+      
       // Log application for tracking
       console.log("Job application submitted for:", jobTitle, "by", data.fullName);
       
@@ -87,7 +118,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
       
     } catch (error) {
       console.error("Error in application:", error);
-      setFormError("There was a problem with your application. Please try again.");
+      setFormError("There was a problem submitting your application. Please try again or contact us directly at info@stellmedia.com.");
     } finally {
       setIsSubmitting(false);
     }
@@ -99,7 +130,7 @@ const JobApplicationForm: React.FC<JobApplicationFormProps> = ({
         <DialogHeader>
           <DialogTitle className="text-xl">Apply for {jobTitle}</DialogTitle>
           <DialogDescription>
-            Complete this form to apply for this position.
+            Complete this form to apply for this position. Your application will be sent to our HR team.
           </DialogDescription>
         </DialogHeader>
         
