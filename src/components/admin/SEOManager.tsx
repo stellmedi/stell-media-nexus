@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -162,15 +163,19 @@ export default function SEOManager() {
   };
 
   const handleSave = async () => {
-    console.log('SEOManager: Saving SEO data for page:', selectedPage);
-    console.log('SEOManager: Current seoData:', seoData);
+    console.log('SEOManager: Starting save operation for page:', selectedPage);
+    console.log('SEOManager: Current seoData to save:', seoData);
+    
     setIsLoading(true);
     
     try {
-      // Add a small delay to ensure UI feedback
-      await new Promise(resolve => setTimeout(resolve, 100));
+      // Add a small delay to show loading state
+      await new Promise(resolve => setTimeout(resolve, 200));
       
+      console.log('SEOManager: Calling saveSEOData function...');
       const success = saveSEOData(selectedPage, seoData);
+      
+      console.log('SEOManager: Save operation result:', success);
       
       if (success) {
         setHasUnsavedChanges(false);
@@ -179,8 +184,23 @@ export default function SEOManager() {
           duration: 3000
         });
         console.log('SEOManager: Save completed successfully');
+        
+        // Force a small delay to ensure localStorage is written before verification
+        setTimeout(() => {
+          const verification = localStorage.getItem('stellmedia_page_seo');
+          console.log('SEOManager: Post-save verification:', verification);
+          if (verification) {
+            try {
+              const parsed = JSON.parse(verification);
+              console.log('SEOManager: Verified saved data for page:', selectedPage, parsed[selectedPage]);
+            } catch (e) {
+              console.error('SEOManager: Verification parse error:', e);
+            }
+          }
+        }, 100);
+        
       } else {
-        throw new Error('Failed to save SEO data');
+        throw new Error('saveSEOData returned false');
       }
     } catch (error) {
       console.error('SEOManager: Error saving SEO settings:', error);
