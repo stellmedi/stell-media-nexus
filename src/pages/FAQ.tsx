@@ -16,7 +16,7 @@ const generalFAQs = [
   },
   {
     question: "What makes Stell Media different from other e-commerce agencies?",
-    answer: "Unlike traditional agencies, we focus specifically on technology-powered optimization solutions for e-commerce with large product catalogs. Our expertise in search optimization, data automation strategies, and AI-driven optimization allows us to handle complex e-commerce challenges at scale. We pride ourselves on our data-driven approach and measurable optimization results."
+    answer: "Unlike traditional agencies, we focus specifically on technology-powered optimization solutions for e-commerce with large product catalogs. Our expertise in search optimization, data automation strategies, and advanced optimization allows us to handle complex e-commerce challenges at scale. We pride ourselves on our data-driven approach and measurable optimization results."
   },
   {
     question: "How do you measure the success of your optimization services?",

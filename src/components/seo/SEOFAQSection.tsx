@@ -22,19 +22,19 @@ const SEOFAQSection: React.FC = () => {
     },
     {
       question: "How do you handle content optimization for SEO?",
-      answer: "We focus on scalable content optimization solutions including programmatically enhanced product descriptions, AI-assisted category page content optimization, automated internal linking optimization strategies, and targeted content gap analysis. We provide content optimization strategies and guidance rather than content creation services."
+      answer: "We focus on scalable content optimization solutions including enhanced product descriptions, category page content optimization, automated internal linking optimization strategies, and targeted content gap analysis. We provide content optimization strategies and guidance rather than content creation services."
     },
     {
       question: "How do you stay current with Google's algorithm updates for optimization?",
       answer: "We maintain a dedicated technical SEO research team that continuously monitors algorithm changes and tests their optimization impact. All clients benefit from our proactive approach to algorithm updates, including immediate optimization recommendations when significant changes occur."
     },
     {
-      question: "How do you optimize for AI and voice search?",
-      answer: "We optimize AI-friendly structured data and semantic markup to help AI systems understand your content better. Our optimization includes natural language processing techniques and question-based content optimization formats that align with how people use voice search and AI assistants to find products."
+      question: "How do you optimize for voice search and modern search behaviors?",
+      answer: "We optimize structured data and semantic markup to help search engines understand your content better. Our optimization includes question-based content optimization formats that align with how people use voice search and modern search behaviors to find products."
     },
     {
-      question: "Do you optimize for ChatGPT and other AI assistants?",
-      answer: "Yes, our advanced SEO optimization strategies include optimizing for AI systems like ChatGPT. We structure content optimization to be machine-readable with clear entity relationships, optimize comprehensive schema markup, and organize information in ways that make it easily extractable and presentable by AI assistants through strategic optimization."
+      question: "Do you optimize for modern search technologies and assistants?",
+      answer: "Yes, our advanced SEO optimization strategies include optimizing for modern search systems. We structure content optimization to be machine-readable with clear entity relationships, optimize comprehensive schema markup, and organize information in ways that make it easily extractable and presentable by search assistants through strategic optimization."
     }
   ];
 
