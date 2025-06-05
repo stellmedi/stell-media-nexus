@@ -16,11 +16,16 @@ const BlogPostPage: React.FC = () => {
   // Find the blog post with the matching ID
   const post = blogPosts.find(post => post.id === postId);
   
-  // If no post is found, redirect to the blog index
-  if (!post) {
-    React.useEffect(() => {
+  // Move useEffect outside of conditional - hooks must always be called in the same order
+  React.useEffect(() => {
+    // If no post is found, redirect to the blog index
+    if (!post) {
       navigate('/blog');
-    }, [navigate]);
+    }
+  }, [post, navigate]);
+  
+  // If no post is found, return null (the useEffect will handle the redirect)
+  if (!post) {
     return null;
   }
   
