@@ -17,6 +17,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { useAuth } from "@/hooks/use-auth";
+import { getContactSubmissions, getConsultationSubmissions } from "@/services/supabaseFormService";
+import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
   const { isAuthenticated, isLoading } = useAuth();
@@ -30,31 +32,94 @@ const AdminDashboard = () => {
     totalUsers: 0,
     recentActivity: 0
   });
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
+  // Load real data from Supabase
   useEffect(() => {
-    // Mock data - will be replaced with actual API calls
-    const mockContactSubmissions = [
-      { id: 1, name: "John Doe", email: "john@example.com", subject: "General Inquiry", date: "2023-05-20", status: "unread" },
-      { id: 2, name: "Jane Smith", email: "jane@example.com", subject: "Product Question", date: "2023-05-19", status: "read" },
-      { id: 3, name: "Robert Johnson", email: "robert@example.com", subject: "Partnership", date: "2023-05-18", status: "read" },
-    ];
+    const loadData = async () => {
+      setIsLoadingData(true);
+      try {
+        const [contactData, consultationData] = await Promise.all([
+          getContactSubmissions(),
+          getConsultationSubmissions()
+        ]);
 
-    const mockConsultationRequests = [
-      { id: 1, name: "Emily Brown", email: "emily@example.com", company: "ABC Inc", date: "2023-05-20", status: "unread", budget: "$1,000-$5,000" },
-      { id: 2, name: "Michael Wilson", email: "michael@example.com", company: "XYZ Corp", date: "2023-05-19", status: "read", budget: "$5,000-$10,000" },
-    ];
+        setContactFormSubmissions(contactData || []);
+        setConsultationRequests(consultationData || []);
+        
+        // Update stats with real data
+        setStatsData({
+          totalContacts: contactData?.length || 0,
+          totalConsultations: consultationData?.length || 0,
+          totalUsers: 5, // Keep as mock for now
+          recentActivity: (contactData?.length || 0) + (consultationData?.length || 0)
+        });
+      } catch (error) {
+        console.error('Error loading dashboard data:', error);
+        toast({
+          title: "Error Loading Data",
+          description: "Failed to load submissions from database",
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoadingData(false);
+      }
+    };
 
-    setContactFormSubmissions(mockContactSubmissions);
-    setConsultationRequests(mockConsultationRequests);
-    
-    // Set mock stats
-    setStatsData({
-      totalContacts: mockContactSubmissions.length,
-      totalConsultations: mockConsultationRequests.length,
-      totalUsers: 5,
-      recentActivity: mockContactSubmissions.length + mockConsultationRequests.length
-    });
-  }, []);
+    if (isAuthenticated && !isLoading) {
+      loadData();
+    }
+  }, [isAuthenticated, isLoading, toast]);
+
+  // Set up real-time subscriptions for new submissions
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    const contactChannel = supabase
+      .channel('contact-submissions')
+      .on('postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'contact_submissions' },
+        (payload) => {
+          console.log('New contact submission:', payload);
+          setContactFormSubmissions(prev => [payload.new, ...prev]);
+          setStatsData(prev => ({
+            ...prev,
+            totalContacts: prev.totalContacts + 1,
+            recentActivity: prev.recentActivity + 1
+          }));
+          toast({
+            title: "New Contact Submission",
+            description: `New message from ${payload.new.name}`,
+          });
+        }
+      )
+      .subscribe();
+
+    const consultationChannel = supabase
+      .channel('consultation-submissions')
+      .on('postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'consultation_submissions' },
+        (payload) => {
+          console.log('New consultation request:', payload);
+          setConsultationRequests(prev => [payload.new, ...prev]);
+          setStatsData(prev => ({
+            ...prev,
+            totalConsultations: prev.totalConsultations + 1,
+            recentActivity: prev.recentActivity + 1
+          }));
+          toast({
+            title: "New Consultation Request",
+            description: `New request from ${payload.new.company}`,
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      contactChannel.unsubscribe();
+      consultationChannel.unsubscribe();
+    };
+  }, [isAuthenticated, toast]);
 
   // If not authenticated, redirect to login
   if (isLoading) {
@@ -65,40 +130,14 @@ const AdminDashboard = () => {
     return <Navigate to="/admin" replace />;
   }
 
-  const markAsRead = (id, type) => {
-    if (type === 'contact') {
-      setContactFormSubmissions(prev => 
-        prev.map(item => item.id === id ? { ...item, status: 'read' } : item)
-      );
-      toast({
-        title: "Status Updated",
-        description: "Contact submission marked as read",
-      });
-    } else {
-      setConsultationRequests(prev => 
-        prev.map(item => item.id === id ? { ...item, status: 'read' } : item)
-      );
-      toast({
-        title: "Status Updated",
-        description: "Consultation request marked as read",
-      });
-    }
-  };
-
-  const deleteSubmission = (id, type) => {
-    if (type === 'contact') {
-      setContactFormSubmissions(prev => prev.filter(item => item.id !== id));
-      toast({
-        title: "Item Deleted",
-        description: "Contact submission has been deleted",
-      });
-    } else {
-      setConsultationRequests(prev => prev.filter(item => item.id !== id));
-      toast({
-        title: "Item Deleted",
-        description: "Consultation request has been deleted",
-      });
-    }
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   };
 
   return (
@@ -157,57 +196,40 @@ const AdminDashboard = () => {
               <CardHeader>
                 <CardTitle>Contact Form Submissions</CardTitle>
                 <CardDescription>
-                  Manage all contact form submissions from your website.
+                  Real-time submissions from your website contact form.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableCaption>A list of all contact form submissions.</TableCaption>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Subject</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {contactFormSubmissions.map((submission) => (
-                      <TableRow key={submission.id}>
-                        <TableCell className="font-medium">{submission.name}</TableCell>
-                        <TableCell>{submission.email}</TableCell>
-                        <TableCell>{submission.subject}</TableCell>
-                        <TableCell>{submission.date}</TableCell>
-                        <TableCell>
-                          <Badge variant={submission.status === 'unread' ? "default" : "secondary"}>
-                            {submission.status === 'unread' ? 'Unread' : 'Read'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => markAsRead(submission.id, 'contact')}
-                              disabled={submission.status === 'read'}
-                            >
-                              Mark as Read
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="destructive"
-                              onClick={() => deleteSubmission(submission.id, 'contact')}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </TableCell>
+                {isLoadingData ? (
+                  <div className="text-center py-8">Loading submissions...</div>
+                ) : (
+                  <Table>
+                    <TableCaption>
+                      {contactFormSubmissions.length === 0 ? 
+                        "No contact submissions yet. Test the contact form to see data here!" : 
+                        `Total: ${contactFormSubmissions.length} submissions`
+                      }
+                    </TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Message</TableHead>
+                        <TableHead>Date</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {contactFormSubmissions.map((submission) => (
+                        <TableRow key={submission.id}>
+                          <TableCell className="font-medium">{submission.name}</TableCell>
+                          <TableCell>{submission.email}</TableCell>
+                          <TableCell className="max-w-xs truncate">{submission.message}</TableCell>
+                          <TableCell>{formatDate(submission.created_at)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
@@ -217,59 +239,42 @@ const AdminDashboard = () => {
               <CardHeader>
                 <CardTitle>Consultation Requests</CardTitle>
                 <CardDescription>
-                  Manage all consultation requests from potential clients.
+                  Real-time consultation requests from potential clients.
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Table>
-                  <TableCaption>A list of all consultation requests.</TableCaption>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Company</TableHead>
-                      <TableHead>Budget</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {consultationRequests.map((request) => (
-                      <TableRow key={request.id}>
-                        <TableCell className="font-medium">{request.name}</TableCell>
-                        <TableCell>{request.email}</TableCell>
-                        <TableCell>{request.company}</TableCell>
-                        <TableCell>{request.budget}</TableCell>
-                        <TableCell>{request.date}</TableCell>
-                        <TableCell>
-                          <Badge variant={request.status === 'unread' ? "default" : "secondary"}>
-                            {request.status === 'unread' ? 'Unread' : 'Read'}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex space-x-2">
-                            <Button 
-                              size="sm" 
-                              variant="outline"
-                              onClick={() => markAsRead(request.id, 'consultation')}
-                              disabled={request.status === 'read'}
-                            >
-                              Mark as Read
-                            </Button>
-                            <Button 
-                              size="sm" 
-                              variant="destructive"
-                              onClick={() => deleteSubmission(request.id, 'consultation')}
-                            >
-                              Delete
-                            </Button>
-                          </div>
-                        </TableCell>
+                {isLoadingData ? (
+                  <div className="text-center py-8">Loading requests...</div>
+                ) : (
+                  <Table>
+                    <TableCaption>
+                      {consultationRequests.length === 0 ? 
+                        "No consultation requests yet. Test the consultation form to see data here!" : 
+                        `Total: ${consultationRequests.length} requests`
+                      }
+                    </TableCaption>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Email</TableHead>
+                        <TableHead>Company</TableHead>
+                        <TableHead>Message</TableHead>
+                        <TableHead>Date</TableHead>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHeader>
+                    <TableBody>
+                      {consultationRequests.map((request) => (
+                        <TableRow key={request.id}>
+                          <TableCell className="font-medium">{request.name}</TableCell>
+                          <TableCell>{request.email}</TableCell>
+                          <TableCell>{request.company}</TableCell>
+                          <TableCell className="max-w-xs truncate">{request.message}</TableCell>
+                          <TableCell>{formatDate(request.created_at)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
               </CardContent>
             </Card>
           </TabsContent>

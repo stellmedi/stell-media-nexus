@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -18,6 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
+import { saveConsultationSubmission } from "@/services/supabaseFormService";
 
 // Simplified form schema - only 4 essential fields
 const formSchema = z.object({
@@ -80,22 +80,29 @@ const ConsultationForm = ({ className = "" }: ConsultationFormProps) => {
     setFormError(null);
     
     try {
-      // Ensure EmailJS is ready
-      if (!isEmailJSInitialized()) {
-        throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
-      }
-      
-      console.log("ConsultationForm: Sending email with template:", TEMPLATES.consultation);
-      
-      const response = await sendEmail(TEMPLATES.consultation, {
+      // Save to Supabase first
+      await saveConsultationSubmission({
         name: data.name,
         email: data.email,
         company: data.company,
         message: data.message,
-        subject: "Consultation Request from " + data.company,
       });
+      console.log("Consultation submission saved to Supabase successfully");
       
-      console.log("ConsultationForm: Email sent successfully:", response);
+      // Then send email via EmailJS
+      if (isEmailJSInitialized()) {
+        console.log("ConsultationForm: Sending email with template:", TEMPLATES.consultation);
+        
+        const response = await sendEmail(TEMPLATES.consultation, {
+          name: data.name,
+          email: data.email,
+          company: data.company,
+          message: data.message,
+          subject: "Consultation Request from " + data.company,
+        });
+        
+        console.log("ConsultationForm: Email sent successfully:", response);
+      }
       
       // Show success message
       toast({

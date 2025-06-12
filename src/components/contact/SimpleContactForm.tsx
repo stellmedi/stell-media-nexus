@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react";
 import { useContactForm } from "./hooks/useContactForm";
 import ContactFormStatus from "./components/ContactFormStatus";
 import ContactFormFields from "./components/ContactFormFields";
+import { saveContactSubmission } from "@/services/supabaseFormService";
 
 interface SimpleContactFormProps {
   className?: string;
@@ -19,8 +20,28 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
     isSuccess,
     emailJSReady,
     isInitializing,
-    onSubmit,
+    onSubmit: originalOnSubmit,
   } = useContactForm();
+
+  // Enhanced submit handler that saves to both EmailJS and Supabase
+  const handleSubmit = async (data: any) => {
+    try {
+      // Save to Supabase first
+      await saveContactSubmission({
+        name: data.name,
+        email: data.email,
+        message: data.message,
+      });
+      console.log("Contact submission saved to Supabase successfully");
+      
+      // Then send email via EmailJS
+      await originalOnSubmit(data);
+    } catch (error) {
+      console.error("Error saving to Supabase:", error);
+      // Still try to send email even if Supabase fails
+      await originalOnSubmit(data);
+    }
+  };
 
   return (
     <div className={`bg-white p-6 rounded-lg shadow-lg border border-gray-200 ${className}`}>
@@ -34,7 +55,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       />
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <ContactFormFields form={form} isSubmitting={isSubmitting} />
           
           <Button 
