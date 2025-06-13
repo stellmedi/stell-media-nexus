@@ -40,9 +40,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useAuth } from "@/hooks/use-auth";
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
+import { getAdminUsers, updateAdminUser, deleteAdminUser, subscribeToAdminChanges, type AdminUser } from "@/services/adminService";
+import { Trash2, Edit } from "lucide-react";
 
-// Define user form schema
 const userFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters" }),
   email: z.string().email({ message: "Please enter a valid email address" }),
@@ -57,21 +58,14 @@ const userFormSchema = z.object({
 
 type UserFormValues = z.infer<typeof userFormSchema>;
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: "admin" | "editor" | "viewer";
-}
-
 const UsersManagement = () => {
-  const { user, isAuthenticated, isLoading, register } = useAuth();
+  const { adminUser, isAuthenticated, isLoading, register } = useAdminAuth();
   const { toast } = useToast();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<AdminUser[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loadingUsers, setLoadingUsers] = useState(true);
 
-  // Initialize form
   const form = useForm<UserFormValues>({
     resolver: zodResolver(userFormSchema),
     defaultValues: {
@@ -82,27 +76,40 @@ const UsersManagement = () => {
     },
   });
 
-  // Load users from localStorage
-  useEffect(() => {
-    const storedUsers = localStorage.getItem("admin_users");
-    if (storedUsers) {
-      try {
-        const parsedUsers = JSON.parse(storedUsers);
-        // Remove password from display
-        const sanitizedUsers = parsedUsers.map(({ password, ...rest }) => rest);
-        setUsers(sanitizedUsers);
-      } catch (error) {
-        console.error("Error parsing users:", error);
-        toast({
-          title: "Error",
-          description: "Failed to load users",
-          variant: "destructive",
-        });
-      }
+  // Load users
+  const loadUsers = async () => {
+    try {
+      setLoadingUsers(true);
+      const data = await getAdminUsers();
+      setUsers(data);
+    } catch (error) {
+      console.error('Error loading users:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load users",
+        variant: "destructive",
+      });
+    } finally {
+      setLoadingUsers(false);
     }
-  }, [toast]);
+  };
 
-  // Form submission handler
+  useEffect(() => {
+    if (isAuthenticated && adminUser?.role === 'admin') {
+      loadUsers();
+
+      // Set up real-time subscription
+      const channel = subscribeToAdminChanges('admin_users', (payload) => {
+        console.log('Admin users real-time update:', payload);
+        loadUsers(); // Reload users on any change
+      });
+
+      return () => {
+        channel.unsubscribe();
+      };
+    }
+  }, [isAuthenticated, adminUser]);
+
   const onSubmit = async (data: UserFormValues) => {
     setIsSubmitting(true);
     
@@ -124,28 +131,60 @@ const UsersManagement = () => {
       );
       
       if (success) {
-        toast({
-          title: "Success",
-          description: "User created successfully",
-        });
-        
-        // Refresh user list
-        const storedUsers = localStorage.getItem("admin_users");
-        if (storedUsers) {
-          const parsedUsers = JSON.parse(storedUsers);
-          const sanitizedUsers = parsedUsers.map(({ password, ...rest }) => rest);
-          setUsers(sanitizedUsers);
-        }
-        
         setIsDialogOpen(false);
         form.reset();
+        loadUsers(); // Reload the list
       }
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Check user permissions
+  const handleDeleteUser = async (userId: string, userEmail: string) => {
+    if (userEmail === adminUser?.email) {
+      toast({
+        title: "Error",
+        description: "You cannot delete your own account",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (confirm(`Are you sure you want to delete this user?`)) {
+      try {
+        await deleteAdminUser(userId);
+        toast({
+          title: "Success",
+          description: "User deleted successfully",
+        });
+        loadUsers();
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to delete user",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+
+  const handleToggleActive = async (userId: string, currentStatus: boolean) => {
+    try {
+      await updateAdminUser(userId, { is_active: !currentStatus });
+      toast({
+        title: "Success",
+        description: `User ${!currentStatus ? 'activated' : 'deactivated'} successfully`,
+      });
+      loadUsers();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update user status",
+        variant: "destructive",
+      });
+    }
+  };
+
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -154,7 +193,7 @@ const UsersManagement = () => {
     return <Navigate to="/admin" replace />;
   }
   
-  if (user?.role !== "admin") {
+  if (adminUser?.role !== "admin") {
     return (
       <AdminLayout>
         <div className="p-6">
@@ -178,7 +217,7 @@ const UsersManagement = () => {
             <DialogHeader>
               <DialogTitle>Add New User</DialogTitle>
               <DialogDescription>
-                Create a new user account with specific permissions.
+                Create a new admin user account with specific permissions.
               </DialogDescription>
             </DialogHeader>
             
@@ -205,7 +244,7 @@ const UsersManagement = () => {
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder="john@example.com" {...field} />
+                        <Input placeholder="john@stellmedia.com" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -274,40 +313,69 @@ const UsersManagement = () => {
         </Dialog>
 
         <div className="bg-white rounded-lg shadow p-6">
-          <Table>
-            <TableCaption>List of all users in the system.</TableCaption>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell className="capitalize">{user.role}</TableCell>
-                  <TableCell>
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline">
-                        Edit
-                      </Button>
-                      <Button 
-                        size="sm" 
-                        variant="destructive"
-                        disabled={user.email === "admin@stellmedia.com"}
-                      >
-                        Delete
-                      </Button>
-                    </div>
-                  </TableCell>
+          {loadingUsers ? (
+            <div className="text-center py-4">Loading users...</div>
+          ) : (
+            <Table>
+              <TableCaption>List of all admin users in the system.</TableCaption>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Last Login</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                        user.role === 'admin' ? 'bg-red-100 text-red-800' :
+                        user.role === 'editor' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {user.role}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`inline-block px-2 py-1 rounded text-xs font-medium ${
+                        user.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {user.is_active ? 'Active' : 'Inactive'}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">
+                      {user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex space-x-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleToggleActive(user.id, user.is_active)}
+                        >
+                          {user.is_active ? 'Deactivate' : 'Activate'}
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="destructive"
+                          disabled={user.email === adminUser?.email}
+                          onClick={() => handleDeleteUser(user.id, user.email)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
         </div>
       </div>
     </AdminLayout>

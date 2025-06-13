@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { initEmailJS, isEmailJSConfigured } from "@/utils/emailService";
-import { AuthProvider } from "@/hooks/use-auth";
+import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 import { ChatProvider } from "@/hooks/use-chat";
 import WhatsAppButton from "@/components/ChatButton";
 import Index from "./pages/Index";
@@ -23,6 +23,7 @@ import FAQ from "./pages/FAQ";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import UsersManagement from "./pages/admin/UsersManagement";
+import ActivityLogs from "./pages/admin/ActivityLogs";
 import ContentManagement from "./pages/admin/ContentManagement";
 import EmailManagement from "./pages/admin/EmailManagement";
 import SettingsPage from "@/pages/admin/SettingsPage";
@@ -96,6 +97,7 @@ const AppContent = () => {
         <Route path="/admin" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/users" element={<UsersManagement />} />
+        <Route path="/admin/activity" element={<ActivityLogs />} />
         <Route path="/admin/content" element={<ContentManagement />} />
         <Route path="/admin/seo" element={<SEOManagement />} />
         <Route path="/admin/emails" element={<EmailManagement />} />
@@ -122,7 +124,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <AuthProvider>
+        <AdminAuthProvider>
           <ChatProvider>
             <TooltipProvider>
               <SiteSchemaMarkup />
@@ -131,7 +133,7 @@ const App = () => {
               <AppContent />
             </TooltipProvider>
           </ChatProvider>
-        </AuthProvider>
+        </AdminAuthProvider>
       </HelmetProvider>
     </QueryClientProvider>
   );

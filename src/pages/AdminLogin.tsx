@@ -23,9 +23,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/hooks/use-auth";
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
 
-// Define form validation schema
 const loginSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
@@ -34,11 +33,10 @@ const loginSchema = z.object({
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 const AdminLogin = () => {
-  const { login, isAuthenticated, isLoading } = useAuth();
+  const { login, isAuthenticated, isLoading } = useAdminAuth();
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Initialize form with react-hook-form
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -47,7 +45,6 @@ const AdminLogin = () => {
     },
   });
 
-  // Form submission handler
   const onSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true);
     try {
@@ -60,7 +57,6 @@ const AdminLogin = () => {
     }
   };
 
-  // If already authenticated, redirect to dashboard
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
@@ -124,7 +120,7 @@ const AdminLogin = () => {
         </CardContent>
         <CardFooter className="flex flex-col">
           <p className="text-xs text-center text-gray-600 mt-2">
-            Default credentials for demo: admin@stellmedia.com / admin123
+            Sign up with admin@stellmedia.com to create your admin account
           </p>
         </CardFooter>
       </Card>

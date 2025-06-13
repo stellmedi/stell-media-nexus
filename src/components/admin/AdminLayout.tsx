@@ -1,125 +1,111 @@
 
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { ReactNode } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText, 
-  Settings, 
-  Mail, 
+import {
+  LayoutDashboard,
+  Users,
+  FileText,
+  Settings,
+  Search,
   LogOut,
-  Search
+  Mail,
+  Activity
 } from "lucide-react";
-import { useAuth } from "@/hooks/use-auth";
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
 
 interface AdminLayoutProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const AdminLayout: React.FC<AdminLayoutProps> = ({ children }) => {
+const AdminLayout = ({ children }: AdminLayoutProps) => {
+  const { isAuthenticated, adminUser, isLoading, logout } = useAdminAuth();
   const navigate = useNavigate();
-  const { logout, user } = useAuth();
 
-  const handleLogout = () => {
-    logout();
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin" replace />;
+  }
+
+  const handleLogout = async () => {
+    await logout();
     navigate("/admin");
   };
 
+  const menuItems = [
+    { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
+    { icon: Users, label: "Users", path: "/admin/users", adminOnly: true },
+    { icon: FileText, label: "Content", path: "/admin/content" },
+    { icon: Mail, label: "Form Submissions", path: "/admin/emails" },
+    { icon: Activity, label: "Activity Logs", path: "/admin/activity", adminOnly: true },
+    { icon: Search, label: "SEO", path: "/admin/seo" },
+    { icon: Settings, label: "Settings", path: "/admin/settings" },
+  ];
+
+  const filteredMenuItems = menuItems.filter(item => 
+    !item.adminOnly || adminUser?.role === 'admin'
+  );
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-indigo-50 flex">
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-md">
-        <div className="p-6">
-          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Stell Media
-          </h2>
-          <p className="text-sm text-gray-500">Admin Panel</p>
+      <aside className="w-64 bg-white shadow-md flex flex-col">
+        <div className="p-4 border-b">
+          <h2 className="font-bold text-lg text-gray-900">Admin Panel</h2>
+          <p className="text-sm text-gray-500">Stell Media CMS</p>
+          {adminUser && (
+            <div className="mt-2 p-2 bg-gray-50 rounded text-xs">
+              <p className="font-medium">{adminUser.name}</p>
+              <p className="text-gray-600">{adminUser.email}</p>
+              <span className={`inline-block px-2 py-1 rounded text-xs font-medium mt-1 ${
+                adminUser.role === 'admin' ? 'bg-red-100 text-red-800' :
+                adminUser.role === 'editor' ? 'bg-blue-100 text-blue-800' :
+                'bg-gray-100 text-gray-800'
+              }`}>
+                {adminUser.role}
+              </span>
+            </div>
+          )}
         </div>
         
-        <div className="px-4 py-2">
-          <div className="border-t border-gray-200 my-4"></div>
-          
-          {/* User Info */}
-          <div className="mb-6 p-2">
-            <p className="font-medium">{user?.name || "Admin User"}</p>
-            <p className="text-sm text-gray-500">{user?.email || "admin@example.com"}</p>
+        <nav className="flex-1 p-4">
+          <div className="space-y-1">
+            {filteredMenuItems.map((item) => {
+              const isActive = window.location.pathname === item.path;
+              return (
+                <Button
+                  key={item.path}
+                  variant={isActive ? "default" : "ghost"}
+                  className="w-full justify-start"
+                  onClick={() => navigate(item.path)}
+                >
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.label}
+                </Button>
+              );
+            })}
           </div>
-          
-          {/* Navigation */}
-          <nav className="space-y-1">
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/dashboard")}
-            >
-              <LayoutDashboard className="mr-2" />
-              Dashboard
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/users")}
-            >
-              <Users className="mr-2" />
-              Users
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/content")}
-            >
-              <FileText className="mr-2" />
-              Content
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/seo")}
-            >
-              <Search className="mr-2" />
-              SEO
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/emails")}
-            >
-              <Mail className="mr-2" />
-              Emails
-            </Button>
-            
-            <Button 
-              variant="ghost" 
-              className="w-full justify-start"
-              onClick={() => navigate("/admin/settings")}
-            >
-              <Settings className="mr-2" />
-              Settings
-            </Button>
-            
-            <div className="pt-4">
-              <Button 
-                variant="outline" 
-                className="w-full justify-start text-destructive hover:text-destructive"
-                onClick={handleLogout}
-              >
-                <LogOut className="mr-2" />
-                Logout
-              </Button>
-            </div>
-          </nav>
+        </nav>
+        
+        <div className="p-4 border-t">
+          <Button 
+            variant="outline" 
+            className="w-full justify-start text-red-600" 
+            onClick={handleLogout}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
         </div>
-      </div>
+      </aside>
       
-      {/* Main Content */}
-      <div className="flex-1 overflow-auto">
+      {/* Main content */}
+      <main className="flex-1 overflow-auto">
         {children}
-      </div>
+      </main>
     </div>
   );
 };
