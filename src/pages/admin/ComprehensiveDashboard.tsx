@@ -1,209 +1,142 @@
-
-import React from "react";
-import { Navigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import AdminLayout from "@/components/admin/AdminLayout";
-import { useAdminAuth } from "@/hooks/use-supabase-admin";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  LayoutDashboard,
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  BarChart3,
   FileText,
   Image,
   Search,
-  Wand2,
-  Blocks,
-  Users,
+  Layout,
+  BookOpen,
   Mail,
-  PenTool,
-  BarChart3,
+  TrendingUp,
   Code,
   Database,
-  Activity,
-  Settings
+  Shield,
+  Settings,
+  Users,
+  Bell
 } from "lucide-react";
+import QuickStats from '@/components/admin/QuickStats';
+import ContentEditor from '@/components/admin/ContentEditor';
+import MediaManager from '@/components/admin/MediaManager';
+import AIPoweredSEO from '@/components/admin/AIPoweredSEO';
+import PageBuilder from '@/components/admin/PageBuilder';
+import BlogManager from '@/components/admin/BlogManager';
+import FormManager from '@/components/admin/FormManager';
+import AnalyticsDashboard from '@/components/admin/AnalyticsDashboard';
+import ScriptManager from '@/components/admin/ScriptManager';
+import BackupRestore from '@/components/admin/BackupRestore';
+import QAudit from '@/components/admin/QAudit';
 
-// Import existing components
-import SEOManager from "@/components/admin/SEOManager";
-import ContentMetadataDisplay from "@/components/admin/ContentMetadataDisplay";
-import SEOVerification from "@/components/admin/SEOVerification";
-import GlobalSEOManager from "@/components/admin/GlobalSEOManager";
-
-// Import new components we'll create
-import ContentEditor from "@/components/admin/ContentEditor";
-import MediaManager from "@/components/admin/MediaManager";
-import AIPoweredSEO from "@/components/admin/AIPoweredSEO";
-import PageBuilder from "@/components/admin/PageBuilder";
-import BlogManager from "@/components/admin/BlogManager";
-import FormManager from "@/components/admin/FormManager";
-import AnalyticsDashboard from "@/components/admin/AnalyticsDashboard";
-import ScriptManager from "@/components/admin/ScriptManager";
-import BackupRestore from "@/components/admin/BackupRestore";
-import QuickStats from "@/components/admin/QuickStats";
+interface DashboardModule {
+  id: string;
+  title: string;
+  icon: React.ComponentType<any>;
+  component: React.ReactNode;
+}
 
 const ComprehensiveDashboard: React.FC = () => {
-  const { isAuthenticated, isLoading, adminUser } = useAdminAuth();
+  const [activeModule, setActiveModule] = useState<string>('overview');
 
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
+  const handleModuleChange = (moduleId: string) => {
+    setActiveModule(moduleId);
+  };
 
-  if (!isAuthenticated) {
-    return <Navigate to="/admin" replace />;
-  }
-
-  const dashboardSections = [
+  const modules = [
     {
-      id: "overview",
-      label: "Dashboard",
-      icon: LayoutDashboard,
-      component: <QuickStats />,
-      permission: "viewer"
-    },
-    {
-      id: "content",
-      label: "Content",
-      icon: FileText,
-      component: <ContentEditor />,
-      permission: "editor"
-    },
-    {
-      id: "media",
-      label: "Media",
-      icon: Image,
-      component: <MediaManager />,
-      permission: "editor"
-    },
-    {
-      id: "seo-basic",
-      label: "SEO Settings",
-      icon: Search,
-      component: (
-        <Tabs defaultValue="page-seo" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="page-seo">Page SEO</TabsTrigger>
-            <TabsTrigger value="global-settings">Global Settings</TabsTrigger>
-            <TabsTrigger value="verification">Verification</TabsTrigger>
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-          </TabsList>
-          <TabsContent value="page-seo" className="mt-6">
-            <SEOManager />
-          </TabsContent>
-          <TabsContent value="global-settings" className="mt-6">
-            <GlobalSEOManager />
-          </TabsContent>
-          <TabsContent value="verification" className="mt-6">
-            <SEOVerification />
-          </TabsContent>
-          <TabsContent value="overview" className="mt-6">
-            <ContentMetadataDisplay />
-          </TabsContent>
-        </Tabs>
-      ),
-      permission: "editor"
-    },
-    {
-      id: "ai-seo",
-      label: "AI SEO",
-      icon: Wand2,
-      component: <AIPoweredSEO />,
-      permission: "editor"
-    },
-    {
-      id: "page-builder",
-      label: "Page Builder",
-      icon: Blocks,
-      component: <PageBuilder />,
-      permission: "editor"
-    },
-    {
-      id: "blog",
-      label: "Blog",
-      icon: PenTool,
-      component: <BlogManager />,
-      permission: "editor"
-    },
-    {
-      id: "forms",
-      label: "Forms",
-      icon: Mail,
-      component: <FormManager />,
-      permission: "viewer"
-    },
-    {
-      id: "analytics",
-      label: "Analytics",
+      id: 'overview',
+      title: 'Dashboard Overview',
       icon: BarChart3,
-      component: <AnalyticsDashboard />,
-      permission: "viewer"
+      component: <QuickStats />
     },
     {
-      id: "scripts",
-      label: "Scripts",
+      id: 'content',
+      title: 'Content Management',
+      icon: FileText,
+      component: <ContentEditor />
+    },
+    {
+      id: 'media',
+      title: 'Media Manager',
+      icon: Image,
+      component: <MediaManager />
+    },
+    {
+      id: 'seo',
+      title: 'SEO Settings',
+      icon: Search,
+      component: <AIPoweredSEO />
+    },
+    {
+      id: 'page-builder',
+      title: 'Page Builder',
+      icon: Layout,
+      component: <PageBuilder />
+    },
+    {
+      id: 'blog',
+      title: 'Blog Management',
+      icon: BookOpen,
+      component: <BlogManager />
+    },
+    {
+      id: 'forms',
+      title: 'Form Submissions',
+      icon: Mail,
+      component: <FormManager />
+    },
+    {
+      id: 'analytics',
+      title: 'Analytics',
+      icon: TrendingUp,
+      component: <AnalyticsDashboard />
+    },
+    {
+      id: 'scripts',
+      title: 'Script Manager',
       icon: Code,
-      component: <ScriptManager />,
-      permission: "admin"
+      component: <ScriptManager />
     },
     {
-      id: "backup",
-      label: "Backup",
+      id: 'backup',
+      title: 'Backup & Restore',
       icon: Database,
-      component: <BackupRestore />,
-      permission: "admin"
+      component: <BackupRestore />
+    },
+    {
+      id: 'qa-audit',
+      title: 'QA Audit',
+      icon: Shield,
+      component: <QAudit />
     }
   ];
 
-  const hasPermission = (required: string) => {
-    if (!adminUser) return false;
-    if (adminUser.role === 'admin') return true;
-    if (adminUser.role === 'editor' && ['viewer', 'editor'].includes(required)) return true;
-    if (adminUser.role === 'viewer' && required === 'viewer') return true;
-    return false;
-  };
-
-  const filteredSections = dashboardSections.filter(section => 
-    hasPermission(section.permission)
-  );
-
   return (
-    <>
-      <Helmet>
-        <title>Admin Dashboard | Stell Tech Academy</title>
-        <meta name="robots" content="noindex, nofollow" />
-      </Helmet>
-      
-      <AdminLayout>
-        <div className="p-6">
-          <header className="mb-6">
-            <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
-            <p className="text-gray-600 mt-2">
-              Comprehensive content management system for Stell Tech Academy
-            </p>
-          </header>
-          
-          <Tabs defaultValue="overview" className="w-full">
-            <TabsList className="grid w-full grid-cols-6 lg:grid-cols-12 mb-6">
-              {filteredSections.map((section) => (
-                <TabsTrigger 
-                  key={section.id} 
-                  value={section.id}
-                  className="flex flex-col items-center gap-1 p-3"
-                >
-                  <section.icon className="h-4 w-4" />
-                  <span className="text-xs hidden sm:block">{section.label}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-            
-            {filteredSections.map((section) => (
-              <TabsContent key={section.id} value={section.id} className="mt-6">
-                {section.component}
-              </TabsContent>
-            ))}
-          </Tabs>
-        </div>
-      </AdminLayout>
-    </>
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-2xl font-bold">Comprehensive Dashboard</h2>
+        <p className="text-gray-600">Manage all aspects of your website</p>
+      </div>
+
+      <Tabs defaultValue={activeModule} className="w-full">
+        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+          {modules.map((module) => (
+            <TabsTrigger key={module.id} value={module.id}>
+              <module.icon className="h-4 w-4 mr-2" />
+              {module.title}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {modules.map((module) => (
+          <TabsContent key={module.id} value={module.id} className="space-y-4">
+            {module.component}
+          </TabsContent>
+        ))}
+      </Tabs>
+    </div>
   );
 };
 
