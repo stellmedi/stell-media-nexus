@@ -7,11 +7,11 @@ import SEOManager from "@/components/admin/SEOManager";
 import ContentMetadataDisplay from "@/components/admin/ContentMetadataDisplay";
 import SEOVerification from "@/components/admin/SEOVerification";
 import GlobalSEOManager from "@/components/admin/GlobalSEOManager";
-import { useAuth } from "@/hooks/use-auth";
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const SEOManagement: React.FC = () => {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAdminAuth();
 
   // Show loading state while checking authentication
   if (isLoading) {
