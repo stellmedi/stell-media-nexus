@@ -46,6 +46,9 @@ import ConversionOptimization from "@/pages/services/ConversionOptimization";
 // Add CSS for the grid pattern
 import "./styles/grid-pattern.css";
 
+// Import AuthProvider!
+import { AuthProvider } from "@/hooks/use-auth";
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -124,19 +127,22 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <AdminAuthProvider>
-          <ChatProvider>
-            <TooltipProvider>
-              <SiteSchemaMarkup />
-              <Toaster />
-              <Sonner position="bottom-right" expand={true} closeButton />
-              <AppContent />
-            </TooltipProvider>
-          </ChatProvider>
-        </AdminAuthProvider>
+        <AuthProvider>
+          <AdminAuthProvider>
+            <ChatProvider>
+              <TooltipProvider>
+                <SiteSchemaMarkup />
+                <Toaster />
+                <Sonner position="bottom-right" expand={true} closeButton />
+                <AppContent />
+              </TooltipProvider>
+            </ChatProvider>
+          </AdminAuthProvider>
+        </AuthProvider>
       </HelmetProvider>
     </QueryClientProvider>
   );
 };
 
 export default App;
+
