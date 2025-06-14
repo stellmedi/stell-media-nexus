@@ -53,7 +53,13 @@ export const getAdminUsers = async (): Promise<AdminUser[]> => {
     throw error;
   }
 
-  return data || [];
+  // Type cast and ensure role is properly typed
+  return (data || []).map(user => ({
+    ...user,
+    auth_user_id: user.auth_user_id || '',
+    role: user.role as "admin" | "editor" | "viewer",
+    last_login: user.last_login || undefined
+  }));
 };
 
 export const updateAdminUser = async (id: string, updates: Partial<AdminUser>): Promise<AdminUser> => {
@@ -69,7 +75,13 @@ export const updateAdminUser = async (id: string, updates: Partial<AdminUser>): 
     throw error;
   }
 
-  return data;
+  // Type cast the returned data
+  return {
+    ...data,
+    auth_user_id: data.auth_user_id || '',
+    role: data.role as "admin" | "editor" | "viewer",
+    last_login: data.last_login || undefined
+  };
 };
 
 export const deleteAdminUser = async (id: string): Promise<void> => {
@@ -103,7 +115,15 @@ export const getActivityLogs = async (limit: number = 50): Promise<AdminActivity
     throw error;
   }
 
-  return data || [];
+  // Type cast and handle the ip_address type
+  return (data || []).map(log => ({
+    ...log,
+    admin_user_id: log.admin_user_id || undefined,
+    resource_id: log.resource_id || undefined,
+    ip_address: log.ip_address ? String(log.ip_address) : undefined,
+    user_agent: log.user_agent || undefined,
+    admin_users: log.admin_users || undefined
+  }));
 };
 
 // Admin Settings
@@ -118,7 +138,11 @@ export const getAdminSettings = async (): Promise<AdminSetting[]> => {
     throw error;
   }
 
-  return data || [];
+  return (data || []).map(setting => ({
+    ...setting,
+    description: setting.description || undefined,
+    updated_by: setting.updated_by || undefined
+  }));
 };
 
 export const updateAdminSetting = async (
@@ -144,7 +168,11 @@ export const updateAdminSetting = async (
     throw error;
   }
 
-  return data;
+  return {
+    ...data,
+    description: data.description || undefined,
+    updated_by: data.updated_by || undefined
+  };
 };
 
 // Form Submissions (Enhanced)
