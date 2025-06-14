@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Database } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/supabaseClient";
+import { supabase } from "@/integrations/supabase/client";
 
 interface ContactSubmission {
   id: string;
@@ -75,7 +76,11 @@ const FormManager: React.FC = () => {
         <Database className="h-6 w-6 text-gray-500" />
       </div>
 
-      <Tabs defaultValue={selectedTab} className="w-full" onValueChange={setSelectedTab}>
+      <Tabs
+        defaultValue={selectedTab}
+        className="w-full"
+        onValueChange={(val: string) => setSelectedTab(val as "contact" | "consultation")}
+      >
         <TabsList className="grid w-full grid-cols-2">
           <TabsTrigger value="contact">Contact Form</TabsTrigger>
           <TabsTrigger value="consultation">Consultation Form</TabsTrigger>
@@ -117,7 +122,6 @@ const FormManager: React.FC = () => {
             </CardContent>
           </Card>
         </TabsContent>
-
         <TabsContent value="consultation" className="space-y-4">
           <Card>
             <CardHeader>
