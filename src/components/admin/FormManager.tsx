@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import {
   User,
   Phone
 } from "lucide-react";
-import { getContactSubmissions, getConsultationSubmissions } from "@/services/adminService";
+import { getContactSubmissions, getConsultationSubmissions } from "@/services/supabaseFormService";
 import { toast } from "sonner";
 
 interface FormSubmission {
@@ -19,7 +20,7 @@ interface FormSubmission {
   type: 'contact' | 'consultation';
   name: string;
   email: string;
-  phone?: string;
+  company?: string;
   message: string;
   date: string;
   status: 'new' | 'read' | 'responded';
@@ -43,7 +44,6 @@ const FormManager: React.FC = () => {
             type: 'contact' as const,
             name: contact.name,
             email: contact.email,
-            phone: contact.phone,
             message: contact.message,
             date: contact.created_at,
             status: 'new' as const
@@ -53,8 +53,8 @@ const FormManager: React.FC = () => {
             type: 'consultation' as const,
             name: consultation.name,
             email: consultation.email,
-            phone: consultation.phone,
-            message: consultation.requirements || 'Consultation request',
+            company: consultation.company,
+            message: consultation.message,
             date: consultation.created_at,
             status: 'new' as const
           }))
@@ -157,6 +157,9 @@ const FormManager: React.FC = () => {
                   <div>
                     <CardTitle className="text-lg">{submission.name}</CardTitle>
                     <CardDescription>{submission.email}</CardDescription>
+                    {submission.company && (
+                      <CardDescription className="mt-1">Company: {submission.company}</CardDescription>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className={`${statusColors[submission.status]} text-xs`}>
@@ -229,6 +232,9 @@ const FormManager: React.FC = () => {
                   <div>
                     <CardTitle className="text-lg">{submission.name}</CardTitle>
                     <CardDescription>{submission.email}</CardDescription>
+                    {submission.company && (
+                      <CardDescription className="mt-1">Company: {submission.company}</CardDescription>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge className={`${statusColors[submission.status]} text-xs`}>
