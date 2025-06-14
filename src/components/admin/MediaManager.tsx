@@ -1,513 +1,309 @@
-import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Search, Upload, Image, FileText, Film, Trash, Filter } from "lucide-react";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
-import { cn, formatFileSize, getFileTypeIcon } from "@/lib/utils";
 
-interface MediaItem {
+import React, { useState } from "react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Upload, 
+  Image as ImageIcon, 
+  FileText, 
+  Video, 
+  Trash2, 
+  Edit,
+  Download,
+  Search,
+  Filter,
+  Grid,
+  List
+} from "lucide-react";
+import { toast } from "sonner";
+
+interface MediaFile {
   id: string;
   name: string;
-  type: string;
+  type: 'image' | 'document' | 'video';
   size: string;
-  uploadedBy: string;
-  uploadedOn: string;
   url: string;
+  altText: string;
+  uploadDate: string;
+  dimensions?: string;
 }
 
-interface MediaManagerProps {
-  mediaItems: MediaItem[];
-  onDeleteMedia: (id: string) => void;
-  onUploadMedia?: (file: File, metadata?: { name?: string; altText?: string }) => void;
-}
+const MediaManager: React.FC = () => {
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [selectedFile, setSelectedFile] = useState<MediaFile | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  
+  const [mediaFiles] = useState<MediaFile[]>([
+    {
+      id: '1',
+      name: 'hero-image.jpg',
+      type: 'image',
+      size: '2.4 MB',
+      url: '/lovable-uploads/hero-image.jpg',
+      altText: 'Students learning with AI technology',
+      uploadDate: '2024-01-15',
+      dimensions: '1920x1080'
+    },
+    {
+      id: '2',
+      name: 'course-catalog.pdf',
+      type: 'document',
+      size: '1.8 MB',
+      url: '/documents/course-catalog.pdf',
+      altText: 'Complete course catalog PDF',
+      uploadDate: '2024-01-14'
+    },
+    {
+      id: '3',
+      name: 'intro-video.mp4',
+      type: 'video',
+      size: '15.2 MB',
+      url: '/videos/intro-video.mp4',
+      altText: 'Introduction to Stell Tech Academy',
+      uploadDate: '2024-01-13',
+      dimensions: '1920x1080'
+    }
+  ]);
 
-export function MediaManager({ mediaItems, onDeleteMedia, onUploadMedia }: MediaManagerProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
-  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [customFileName, setCustomFileName] = useState("");
-  const [altText, setAltText] = useState("");
-  const [mediaTypeFilter, setMediaTypeFilter] = useState<string | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [dragActive, setDragActive] = useState(false);
-
-  // Filter media items based on search term and media type filter
-  const filteredMedia = mediaItems.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.type.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesTypeFilter = mediaTypeFilter === null || 
-      (mediaTypeFilter === 'image' && item.type.startsWith('image/')) ||
-      (mediaTypeFilter === 'document' && item.type.includes('pdf')) || 
-      (mediaTypeFilter === 'video' && item.type.includes('video'));
-      
-    return matchesSearch && matchesTypeFilter;
-  });
-
-  // Handle file selection
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      setCustomFileName(file.name);
-      generatePreview(file);
+  const getFileIcon = (type: string) => {
+    switch (type) {
+      case 'image': return <ImageIcon className="h-8 w-8 text-blue-500" />;
+      case 'document': return <FileText className="h-8 w-8 text-green-500" />;
+      case 'video': return <Video className="h-8 w-8 text-purple-500" />;
+      default: return <FileText className="h-8 w-8 text-gray-500" />;
     }
   };
 
-  const generatePreview = (file: File) => {
-    if (file.type.startsWith("image/")) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewUrl(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setPreviewUrl(null);
-    }
-  };
-
-  // Handle file upload
   const handleUpload = () => {
-    if (selectedFile && onUploadMedia) {
-      setIsUploading(true);
-      
-      try {
-        onUploadMedia(selectedFile, {
-          name: customFileName || selectedFile.name,
-          altText: altText
-        });
-        
-        // Clear form
-        setSelectedFile(null);
-        setCustomFileName("");
-        setAltText("");
-        setPreviewUrl(null);
-        setUploadDialogOpen(false);
-        toast.success("File uploaded successfully");
-      } catch (error) {
-        toast.error("Upload failed. Please try again.");
-        console.error("Upload error:", error);
-      } finally {
-        setIsUploading(false);
-      }
-    } else {
-      toast.error("Please select a file to upload");
-    }
+    toast.success("File uploaded successfully!");
   };
 
-  // Open media details dialog
-  const openMediaDetails = (media: MediaItem) => {
-    setSelectedMedia(media);
-    setDetailsDialogOpen(true);
+  const handleDelete = (fileId: string) => {
+    toast.success("File deleted successfully!");
   };
 
-  // Handle drag and drop events
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
+  const handleSaveAltText = () => {
+    toast.success("Alt text updated successfully!");
   };
 
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      setSelectedFile(file);
-      setCustomFileName(file.name);
-      generatePreview(file);
-    }
-  };
+  const filteredFiles = mediaFiles.filter(file =>
+    file.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
-    <>
-      <div className="mb-6 flex flex-col md:flex-row gap-4 items-start md:items-center justify-between">
-        <div className="relative flex-1 min-w-[250px] max-w-md">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-500" />
-          <Input
-            placeholder="Search media files..."
-            className="pl-9"
-            value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
-          />
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h2 className="text-2xl font-bold">Media Manager</h2>
+          <p className="text-gray-600">Upload and manage images, documents, and videos</p>
         </div>
-        
-        <div className="flex gap-2 flex-wrap">
-          <div className="dropdown">
-            <Button variant="outline" className="flex items-center gap-1">
-              <Filter className="h-4 w-4" />
-              <span>Filter: {mediaTypeFilter || 'All'}</span>
-            </Button>
-            <div className="dropdown-content">
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={() => setMediaTypeFilter(null)}
-              >
-                All
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={() => setMediaTypeFilter('image')}
-              >
-                Images
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={() => setMediaTypeFilter('document')}
-              >
-                Documents
-              </Button>
-              <Button 
-                variant="ghost" 
-                className="w-full justify-start" 
-                onClick={() => setMediaTypeFilter('video')}
-              >
-                Videos
-              </Button>
-            </div>
-          </div>
-          
-          <Button onClick={() => setUploadDialogOpen(true)}>
-            <Upload className="mr-2 h-4 w-4" /> Upload New Media
-          </Button>
-        </div>
-      </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-        {filteredMedia.length > 0 ? (
-          filteredMedia.map(media => (
-            <Card key={media.id} className="overflow-hidden h-full">
-              <div 
-                className="aspect-square bg-gray-100 relative cursor-pointer transition-all hover:opacity-90"
-                onClick={() => openMediaDetails(media)}
-              >
-                {media.type.startsWith("image/") ? (
-                  <img 
-                    src={media.url} 
-                    alt={media.name} 
-                    className="w-full h-full object-cover" 
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    {media.type.includes("video") ? (
-                      <Film className="h-12 w-12 text-gray-400" />
-                    ) : (
-                      <FileText className="h-12 w-12 text-gray-400" />
-                    )}
-                  </div>
-                )}
-              </div>
-              
-              <CardContent className="p-4">
-                <h3 className="font-medium mb-1 truncate" title={media.name}>
-                  {media.name}
-                </h3>
-                <p className="text-sm text-gray-500 mb-2">
-                  {media.type.split('/')[1]?.toUpperCase() || media.type} • {media.size}
-                </p>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-gray-500">
-                    {media.uploadedOn}
-                  </span>
-                  <div className="flex space-x-1">
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      onClick={() => openMediaDetails(media)}
-                    >
-                      <Image className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      size="sm" 
-                      variant="ghost" 
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (confirm(`Are you sure you want to delete ${media.name}?`)) {
-                          onDeleteMedia(media.id);
-                          toast.success("Media deleted successfully");
-                        }
-                      }}
-                    >
-                      <Trash className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full text-center py-12">
-            <FileText className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-            <h3 className="text-lg font-medium">No media found</h3>
-            <p className="text-gray-500 mb-4">
-              {mediaItems.length === 0 
-                ? "Your media library is empty." 
-                : "No media matches your search criteria."}
-            </p>
-            {mediaItems.length === 0 && (
-              <Button onClick={() => setUploadDialogOpen(true)}>
-                <Upload className="mr-2 h-4 w-4" /> Upload Media
-              </Button>
-            )}
-          </div>
-        )}
+        <Button className="flex items-center gap-2" onClick={handleUpload}>
+          <Upload className="h-4 w-4" />
+          Upload Files
+        </Button>
       </div>
 
-      {/* Media Details Dialog */}
-      <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>Media Details</DialogTitle>
-          </DialogHeader>
-          
-          {selectedMedia && (
-            <div className="space-y-4">
-              <div className="aspect-video bg-gray-100 rounded-md overflow-hidden">
-                {selectedMedia.type.startsWith("image/") ? (
-                  <img 
-                    src={selectedMedia.url} 
-                    alt={selectedMedia.name} 
-                    className="w-full h-full object-contain" 
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Media Library */}
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle>Media Library</CardTitle>
+              <div className="flex items-center gap-2">
+                <div className="relative">
+                  <Search className="h-4 w-4 absolute left-2 top-2.5 text-gray-400" />
+                  <Input
+                    placeholder="Search files..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-8 w-48"
                   />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    {selectedMedia.type.includes("video") ? (
-                      <Film className="h-16 w-16 text-gray-400" />
-                    ) : (
-                      <FileText className="h-16 w-16 text-gray-400" />
-                    )}
-                  </div>
-                )}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}
+                >
+                  {viewMode === 'grid' ? <List className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+                </Button>
               </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-sm text-gray-500">File Name</Label>
-                  <p className="font-medium">{selectedMedia.name}</p>
-                </div>
-                
-                <div>
-                  <Label className="text-sm text-gray-500">File Type</Label>
-                  <p className="font-medium">{selectedMedia.type}</p>
-                </div>
-                
-                <div>
-                  <Label className="text-sm text-gray-500">Size</Label>
-                  <p className="font-medium">{formatFileSize(selectedMedia.size)}</p>
-                </div>
-                
-                <div>
-                  <Label className="text-sm text-gray-500">Uploaded On</Label>
-                  <p className="font-medium">{selectedMedia.uploadedOn}</p>
-                </div>
-                
-                <div>
-                  <Label className="text-sm text-gray-500">Uploaded By</Label>
-                  <p className="font-medium">{selectedMedia.uploadedBy}</p>
-                </div>
-              </div>
-              
-              {selectedMedia.type.startsWith("image/") && (
-                <div className="space-y-2">
-                  <Label htmlFor="altText">Alt Text</Label>
-                  <Input id="altText" placeholder="Describe this image for accessibility" />
-                </div>
-              )}
-              
-              <div className="space-y-2">
-                <Label htmlFor="fileUrl">File URL</Label>
-                <div className="flex">
-                  <Input id="fileUrl" value={selectedMedia.url} readOnly />
-                  <Button 
-                    className="ml-2" 
-                    variant="outline" 
-                    onClick={() => {
-                      navigator.clipboard.writeText(selectedMedia.url);
-                      toast.success("URL copied to clipboard");
-                    }}
+            </div>
+          </CardHeader>
+          <CardContent>
+            {viewMode === 'grid' ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {filteredFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className={`p-4 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+                      selectedFile?.id === file.id ? 'border-blue-500 bg-blue-50' : ''
+                    }`}
+                    onClick={() => setSelectedFile(file)}
                   >
-                    Copy
+                    <div className="flex flex-col items-center text-center">
+                      {file.type === 'image' ? (
+                        <img 
+                          src={file.url} 
+                          alt={file.altText}
+                          className="w-full h-24 object-cover rounded mb-2"
+                        />
+                      ) : (
+                        <div className="w-full h-24 flex items-center justify-center bg-gray-100 rounded mb-2">
+                          {getFileIcon(file.type)}
+                        </div>
+                      )}
+                      <h4 className="font-medium text-sm truncate w-full">{file.name}</h4>
+                      <p className="text-xs text-gray-500">{file.size}</p>
+                      <Badge className="mt-1 text-xs">{file.type}</Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {filteredFiles.map((file) => (
+                  <div
+                    key={file.id}
+                    className={`flex items-center justify-between p-3 border rounded-lg cursor-pointer hover:bg-gray-50 ${
+                      selectedFile?.id === file.id ? 'border-blue-500 bg-blue-50' : ''
+                    }`}
+                    onClick={() => setSelectedFile(file)}
+                  >
+                    <div className="flex items-center gap-3">
+                      {getFileIcon(file.type)}
+                      <div>
+                        <h4 className="font-medium text-sm">{file.name}</h4>
+                        <p className="text-xs text-gray-500">
+                          {file.size} • {file.uploadDate}
+                          {file.dimensions && ` • ${file.dimensions}`}
+                        </p>
+                      </div>
+                    </div>
+                    <Badge className="text-xs">{file.type}</Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* File Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>File Details</CardTitle>
+            <CardDescription>Edit file information and settings</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {selectedFile ? (
+              <div className="space-y-4">
+                {/* File Preview */}
+                <div className="text-center">
+                  {selectedFile.type === 'image' ? (
+                    <img 
+                      src={selectedFile.url} 
+                      alt={selectedFile.altText}
+                      className="w-full max-h-48 object-cover rounded"
+                    />
+                  ) : (
+                    <div className="w-full h-32 flex items-center justify-center bg-gray-100 rounded">
+                      {getFileIcon(selectedFile.type)}
+                    </div>
+                  )}
+                </div>
+
+                {/* File Info */}
+                <div className="space-y-3">
+                  <div>
+                    <Label htmlFor="fileName">File Name</Label>
+                    <Input id="fileName" value={selectedFile.name} readOnly />
+                  </div>
+
+                  <div>
+                    <Label htmlFor="fileUrl">URL</Label>
+                    <div className="flex gap-2">
+                      <Input id="fileUrl" value={selectedFile.url} readOnly />
+                      <Button variant="outline" size="sm">
+                        <Download className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <Label htmlFor="altText">Alt Text</Label>
+                    <Textarea 
+                      id="altText"
+                      value={selectedFile.altText}
+                      placeholder="Describe this file for accessibility"
+                      className="h-20"
+                    />
+                  </div>
+
+                  {selectedFile.dimensions && (
+                    <div>
+                      <Label>Dimensions</Label>
+                      <p className="text-sm text-gray-600">{selectedFile.dimensions}</p>
+                    </div>
+                  )}
+
+                  <div>
+                    <Label>File Size</Label>
+                    <p className="text-sm text-gray-600">{selectedFile.size}</p>
+                  </div>
+
+                  <div>
+                    <Label>Upload Date</Label>
+                    <p className="text-sm text-gray-600">{selectedFile.uploadDate}</p>
+                  </div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex gap-2 pt-4">
+                  <Button size="sm" onClick={handleSaveAltText}>
+                    <Edit className="h-4 w-4 mr-1" />
+                    Save Changes
+                  </Button>
+                  <Button 
+                    variant="destructive" 
+                    size="sm"
+                    onClick={() => handleDelete(selectedFile.id)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />
+                    Delete
                   </Button>
                 </div>
               </div>
-              
-              <div className="flex justify-between pt-4">
-                <Button 
-                  variant="destructive" 
-                  onClick={() => {
-                    onDeleteMedia(selectedMedia.id);
-                    setDetailsDialogOpen(false);
-                    toast.success("Media deleted successfully");
-                  }}
-                >
-                  Delete
-                </Button>
-                
-                <Button onClick={() => setDetailsDialogOpen(false)}>Close</Button>
-              </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-      
-      {/* Upload Dialog */}
-      <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Upload Media</DialogTitle>
-            <DialogDescription>
-              Upload images, documents, or other media files to your library.
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-4">
-            <div 
-              className={cn(
-                "flex flex-col items-center justify-center border-dashed border-2 border-gray-300 rounded-md p-6",
-                "transition-colors duration-200",
-                dragActive ? "border-primary bg-primary/5" : "",
-                previewUrl ? "bg-gray-50" : ""
-              )}
-              onDragEnter={handleDrag}
-              onDragLeave={handleDrag}
-              onDragOver={handleDrag}
-              onDrop={handleDrop}
-            >
-              {previewUrl ? (
-                <div className="text-center">
-                  <img 
-                    src={previewUrl} 
-                    alt="Preview" 
-                    className="mx-auto h-32 object-contain mb-4" 
-                  />
-                  <p className="text-sm font-medium">{selectedFile?.name}</p>
-                  <p className="text-xs text-gray-500">
-                    {selectedFile ? (selectedFile.size / 1024 / 1024).toFixed(2) + " MB" : ""}
-                  </p>
-                </div>
-              ) : selectedFile ? (
-                <div className="text-center">
-                  {selectedFile.type.includes("video") ? (
-                    <Film className="h-20 w-20 text-gray-400 mx-auto mb-2" />
-                  ) : (
-                    <FileText className="h-20 w-20 text-gray-400 mx-auto mb-2" />
-                  )}
-                  <p className="text-sm font-medium">{selectedFile.name}</p>
-                  <p className="text-xs text-gray-500">{(selectedFile.size / 1024 / 1024).toFixed(2)} MB</p>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <Upload className="h-10 w-10 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500 mb-2">
-                    {dragActive 
-                      ? "Drop your file here" 
-                      : "Drag and drop or click to upload"}
-                  </p>
-                  <p className="text-xs text-gray-400">Supports images, documents, and videos up to 10MB</p>
-                </div>
-              )}
-              
-              <Input 
-                id="fileUpload" 
-                type="file" 
-                className="hidden" 
-                onChange={handleFileSelect} 
-                accept="image/*,video/*,application/pdf"
-              />
-              <Button 
-                variant="outline" 
-                className="mt-4"
-                onClick={() => document.getElementById('fileUpload')?.click()}
-              >
-                {selectedFile ? "Change File" : "Select File"}
-              </Button>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="fileName">File Name (optional)</Label>
-              <Input 
-                id="fileName" 
-                placeholder="Enter a custom file name" 
-                value={customFileName}
-                onChange={(e) => setCustomFileName(e.target.value)}
-              />
-            </div>
-            
-            {selectedFile?.type.startsWith("image/") && (
-              <div className="space-y-2">
-                <Label htmlFor="altText">Alt Text</Label>
-                <Input 
-                  id="altText" 
-                  placeholder="Describe this image for accessibility" 
-                  value={altText}
-                  onChange={(e) => setAltText(e.target.value)}
-                />
+            ) : (
+              <div className="text-center py-12">
+                <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No File Selected</h3>
+                <p className="text-gray-600">Select a file to view and edit its details</p>
               </div>
             )}
-          </div>
-          
-          <div className="flex justify-between">
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                setSelectedFile(null);
-                setCustomFileName("");
-                setAltText("");
-                setPreviewUrl(null);
-                setUploadDialogOpen(false);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button 
-              onClick={handleUpload}
-              disabled={!selectedFile || isUploading}
-            >
-              {isUploading ? "Uploading..." : "Upload"}
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </CardContent>
+        </Card>
+      </div>
 
-      <style>{`
-        .dropdown {
-          position: relative;
-          display: inline-block;
-        }
-        
-        .dropdown-content {
-          display: none;
-          position: absolute;
-          background-color: white;
-          min-width: 160px;
-          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
-          z-index: 1;
-          border-radius: 0.375rem;
-          padding: 0.5rem;
-          margin-top: 0.25rem;
-        }
-        
-        .dropdown:hover .dropdown-content {
-          display: block;
-        }
-      `}</style>
-    </>
+      {/* Upload Area */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Upload New Files</CardTitle>
+          <CardDescription>Drag and drop files or click to browse</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center hover:border-gray-400 transition-colors">
+            <Upload className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-lg font-medium text-gray-900 mb-2">Drop files here or click to upload</p>
+            <p className="text-gray-600 mb-4">Supports images, documents, and videos up to 50MB</p>
+            <Button variant="outline">Browse Files</Button>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
-}
+};
+
+export default MediaManager;
