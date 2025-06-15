@@ -1,18 +1,21 @@
 
-import React from "react";
+import React, { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet-async";
+
+// Critical above-the-fold components (loaded immediately)
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import ServicesSection from "@/components/ServicesSection";
-import ClientLogos from "@/components/ClientLogos";
-import EnhancedTestimonials from "@/components/EnhancedTestimonials";
-import ContactSection from "@/components/ContactSection";
-import FAQSection from "@/components/FAQSection";
-import Footer from "@/components/Footer";
-import WhatsAppButton from "@/components/ChatButton";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
-import SupabaseTest from "@/components/SupabaseTest";
+
+// Lazy load below-the-fold components
+const ServicesSection = lazy(() => import("@/components/ServicesSection"));
+const ClientLogos = lazy(() => import("@/components/ClientLogos"));
+const EnhancedTestimonials = lazy(() => import("@/components/EnhancedTestimonials"));
+const ContactSection = lazy(() => import("@/components/ContactSection"));
+const FAQSection = lazy(() => import("@/components/FAQSection"));
+const Footer = lazy(() => import("@/components/Footer"));
+const SupabaseTest = lazy(() => import("@/components/SupabaseTest"));
 
 const Index = () => {
   const faqItems = [
@@ -45,32 +48,69 @@ const Index = () => {
         <meta name="description" content="Leading e-commerce optimization agency specializing in product discovery, search platform configuration, and conversion optimization. Boost your online store's performance with expert optimization services." />
         <meta name="keywords" content="ecommerce optimization, product discovery, search optimization, conversion rate optimization, elasticsearch optimization, coveo configuration, shopify optimization" />
         <link rel="canonical" href="https://stellmedia.com" />
+        
+        {/* Critical CSS inlined for LCP optimization */}
+        <style>{`
+          .hero-section { 
+            background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+          }
+          .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+          }
+        `}</style>
       </Helmet>
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />
       
+      {/* Critical above-the-fold content */}
       <Navbar />
       <HeroSection />
-      <ServicesSection />
-      <ClientLogos />
-      <EnhancedTestimonials />
-      <ContactSection />
-      <FAQSection items={faqItems} />
+      
+      {/* Below-the-fold content with lazy loading */}
+      <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
+        <ServicesSection />
+      </Suspense>
+      
+      <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
+        <ClientLogos />
+      </Suspense>
+      
+      <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
+        <EnhancedTestimonials />
+      </Suspense>
+      
+      <Suspense fallback={<div className="h-40 bg-white animate-pulse" />}>
+        <ContactSection />
+      </Suspense>
+      
+      <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
+        <FAQSection items={faqItems} />
+      </Suspense>
       
       {/* Supabase Test Section - Remove this after testing */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-8">Database Connection Test</h2>
-          <p className="text-center text-gray-600 mb-8">
-            This section is for testing Supabase connectivity. Remove it after confirming everything works.
-          </p>
-          <SupabaseTest />
-        </div>
-      </section>
+      <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-8">Database Connection Test</h2>
+            <p className="text-center text-gray-600 mb-8">
+              This section is for testing Supabase connectivity. Remove it after confirming everything works.
+            </p>
+            <SupabaseTest />
+          </div>
+        </section>
+      </Suspense>
       
-      <Footer />
-      <WhatsAppButton />
+      <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
+        <Footer />
+      </Suspense>
     </div>
   );
 };
