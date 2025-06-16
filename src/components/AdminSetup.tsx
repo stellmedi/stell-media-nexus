@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -8,7 +7,7 @@ import { useToast } from '@/hooks/use-toast';
 
 const AdminSetup = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [email, setEmail] = useState('admin@stellmedia.com');
+  const [email, setEmail] = useState('info@stellmedia.com');
   const [password, setPassword] = useState('admin123');
   const { toast } = useToast();
 
