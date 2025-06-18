@@ -15,7 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { getContactSubmissions, getConsultationSubmissions } from "@/services/supabaseFormService";
+import { getContactSubmissions, getConsultationSubmissions, getAdminUsers } from "@/services/supabaseFormService";
 import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
@@ -35,9 +35,10 @@ const AdminDashboard = () => {
     const loadData = async () => {
       setIsLoadingData(true);
       try {
-        const [contactData, consultationData] = await Promise.all([
+        const [contactData, consultationData, usersData] = await Promise.all([
           getContactSubmissions(),
-          getConsultationSubmissions()
+          getConsultationSubmissions(),
+          getAdminUsers()
         ]);
 
         setContactFormSubmissions(contactData || []);
@@ -47,7 +48,7 @@ const AdminDashboard = () => {
         setStatsData({
           totalContacts: contactData?.length || 0,
           totalConsultations: consultationData?.length || 0,
-          totalUsers: 5, // Keep as mock for now
+          totalUsers: usersData?.length || 0, // Now using real user count
           recentActivity: (contactData?.length || 0) + (consultationData?.length || 0)
         });
       } catch (error) {
