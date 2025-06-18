@@ -136,25 +136,6 @@ export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
     localStorage.setItem('stellmedia_page_seo', serializedData);
     console.log('saveSEOData: Successfully saved to localStorage');
     
-    // Immediate verification
-    const immediateVerification = localStorage.getItem('stellmedia_page_seo');
-    if (!immediateVerification) {
-      console.error('saveSEOData: Immediate verification failed - no data found in localStorage');
-      return false;
-    }
-    
-    try {
-      const verificationParsed = JSON.parse(immediateVerification);
-      if (!verificationParsed[pagePath]) {
-        console.error('saveSEOData: Immediate verification failed - page data not found');
-        return false;
-      }
-      console.log('saveSEOData: Immediate verification successful for page:', pagePath);
-    } catch (parseError) {
-      console.error('saveSEOData: Immediate verification failed - parse error:', parseError);
-      return false;
-    }
-    
     // Dispatch update event immediately
     const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
       detail: { 
