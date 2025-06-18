@@ -1,5 +1,5 @@
 
-import React, { ReactNode } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,18 +21,26 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { isAuthenticated, adminUser, isLoading, logout } = useAdminAuth();
   const navigate = useNavigate();
+  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
 
-  if (isLoading) {
+  useEffect(() => {
+    if (!isLoading) {
+      setHasCheckedAuth(true);
+    }
+  }, [isLoading]);
+
+  if (isLoading || !hasCheckedAuth) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && hasCheckedAuth) {
+    console.log('AdminLayout: User not authenticated, redirecting to login');
     return <Navigate to="/admin" replace />;
   }
 
   const handleLogout = async () => {
     await logout();
-    navigate("/admin");
+    navigate("/admin", { replace: true });
   };
 
   const menuItems = [

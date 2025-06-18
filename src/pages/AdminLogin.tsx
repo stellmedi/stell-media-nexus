@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
@@ -44,6 +43,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignupMode, setIsSignupMode] = useState(false);
+  const [hasRedirected, setHasRedirected] = useState(false);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -62,12 +62,22 @@ const AdminLogin = () => {
     },
   });
 
+  // Handle redirect only once when authenticated
+  useEffect(() => {
+    if (isAuthenticated && !isLoading && !hasRedirected) {
+      console.log('AdminLogin: User authenticated, redirecting to dashboard');
+      setHasRedirected(true);
+      navigate("/admin/dashboard", { replace: true });
+    }
+  }, [isAuthenticated, isLoading, hasRedirected, navigate]);
+
   const onLoginSubmit = async (data: LoginFormValues) => {
     setIsSubmitting(true);
     try {
       const success = await login(data.email, data.password);
       if (success) {
-        navigate("/admin/dashboard");
+        // Don't navigate here, let the useEffect handle it
+        console.log('Login successful, waiting for redirect...');
       }
     } finally {
       setIsSubmitting(false);
@@ -90,9 +100,10 @@ const AdminLogin = () => {
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
-  
-  if (isAuthenticated && !isLoading) {
-    return <Navigate to="/admin/dashboard" replace />;
+
+  // Don't redirect with Navigate if we're already handling it in useEffect
+  if (isAuthenticated && hasRedirected) {
+    return null; // Let the navigation happen
   }
 
   return (
