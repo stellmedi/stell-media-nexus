@@ -21,29 +21,32 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { isAuthenticated, adminUser, isLoading, logout } = useAdminAuth();
   const navigate = useNavigate();
-  const [hasCheckedAuth, setHasCheckedAuth] = useState(false);
-  const redirectedRef = useRef(false);
+  const [authChecked, setAuthChecked] = useState(false);
+  const hasRedirected = useRef(false);
 
+  // Wait for auth check to complete before making decisions
   useEffect(() => {
     if (!isLoading) {
-      setHasCheckedAuth(true);
+      setAuthChecked(true);
     }
   }, [isLoading]);
 
-  if (isLoading || !hasCheckedAuth) {
+  // Show loading while checking authentication
+  if (isLoading || !authChecked) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  if (!isAuthenticated && hasCheckedAuth && !redirectedRef.current) {
+  // Only redirect if we're sure user is not authenticated and haven't redirected yet
+  if (!isAuthenticated && authChecked && !hasRedirected.current) {
     console.log('AdminLayout: User not authenticated, redirecting to login');
-    redirectedRef.current = true;
+    hasRedirected.current = true;
     return <Navigate to="/admin" replace />;
   }
 
   const handleLogout = async () => {
     try {
       await logout();
-      redirectedRef.current = true;
+      hasRedirected.current = true;
       navigate("/admin", { replace: true });
     } catch (error) {
       console.error('Logout error:', error);

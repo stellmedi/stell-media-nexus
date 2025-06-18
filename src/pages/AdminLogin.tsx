@@ -44,7 +44,7 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignupMode, setIsSignupMode] = useState(false);
-  const redirectedRef = useRef(false);
+  const hasRedirected = useRef(false);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -63,27 +63,31 @@ const AdminLogin = () => {
     },
   });
 
-  // Handle redirect only once when authenticated
+  // Single useEffect to handle authentication redirect
   useEffect(() => {
-    if (isAuthenticated && !isLoading && !redirectedRef.current) {
+    // Only redirect if authenticated, not loading, and haven't redirected yet
+    if (isAuthenticated && !isLoading && !hasRedirected.current) {
       console.log('AdminLogin: User authenticated, redirecting to dashboard');
-      redirectedRef.current = true;
-      // Use setTimeout to defer navigation and prevent rapid state changes
-      setTimeout(() => {
+      hasRedirected.current = true;
+      
+      // Use a small delay to prevent rapid state changes
+      const redirectTimer = setTimeout(() => {
         navigate("/admin/dashboard", { replace: true });
-      }, 100);
+      }, 50);
+
+      return () => clearTimeout(redirectTimer);
     }
   }, [isAuthenticated, isLoading, navigate]);
 
+  // Prevent form submission if already redirected
   const onLoginSubmit = async (data: LoginFormValues) => {
-    if (isSubmitting || redirectedRef.current) return;
+    if (isSubmitting || hasRedirected.current) return;
     
     setIsSubmitting(true);
     try {
       const success = await login(data.email, data.password);
       if (success) {
         console.log('Login successful, waiting for redirect...');
-        // Don't navigate here, let the useEffect handle it
       }
     } finally {
       setIsSubmitting(false);
@@ -91,7 +95,7 @@ const AdminLogin = () => {
   };
 
   const onSignupSubmit = async (data: SignupFormValues) => {
-    if (isSubmitting) return;
+    if (isSubmitting || hasRedirected.current) return;
     
     setIsSubmitting(true);
     try {
@@ -105,18 +109,14 @@ const AdminLogin = () => {
     }
   };
 
+  // Show loading while checking auth state
   if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  // If already authenticated and redirected, don't render anything
-  if (isAuthenticated && redirectedRef.current) {
+  // If authenticated and we've redirected, show loading to prevent flash
+  if (isAuthenticated && hasRedirected.current) {
     return <div className="flex items-center justify-center min-h-screen">Redirecting...</div>;
-  }
-
-  // If authenticated but haven't redirected yet, show loading
-  if (isAuthenticated && !redirectedRef.current) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
   return (
@@ -171,7 +171,7 @@ const AdminLogin = () => {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting || redirectedRef.current}
+                  disabled={isSubmitting || hasRedirected.current}
                 >
                   {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
@@ -235,7 +235,7 @@ const AdminLogin = () => {
             variant="ghost"
             className="w-full"
             onClick={() => setIsSignupMode(!isSignupMode)}
-            disabled={isSubmitting || redirectedRef.current}
+            disabled={isSubmitting || hasRedirected.current}
           >
             {isSignupMode 
               ? "Already have an account? Login" 
