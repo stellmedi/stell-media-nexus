@@ -16,6 +16,8 @@ const AdminSetup = () => {
     setIsLoading(true);
     
     try {
+      console.log('Creating admin user with email:', email);
+      
       // First, try to sign up the user
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -28,11 +30,80 @@ const AdminSetup = () => {
 
       if (error) {
         if (error.message.includes('already registered')) {
-          toast({
-            title: "User already exists",
-            description: "Admin user already exists. Try logging in with the credentials.",
-            variant: "default",
+          // User exists, let's check if they have an admin profile
+          console.log('User already exists, checking admin profile...');
+          
+          // Try to sign in to get the user ID
+          const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
           });
+          
+          if (!signInError && signInData.user) {
+            // Check if admin profile exists
+            const { data: adminData, error: adminError } = await supabase
+              .from('admin_users')
+              .select('*')
+              .eq('auth_user_id', signInData.user.id)
+              .single();
+            
+            if (adminError || !adminData) {
+              // Create admin profile
+              const { error: createProfileError } = await supabase
+                .from('admin_users')
+                .insert({
+                  auth_user_id: signInData.user.id,
+                  name: 'Admin User',
+                  email: email,
+                  role: 'admin'
+                });
+              
+              if (createProfileError) {
+                console.error('Error creating admin profile:', createProfileError);
+                toast({
+                  title: "Error creating admin profile",
+                  description: createProfileError.message,
+                  variant: "destructive",
+                });
+              } else {
+                toast({
+                  title: "Admin profile created",
+                  description: "Admin user profile has been created successfully.",
+                });
+              }
+            } else {
+              // Update role to admin if needed
+              if (adminData.role !== 'admin') {
+                const { error: updateError } = await supabase
+                  .from('admin_users')
+                  .update({ role: 'admin' })
+                  .eq('id', adminData.id);
+                
+                if (updateError) {
+                  console.error('Error updating role:', updateError);
+                } else {
+                  toast({
+                    title: "Role updated",
+                    description: "User role has been updated to admin.",
+                  });
+                }
+              } else {
+                toast({
+                  title: "Admin user ready",
+                  description: "Admin user already exists and is configured correctly.",
+                });
+              }
+            }
+            
+            // Sign out after setup
+            await supabase.auth.signOut();
+          } else {
+            toast({
+              title: "Error",
+              description: "User exists but credentials are incorrect.",
+              variant: "destructive",
+            });
+          }
         } else {
           toast({
             title: "Error creating admin user",
@@ -41,10 +112,29 @@ const AdminSetup = () => {
           });
         }
       } else if (data.user) {
-        toast({
-          title: "Admin user created successfully",
-          description: "You can now log in with the provided credentials.",
-        });
+        // New user created, create admin profile
+        const { error: profileError } = await supabase
+          .from('admin_users')
+          .insert({
+            auth_user_id: data.user.id,
+            name: 'Admin User',
+            email: email,
+            role: 'admin'
+          });
+        
+        if (profileError) {
+          console.error('Error creating admin profile:', profileError);
+          toast({
+            title: "Error creating admin profile",
+            description: profileError.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Admin user created successfully",
+            description: "You can now log in with the provided credentials.",
+          });
+        }
       }
     } catch (error) {
       console.error('Error creating admin user:', error);
@@ -62,22 +152,55 @@ const AdminSetup = () => {
     setIsLoading(true);
     
     try {
+      console.log('Testing login credentials...');
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Login test failed:', error);
         toast({
           title: "Login failed",
           description: error.message,
           variant: "destructive",
         });
       } else if (data.user) {
-        toast({
-          title: "Login successful",
-          description: "Admin credentials are working correctly!",
-        });
+        console.log('Login successful, checking admin profile...');
+        
+        // Check admin profile
+        const { data: adminData, error: adminError } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('auth_user_id', data.user.id)
+          .single();
+        
+        if (adminError || !adminData) {
+          toast({
+            title: "Admin profile missing",
+            description: "User authenticated but no admin profile found. Use 'Create Admin User' button.",
+            variant: "destructive",
+          });
+        } else if (!adminData.is_active) {
+          toast({
+            title: "Account inactive",
+            description: "Admin account exists but is not active.",
+            variant: "destructive",
+          });
+        } else if (adminData.role !== 'admin') {
+          toast({
+            title: "Insufficient permissions",
+            description: `User role is '${adminData.role}', needs 'admin' role.`,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Login successful",
+            description: "Admin credentials are working correctly!",
+          });
+        }
+        
         // Sign out immediately after test
         await supabase.auth.signOut();
       }
@@ -122,7 +245,7 @@ const AdminSetup = () => {
             className="w-full"
             variant="outline"
           >
-            {isLoading ? "Creating Admin User..." : "Create Admin User"}
+            {isLoading ? "Setting up Admin User..." : "Create/Fix Admin User"}
           </Button>
           <Button 
             onClick={testLogin} 

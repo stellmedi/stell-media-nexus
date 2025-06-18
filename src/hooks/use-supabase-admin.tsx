@@ -40,11 +40,12 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Load admin user profile
   const loadAdminUser = async (authUserId: string) => {
     try {
+      console.log('Loading admin user for auth ID:', authUserId);
+      
       const { data, error } = await supabase
         .from('admin_users')
         .select('*')
         .eq('auth_user_id', authUserId)
-        .eq('is_active', true)
         .single();
 
       if (error) {
@@ -52,6 +53,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         return null;
       }
 
+      console.log('Admin user data loaded:', data);
       return data as AdminUser;
     } catch (error) {
       console.error('Error in loadAdminUser:', error);
@@ -88,24 +90,38 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
   // Login function
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
+      console.log('Attempting login for:', email);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
       if (error) {
+        console.error('Login error:', error);
         toast.error(error.message);
         return false;
       }
 
       if (data.user) {
+        console.log('Authentication successful, loading admin user...');
         const adminUserData = await loadAdminUser(data.user.id);
+        
         if (!adminUserData) {
-          toast.error("Admin access denied. Contact your administrator.");
+          console.error('No admin user found for authenticated user');
+          toast.error("Admin access denied. User not found in admin_users table.");
           await supabase.auth.signOut();
           return false;
         }
 
+        if (!adminUserData.is_active) {
+          console.error('Admin user is not active');
+          toast.error("Admin access denied. Account is not active.");
+          await supabase.auth.signOut();
+          return false;
+        }
+
+        console.log('Admin user loaded successfully:', adminUserData);
         setUser(data.user);
         setSession(data.session);
         setAdminUser(adminUserData);
@@ -147,12 +163,8 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     role: "admin" | "editor" | "viewer"
   ): Promise<boolean> => {
     try {
-      // Check if current user is admin
-      if (!adminUser || adminUser.role !== 'admin') {
-        toast.error("Only admins can create new users");
-        return false;
-      }
-
+      console.log('Attempting to register new admin user:', email);
+      
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -163,6 +175,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
       });
 
       if (error) {
+        console.error('Registration error:', error);
         toast.error(error.message);
         return false;
       }
@@ -226,6 +239,8 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
   // Initialize auth state
   useEffect(() => {
+    console.log('Setting up auth state listener...');
+    
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
@@ -238,7 +253,7 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
             setSession(session);
             setAdminUser(adminUserData);
           } else {
-            // Not an admin user, sign them out
+            console.log('User not authorized for admin access, signing out');
             if (event !== 'SIGNED_OUT') {
               await supabase.auth.signOut();
             }
