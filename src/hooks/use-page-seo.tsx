@@ -118,23 +118,37 @@ export function getAllPageSEO(): PageSEOData {
 // Helper function to save SEO data (for use outside of SEOManager if needed)
 export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
   try {
-    console.log('saveSEOData: Attempting to save SEO data for page:', pagePath);
-    console.log('saveSEOData: Data to save:', seoData);
+    console.log('saveSEOData: [START] Attempting to save SEO data for page:', pagePath);
+    console.log('saveSEOData: [DATA] Data to save:', JSON.stringify(seoData, null, 2));
     
     const existingData = getAllPageSEO();
-    console.log('saveSEOData: Existing data before save:', existingData);
+    console.log('saveSEOData: [EXISTING] Current data before save:', existingData);
     
     const updatedData = {
       ...existingData,
       [pagePath]: { ...seoData }
     };
     
-    console.log('saveSEOData: Updated data to save:', updatedData);
+    console.log('saveSEOData: [UPDATED] Final data structure to save:', JSON.stringify(updatedData, null, 2));
     
     // Save to localStorage with error handling
     const serializedData = JSON.stringify(updatedData);
+    console.log('saveSEOData: [SERIALIZE] Serialized data length:', serializedData.length);
+    
     localStorage.setItem('stellmedia_page_seo', serializedData);
-    console.log('saveSEOData: Successfully saved to localStorage');
+    console.log('saveSEOData: [SUCCESS] Successfully saved to localStorage');
+    
+    // Immediate verification
+    const verifyData = localStorage.getItem('stellmedia_page_seo');
+    if (verifyData) {
+      const parsed = JSON.parse(verifyData);
+      console.log('saveSEOData: [VERIFY] Data verification successful:', parsed[pagePath] ? 'FOUND' : 'NOT FOUND');
+      if (parsed[pagePath]) {
+        console.log('saveSEOData: [VERIFY] Saved page data:', JSON.stringify(parsed[pagePath], null, 2));
+      }
+    } else {
+      console.error('saveSEOData: [ERROR] Verification failed - no data in localStorage');
+    }
     
     // Dispatch update event immediately
     const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
@@ -146,12 +160,12 @@ export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
       }
     });
     window.dispatchEvent(seoUpdateEvent);
-    console.log('saveSEOData: Successfully dispatched update event for page:', pagePath);
+    console.log('saveSEOData: [EVENT] Successfully dispatched update event for page:', pagePath);
     
-    console.log('saveSEOData: Save operation completed successfully for page:', pagePath);
+    console.log('saveSEOData: [COMPLETE] Save operation completed successfully for page:', pagePath);
     return true;
   } catch (error) {
-    console.error('saveSEOData: Error saving SEO data:', error);
+    console.error('saveSEOData: [ERROR] Error saving SEO data:', error);
     return false;
   }
 }

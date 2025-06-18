@@ -142,12 +142,17 @@ export default function SEOManager() {
   }, [selectedPage, pageSEOData, pageDefaults, dataLoading]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
-    console.log('SEOManager: Field changed:', field, 'new value:', value);
-    setSeoData(prev => ({
-      ...prev,
-      [field]: value
-    }));
+    console.log('SEOManager: [INPUT] Field changed:', field, 'new value:', value);
+    setSeoData(prev => {
+      const updated = {
+        ...prev,
+        [field]: value
+      };
+      console.log('SEOManager: [INPUT] Updated seoData:', updated);
+      return updated;
+    });
     setHasUnsavedChanges(true);
+    console.log('SEOManager: [INPUT] Marked as having unsaved changes');
   };
 
   const handlePageChange = (newPage: string) => {
@@ -162,16 +167,16 @@ export default function SEOManager() {
   };
 
   const handleSave = async () => {
-    console.log('SEOManager: Starting save operation for page:', selectedPage);
-    console.log('SEOManager: Current seoData to save:', seoData);
+    console.log('SEOManager: [SAVE] Starting save operation for page:', selectedPage);
+    console.log('SEOManager: [SAVE] Current seoData to save:', JSON.stringify(seoData, null, 2));
     
     setIsLoading(true);
     
     try {
-      console.log('SEOManager: Calling saveSEOData function...');
+      console.log('SEOManager: [SAVE] Calling saveSEOData function...');
       const success = saveSEOData(selectedPage, seoData);
       
-      console.log('SEOManager: Save operation result:', success);
+      console.log('SEOManager: [SAVE] Save operation result:', success);
       
       if (success) {
         setHasUnsavedChanges(false);
@@ -179,12 +184,12 @@ export default function SEOManager() {
           description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`,
           duration: 3000
         });
-        console.log('SEOManager: Save completed successfully');
+        console.log('SEOManager: [SAVE] Save completed successfully');
       } else {
         throw new Error('saveSEOData returned false');
       }
     } catch (error) {
-      console.error('SEOManager: Error saving SEO settings:', error);
+      console.error('SEOManager: [SAVE] Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
         description: "Please try again. Check the console for more details.",
         duration: 5000
