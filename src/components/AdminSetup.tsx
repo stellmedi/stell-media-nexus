@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -57,10 +58,45 @@ const AdminSetup = () => {
     }
   };
 
+  const testLogin = async () => {
+    setIsLoading(true);
+    
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        toast({
+          title: "Login failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      } else if (data.user) {
+        toast({
+          title: "Login successful",
+          description: "Admin credentials are working correctly!",
+        });
+        // Sign out immediately after test
+        await supabase.auth.signOut();
+      }
+    } catch (error) {
+      console.error('Error testing login:', error);
+      toast({
+        title: "Error",
+        description: "Failed to test login",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Card className="w-full max-w-md mx-auto mt-8">
       <CardHeader>
-        <CardTitle>Admin Setup</CardTitle>
+        <CardTitle>Admin Setup & Testing</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
@@ -79,15 +115,25 @@ const AdminSetup = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
-        <Button 
-          onClick={createAdminUser} 
-          disabled={isLoading}
-          className="w-full"
-        >
-          {isLoading ? "Creating Admin User..." : "Create Admin User"}
-        </Button>
+        <div className="space-y-2">
+          <Button 
+            onClick={createAdminUser} 
+            disabled={isLoading}
+            className="w-full"
+            variant="outline"
+          >
+            {isLoading ? "Creating Admin User..." : "Create Admin User"}
+          </Button>
+          <Button 
+            onClick={testLogin} 
+            disabled={isLoading}
+            className="w-full"
+          >
+            {isLoading ? "Testing Login..." : "Test Login Credentials"}
+          </Button>
+        </div>
         <p className="text-xs text-gray-600 text-center">
-          This will create the admin user in Supabase if it doesn't exist.
+          Current credentials: info@stellmedia.com / admin123
         </p>
       </CardContent>
     </Card>

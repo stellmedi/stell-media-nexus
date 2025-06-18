@@ -15,8 +15,6 @@ const EnhancedTestimonials = lazy(() => import("@/components/EnhancedTestimonial
 const ContactSection = lazy(() => import("@/components/ContactSection"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const Footer = lazy(() => import("@/components/Footer"));
-const SupabaseTest = lazy(() => import("@/components/SupabaseTest"));
-const AdminSetup = lazy(() => import("@/components/AdminSetup"));
 
 const Index = () => {
   const faqItems = [
@@ -94,32 +92,6 @@ const Index = () => {
       
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
         <FAQSection items={faqItems} />
-      </Suspense>
-      
-      {/* Admin Setup Section - For creating admin user */}
-      <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
-        <section className="py-16 bg-gray-100">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-8">Admin Setup</h2>
-            <p className="text-center text-gray-600 mb-8">
-              Use this section to create the admin user if login isn't working.
-            </p>
-            <AdminSetup />
-          </div>
-        </section>
-      </Suspense>
-      
-      {/* Supabase Test Section - Remove this after testing */}
-      <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
-        <section className="py-16 bg-gray-50">
-          <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-8">Database Connection Test</h2>
-            <p className="text-center text-gray-600 mb-8">
-              This section is for testing Supabase connectivity. Remove it after confirming everything works.
-            </p>
-            <SupabaseTest />
-          </div>
-        </section>
       </Suspense>
       
       <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
