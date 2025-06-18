@@ -18,6 +18,28 @@ export const getContactSubmissions = async () => {
   return data;
 };
 
+export const saveContactSubmission = async (submission: {
+  name: string;
+  email: string;
+  message: string;
+}) => {
+  console.log('Saving contact submission:', submission);
+  
+  const { data, error } = await supabase
+    .from('contact_submissions')
+    .insert([submission])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error saving contact submission:', error);
+    throw error;
+  }
+
+  console.log('Contact submission saved:', data);
+  return data;
+};
+
 export const getConsultationSubmissions = async () => {
   console.log('Fetching consultation submissions...');
   
@@ -32,6 +54,29 @@ export const getConsultationSubmissions = async () => {
   }
 
   console.log('Consultation submissions fetched:', data);
+  return data;
+};
+
+export const saveConsultationSubmission = async (submission: {
+  name: string;
+  email: string;
+  company: string;
+  message: string;
+}) => {
+  console.log('Saving consultation submission:', submission);
+  
+  const { data, error } = await supabase
+    .from('consultation_submissions')
+    .insert([submission])
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error saving consultation submission:', error);
+    throw error;
+  }
+
+  console.log('Consultation submission saved:', data);
   return data;
 };
 
