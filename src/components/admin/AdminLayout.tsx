@@ -1,5 +1,5 @@
 
-import React, { ReactNode, useEffect, useState, useRef } from "react";
+import React, { ReactNode, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,32 +21,21 @@ interface AdminLayoutProps {
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   const { isAuthenticated, adminUser, isLoading, logout } = useAdminAuth();
   const navigate = useNavigate();
-  const [authChecked, setAuthChecked] = useState(false);
-  const hasRedirected = useRef(false);
-
-  // Wait for auth check to complete before making decisions
-  useEffect(() => {
-    if (!isLoading) {
-      setAuthChecked(true);
-    }
-  }, [isLoading]);
 
   // Show loading while checking authentication
-  if (isLoading || !authChecked) {
+  if (isLoading) {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  // Only redirect if we're sure user is not authenticated and haven't redirected yet
-  if (!isAuthenticated && authChecked && !hasRedirected.current) {
+  // Simple redirect - if not authenticated, redirect to login
+  if (!isAuthenticated) {
     console.log('AdminLayout: User not authenticated, redirecting to login');
-    hasRedirected.current = true;
     return <Navigate to="/admin" replace />;
   }
 
   const handleLogout = async () => {
     try {
       await logout();
-      hasRedirected.current = true;
       navigate("/admin", { replace: true });
     } catch (error) {
       console.error('Logout error:', error);

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
@@ -44,7 +44,6 @@ const AdminLogin = () => {
   const navigate = useNavigate();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSignupMode, setIsSignupMode] = useState(false);
-  const hasRedirected = useRef(false);
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -63,39 +62,28 @@ const AdminLogin = () => {
     },
   });
 
-  // Single useEffect to handle authentication redirect
+  // Simple redirect logic - only redirect when authenticated and not loading
   useEffect(() => {
-    // Only redirect if authenticated, not loading, and haven't redirected yet
-    if (isAuthenticated && !isLoading && !hasRedirected.current) {
-      console.log('AdminLogin: User authenticated, redirecting to dashboard');
-      hasRedirected.current = true;
-      
-      // Use a small delay to prevent rapid state changes
-      const redirectTimer = setTimeout(() => {
-        navigate("/admin/dashboard", { replace: true });
-      }, 50);
-
-      return () => clearTimeout(redirectTimer);
+    if (isAuthenticated && !isLoading) {
+      console.log('AdminLogin: Redirecting authenticated user to dashboard');
+      navigate("/admin/dashboard", { replace: true });
     }
   }, [isAuthenticated, isLoading, navigate]);
 
-  // Prevent form submission if already redirected
   const onLoginSubmit = async (data: LoginFormValues) => {
-    if (isSubmitting || hasRedirected.current) return;
+    if (isSubmitting) return;
     
     setIsSubmitting(true);
     try {
-      const success = await login(data.email, data.password);
-      if (success) {
-        console.log('Login successful, waiting for redirect...');
-      }
+      await login(data.email, data.password);
+      // Navigation will be handled by useEffect
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const onSignupSubmit = async (data: SignupFormValues) => {
-    if (isSubmitting || hasRedirected.current) return;
+    if (isSubmitting) return;
     
     setIsSubmitting(true);
     try {
@@ -114,8 +102,8 @@ const AdminLogin = () => {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  // If authenticated and we've redirected, show loading to prevent flash
-  if (isAuthenticated && hasRedirected.current) {
+  // Don't render form if already authenticated (prevents flash)
+  if (isAuthenticated) {
     return <div className="flex items-center justify-center min-h-screen">Redirecting...</div>;
   }
 
@@ -171,7 +159,7 @@ const AdminLogin = () => {
                 <Button
                   type="submit"
                   className="w-full"
-                  disabled={isSubmitting || hasRedirected.current}
+                  disabled={isSubmitting}
                 >
                   {isSubmitting ? "Logging in..." : "Login"}
                 </Button>
@@ -235,7 +223,7 @@ const AdminLogin = () => {
             variant="ghost"
             className="w-full"
             onClick={() => setIsSignupMode(!isSignupMode)}
-            disabled={isSubmitting || hasRedirected.current}
+            disabled={isSubmitting}
           >
             {isSignupMode 
               ? "Already have an account? Login" 

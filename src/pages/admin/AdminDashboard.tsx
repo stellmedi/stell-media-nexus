@@ -1,6 +1,5 @@
 
 import React, { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import {
@@ -16,14 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useAuth } from "@/hooks/use-auth";
 import { getContactSubmissions, getConsultationSubmissions } from "@/services/supabaseFormService";
 import { supabase } from "@/integrations/supabase/client";
 
 const AdminDashboard = () => {
-  const { isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
-  const navigate = useNavigate();
   const [contactFormSubmissions, setContactFormSubmissions] = useState([]);
   const [consultationRequests, setConsultationRequests] = useState([]);
   const [statsData, setStatsData] = useState({
@@ -66,15 +62,11 @@ const AdminDashboard = () => {
       }
     };
 
-    if (isAuthenticated && !isLoading) {
-      loadData();
-    }
-  }, [isAuthenticated, isLoading, toast]);
+    loadData();
+  }, [toast]);
 
   // Set up real-time subscriptions for new submissions
   useEffect(() => {
-    if (!isAuthenticated) return;
-
     const contactChannel = supabase
       .channel('contact-submissions')
       .on('postgres_changes', 
@@ -119,16 +111,7 @@ const AdminDashboard = () => {
       contactChannel.unsubscribe();
       consultationChannel.unsubscribe();
     };
-  }, [isAuthenticated, toast]);
-
-  // If not authenticated, redirect to login
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/admin" replace />;
-  }
+  }, [toast]);
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
