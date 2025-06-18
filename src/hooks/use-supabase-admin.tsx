@@ -105,6 +105,10 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
 
       if (data.user) {
         console.log('Authentication successful, loading admin user...');
+        
+        // Wait a moment for the session to be fully established
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         const adminUserData = await loadAdminUser(data.user.id);
         
         if (!adminUserData) {
@@ -247,24 +251,27 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
         console.log('Auth state changed:', event, session?.user?.email);
         
         if (session?.user) {
-          const adminUserData = await loadAdminUser(session.user.id);
-          if (adminUserData && adminUserData.is_active) {
-            setUser(session.user);
-            setSession(session);
-            setAdminUser(adminUserData);
-          } else {
-            console.log('User not authorized for admin access, signing out');
-            if (event !== 'SIGNED_OUT') {
-              await supabase.auth.signOut();
+          // Wait for session to be fully established before loading admin user
+          setTimeout(async () => {
+            const adminUserData = await loadAdminUser(session.user.id);
+            if (adminUserData && adminUserData.is_active) {
+              setUser(session.user);
+              setSession(session);
+              setAdminUser(adminUserData);
+            } else {
+              console.log('User not authorized for admin access, signing out');
+              if (event !== 'SIGNED_OUT') {
+                await supabase.auth.signOut();
+              }
             }
-          }
+            setIsLoading(false);
+          }, 100);
         } else {
           setUser(null);
           setSession(null);
           setAdminUser(null);
+          setIsLoading(false);
         }
-        
-        setIsLoading(false);
       }
     );
 
