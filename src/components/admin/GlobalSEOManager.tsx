@@ -120,7 +120,7 @@ const GlobalSEOManager: React.FC = () => {
     
     try {
       // Check if gtag is available (would be loaded if GA is properly configured)
-      const hasGtag = typeof window !== 'undefined' && window.gtag;
+      const hasGtag = typeof window !== 'undefined' && typeof window.gtag === 'function';
       
       setTimeout(() => {
         if (hasGtag) {
@@ -182,7 +182,7 @@ const GlobalSEOManager: React.FC = () => {
     
     try {
       // Check if GTM dataLayer exists
-      const hasDataLayer = typeof window !== 'undefined' && window.dataLayer;
+      const hasDataLayer = typeof window !== 'undefined' && Array.isArray(window.dataLayer);
       
       setTimeout(() => {
         if (hasDataLayer) {
