@@ -88,21 +88,18 @@ export default function SEOManager() {
   // Use the hook to get SEO data for the selected page
   const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
 
-  // Update local state when page changes or data loads
+  // Simplified state update logic
   useEffect(() => {
-    console.log('SEOManager: useEffect triggered for page:', selectedPage);
-    console.log('SEOManager: Page SEO data:', pageSEOData);
-    console.log('SEOManager: Page defaults:', pageDefaults);
-    console.log('SEOManager: Data loading state:', dataLoading);
-    
     if (!dataLoading) {
+      console.log('🔄 SEOManager: Updating state for page:', selectedPage);
+      console.log('📊 SEOManager: Page SEO data:', pageSEOData);
+      console.log('📋 SEOManager: Page defaults:', pageDefaults);
+      
       if (pageSEOData) {
-        console.log('SEOManager: Setting existing saved SEO data for page:', selectedPage);
+        console.log('✅ SEOManager: Using saved SEO data');
         setSeoData(pageSEOData);
-        setHasUnsavedChanges(false);
       } else if (pageDefaults) {
-        console.log('SEOManager: Setting page defaults for page:', selectedPage);
-        // Use page defaults as starting point
+        console.log('📋 SEOManager: Using page defaults');
         setSeoData({
           metaTitle: pageDefaults.metaTitle || "",
           metaDescription: pageDefaults.metaDescription || "",
@@ -118,7 +115,6 @@ export default function SEOManager() {
           robotsFollow: true,
           schemaType: "WebPage",
           schemaData: "",
-          // AI SEO fields from defaults
           aiContentType: pageDefaults.aiContentType || "",
           aiExpertise: pageDefaults.aiExpertise || "",
           aiServiceFocus: pageDefaults.aiServiceFocus || "",
@@ -128,31 +124,24 @@ export default function SEOManager() {
           enablePerplexityOptimization: true,
           enableChatGPTOptimization: true
         });
-        setHasUnsavedChanges(false);
       } else {
-        console.log('SEOManager: No data or defaults, setting empty defaults for page:', selectedPage);
-        // Set defaults with page-specific canonical URL
+        console.log('⚠️ SEOManager: Using default values');
         setSeoData({
           ...defaultSEOData,
           canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
         });
-        setHasUnsavedChanges(false);
       }
+      setHasUnsavedChanges(false);
     }
   }, [selectedPage, pageSEOData, pageDefaults, dataLoading]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
-    console.log('SEOManager: [INPUT] Field changed:', field, 'new value:', value);
-    setSeoData(prev => {
-      const updated = {
-        ...prev,
-        [field]: value
-      };
-      console.log('SEOManager: [INPUT] Updated seoData:', updated);
-      return updated;
-    });
+    console.log('📝 SEOManager: Field changed:', field, 'new value:', value);
+    setSeoData(prev => ({
+      ...prev,
+      [field]: value
+    }));
     setHasUnsavedChanges(true);
-    console.log('SEOManager: [INPUT] Marked as having unsaved changes');
   };
 
   const handlePageChange = (newPage: string) => {
@@ -161,22 +150,19 @@ export default function SEOManager() {
         return;
       }
     }
-    console.log('SEOManager: Page changed from', selectedPage, 'to', newPage);
+    console.log('🔄 SEOManager: Page changed from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
     setHasUnsavedChanges(false);
   };
 
   const handleSave = async () => {
-    console.log('SEOManager: [SAVE] Starting save operation for page:', selectedPage);
-    console.log('SEOManager: [SAVE] Current seoData to save:', JSON.stringify(seoData, null, 2));
+    console.log('💾 SEOManager: Starting save operation for page:', selectedPage);
+    console.log('📝 SEOManager: Data to save:', seoData);
     
     setIsLoading(true);
     
     try {
-      console.log('SEOManager: [SAVE] Calling saveSEOData function...');
       const success = saveSEOData(selectedPage, seoData);
-      
-      console.log('SEOManager: [SAVE] Save operation result:', success);
       
       if (success) {
         setHasUnsavedChanges(false);
@@ -184,12 +170,12 @@ export default function SEOManager() {
           description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`,
           duration: 3000
         });
-        console.log('SEOManager: [SAVE] Save completed successfully');
+        console.log('✅ SEOManager: Save completed successfully');
       } else {
         throw new Error('saveSEOData returned false');
       }
     } catch (error) {
-      console.error('SEOManager: [SAVE] Error saving SEO settings:', error);
+      console.error('🚨 SEOManager: Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
         description: "Please try again. Check the console for more details.",
         duration: 5000
@@ -204,9 +190,8 @@ export default function SEOManager() {
       return;
     }
     
-    console.log('SEOManager: Resetting SEO data for page:', selectedPage);
+    console.log('🔄 SEOManager: Resetting SEO data for page:', selectedPage);
     if (pageDefaults) {
-      // Reset to page defaults
       setSeoData({
         metaTitle: pageDefaults.metaTitle || "",
         metaDescription: pageDefaults.metaDescription || "",
@@ -222,7 +207,6 @@ export default function SEOManager() {
         robotsFollow: true,
         schemaType: "WebPage",
         schemaData: "",
-        // AI SEO fields from defaults
         aiContentType: pageDefaults.aiContentType || "",
         aiExpertise: pageDefaults.aiExpertise || "",
         aiServiceFocus: pageDefaults.aiServiceFocus || "",
@@ -254,12 +238,11 @@ export default function SEOManager() {
       return;
     }
     
-    console.log('SEOManager: Deleting saved SEO data for page:', selectedPage);
+    console.log('🗑️ SEOManager: Deleting saved SEO data for page:', selectedPage);
     const success = deleteSEOData(selectedPage);
     
     if (success) {
       toast.success("Saved SEO data deleted successfully");
-      // The useEffect will automatically reload the defaults
     } else {
       toast.error("Failed to delete saved SEO data");
     }
@@ -310,7 +293,6 @@ export default function SEOManager() {
               </SelectContent>
             </Select>
             
-            {/* Status indicators */}
             <div className="mt-2 flex items-center gap-2 flex-wrap">
               {dataLoading && (
                 <p className="text-sm text-gray-500">Loading SEO data...</p>

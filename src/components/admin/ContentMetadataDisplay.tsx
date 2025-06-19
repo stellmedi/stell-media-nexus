@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { getAllPageSEO } from "@/hooks/use-page-seo";
-import { Eye, Edit, FileText } from "lucide-react";
+import { Eye, Edit, FileText, RefreshCw } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ContentMetadata {
   title: string;
@@ -36,18 +37,21 @@ const availablePages = [
 
 export default function ContentMetadataDisplay() {
   const [contentData, setContentData] = useState<ContentMetadata[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const loadContentData = () => {
-    console.log('ContentMetadataDisplay: Loading content data...');
+    console.log('🔄 ContentMetadataDisplay: Loading content data...');
+    setIsRefreshing(true);
+    
     const seoData = getAllPageSEO();
-    console.log('ContentMetadataDisplay: Retrieved SEO data:', seoData);
+    console.log('📊 ContentMetadataDisplay: Retrieved SEO data:', seoData);
     
     const content: ContentMetadata[] = availablePages.map(page => {
       const pageSEO = seoData[page.path];
       return {
         title: page.name,
         description: pageSEO?.metaDescription || `Default description for ${page.name}`,
-        lastModified: pageSEO ? 'Recently updated' : 'No SEO data',
+        lastModified: pageSEO ? new Date().toLocaleDateString() : 'No SEO data',
         status: (pageSEO ? 'published' : 'draft') as 'published' | 'draft',
         path: page.path,
         seoData: pageSEO ? {
@@ -59,21 +63,22 @@ export default function ContentMetadataDisplay() {
     });
     
     setContentData(content);
+    setTimeout(() => setIsRefreshing(false), 300);
   };
 
   useEffect(() => {
     loadContentData();
 
     // Listen for SEO data updates
-    const handleSEODataUpdated = () => {
-      console.log('ContentMetadataDisplay: SEO data updated, reloading content data');
-      loadContentData();
+    const handleSEODataUpdated = (e: CustomEvent) => {
+      console.log('📡 ContentMetadataDisplay: SEO data updated event received:', e.detail);
+      setTimeout(() => loadContentData(), 100);
     };
 
-    window.addEventListener('seoDataUpdated', handleSEODataUpdated);
+    window.addEventListener('seoDataUpdated', handleSEODataUpdated as EventListener);
     
     return () => {
-      window.removeEventListener('seoDataUpdated', handleSEODataUpdated);
+      window.removeEventListener('seoDataUpdated', handleSEODataUpdated as EventListener);
     };
   }, []);
 
@@ -81,13 +86,26 @@ export default function ContentMetadataDisplay() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
-            Content Overview
-          </CardTitle>
-          <CardDescription>
-            View and manage content metadata across all pages
-          </CardDescription>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="h-5 w-5" />
+                Content Overview
+              </CardTitle>
+              <CardDescription>
+                View and manage content metadata across all pages
+              </CardDescription>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={loadContentData}
+              disabled={isRefreshing}
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -102,10 +120,18 @@ export default function ContentMetadataDisplay() {
                     <Badge variant={content.status === 'published' ? 'default' : 'secondary'}>
                       {content.status}
                     </Badge>
-                    <button className="p-2 hover:bg-gray-100 rounded">
+                    <button 
+                      onClick={() => window.open(content.path, '_blank')}
+                      className="p-2 hover:bg-gray-100 rounded"
+                      title="Preview page"
+                    >
                       <Eye className="h-4 w-4" />
                     </button>
-                    <button className="p-2 hover:bg-gray-100 rounded">
+                    <button 
+                      onClick={() => window.location.href = `/admin/seo?page=${encodeURIComponent(content.path)}`}
+                      className="p-2 hover:bg-gray-100 rounded"
+                      title="Edit SEO"
+                    >
                       <Edit className="h-4 w-4" />
                     </button>
                   </div>

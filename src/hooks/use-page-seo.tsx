@@ -39,34 +39,34 @@ export function usePageSEO(pagePath: string) {
 
   useEffect(() => {
     const loadSEOData = () => {
-      console.log('usePageSEO: Loading SEO data for page:', pagePath);
+      console.log('🔄 usePageSEO: Loading SEO data for page:', pagePath);
       
       // Get page defaults first
       const defaults = getPageDefaults(pagePath);
       setPageDefaults(defaults);
-      console.log('usePageSEO: Page defaults:', defaults);
+      console.log('📋 usePageSEO: Page defaults:', defaults);
 
       try {
         const savedSEOData = localStorage.getItem('stellmedia_page_seo');
-        console.log('usePageSEO: Raw localStorage data:', savedSEOData);
+        console.log('💾 usePageSEO: Raw localStorage data:', savedSEOData);
         
         if (savedSEOData) {
           const parsedData: PageSEOData = JSON.parse(savedSEOData);
-          console.log('usePageSEO: All saved SEO data:', parsedData);
+          console.log('📊 usePageSEO: All saved SEO data:', parsedData);
           
           if (parsedData[pagePath]) {
-            console.log('usePageSEO: Found saved SEO data for page:', pagePath, parsedData[pagePath]);
+            console.log('✅ usePageSEO: Found saved SEO data for page:', pagePath, parsedData[pagePath]);
             setSeoData(parsedData[pagePath]);
           } else {
-            console.log('usePageSEO: No saved SEO data for page, will use defaults:', pagePath);
+            console.log('⚠️ usePageSEO: No saved SEO data for page, will use defaults:', pagePath);
             setSeoData(null);
           }
         } else {
-          console.log('usePageSEO: No SEO data in localStorage, will use defaults');
+          console.log('❌ usePageSEO: No SEO data in localStorage, will use defaults');
           setSeoData(null);
         }
       } catch (error) {
-        console.error('usePageSEO: Error loading SEO data for page:', pagePath, error);
+        console.error('🚨 usePageSEO: Error loading SEO data for page:', pagePath, error);
         setSeoData(null);
       } finally {
         setIsLoading(false);
@@ -78,17 +78,17 @@ export function usePageSEO(pagePath: string) {
     // Listen for storage changes to update when SEO data is modified in other tabs
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'stellmedia_page_seo') {
-        console.log('usePageSEO: Storage change detected for SEO data, reloading for page:', pagePath);
+        console.log('🔄 usePageSEO: Storage change detected for SEO data, reloading for page:', pagePath);
         loadSEOData();
       }
     };
 
     // Listen for custom seoDataUpdated event for same-tab updates
     const handleSEODataUpdated = (e: CustomEvent) => {
-      console.log('usePageSEO: Custom seoDataUpdated event detected, reloading data for page:', pagePath);
-      console.log('usePageSEO: Event details:', e.detail);
+      console.log('🔄 usePageSEO: Custom seoDataUpdated event detected, reloading data for page:', pagePath);
+      console.log('📝 usePageSEO: Event details:', e.detail);
       // Force reload data to ensure we have the latest
-      setTimeout(() => loadSEOData(), 50);
+      setTimeout(() => loadSEOData(), 100);
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -107,50 +107,31 @@ export function getAllPageSEO(): PageSEOData {
   try {
     const savedSEOData = localStorage.getItem('stellmedia_page_seo');
     const data = savedSEOData ? JSON.parse(savedSEOData) : {};
-    console.log('getAllPageSEO: Retrieved all SEO data:', data);
+    console.log('📖 getAllPageSEO: Retrieved all SEO data:', data);
     return data;
   } catch (error) {
-    console.error('getAllPageSEO: Error loading all SEO data:', error);
+    console.error('🚨 getAllPageSEO: Error loading all SEO data:', error);
     return {};
   }
 }
 
-// Helper function to save SEO data (for use outside of SEOManager if needed)
+// Simplified save function - removed problematic verification logic
 export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
   try {
-    console.log('saveSEOData: [START] Attempting to save SEO data for page:', pagePath);
-    console.log('saveSEOData: [DATA] Data to save:', JSON.stringify(seoData, null, 2));
+    console.log('💾 [SAVE START] Saving SEO data for page:', pagePath);
+    console.log('📝 [SAVE DATA]:', JSON.stringify(seoData, null, 2));
     
     const existingData = getAllPageSEO();
-    console.log('saveSEOData: [EXISTING] Current data before save:', existingData);
-    
     const updatedData = {
       ...existingData,
       [pagePath]: { ...seoData }
     };
     
-    console.log('saveSEOData: [UPDATED] Final data structure to save:', JSON.stringify(updatedData, null, 2));
+    // Save to localStorage
+    localStorage.setItem('stellmedia_page_seo', JSON.stringify(updatedData));
+    console.log('✅ [SAVE SUCCESS] Data saved to localStorage');
     
-    // Save to localStorage with error handling
-    const serializedData = JSON.stringify(updatedData);
-    console.log('saveSEOData: [SERIALIZE] Serialized data length:', serializedData.length);
-    
-    localStorage.setItem('stellmedia_page_seo', serializedData);
-    console.log('saveSEOData: [SUCCESS] Successfully saved to localStorage');
-    
-    // Immediate verification
-    const verifyData = localStorage.getItem('stellmedia_page_seo');
-    if (verifyData) {
-      const parsed = JSON.parse(verifyData);
-      console.log('saveSEOData: [VERIFY] Data verification successful:', parsed[pagePath] ? 'FOUND' : 'NOT FOUND');
-      if (parsed[pagePath]) {
-        console.log('saveSEOData: [VERIFY] Saved page data:', JSON.stringify(parsed[pagePath], null, 2));
-      }
-    } else {
-      console.error('saveSEOData: [ERROR] Verification failed - no data in localStorage');
-    }
-    
-    // Dispatch update event immediately
+    // Dispatch update event
     const seoUpdateEvent = new CustomEvent('seoDataUpdated', {
       detail: { 
         updatedPage: pagePath, 
@@ -160,12 +141,11 @@ export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
       }
     });
     window.dispatchEvent(seoUpdateEvent);
-    console.log('saveSEOData: [EVENT] Successfully dispatched update event for page:', pagePath);
+    console.log('📡 [SAVE EVENT] Update event dispatched for page:', pagePath);
     
-    console.log('saveSEOData: [COMPLETE] Save operation completed successfully for page:', pagePath);
     return true;
   } catch (error) {
-    console.error('saveSEOData: [ERROR] Error saving SEO data:', error);
+    console.error('🚨 [SAVE ERROR] Error saving SEO data:', error);
     return false;
   }
 }
@@ -173,7 +153,7 @@ export function saveSEOData(pagePath: string, seoData: SEOData): boolean {
 // Helper function to delete SEO data for a specific page
 export function deleteSEOData(pagePath: string): boolean {
   try {
-    console.log('deleteSEOData: Deleting SEO data for page:', pagePath);
+    console.log('🗑️ deleteSEOData: Deleting SEO data for page:', pagePath);
     
     const existingData = getAllPageSEO();
     delete existingData[pagePath];
@@ -192,10 +172,10 @@ export function deleteSEOData(pagePath: string): boolean {
     });
     window.dispatchEvent(seoUpdateEvent);
     
-    console.log('deleteSEOData: Successfully deleted SEO data for page:', pagePath);
+    console.log('✅ deleteSEOData: Successfully deleted SEO data for page:', pagePath);
     return true;
   } catch (error) {
-    console.error('deleteSEOData: Error deleting SEO data:', error);
+    console.error('🚨 deleteSEOData: Error deleting SEO data:', error);
     return false;
   }
 }
