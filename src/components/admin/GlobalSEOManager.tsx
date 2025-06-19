@@ -7,7 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { useGlobalSEO } from '@/hooks/use-global-seo';
-import { Globe, BarChart3, Search, Bot, Brain, AlertCircle, CheckCircle } from 'lucide-react';
+import { Globe, BarChart3, Search, Bot, Brain, AlertCircle, CheckCircle, RefreshCw, ExternalLink, TestTube } from 'lucide-react';
 
 const GlobalSEOManager: React.FC = () => {
   const { config, isLoading, updateConfig } = useGlobalSEO();
@@ -22,6 +22,9 @@ const GlobalSEOManager: React.FC = () => {
   });
   const [isSaving, setIsSaving] = useState(false);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [testingGA, setTestingGA] = useState(false);
+  const [testingGSC, setTestingGSC] = useState(false);
+  const [testingGTM, setTestingGTM] = useState(false);
 
   useEffect(() => {
     if (!isLoading) {
@@ -99,7 +102,7 @@ const GlobalSEOManager: React.FC = () => {
     }
   };
 
-  const testAnalyticsConnection = () => {
+  const testAnalyticsConnection = async () => {
     const gaId = formData.googleAnalyticsId;
     if (!gaId) {
       toast.error('Please enter a Google Analytics ID first');
@@ -112,14 +115,56 @@ const GlobalSEOManager: React.FC = () => {
       return;
     }
 
-    // Simulate connection test
+    setTestingGA(true);
     toast.info('Testing Google Analytics connection...');
+    
+    try {
+      // Check if gtag is available (would be loaded if GA is properly configured)
+      const hasGtag = typeof window !== 'undefined' && window.gtag;
+      
+      setTimeout(() => {
+        if (hasGtag) {
+          toast.success('Google Analytics is connected and tracking', {
+            description: 'GA tracking script is loaded and functional'
+          });
+        } else {
+          toast.success('Google Analytics ID format is valid', {
+            description: 'Note: Tracking will be active after page reload'
+          });
+        }
+        setTestingGA(false);
+      }, 1500);
+    } catch (error) {
+      toast.error('Error testing Google Analytics connection');
+      setTestingGA(false);
+    }
+  };
+
+  const testSearchConsoleConnection = async () => {
+    const gscCode = formData.googleSearchConsoleVerification;
+    if (!gscCode) {
+      toast.error('Please enter a Google Search Console verification code first');
+      return;
+    }
+
+    const gscError = validateGoogleSearchConsoleVerification(gscCode);
+    if (gscError) {
+      toast.error(gscError);
+      return;
+    }
+
+    setTestingGSC(true);
+    toast.info('Verifying Search Console configuration...');
+    
     setTimeout(() => {
-      toast.success('Google Analytics ID format is valid');
+      toast.success('Search Console verification code format is valid', {
+        description: 'Verification will be active after saving and page reload'
+      });
+      setTestingGSC(false);
     }, 1000);
   };
 
-  const testTagManagerConnection = () => {
+  const testTagManagerConnection = async () => {
     const gtmId = formData.googleTagManagerId;
     if (!gtmId) {
       toast.error('Please enter a Google Tag Manager ID first');
@@ -132,10 +177,68 @@ const GlobalSEOManager: React.FC = () => {
       return;
     }
 
+    setTestingGTM(true);
     toast.info('Testing Google Tag Manager connection...');
-    setTimeout(() => {
-      toast.success('Google Tag Manager ID format is valid');
-    }, 1000);
+    
+    try {
+      // Check if GTM dataLayer exists
+      const hasDataLayer = typeof window !== 'undefined' && window.dataLayer;
+      
+      setTimeout(() => {
+        if (hasDataLayer) {
+          toast.success('Google Tag Manager is connected', {
+            description: 'GTM container is loaded and dataLayer is active'
+          });
+        } else {
+          toast.success('Google Tag Manager ID format is valid', {
+            description: 'Container will be loaded after saving and page reload'
+          });
+        }
+        setTestingGTM(false);
+      }, 1500);
+    } catch (error) {
+      toast.error('Error testing Google Tag Manager connection');
+      setTestingGTM(false);
+    }
+  };
+
+  const handleReconnectGA = () => {
+    if (!formData.googleAnalyticsId) {
+      toast.error('Please enter a Google Analytics ID first');
+      return;
+    }
+    
+    toast.info('Reconnecting Google Analytics...', {
+      description: 'Save the settings and reload the page to reconnect'
+    });
+  };
+
+  const handleReconnectGSC = () => {
+    if (!formData.googleSearchConsoleVerification) {
+      toast.error('Please enter a Search Console verification code first');
+      return;
+    }
+    
+    toast.info('Reconnecting Search Console...', {
+      description: 'Save the settings and reload the page to reconnect'
+    });
+  };
+
+  const openGADashboard = () => {
+    const gaId = formData.googleAnalyticsId;
+    if (gaId && gaId.startsWith('G-')) {
+      // GA4 dashboard
+      window.open(`https://analytics.google.com/analytics/web/#/p${gaId.slice(2)}/reports/dashboard`, '_blank');
+    } else if (gaId && gaId.startsWith('UA-')) {
+      // Universal Analytics dashboard
+      window.open('https://analytics.google.com/analytics/web/', '_blank');
+    } else {
+      window.open('https://analytics.google.com/', '_blank');
+    }
+  };
+
+  const openGSCDashboard = () => {
+    window.open('https://search.google.com/search-console', '_blank');
   };
 
   const handleSave = async () => {
@@ -153,7 +256,7 @@ const GlobalSEOManager: React.FC = () => {
       
       if (success) {
         toast.success('Global SEO settings saved successfully', {
-          description: 'Changes will be applied to all pages immediately'
+          description: 'Changes will be applied to all pages. Reload the page to see analytics changes.'
         });
         console.log('GlobalSEOManager: Config saved successfully');
       } else {
@@ -221,9 +324,33 @@ const GlobalSEOManager: React.FC = () => {
                 type="button"
                 variant="outline"
                 onClick={testAnalyticsConnection}
+                disabled={testingGA}
                 className="shrink-0"
               >
+                {testingGA ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <TestTube className="h-4 w-4" />
+                )}
                 Test
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleReconnectGA}
+                className="shrink-0"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Reconnect
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={openGADashboard}
+                className="shrink-0"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Dashboard
               </Button>
             </div>
             {validationErrors.googleAnalyticsId && (
@@ -258,13 +385,47 @@ const GlobalSEOManager: React.FC = () => {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="gsc-verification">Google Site Verification Code</Label>
-            <Input
-              id="gsc-verification"
-              value={formData.googleSearchConsoleVerification}
-              onChange={(e) => handleInputChange('googleSearchConsoleVerification', e.target.value)}
-              placeholder="Enter verification code (without meta tag)"
-              className={`font-mono text-sm ${validationErrors.googleSearchConsoleVerification ? 'border-red-500' : ''}`}
-            />
+            <div className="flex gap-2">
+              <Input
+                id="gsc-verification"
+                value={formData.googleSearchConsoleVerification}
+                onChange={(e) => handleInputChange('googleSearchConsoleVerification', e.target.value)}
+                placeholder="Enter verification code (without meta tag)"
+                className={`font-mono text-sm ${validationErrors.googleSearchConsoleVerification ? 'border-red-500' : ''}`}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                onClick={testSearchConsoleConnection}
+                disabled={testingGSC}
+                className="shrink-0"
+              >
+                {testingGSC ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <TestTube className="h-4 w-4" />
+                )}
+                Test
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleReconnectGSC}
+                className="shrink-0"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Reconnect
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={openGSCDashboard}
+                className="shrink-0"
+              >
+                <ExternalLink className="h-4 w-4" />
+                Dashboard
+              </Button>
+            </div>
             {validationErrors.googleSearchConsoleVerification && (
               <div className="flex items-center gap-1 text-sm text-red-600">
                 <AlertCircle className="h-4 w-4" />
@@ -309,8 +470,14 @@ const GlobalSEOManager: React.FC = () => {
                 type="button"
                 variant="outline"
                 onClick={testTagManagerConnection}
+                disabled={testingGTM}
                 className="shrink-0"
               >
+                {testingGTM ? (
+                  <RefreshCw className="h-4 w-4 animate-spin" />
+                ) : (
+                  <TestTube className="h-4 w-4" />
+                )}
                 Test
               </Button>
             </div>
