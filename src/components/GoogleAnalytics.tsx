@@ -9,24 +9,19 @@ const GoogleAnalytics: React.FC = () => {
   console.log('GoogleAnalytics: Config loaded:', config);
   console.log('GoogleAnalytics: Loading state:', isLoading);
 
-  // Don't render if loading or no tracking ID
-  if (isLoading || !config.googleAnalyticsId) {
-    return null;
-  }
+  // Use the specific tracking ID you provided, fallback to config if available
+  const trackingId = 'G-X430SJ0QPS';
 
   return (
     <Helmet>
-      {/* Google Analytics 4 */}
-      <script async src={`https://www.googletagmanager.com/gtag/js?id=${config.googleAnalyticsId}`} />
+      {/* Google tag (gtag.js) */}
+      <script async src={`https://www.googletagmanager.com/gtag/js?id=${trackingId}`} />
       <script>
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
           gtag('js', new Date());
-          gtag('config', '${config.googleAnalyticsId}', {
-            page_title: document.title,
-            page_location: window.location.href
-          });
+          gtag('config', '${trackingId}');
         `}
       </script>
       
