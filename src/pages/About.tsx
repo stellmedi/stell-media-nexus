@@ -1,3 +1,4 @@
+
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -79,7 +80,7 @@ const About = () => {
               <strong className="text-purple-700"> advanced e-commerce optimization</strong> that drive exceptional growth.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <Badge variant="secondary" className="px-6 py-3 text-base bg-blue-100 text-blue-800">15+ Years Global Experience</Badge>
+              <Badge variant="secondary" className="px-6 py-3 text-base bg-blue-100 text-blue-800">18+ Years Global Experience</Badge>
               <Badge variant="secondary" className="px-6 py-3 text-base bg-indigo-100 text-indigo-800">Fortune 500 Clients</Badge>
               <Badge variant="secondary" className="px-6 py-3 text-base bg-purple-100 text-purple-800">Dual Industry Focus</Badge>
             </div>
@@ -126,7 +127,7 @@ const About = () => {
                         <div>
                           <h4 className="text-xl font-bold text-gray-900 mb-2">Global Fortune 500 Experience</h4>
                           <p className="text-gray-700 leading-relaxed">
-                            With over 15 years of global digital experience working with Fortune 500 companies, 
+                            With over 18+ years of global digital experience working with Fortune 500 companies, 
                             Saurav has led digital transformation initiatives across multiple continents, 
                             bringing enterprise-level expertise to businesses of all sizes. His experience includes 
                             working with e-commerce global brands with specific expertise in product findability 
