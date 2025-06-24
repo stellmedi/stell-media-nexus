@@ -82,6 +82,8 @@ const GoogleAnalytics: React.FC = () => {
             "name": "Stell Media",
             "description": "Leading e-commerce optimization agency specializing in product discovery, search optimization, and conversion enhancement services",
             "url": "https://stellmedia.com",
+            "logo": "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
+            "image": "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
             "serviceType": [
               "E-commerce Optimization",
               "Product Discovery Optimization", 

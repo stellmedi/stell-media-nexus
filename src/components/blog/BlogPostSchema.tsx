@@ -46,7 +46,7 @@ const BlogPostSchema: React.FC<BlogPostSchemaProps> = ({
       name: 'Stell Media',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://stellmedia.com/logo.png'
+        url: '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png'
       },
       url: 'https://stellmedia.com'
     },

@@ -18,7 +18,7 @@ export default function SEOHelmet({
   defaultTitle = '',
   defaultDescription = '',
   defaultKeywords = '',
-  defaultOgImage = '',
+  defaultOgImage = '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png',
   children
 }: SEOHelmetProps) {
   const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
