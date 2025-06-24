@@ -10,7 +10,6 @@ const EnhancedTestimonials = () => {
       name: "Mukul Bansal",
       title: "Managing Director",
       company: "Motiaz Group",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "Stell Media's comprehensive digital transformation has revolutionized our property sales process. Their virtual tours and CRM automation have significantly enhanced our customer engagement and streamlined our operations across all our luxury residential projects.",
       results: "Enhanced customer engagement & streamlined operations"
@@ -19,7 +18,6 @@ const EnhancedTestimonials = () => {
       name: "Aman Khatri",
       title: "Head of Marketing",
       company: "Ex-DLF & Central Park",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "The end-to-end digital solutions provided by Stell Media transformed our marketing approach. From automated lead nurturing to comprehensive CRM integration, their expertise has been instrumental in modernizing our real estate operations.",
       results: "Complete marketing transformation & modernization"
@@ -28,7 +26,6 @@ const EnhancedTestimonials = () => {
       name: "Pradeep Sandal",
       title: "Managing Partner",
       company: "AHP Group",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "Stell Media's holistic approach to real estate digital transformation exceeded our expectations. Their 3D visualization, automated marketing, and comprehensive analytics have elevated our project presentations and client interactions to new heights.",
       results: "Elevated project presentations & client interactions"
@@ -38,7 +35,6 @@ const EnhancedTestimonials = () => {
       name: "Julie Tolbert",
       title: "Founder",
       company: "Antell Coaching, US",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "Stell Media's e-commerce optimization transformed our online presence completely. Their product discovery management and performance marketing strategies have significantly improved our customer journey and conversion rates.",
       results: "Improved customer journey & conversion optimization"
@@ -47,7 +43,6 @@ const EnhancedTestimonials = () => {
       name: "Akanksha",
       title: "Head of E-commerce",
       company: "Detox People Ltd, UK",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "The catalog SEO and data enrichment services provided by Stell Media revolutionized our product visibility. Their comprehensive approach to e-commerce optimization has driven substantial growth in our organic traffic and sales performance.",
       results: "Substantial growth in organic traffic & sales"
@@ -56,7 +51,6 @@ const EnhancedTestimonials = () => {
       name: "Manu",
       title: "Managing Partner",
       company: "Ruhee - On Demand Salon Services, UAE",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
       text: "Stell Media's end-to-end e-commerce solutions have been game-changing for our on-demand service platform. Their performance marketing and conversion optimization strategies have significantly enhanced our customer acquisition and retention.",
       results: "Enhanced customer acquisition & retention"
@@ -95,18 +89,10 @@ const EnhancedTestimonials = () => {
                   </div>
                 </div>
                 
-                <div className="flex items-center">
-                  <img
-                    src={testimonial.image}
-                    alt={`${testimonial.name} profile`}
-                    className="w-12 h-12 rounded-full mr-4 object-cover"
-                    loading="lazy"
-                  />
-                  <div>
-                    <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                    <div className="text-sm text-gray-600">{testimonial.title}</div>
-                    <div className="text-sm text-indigo-600 font-medium">{testimonial.company}</div>
-                  </div>
+                <div className="pt-4 border-t border-gray-100">
+                  <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                  <div className="text-sm text-gray-600">{testimonial.title}</div>
+                  <div className="text-sm text-indigo-600 font-medium">{testimonial.company}</div>
                 </div>
               </CardContent>
             </Card>
