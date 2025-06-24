@@ -237,20 +237,13 @@ const About = () => {
           </div>
         </section>
 
-        {/* Team Section */}
+        {/* Team Section - Removed image, kept text */}
         <section className="py-20 bg-white/80 backdrop-blur-sm">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
               Meet Our Expert Team
             </h2>
             <div className="max-w-5xl mx-auto text-center">
-              <div className="mb-12">
-                <img 
-                  src="/lovable-uploads/d1aeb466-efb1-4d25-900f-37414e5d0863.png" 
-                  alt="Stell Media Team - Dedicated professionals specializing in real estate and e-commerce digital transformation"
-                  className="w-full rounded-3xl shadow-2xl border border-gray-200"
-                />
-              </div>
               <p className="text-xl text-gray-600 leading-relaxed max-w-4xl mx-auto">
                 Our diverse team of specialists brings together years of focused experience in real estate and e-commerce 
                 digital transformation. We combine deep industry knowledge with cutting-edge technology expertise to deliver 
@@ -260,7 +253,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section - Updated */}
         <section className="py-20 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="container mx-auto px-4 text-center relative z-10">

@@ -17,7 +17,7 @@ const services = [
       "Drone Aerial Services", 
       "Interactive Floor Plans"
     ],
-    link: "/real-estate",
+    link: "/services/virtual-tours",
     gradient: "from-blue-500 to-indigo-600",
     category: "Real Estate"
   },
@@ -31,7 +31,7 @@ const services = [
       "Project Development Animations", 
       "Virtual Reality Experiences"
     ],
-    link: "/real-estate",
+    link: "/services/3d-visualization",
     gradient: "from-blue-500 to-indigo-600",
     category: "Real Estate"
   },
@@ -45,7 +45,7 @@ const services = [
       "Smart Follow-up Sequences", 
       "Performance Analytics Dashboard"
     ],
-    link: "/real-estate",
+    link: "/services/crm-lead-management",
     gradient: "from-blue-500 to-indigo-600",
     category: "Real Estate"
   },
@@ -59,7 +59,7 @@ const services = [
       "Market Analysis & Insights", 
       "ROI Tracking & Optimization"
     ],
-    link: "/real-estate",
+    link: "/services/lead-generation",
     gradient: "from-blue-500 to-indigo-600",
     category: "Real Estate"
   },
@@ -74,7 +74,7 @@ const services = [
       "Personalized Recommendation Engines", 
       "User Experience Enhancement"
     ],
-    link: "/ecommerce",
+    link: "/services/product-discovery",
     gradient: "from-purple-500 to-indigo-600",
     category: "E-Commerce"
   },
@@ -88,7 +88,7 @@ const services = [
       "Schema Markup Implementation", 
       "Content Optimization at Scale"
     ],
-    link: "/ecommerce",
+    link: "/services/data-enrichment",
     gradient: "from-purple-500 to-indigo-600",
     category: "E-Commerce"
   },
@@ -102,7 +102,7 @@ const services = [
       "Conversion Rate Optimization", 
       "Real-Time Analytics & Reporting"
     ],
-    link: "/ecommerce",
+    link: "/services/sem",
     gradient: "from-purple-500 to-indigo-600",
     category: "E-Commerce"
   },
@@ -116,7 +116,7 @@ const services = [
       "Checkout Process Enhancement", 
       "Mobile Experience Optimization"
     ],
-    link: "/ecommerce",
+    link: "/services/conversion-optimization",
     gradient: "from-purple-500 to-indigo-600",
     category: "E-Commerce"
   }
