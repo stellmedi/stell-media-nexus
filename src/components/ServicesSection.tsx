@@ -1,15 +1,15 @@
 
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, ShoppingCart, Users, BarChart } from "lucide-react";
+import { Home, ShoppingCart, Users, BarChart, Target, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const services = [
   {
-    icon: <Home className="h-10 w-10 text-blue-500" />,
+    icon: <Target className="h-10 w-10 text-blue-500" />,
     title: "Real Estate Lead Generation",
-    description: "Comprehensive lead generation systems with automated nurturing, CRM integration, and conversion optimization specifically for real estate developers.",
+    description: "Comprehensive lead generation systems with automated nurturing, CRM integration, and conversion optimization specifically for real estate developers in India.",
     features: [
       "Automated lead capture systems", 
       "CRM integration & management", 

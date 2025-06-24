@@ -5,59 +5,61 @@ import { Star } from "lucide-react";
 
 const EnhancedTestimonials = () => {
   const testimonials = [
+    // Real Estate (India) Examples
+    {
+      name: "Rajesh Sharma",
+      title: "Managing Director",
+      company: "Prestige Group",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
+      rating: 5,
+      text: "Stell Media transformed our lead generation process for luxury residential projects in Bangalore. Our qualified leads increased by 180% and conversion rates improved dramatically. Their CRM automation saved our sales team countless hours.",
+      results: "180% increase in qualified leads"
+    },
+    {
+      name: "Priya Mehta",
+      title: "Head of Sales",
+      company: "Godrej Properties",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
+      rating: 5,
+      text: "The automated lead nurturing system helped us stay connected with prospects throughout their property buying journey. Our sales cycle reduced by 40% and customer satisfaction scores improved significantly.",
+      results: "40% reduction in sales cycle"
+    },
+    {
+      name: "Amit Agarwal",
+      title: "Vice President Marketing",
+      company: "DLF Limited",
+      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
+      rating: 5,
+      text: "Our digital marketing campaigns for premium residential projects in Gurgaon achieved exceptional results. Lead quality improved by 220% and our cost per acquisition dropped by 35% within 6 months.",
+      results: "220% improvement in lead quality"
+    },
+    // E-commerce (Global) Examples
     {
       name: "Sarah Chen",
       title: "VP of E-commerce",
       company: "TechVantage Solutions",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b5e5?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Stell Media transformed our product discovery experience through expert search optimization. Our search conversion rate improved by 42% within 3 months. Their technical expertise in Elasticsearch optimization is unmatched.",
-      results: "42% increase in search conversions"
+      text: "Stell Media's product discovery optimization transformed our customer experience. Search conversion rates improved by 65% and zero-result searches dropped to less than 2%. Outstanding technical expertise.",
+      results: "65% increase in search conversions"
     },
     {
       name: "Michael Rodriguez",
       title: "Director of Digital Strategy",
       company: "GlobalMart Industries",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
+      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "The search platform optimization and configuration for Coveo was seamless. Zero downtime, improved performance, and our customers can now find products 60% faster. Exceptional optimization expertise.",
-      results: "60% faster product discovery"
+      text: "The catalog SEO and performance marketing strategies delivered exceptional ROI. Our organic traffic grew 3x in 8 months and revenue per visitor increased by 45%. Highly recommend their expertise.",
+      results: "3x organic traffic growth"
     },
     {
       name: "Emily Thompson",
       title: "Head of Product",
       company: "StyleForward",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
-      rating: 5,
-      text: "Our Amazon marketplace optimization campaign exceeded all expectations. Organic visibility increased by 62% and our conversion rates improved dramatically through their expert configuration. ROI was incredible.",
-      results: "62% increase in organic visibility"
-    },
-    {
-      name: "David Park",
-      title: "E-commerce Manager",
-      company: "TechGear Hub",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
-      rating: 5,
-      text: "The data optimization project cleaned up our entire product catalog. Search accuracy improved by 75% and our zero-result searches dropped to almost nothing. Outstanding optimization work.",
-      results: "75% improvement in search accuracy"
-    },
-    {
-      name: "Lisa Wang",
-      title: "Marketing Director",
-      company: "FashionFirst",
       image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
       rating: 5,
-      text: "Performance marketing optimization campaigns delivered 85% ROAS improvement. The team's strategic optimization approach and data-driven insights made all the difference. Highly recommend.",
-      results: "85% ROAS improvement"
-    },
-    {
-      name: "James Wilson",
-      title: "CTO",
-      company: "ElectroMart",
-      image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&h=80&fit=crop&crop=face&auto=format&q=85",
-      rating: 5,
-      text: "Technical SEO optimization audit revealed critical issues we didn't know existed. After optimization implementation, our organic traffic grew 2.4x in 6 months. The team's optimization expertise is phenomenal.",
-      results: "2.4x organic traffic growth"
+      text: "Product discovery management and search optimization helped our customers find products 70% faster. Conversion rates improved across all categories and customer satisfaction scores reached all-time highs.",
+      results: "70% faster product discovery"
     }
   ];
 
@@ -66,10 +68,10 @@ const EnhancedTestimonials = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            What Our Optimization Clients Say
+            Trusted by Leading Brands Globally
           </h2>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Real optimization results from real businesses. See how we've helped e-commerce brands optimize their product discovery and boost conversions through expert configuration and strategy.
+            Real results from real estate developers in India and e-commerce brands worldwide. See how we've helped businesses achieve exceptional growth.
           </p>
         </div>
 
@@ -89,7 +91,7 @@ const EnhancedTestimonials = () => {
                 
                 <div className="bg-green-50 p-3 rounded-lg mb-4">
                   <div className="text-sm font-semibold text-green-800">
-                    Optimization Result: {testimonial.results}
+                    Result: {testimonial.results}
                   </div>
                 </div>
                 
@@ -118,7 +120,7 @@ const EnhancedTestimonials = () => {
               <span>4.9/5 average rating</span>
             </div>
             <span>•</span>
-            <span>200+ successful optimization projects</span>
+            <span>500+ successful projects</span>
             <span>•</span>
             <span>99% client retention</span>
           </div>
