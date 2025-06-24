@@ -10,7 +10,7 @@ const EnhancedTestimonials = () => {
       title: "Managing Director",
       company: "Motiaz Group",
       rating: 5,
-      text: "Stell Media's comprehensive digital transformation has delivered exceptional quality leads and dramatically increased our site visits. Their virtual tours and CRM automation have significantly enhanced our lead conversion rates and streamlined our operations across all our luxury residential projects.",
+      text: "Stell Media's comprehensive digital transformation has delivered exceptional quality leads and dramatically increased our site visits. Their successful performance marketing campaigns and CRM automation have significantly enhanced our lead conversion rates and streamlined our operations across all our residential, commercial and industrial projects.",
       results: "Exceptional quality leads & increased site visits"
     },
     {
