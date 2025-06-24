@@ -143,6 +143,26 @@ export default function SEOHelmet({
           })}
         </script>
       )}
+      
+      {/* Global Analytics Tags */}
+      {globalConfig?.googleAnalyticsId && (
+        <>
+          <script async src={`https://www.googletagmanager.com/gtag/js?id=${globalConfig.googleAnalyticsId}`} />
+          <script>
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${globalConfig.googleAnalyticsId}');
+            `}
+          </script>
+        </>
+      )}
+      
+      {/* Search Console Verification */}
+      {globalConfig?.googleSearchConsoleVerification && (
+        <meta name="google-site-verification" content={globalConfig.googleSearchConsoleVerification} />
+      )}
     </Helmet>
   );
 }
