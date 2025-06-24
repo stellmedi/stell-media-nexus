@@ -28,23 +28,22 @@ const HeroSection = () => {
           
           {/* Subheadline */}
           <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto">
-            Specialized lead generation & CRM for real estate developers. 
-            Advanced product discovery & performance marketing for e-commerce brands.
+            Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.
           </p>
           
           {/* Value propositions */}
           <div className="flex flex-wrap justify-center gap-6 mb-10">
             <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              <span className="font-medium">18+ Years Experience</span>
+              <span className="font-medium">18+ Years of Digital Leadership</span>
             </div>
             <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              <span className="font-medium">Data-Driven Results</span>
+              <span className="font-medium">Growth Backed by Data & Automation</span>
             </div>
             <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-5 w-5 text-green-500" />
-              <span className="font-medium">Industry Specialists</span>
+              <span className="font-medium">Niche Experts in Real Estate & eCommerce</span>
             </div>
           </div>
           

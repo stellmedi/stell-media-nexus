@@ -149,9 +149,7 @@ const About = () => {
                       
                       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
                         <p className="text-lg italic text-gray-700 leading-relaxed">
-                          "I founded Stell Media with a simple belief: every business deserves access to 
-                          enterprise-level digital solutions. By focusing deeply on real estate and e-commerce, 
-                          we can deliver the specialized expertise that drives real, measurable results."
+                          "My global Fortune 500 experience and passion for real estate encouraged me to solve some ground-level problems in the industry. By focusing deeply on real estate and e-commerce, we can deliver the specialized expertise that drives real, measurable results for businesses of all sizes."
                         </p>
                         <div className="flex items-center mt-4">
                           <div className="flex text-yellow-400">
