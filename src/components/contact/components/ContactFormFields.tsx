@@ -42,18 +42,18 @@ const ContactFormFields = ({ form, isSubmitting }: ContactFormFieldsProps) => {
       
       <FormField
         control={form.control}
-        name="email"
+        name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-gray-700 font-medium">Email</FormLabel>
+            <FormLabel className="text-gray-700 font-medium">Phone Number</FormLabel>
             <FormControl>
               <Input 
-                type="email" 
-                placeholder="your@email.com" 
+                type="tel" 
+                placeholder="Your phone number" 
                 {...field} 
                 disabled={isSubmitting}
                 className="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 bg-white text-gray-900 placeholder:text-gray-500"
-                autoComplete="email"
+                autoComplete="tel"
               />
             </FormControl>
             <FormMessage />

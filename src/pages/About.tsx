@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -81,7 +80,7 @@ const About = () => {
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-12">
               <Badge variant="secondary" className="px-6 py-3 text-base bg-blue-100 text-blue-800">18+ Years Global Experience</Badge>
-              <Badge variant="secondary" className="px-6 py-3 text-base bg-indigo-100 text-indigo-800">Fortune 500 Clients</Badge>
+              <Badge variant="secondary" className="px-6 py-3 text-base bg-indigo-100 text-indigo-800">Enterprise-Level Expertise</Badge>
               <Badge variant="secondary" className="px-6 py-3 text-base bg-purple-100 text-purple-800">Dual Industry Focus</Badge>
             </div>
           </div>
@@ -171,8 +170,8 @@ const About = () => {
           </div>
         </section>
 
-        {/* Mission & Vision */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+        {/* Mission & Vision - Fixed spacing */}
+        <section className="py-16 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 max-w-7xl mx-auto">
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-10">
@@ -345,7 +344,7 @@ const About = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated */}
+        {/* CTA Section - Updated with white text buttons */}
         <section className="py-20 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="container mx-auto px-4 text-center relative z-10">
@@ -358,7 +357,7 @@ const About = () => {
               <Link to="/consultation">
                 <Button size="xl" className="bg-white text-indigo-600 hover:bg-gray-100 font-semibold px-10 py-6 text-lg shadow-lg">
                   <Briefcase className="mr-3 h-5 w-5" />
-                  Start Your Transformation
+                  <span className="text-white">Start Your Transformation</span>
                 </Button>
               </Link>
               <Link to="/services">
@@ -367,7 +366,7 @@ const About = () => {
                   variant="outline" 
                   className="border-2 border-white text-white bg-transparent hover:bg-white hover:text-indigo-600 font-semibold px-10 py-6 text-lg"
                 >
-                  Explore Our Services <ArrowRight className="ml-3 h-5 w-5" />
+                  <span className="text-white">Explore Our Services</span> <ArrowRight className="ml-3 h-5 w-5" />
                 </Button>
               </Link>
             </div>

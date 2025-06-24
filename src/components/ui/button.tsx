@@ -12,13 +12,13 @@ const buttonVariants = cva(
       variant: {
         default: "bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90 active:opacity-100",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "bg-destructive text-white hover:bg-destructive/90",
         outline:
-          "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+          "border border-input bg-background text-white hover:bg-accent hover:text-white",
         secondary:
-          "bg-indigo-100 text-indigo-700 hover:bg-indigo-200 active:bg-indigo-300",
-        ghost: "hover:bg-indigo-50 hover:text-indigo-600 active:bg-indigo-100",
-        link: "text-indigo-600 underline-offset-4 hover:underline",
+          "bg-indigo-100 text-white hover:bg-indigo-200 active:bg-indigo-300",
+        ghost: "text-white hover:bg-indigo-50 hover:text-white active:bg-indigo-100",
+        link: "text-white underline-offset-4 hover:underline",
         cta: "bg-white text-indigo-700 hover:bg-indigo-50 active:bg-indigo-100 font-semibold shadow-md hover:shadow-lg border-2 border-white",
         white: "bg-white text-indigo-700 hover:bg-indigo-50 active:bg-indigo-100 font-semibold shadow-md hover:shadow-lg border-2 border-white",
       },

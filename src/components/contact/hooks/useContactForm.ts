@@ -2,9 +2,9 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { sendEmail, TEMPLATES, initEmailJS, isEmailJSInitialized, testEmailJSConnection } from "@/utils/emailService";
 import { useToast } from "@/hooks/use-toast";
-import { formSchema, FormValues } from "../schemas/contactFormSchema";
+import { sendEmail, isEmailJSConfigured } from "@/utils/emailService";
+import { contactFormSchema, FormValues } from "../schemas/contactFormSchema";
 
 export const useContactForm = () => {
   const { toast } = useToast();
@@ -15,87 +15,66 @@ export const useContactForm = () => {
   const [isInitializing, setIsInitializing] = useState(true);
 
   const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(contactFormSchema),
     defaultValues: {
       name: "",
-      email: "",
+      phone: "",
       message: "",
     },
-    mode: "onChange",
   });
 
-  // Initialize EmailJS on component mount
   useEffect(() => {
-    const initializeEmailJS = async () => {
-      console.log("SimpleContactForm: Initializing EmailJS...");
-      setIsInitializing(true);
-      
-      try {
-        await initEmailJS();
-        const connectionTest = await testEmailJSConnection();
-        setEmailJSReady(connectionTest);
-        console.log("SimpleContactForm: EmailJS ready:", connectionTest);
-      } catch (error) {
-        console.error("SimpleContactForm: EmailJS initialization failed:", error);
-        setEmailJSReady(false);
-      } finally {
-        setIsInitializing(false);
-      }
+    const checkEmailJS = () => {
+      setEmailJSReady(isEmailJSConfigured());
+      setIsInitializing(false);
     };
-
-    initializeEmailJS();
+    
+    // Add a small delay to ensure EmailJS has time to initialize
+    const timer = setTimeout(checkEmailJS, 500);
+    return () => clearTimeout(timer);
   }, []);
 
   const onSubmit = async (data: FormValues) => {
-    console.log("SimpleContactForm: Form submission started with data:", data);
-    
     setIsSubmitting(true);
     setFormError(null);
     
     try {
-      // Ensure EmailJS is ready
-      if (!isEmailJSInitialized()) {
-        throw new Error("EmailJS is not properly initialized. Please refresh the page and try again.");
+      if (!emailJSReady) {
+        throw new Error("Email service is not configured");
       }
-      
-      console.log("SimpleContactForm: Sending email with template:", TEMPLATES.contact);
-      
-      const response = await sendEmail(TEMPLATES.contact, {
+
+      // Send email with phone number instead of email
+      await sendEmail("template_contact", {
         name: data.name,
-        email: data.email,
+        email: data.phone, // Using phone as email field for backward compatibility
+        phone: data.phone,
+        company: "",
+        website: "",
+        subject: "Contact Form Submission",
         message: data.message,
-        subject: "Website Contact Form Message",
       });
       
-      console.log("SimpleContactForm: Email sent successfully:", response);
-      
-      // Show success message
       toast({
-        title: "Message Sent Successfully!",
-        description: "Thank you for contacting us. We'll get back to you within 24 hours!",
+        title: "Message Sent",
+        description: "Thank you for your message. We'll get back to you soon!",
       });
       
-      // Reset form and show success state
       form.reset();
       setIsSuccess(true);
       
-      // Hide success message after 5 seconds
       setTimeout(() => {
         setIsSuccess(false);
       }, 5000);
       
     } catch (error) {
-      console.error("SimpleContactForm: Form submission failed:", error);
+      console.error("Error with form submission:", error);
+      let errorMessage = "There was a problem sending your message. Please try again.";
       
-      const errorMessage = error instanceof Error ? error.message : "There was a problem sending your message. Please try again.";
+      if (error instanceof Error) {
+        errorMessage += " Details: " + error.message;
+      }
+      
       setFormError(errorMessage);
-      
-      // Show error toast
-      toast({
-        title: "Failed to Send Message",
-        description: errorMessage,
-        variant: "destructive",
-      });
     } finally {
       setIsSubmitting(false);
     }

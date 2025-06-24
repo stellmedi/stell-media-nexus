@@ -29,7 +29,7 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
       // Save to Supabase first
       await saveContactSubmission({
         name: data.name,
-        email: data.email,
+        email: data.phone, // Using phone field for email in the service
         message: data.message,
       });
       console.log("Contact submission saved to Supabase successfully");
@@ -60,11 +60,11 @@ const SimpleContactForm = ({ className = "" }: SimpleContactFormProps) => {
           
           <Button 
             type="submit" 
-            className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 hover:opacity-90 disabled:opacity-50 text-white"
             disabled={isSubmitting || isInitializing}
           >
             {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            {isSubmitting ? "Sending..." : "Send Message"}
+            <span className="text-white">{isSubmitting ? "Sending..." : "Send Message"}</span>
           </Button>
           
           <p className="text-xs text-gray-500 text-center">
