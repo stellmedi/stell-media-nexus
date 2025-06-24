@@ -24,25 +24,27 @@ const AIPoweredSEO: React.FC = () => {
   const [suggestions] = useState([
     {
       type: 'title',
-      current: 'About Us - Stell Tech Academy',
-      suggested: 'AI-Powered Education Platform | Stell Tech Academy',
-      score: 85,
-      reason: 'Includes target keyword "AI-Powered Education" with higher search volume'
+      current: 'About Us - Stell Media',
+      suggested: 'Digital Marketing Agency | Lead Generation & SEO Services | Stell Media',
+      score: 88,
+      reason: 'Includes target keywords "Digital Marketing Agency" and "Lead Generation" with higher search volume'
     },
     {
       type: 'description',
-      current: 'Learn about our academy',
-      suggested: 'Discover cutting-edge AI education programs at Stell Tech Academy. Expert-led courses in machine learning, data science, and emerging technologies.',
-      score: 92,
-      reason: 'More descriptive, includes relevant keywords, and within optimal length'
+      current: 'Learn about our agency',
+      suggested: 'Stell Media is a leading digital marketing agency specializing in lead generation, SEO services, and conversion optimization for real estate and e-commerce businesses.',
+      score: 94,
+      reason: 'More descriptive, includes relevant keywords, targets specific industries, and within optimal length'
     }
   ]);
 
   const [keywordInsights] = useState([
-    { keyword: 'AI education', volume: '12K', difficulty: 'Medium', opportunity: 'High' },
-    { keyword: 'machine learning courses', volume: '8.5K', difficulty: 'High', opportunity: 'Medium' },
-    { keyword: 'data science training', volume: '15K', difficulty: 'Medium', opportunity: 'High' },
-    { keyword: 'tech academy online', volume: '5.2K', difficulty: 'Low', opportunity: 'High' }
+    { keyword: 'digital marketing agency', volume: '18K', difficulty: 'High', opportunity: 'High' },
+    { keyword: 'lead generation services', volume: '12K', difficulty: 'Medium', opportunity: 'High' },
+    { keyword: 'SEO services company', volume: '15K', difficulty: 'High', opportunity: 'Medium' },
+    { keyword: 'conversion optimization', volume: '8.5K', difficulty: 'Medium', opportunity: 'High' },
+    { keyword: 'real estate marketing', volume: '7.2K', difficulty: 'Medium', opportunity: 'High' },
+    { keyword: 'ecommerce marketing agency', volume: '5.8K', difficulty: 'Low', opportunity: 'High' }
   ]);
 
   const [seoScore] = useState({
@@ -52,6 +54,23 @@ const AIPoweredSEO: React.FC = () => {
     structure: 80,
     performance: 75
   });
+
+  // Updated page list to match SEOManager
+  const availablePages = [
+    { path: "/", name: "Home Page" },
+    { path: "/about", name: "About Page" },
+    { path: "/services", name: "Services Page" },
+    { path: "/services/seo", name: "SEO Services" },
+    { path: "/services/product-discovery", name: "Product Discovery" },
+    { path: "/services/data-enrichment", name: "Data Enrichment" },
+    { path: "/services/sem", name: "SEM Services" },
+    { path: "/services/conversion-optimization", name: "Conversion Optimization" },
+    { path: "/blog", name: "Blog Page" },
+    { path: "/contact", name: "Contact Page" },
+    { path: "/careers", name: "Careers Page" },
+    { path: "/case-studies", name: "Case Studies" },
+    { path: "/faq", name: "FAQ Page" }
+  ];
 
   const handleAnalyzePage = () => {
     if (!selectedPage) {
@@ -120,11 +139,11 @@ const AIPoweredSEO: React.FC = () => {
               onChange={(e) => setSelectedPage(e.target.value)}
             >
               <option value="">Select a page...</option>
-              <option value="/">Home Page</option>
-              <option value="/about">About Us</option>
-              <option value="/services">Services</option>
-              <option value="/contact">Contact</option>
-              <option value="/blog">Blog</option>
+              {availablePages.map((page) => (
+                <option key={page.path} value={page.path}>
+                  {page.name}
+                </option>
+              ))}
             </select>
             <Button 
               variant="outline" 
@@ -303,12 +322,12 @@ const AIPoweredSEO: React.FC = () => {
               <div className="text-xs text-gray-500">Company info</div>
             </Button>
             <Button variant="outline" className="h-16 flex flex-col gap-1">
-              <div className="text-sm font-medium">Course</div>
-              <div className="text-xs text-gray-500">Educational content</div>
+              <div className="text-sm font-medium">Service</div>
+              <div className="text-xs text-gray-500">Marketing services</div>
             </Button>
             <Button variant="outline" className="h-16 flex flex-col gap-1">
-              <div className="text-sm font-medium">Article</div>
-              <div className="text-xs text-gray-500">Blog posts</div>
+              <div className="text-sm font-medium">LocalBusiness</div>
+              <div className="text-xs text-gray-500">Local presence</div>
             </Button>
           </div>
         </CardContent>
