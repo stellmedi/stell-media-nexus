@@ -5,15 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 
 const SocialProofSection = () => {
-  const clientLogos = [
-    { name: 'TechCorp', logo: '🏢' },
-    { name: 'RealEstate Pro', logo: '🏠' },
-    { name: 'ShopMax', logo: '🛍️' },
-    { name: 'BuildersCorp', logo: '🏗️' },
-    { name: 'eCommerce Plus', logo: '📱' },
-    { name: 'PropertyLink', logo: '🔗' }
-  ];
-
   const caseStudies = [
     {
       title: 'Real Estate CRM Automation',
@@ -41,19 +32,6 @@ const SocialProofSection = () => {
   return (
     <section className="py-16 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container mx-auto px-4">
-        {/* Trusted By Section */}
-        <div className="text-center mb-16">
-          <h2 className="text-sm font-semibold text-gray-500 mb-6 tracking-wide uppercase">Trusted by Industry Leaders</h2>
-          <div className="flex flex-wrap justify-center items-center gap-8 opacity-60">
-            {clientLogos.map((client, index) => (
-              <div key={index} className="flex items-center gap-2 text-2xl hover:opacity-100 transition-opacity">
-                <span>{client.logo}</span>
-                <span className="text-gray-600 font-medium">{client.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Case Studies Preview */}
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-12">
