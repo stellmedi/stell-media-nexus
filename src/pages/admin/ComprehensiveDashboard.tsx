@@ -1,7 +1,6 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   BarChart3,
@@ -15,9 +14,8 @@ import {
   Code,
   Database,
   Shield,
-  Settings,
-  Users,
-  Bell
+  Building2,
+  ShoppingCart
 } from "lucide-react";
 import QuickStats from '@/components/admin/QuickStats';
 import ContentEditor from '@/components/admin/ContentEditor';
@@ -31,24 +29,13 @@ import ScriptManager from '@/components/admin/ScriptManager';
 import BackupRestore from '@/components/admin/BackupRestore';
 import QAudit from '@/components/admin/QAudit';
 
-interface DashboardModule {
-  id: string;
-  title: string;
-  icon: React.ComponentType<any>;
-  component: React.ReactNode;
-}
-
 const ComprehensiveDashboard: React.FC = () => {
   const [activeModule, setActiveModule] = useState<string>('overview');
-
-  const handleModuleChange = (moduleId: string) => {
-    setActiveModule(moduleId);
-  };
 
   const modules = [
     {
       id: 'overview',
-      title: 'Dashboard Overview',
+      title: 'Analytics Overview',
       icon: BarChart3,
       component: <QuickStats />
     },
@@ -60,13 +47,13 @@ const ComprehensiveDashboard: React.FC = () => {
     },
     {
       id: 'media',
-      title: 'Media Manager',
+      title: 'Media Library',
       icon: Image,
       component: <MediaManager />
     },
     {
       id: 'seo',
-      title: 'SEO Settings',
+      title: 'SEO Tools',
       icon: Search,
       component: <AIPoweredSEO />
     },
@@ -78,7 +65,7 @@ const ComprehensiveDashboard: React.FC = () => {
     },
     {
       id: 'blog',
-      title: 'Blog Management',
+      title: 'Blog Posts',
       icon: BookOpen,
       component: <BlogManager />
     },
@@ -90,7 +77,7 @@ const ComprehensiveDashboard: React.FC = () => {
     },
     {
       id: 'analytics',
-      title: 'Analytics',
+      title: 'Performance Analytics',
       icon: TrendingUp,
       component: <AnalyticsDashboard />
     },
@@ -108,7 +95,7 @@ const ComprehensiveDashboard: React.FC = () => {
     },
     {
       id: 'qa-audit',
-      title: 'QA Audit',
+      title: 'Quality Audit',
       icon: Shield,
       component: <QAudit />
     }
@@ -116,23 +103,80 @@ const ComprehensiveDashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold">Comprehensive Dashboard</h2>
-        <p className="text-gray-600">Manage all aspects of your website</p>
+      <div className="border-b border-gray-200 pb-4">
+        <h2 className="text-2xl font-bold text-gray-900">Stell Media Management Console</h2>
+        <p className="text-gray-600 mt-2">Comprehensive tools for managing your digital marketing platform</p>
+      </div>
+
+      {/* Service Overview Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <Card className="border border-blue-200 bg-blue-50/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-blue-900">
+              <Building2 className="h-5 w-5" />
+              Real Estate Services
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-blue-700">Lead generation, CRM automation, and virtual tours for real estate developers</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border border-purple-200 bg-purple-50/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-purple-900">
+              <ShoppingCart className="h-5 w-5" />
+              E-commerce Solutions
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-purple-700">Product discovery, catalog optimization, and performance marketing</p>
+          </CardContent>
+        </Card>
+        
+        <Card className="border border-green-200 bg-green-50/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-green-900">
+              <TrendingUp className="h-5 w-5" />
+              Growth Analytics
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-green-700">Performance tracking, conversion optimization, and ROI analysis</p>
+          </CardContent>
+        </Card>
       </div>
 
       <Tabs defaultValue={activeModule} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+        <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 xl:grid-cols-11 gap-1">
           {modules.map((module) => (
-            <TabsTrigger key={module.id} value={module.id}>
-              <module.icon className="h-4 w-4 mr-2" />
-              {module.title}
+            <TabsTrigger 
+              key={module.id} 
+              value={module.id}
+              className="flex items-center gap-1 text-xs px-2 py-2"
+            >
+              <module.icon className="h-3 w-3" />
+              <span className="hidden sm:inline">{module.title}</span>
             </TabsTrigger>
           ))}
         </TabsList>
+        
         {modules.map((module) => (
-          <TabsContent key={module.id} value={module.id} className="space-y-4">
-            {module.component}
+          <TabsContent key={module.id} value={module.id} className="space-y-4 mt-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <module.icon className="h-5 w-5" />
+                  {module.title}
+                </CardTitle>
+                <CardDescription>
+                  Manage {module.title.toLowerCase()} for your digital marketing platform
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {module.component}
+              </CardContent>
+            </Card>
           </TabsContent>
         ))}
       </Tabs>

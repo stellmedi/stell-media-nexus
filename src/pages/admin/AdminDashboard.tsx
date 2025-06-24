@@ -12,7 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { getContactSubmissions, getConsultationSubmissions, getAdminUsers } from "@/services/supabaseFormService";
@@ -48,7 +47,7 @@ const AdminDashboard = () => {
         setStatsData({
           totalContacts: contactData?.length || 0,
           totalConsultations: consultationData?.length || 0,
-          totalUsers: usersData?.length || 0, // Now using real user count
+          totalUsers: usersData?.length || 0,
           recentActivity: (contactData?.length || 0) + (consultationData?.length || 0)
         });
       } catch (error) {
@@ -126,143 +125,165 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      <div className="p-6">
-        <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
+      <div className="p-6 space-y-6">
+        <div className="border-b border-gray-200 pb-4">
+          <h1 className="text-3xl font-bold text-gray-900">Stell Media Dashboard</h1>
+          <p className="text-gray-600 mt-2">Monitor website activity and manage digital marketing operations</p>
+        </div>
         
-        {/* Stats Overview */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Total Contacts</CardTitle>
+        {/* Stats Overview with proper spacing */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="border border-blue-200 bg-blue-50/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-medium text-blue-900">Contact Inquiries</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statsData.totalContacts}</p>
+              <p className="text-3xl font-bold text-blue-700">{statsData.totalContacts}</p>
+              <p className="text-sm text-blue-600 mt-1">Website contacts</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Consultations</CardTitle>
+          <Card className="border border-purple-200 bg-purple-50/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-medium text-purple-900">Consultation Requests</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statsData.totalConsultations}</p>
+              <p className="text-3xl font-bold text-purple-700">{statsData.totalConsultations}</p>
+              <p className="text-sm text-purple-600 mt-1">Business consultations</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Users</CardTitle>
+          <Card className="border border-green-200 bg-green-50/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-medium text-green-900">Admin Users</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statsData.totalUsers}</p>
+              <p className="text-3xl font-bold text-green-700">{statsData.totalUsers}</p>
+              <p className="text-sm text-green-600 mt-1">System users</p>
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium">Recent Activity</CardTitle>
+          <Card className="border border-indigo-200 bg-indigo-50/50">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg font-medium text-indigo-900">Total Activity</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-3xl font-bold">{statsData.recentActivity}</p>
+              <p className="text-3xl font-bold text-indigo-700">{statsData.recentActivity}</p>
+              <p className="text-sm text-indigo-600 mt-1">Recent interactions</p>
             </CardContent>
           </Card>
         </div>
         
-        {/* Tabs for Different Sections */}
-        <Tabs defaultValue="contacts" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="contacts">Contact Submissions</TabsTrigger>
-            <TabsTrigger value="consultations">Consultation Requests</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="contacts">
-            <Card>
-              <CardHeader>
-                <CardTitle>Contact Form Submissions</CardTitle>
-                <CardDescription>
-                  Real-time submissions from your website contact form.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isLoadingData ? (
-                  <div className="text-center py-8">Loading submissions...</div>
-                ) : (
-                  <Table>
-                    <TableCaption>
-                      {contactFormSubmissions.length === 0 ? 
-                        "No contact submissions yet. Test the contact form to see data here!" : 
-                        `Total: ${contactFormSubmissions.length} submissions`
-                      }
-                    </TableCaption>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Message</TableHead>
-                        <TableHead>Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {contactFormSubmissions.map((submission) => (
-                        <TableRow key={submission.id}>
-                          <TableCell className="font-medium">{submission.name}</TableCell>
-                          <TableCell>{submission.email}</TableCell>
-                          <TableCell className="max-w-xs truncate">{submission.message}</TableCell>
-                          <TableCell>{formatDate(submission.created_at)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="consultations">
-            <Card>
-              <CardHeader>
-                <CardTitle>Consultation Requests</CardTitle>
-                <CardDescription>
-                  Real-time consultation requests from potential clients.
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                {isLoadingData ? (
-                  <div className="text-center py-8">Loading requests...</div>
-                ) : (
-                  <Table>
-                    <TableCaption>
-                      {consultationRequests.length === 0 ? 
-                        "No consultation requests yet. Test the consultation form to see data here!" : 
-                        `Total: ${consultationRequests.length} requests`
-                      }
-                    </TableCaption>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Email</TableHead>
-                        <TableHead>Company</TableHead>
-                        <TableHead>Message</TableHead>
-                        <TableHead>Date</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {consultationRequests.map((request) => (
-                        <TableRow key={request.id}>
-                          <TableCell className="font-medium">{request.name}</TableCell>
-                          <TableCell>{request.email}</TableCell>
-                          <TableCell>{request.company}</TableCell>
-                          <TableCell className="max-w-xs truncate">{request.message}</TableCell>
-                          <TableCell>{formatDate(request.created_at)}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                )}
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+        {/* Tabs for Different Sections with proper spacing */}
+        <div className="mt-8">
+          <Tabs defaultValue="contacts" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6">
+              <TabsTrigger value="contacts" className="text-base">Website Contacts</TabsTrigger>
+              <TabsTrigger value="consultations" className="text-base">Business Consultations</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="contacts" className="space-y-4">
+              <Card className="border border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-900">Contact Form Submissions</CardTitle>
+                  <CardDescription>
+                    Messages received through the Stell Media website contact form
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingData ? (
+                    <div className="text-center py-8 text-gray-500">Loading contact submissions...</div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableCaption className="text-gray-600">
+                          {contactFormSubmissions.length === 0 ? 
+                            "No contact submissions yet." : 
+                            `Total: ${contactFormSubmissions.length} contact submissions`
+                          }
+                        </TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="font-semibold">Name</TableHead>
+                            <TableHead className="font-semibold">Email</TableHead>
+                            <TableHead className="font-semibold">Message Preview</TableHead>
+                            <TableHead className="font-semibold">Received</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {contactFormSubmissions.map((submission) => (
+                            <TableRow key={submission.id} className="hover:bg-gray-50">
+                              <TableCell className="font-medium">{submission.name}</TableCell>
+                              <TableCell className="text-blue-600">{submission.email}</TableCell>
+                              <TableCell className="max-w-xs">
+                                <div className="truncate" title={submission.message}>
+                                  {submission.message}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-gray-600">{formatDate(submission.created_at)}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="consultations" className="space-y-4">
+              <Card className="border border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-900">Business Consultation Requests</CardTitle>
+                  <CardDescription>
+                    Consultation requests for digital marketing services
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {isLoadingData ? (
+                    <div className="text-center py-8 text-gray-500">Loading consultation requests...</div>
+                  ) : (
+                    <div className="overflow-x-auto">
+                      <Table>
+                        <TableCaption className="text-gray-600">
+                          {consultationRequests.length === 0 ? 
+                            "No consultation requests yet." : 
+                            `Total: ${consultationRequests.length} consultation requests`
+                          }
+                        </TableCaption>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="font-semibold">Contact</TableHead>
+                            <TableHead className="font-semibold">Company</TableHead>
+                            <TableHead className="font-semibold">Message Preview</TableHead>
+                            <TableHead className="font-semibold">Submitted</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {consultationRequests.map((request) => (
+                            <TableRow key={request.id} className="hover:bg-gray-50">
+                              <TableCell>
+                                <div className="font-medium">{request.name}</div>
+                                <div className="text-sm text-blue-600">{request.email}</div>
+                              </TableCell>
+                              <TableCell className="font-medium text-purple-700">{request.company}</TableCell>
+                              <TableCell className="max-w-xs">
+                                <div className="truncate" title={request.message}>
+                                  {request.message}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-gray-600">{formatDate(request.created_at)}</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
     </AdminLayout>
   );
