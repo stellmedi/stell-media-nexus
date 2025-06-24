@@ -7,6 +7,7 @@ import HeroSection from "@/components/HeroSection";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SchemaMarkup from "@/components/SchemaMarkup";
+import WhatsAppButton from "@/components/ChatButton";
 
 // Lazy load below-the-fold components
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
@@ -164,6 +165,9 @@ const Index = () => {
       {/* Critical above-the-fold content */}
       <Navbar />
       <HeroSection />
+      
+      {/* WhatsApp Button */}
+      <WhatsAppButton />
       
       {/* Below-the-fold content with lazy loading */}
       <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>

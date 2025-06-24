@@ -1,4 +1,3 @@
-
 import React from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -106,7 +105,7 @@ const About = () => {
                     <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
                       <User className="w-16 h-16 text-white" />
                     </div>
-                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Saurav Sharma</h3>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Saurav Bansal</h3>
                     <p className="text-blue-600 font-semibold mb-4">Founder & CEO</p>
                     <div className="flex justify-center space-x-4">
                       <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
@@ -160,7 +159,7 @@ const About = () => {
                               <Star key={i} className="w-4 h-4 fill-current" />
                             ))}
                           </div>
-                          <span className="ml-2 text-sm text-gray-600">— Saurav Sharma, Founder & CEO</span>
+                          <span className="ml-2 text-sm text-gray-600">— Saurav Bansal, Founder & CEO</span>
                         </div>
                       </div>
                     </div>

@@ -18,23 +18,23 @@ const WhatsAppButton = () => {
       @keyframes float-pulse-rotate {
         0% { 
           transform: translateY(0) scale(1) rotate(0deg); 
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+          box-shadow: 0 5px 15px rgba(34, 197, 94, 0.2); 
         }
         25% {
           transform: translateY(-5px) scale(1.05) rotate(1deg);
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+          box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
         }
         50% { 
           transform: translateY(-7px) scale(1.07) rotate(0deg); 
-          box-shadow: 0 12px 24px rgba(0,0,0,0.18); 
+          box-shadow: 0 12px 24px rgba(34, 197, 94, 0.35); 
         }
         75% {
           transform: translateY(-5px) scale(1.05) rotate(-1deg);
-          box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+          box-shadow: 0 10px 20px rgba(34, 197, 94, 0.3);
         }
         100% { 
           transform: translateY(0) scale(1) rotate(0deg); 
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+          box-shadow: 0 5px 15px rgba(34, 197, 94, 0.2); 
         }
       }
     `;
@@ -69,7 +69,7 @@ const WhatsAppButton = () => {
         ref={buttonRef}
         variant="default" 
         size="icon" 
-        className="h-14 w-14 rounded-full shadow-lg transition-all duration-300"
+        className="h-14 w-14 rounded-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 shadow-lg transition-all duration-300"
         onClick={handleWhatsAppClick}
         aria-label="Contact us on WhatsApp"
       >

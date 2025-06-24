@@ -1,10 +1,16 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle } from "lucide-react";
+import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
+  const handleWhatsAppClick = () => {
+    const phoneNumber = "919877100369"; // Format for WhatsApp: country code (91) + number without any symbols
+    const whatsappUrl = `https://wa.me/${phoneNumber}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
       {/* Background pattern */}
@@ -50,10 +56,14 @@ const HeroSection = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="border-2 border-gray-300 hover:border-blue-500 text-gray-700 hover:text-blue-600 font-semibold px-8 py-4 text-lg transition-all duration-300">
-              <Link to="/case-studies">
-                View Case Studies
-              </Link>
+            <Button 
+              onClick={handleWhatsAppClick}
+              variant="outline" 
+              size="lg" 
+              className="border-2 border-green-500 hover:border-green-600 text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold px-8 py-4 text-lg transition-all duration-300"
+            >
+              <MessageCircle className="mr-2 h-5 w-5" />
+              WhatsApp Us
             </Button>
           </div>
         </div>
