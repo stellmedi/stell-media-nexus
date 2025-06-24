@@ -45,7 +45,7 @@ const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const ComprehensiveDashboard = lazy(() => import("./pages/admin/ComprehensiveDashboard"));
 const ContentManagement = lazy(() => import("./pages/admin/ContentManagement"));
-const SEOManagement = lazy(() => import("./pages/admin/SEOManagement"));
+const SEOManagement = lazy(() => import("./components/admin/SEOManagement"));
 const EmailManagement = lazy(() => import("./pages/admin/EmailManagement"));
 const UsersManagement = lazy(() => import("./pages/admin/UsersManagement"));
 const SettingsPage = lazy(() => import("./pages/admin/SettingsPage"));
