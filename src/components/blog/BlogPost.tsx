@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Book, User, ArrowLeft, CalendarIcon } from 'lucide-react';
 import BlogPostSchema from './BlogPostSchema';
+import SocialShareButtons from '@/components/SocialShareButtons';
 
 interface BlogPostProps {
   id: string;
@@ -258,6 +259,16 @@ const BlogPost: React.FC<BlogPostProps> = ({
               <span>{readingTime} min read</span>
             </div>
           </div>
+
+          {/* Social Share Buttons - NEW */}
+          <div className="mb-6 pb-6 border-b border-gray-100">
+            <SocialShareButtons 
+              url={url}
+              title={title}
+              description={description}
+              className="justify-start"
+            />
+          </div>
           
           {/* Author with Link to About Page - ENHANCED with expertise */}
           <div className="flex items-center mb-6 bg-gray-50 p-3 rounded-lg">
@@ -419,15 +430,21 @@ const BlogPost: React.FC<BlogPostProps> = ({
             </div>
           </div>
           
-          {/* Improved Navigation and Sharing - NEW */}
-          <div className="mt-8 flex justify-between border-t border-gray-100 pt-6">
+          {/* Improved Navigation and Sharing - Enhanced with social buttons */}
+          <div className="mt-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-t border-gray-100 pt-6">
             <Link 
               to="/blog" 
               className="text-indigo-600 hover:text-indigo-800 inline-flex items-center"
             >
               <ArrowLeft className="mr-2 h-4 w-4" /> Back to all articles
             </Link>
-            <div className="flex items-center space-x-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <SocialShareButtons 
+                url={url}
+                title={title}
+                description={description}
+                className="justify-start sm:justify-end"
+              />
               <Link 
                 to="/case-studies" 
                 className="text-indigo-600 hover:text-indigo-800 inline-flex items-center"

@@ -1,3 +1,4 @@
+
 import React, { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -8,6 +9,8 @@ import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import WhatsAppButton from "@/components/ChatButton";
+import SEOHelmet from "@/components/SEOHelmet";
+import SocialShareButtons from "@/components/SocialShareButtons";
 
 // Lazy load below-the-fold components
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
@@ -131,29 +134,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <Helmet>
-        <title>Stell Media - Digital Growth Partner for Real Estate & E-commerce</title>
-        <meta name="description" content="Your trusted digital growth partner specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands." />
-        <meta name="keywords" content="digital growth partner, real estate lead generation, ecommerce optimization, CRM automation, product discovery, performance marketing, catalog SEO" />
-        <link rel="canonical" href="https://stellmedia.com" />
-        
-        {/* Critical CSS inlined for LCP optimization */}
-        <style>{`
-          .hero-section { 
-            background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-          }
-          .navbar {
-            position: sticky;
-            top: 0;
-            z-index: 50;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-          }
-        `}</style>
-      </Helmet>
+      <SEOHelmet
+        pagePath="/"
+        defaultTitle="Stell Media - Digital Growth Partner for Real Estate & E-commerce"
+        defaultDescription="Your trusted digital growth partner with 18+ years of experience specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands."
+        defaultKeywords="digital growth partner, real estate lead generation, ecommerce optimization, CRM automation, product discovery, performance marketing, catalog SEO"
+      />
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />
@@ -165,6 +151,17 @@ const Index = () => {
       {/* Critical above-the-fold content */}
       <Navbar />
       <HeroSection />
+      
+      {/* Social Share Buttons - Added to homepage */}
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-center">
+          <SocialShareButtons 
+            title="Stell Media - Digital Growth Partner"
+            description="Transform your business with our proven digital solutions for real estate and e-commerce"
+            className="bg-white p-4 rounded-lg shadow-sm border"
+          />
+        </div>
+      </div>
       
       {/* WhatsApp Button */}
       <WhatsAppButton />

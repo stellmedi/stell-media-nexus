@@ -54,8 +54,8 @@ export default function SEOHelmet({
   }
 
   // Priority: saved data > page defaults > component props
-  const metaTitle = seoData?.metaTitle || pageDefaults?.metaTitle || defaultTitle;
-  const metaDescription = seoData?.metaDescription || pageDefaults?.metaDescription || defaultDescription;
+  const metaTitle = seoData?.metaTitle || pageDefaults?.metaTitle || defaultTitle || 'Stell Media - Digital Growth Partner';
+  const metaDescription = seoData?.metaDescription || pageDefaults?.metaDescription || defaultDescription || 'Your trusted digital growth partner specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands.';
   const keywords = seoData?.keywords || pageDefaults?.keywords || defaultKeywords;
   const canonicalUrl = seoData?.canonicalUrl || `https://stellmedia.com${pagePath === '/' ? '' : pagePath}`;
   const ogTitle = seoData?.ogTitle || metaTitle;
@@ -84,6 +84,10 @@ export default function SEOHelmet({
   if (seoData?.robotsFollow === false) robotsContent.push('nofollow');
   const robots = robotsContent.length > 0 ? robotsContent.join(', ') : undefined;
 
+  // Ensure absolute URLs for social sharing
+  const absoluteOgImage = ogImage.startsWith('http') ? ogImage : `https://stellmedia.com${ogImage}`;
+  const absoluteTwitterImage = twitterImage.startsWith('http') ? twitterImage : `https://stellmedia.com${twitterImage}`;
+
   return (
     <Helmet>
       {metaTitle && <title>{metaTitle}</title>}
@@ -92,18 +96,21 @@ export default function SEOHelmet({
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       {robots && <meta name="robots" content={robots} />}
       
-      {/* Open Graph */}
-      {ogTitle && <meta property="og:title" content={ogTitle} />}
-      {ogDescription && <meta property="og:description" content={ogDescription} />}
-      {ogImage && <meta property="og:image" content={ogImage} />}
+      {/* Open Graph - Always include these for social sharing */}
+      <meta property="og:title" content={ogTitle} />
+      <meta property="og:description" content={ogDescription} />
+      <meta property="og:image" content={absoluteOgImage} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
+      <meta property="og:site_name" content="Stell Media" />
+      <meta property="og:locale" content="en_US" />
       
-      {/* Twitter Card */}
+      {/* Twitter Card - Always include these */}
       <meta name="twitter:card" content="summary_large_image" />
-      {twitterTitle && <meta name="twitter:title" content={twitterTitle} />}
-      {twitterDescription && <meta name="twitter:description" content={twitterDescription} />}
-      {twitterImage && <meta name="twitter:image" content={twitterImage} />}
+      <meta name="twitter:site" content="@StellMedia" />
+      <meta name="twitter:title" content={twitterTitle} />
+      <meta name="twitter:description" content={twitterDescription} />
+      <meta name="twitter:image" content={absoluteTwitterImage} />
       
       {/* Additional custom meta tags from children */}
       {children}
