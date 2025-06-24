@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from "react";
 import { Helmet } from "react-helmet-async";
 
@@ -11,7 +10,6 @@ import SchemaMarkup from "@/components/SchemaMarkup";
 
 // Lazy load below-the-fold components
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
-const ClientLogos = lazy(() => import("@/components/ClientLogos"));
 const EnhancedTestimonials = lazy(() => import("@/components/EnhancedTestimonials"));
 const ContactSection = lazy(() => import("@/components/ContactSection"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
@@ -170,10 +168,6 @@ const Index = () => {
       {/* Below-the-fold content with lazy loading */}
       <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
         <ServicesSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
-        <ClientLogos />
       </Suspense>
       
       <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
