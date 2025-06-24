@@ -1,4 +1,3 @@
-
 import React, { useEffect, Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "sonner";
@@ -49,6 +48,10 @@ const ConversionOptimization = lazy(() => import("@/pages/services/ConversionOpt
 
 // Lazy load WhatsApp button for non-critical functionality
 const WhatsAppButton = lazy(() => import("@/components/ChatButton"));
+
+// Add new lazy loaded components
+const RealEstate = lazy(() => import("@/pages/RealEstate"));
+const ECommerce = lazy(() => import("@/pages/ECommerce"));
 
 // Defer CSS import to reduce render-blocking
 import("./styles/grid-pattern.css");
@@ -106,6 +109,10 @@ const AppContent = () => {
           <Route path="/blog/:postId" element={<BlogPostPage />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/faq" element={<FAQ />} />
+
+          {/* New sub-brand routes */}
+          <Route path="/real-estate" element={<RealEstate />} />
+          <Route path="/ecommerce" element={<ECommerce />} />
 
           {/* Legal and sitemap */}
           <Route path="/privacy" element={<Privacy />} />

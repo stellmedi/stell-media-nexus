@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
 import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
+import SchemaMarkup from "@/components/SchemaMarkup";
 
 // Lazy load below-the-fold components
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
@@ -19,33 +20,122 @@ const Footer = lazy(() => import("@/components/Footer"));
 const Index = () => {
   const faqItems = [
     {
-      question: "What makes your product discovery optimization different?",
-      answer: "We combine advanced technology with deep e-commerce expertise. Our approach includes technical search platform optimization (Elasticsearch, Coveo), data enrichment, and performance optimization that goes beyond basic consulting to deliver measurable results."
+      question: "How do you help real estate developers with lead generation?",
+      answer: "We provide comprehensive lead generation solutions including automated marketing funnels, CRM integration, landing page optimization, and multi-channel campaigns specifically designed for real estate developers and projects."
     },
     {
-      question: "How quickly can we see results from optimization?",
+      question: "What makes your e-commerce optimization different?",
+      answer: "We combine advanced technology with deep e-commerce expertise. Our approach includes product discovery optimization, catalog SEO, performance marketing, and data enrichment that goes beyond basic consulting to deliver measurable results."
+    },
+    {
+      question: "Do you work with both real estate and e-commerce clients?",
+      answer: "Yes, we're uniquely positioned as a digital growth partner serving both verticals. Our real estate division focuses on lead generation and CRM automation, while our e-commerce division specializes in product discovery and performance marketing."
+    },
+    {
+      question: "How quickly can we see results from your services?",
       answer: "Most clients see initial improvements within 2-4 weeks of implementation. Significant conversion rate improvements typically occur within 6-8 weeks as the optimization strategies take full effect and data collection provides insights for further refinement."
     },
     {
-      question: "Do you work with specific e-commerce platforms?",
-      answer: "Yes, we have extensive experience with major platforms including Shopify Plus, Magento Commerce, WooCommerce, BigCommerce, and custom solutions. Our optimization strategies are platform-agnostic and focus on the underlying search and discovery technologies."
-    },
-    {
-      question: "What's included in your search platform optimization service?",
-      answer: "Our service includes complete search platform configuration, relevance tuning, faceted navigation optimization, synonym management, search analytics setup, A/B testing implementation, and ongoing performance monitoring with monthly optimization reports."
-    },
-    {
-      question: "How do you measure the success of optimization campaigns?",
-      answer: "We track key metrics including search conversion rates, click-through rates, revenue per search, zero-result search reduction, average order value improvements, and overall site conversion rate increases. All metrics are provided in detailed monthly reports."
+      question: "What platforms and technologies do you work with?",
+      answer: "For real estate: CRM platforms, marketing automation tools, lead management systems. For e-commerce: Shopify Plus, Magento, WooCommerce, BigCommerce, Elasticsearch, Coveo, and custom solutions. Our strategies are platform-agnostic and focus on results."
     }
   ];
+
+  // Schema data for service clusters
+  const realEstateServiceData = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateService",
+    "name": "Real Estate Digital Marketing Services",
+    "description": "Comprehensive lead generation, automation, and CRM services for real estate developers",
+    "provider": {
+      "@type": "Organization",
+      "name": "Stell Media",
+      "url": "https://stellmedia.com"
+    },
+    "serviceType": "Real Estate Lead Generation",
+    "areaServed": "Worldwide",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Real Estate Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Lead Generation",
+            "description": "Automated lead generation systems for real estate developers"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "CRM Integration",
+            "description": "Custom CRM solutions and automation for real estate sales teams"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Marketing Automation",
+            "description": "Automated marketing campaigns and nurturing sequences"
+          }
+        }
+      ]
+    }
+  };
+
+  const eCommerceServiceData = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    "name": "E-commerce Optimization Services",
+    "description": "Product discovery management, catalog SEO, and performance marketing for e-commerce brands",
+    "provider": {
+      "@type": "Organization",
+      "name": "Stell Media",
+      "url": "https://stellmedia.com"
+    },
+    "serviceType": "E-commerce Optimization",
+    "areaServed": "Worldwide",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "E-commerce Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Product Discovery Management",
+            "description": "Advanced product discovery optimization and search enhancement"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Catalog SEO",
+            "description": "Strategic SEO optimization for large product catalogs"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "Performance Marketing",
+            "description": "Data-driven performance marketing campaigns for e-commerce growth"
+          }
+        }
+      ]
+    }
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>Stell Media - E-commerce Product Discovery & Search Optimization Experts</title>
-        <meta name="description" content="Leading e-commerce optimization agency specializing in product discovery, search platform configuration, and conversion optimization. Boost your online store's performance with expert optimization services." />
-        <meta name="keywords" content="ecommerce optimization, product discovery, search optimization, conversion rate optimization, elasticsearch optimization, coveo configuration, shopify optimization" />
+        <title>Stell Media - Digital Growth Partner for Real Estate & E-commerce</title>
+        <meta name="description" content="Your trusted digital growth partner specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands." />
+        <meta name="keywords" content="digital growth partner, real estate lead generation, ecommerce optimization, CRM automation, product discovery, performance marketing, catalog SEO" />
         <link rel="canonical" href="https://stellmedia.com" />
         
         {/* Critical CSS inlined for LCP optimization */}
@@ -68,6 +158,10 @@ const Index = () => {
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />
+      
+      {/* Service Cluster Schema Markup */}
+      <SchemaMarkup type="service" data={realEstateServiceData} />
+      <SchemaMarkup type="service" data={eCommerceServiceData} />
       
       {/* Critical above-the-fold content */}
       <Navbar />
