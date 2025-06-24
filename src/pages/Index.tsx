@@ -11,6 +11,10 @@ import SchemaMarkup from "@/components/SchemaMarkup";
 import WhatsAppButton from "@/components/ChatButton";
 import SEOHelmet from "@/components/SEOHelmet";
 import SocialShareButtons from "@/components/SocialShareButtons";
+import XMLSitemap from "@/components/XMLSitemap";
+import StickyHeader from "@/components/StickyHeader";
+import ScrollProgressIndicator from "@/components/ScrollProgressIndicator";
+import SocialProofSection from "@/components/SocialProofSection";
 
 // Lazy load below-the-fold components
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
@@ -136,13 +140,15 @@ const Index = () => {
     <div className="min-h-screen bg-white">
       <SEOHelmet
         pagePath="/"
-        defaultTitle="Stell Media - Digital Growth Partner for Real Estate & E-commerce"
-        defaultDescription="Your trusted digital growth partner with 18+ years of experience specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands."
+        defaultTitle="Stell Media | Digital Growth for Real Estate & eCommerce Brands - Lead generation, CRM automation & product findability—done right."
+        defaultDescription="Digital growth for real estate and eCommerce brands. CRM automation, lead gen, and SEO-powered product discovery by Stell Media."
         defaultKeywords="digital growth partner, real estate lead generation, ecommerce optimization, CRM automation, product discovery, performance marketing, catalog SEO"
       />
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />
+      <XMLSitemap />
+      <ScrollProgressIndicator />
       
       {/* Service Cluster Schema Markup */}
       <SchemaMarkup type="service" data={realEstateServiceData} />
@@ -151,6 +157,12 @@ const Index = () => {
       {/* Critical above-the-fold content */}
       <Navbar />
       <HeroSection />
+      
+      {/* Sticky Header with CTA */}
+      <StickyHeader />
+      
+      {/* Social Proof Section */}
+      <SocialProofSection />
       
       {/* Social Share Buttons - Added to homepage */}
       <div className="container mx-auto px-4 py-8">

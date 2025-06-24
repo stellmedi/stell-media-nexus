@@ -18,11 +18,11 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">          
-          {/* Main headline */}
+          {/* Main headline - Updated as requested */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            Your Digital Growth Partner for{" "}
+            Digital Growth for{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Real Estate & E-commerce
+              Builders and eCommerce Giants
             </span>
           </h1>
           
@@ -47,11 +47,35 @@ const HeroSection = () => {
             </div>
           </div>
           
+          {/* Enhanced Services Navigation - Two distinct entry paths */}
+          <div className="grid md:grid-cols-2 gap-6 mb-10 max-w-2xl mx-auto">
+            <Link to="/real-estate" className="group">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <h3 className="text-xl font-bold mb-2">🏗️ Real Estate Solutions</h3>
+                <p className="text-blue-100">CRM automation, lead generation & virtual tours</p>
+                <div className="mt-4 flex items-center text-blue-200 group-hover:text-white">
+                  <span className="text-sm">Explore Services</span>
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+            <Link to="/ecommerce" className="group">
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
+                <h3 className="text-xl font-bold mb-2">🛒 eCommerce Solutions</h3>
+                <p className="text-purple-100">Product discovery, catalog SEO & performance marketing</p>
+                <div className="mt-4 flex items-center text-purple-200 group-hover:text-white">
+                  <span className="text-sm">Explore Services</span>
+                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </div>
+            </Link>
+          </div>
+          
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-8 py-4 text-lg shadow-xl hover:shadow-2xl transition-all duration-300">
               <Link to="/consultation">
-                Get Free Consultation
+                Talk to Us
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
