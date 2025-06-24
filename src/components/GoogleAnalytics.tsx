@@ -10,7 +10,7 @@ const GoogleAnalytics: React.FC = () => {
   console.log('GoogleAnalytics: Loading state:', isLoading);
 
   // Use the specific tracking ID you provided, fallback to config if available
-  const trackingId = 'G-X430SJ0QPS';
+  const trackingId = config.googleAnalyticsId || 'G-X430SJ0QPS';
 
   return (
     <Helmet>
@@ -45,35 +45,17 @@ const GoogleAnalytics: React.FC = () => {
         </>
       )}
 
-      {/* AI SEO Meta Tags */}
-      {config.enableAISEO && (
-        <>
-          <meta name="ai-content-type" content="e-commerce optimization services" />
-          <meta name="ai-expertise" content="product discovery, search optimization, conversion optimization, SEO, SEM, data enrichment" />
-          <meta name="ai-service-focus" content="e-commerce platform optimization and configuration" />
-          <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
-          <meta name="googlebot" content="index, follow" />
-          
-          {/* AI Crawler Instructions */}
-          {config.aiCrawlerInstructions && (
-            <meta name="ai-crawler-instructions" content={config.aiCrawlerInstructions} />
-          )}
-          
-          {/* AI Platform Specific Meta Tags */}
-          {config.chatgptOptimization && (
-            <>
-              <meta name="chatgpt-crawl" content="allowed" />
-              <meta name="openai-crawl" content="allowed" />
-            </>
-          )}
-          
-          {config.perplexityOptimization && (
-            <meta name="perplexity-crawl" content="allowed" />
-          )}
-        </>
+      {/* Bing Webmaster Verification */}
+      {config.bingWebmasterVerification && (
+        <meta name="msvalidate.01" content={config.bingWebmasterVerification} />
+      )}
+      
+      {/* Facebook Domain Verification */}
+      {config.facebookDomainVerification && (
+        <meta name="facebook-domain-verification" content={config.facebookDomainVerification} />
       )}
 
-      {/* Enhanced Schema for AI Understanding */}
+      {/* Enhanced Schema for Better Understanding */}
       <script type="application/ld+json">
         {`
           {
