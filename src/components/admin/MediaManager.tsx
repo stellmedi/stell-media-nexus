@@ -17,7 +17,8 @@ import {
   Search,
   Filter,
   Grid,
-  List
+  List,
+  Save
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -36,8 +37,10 @@ const MediaManager: React.FC = () => {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedFile, setSelectedFile] = useState<MediaFile | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editedAltText, setEditedAltText] = useState('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   
-  const [mediaFiles] = useState<MediaFile[]>([
+  const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([
     {
       id: '1',
       name: 'hero-image.jpg',
@@ -69,6 +72,14 @@ const MediaManager: React.FC = () => {
     }
   ]);
 
+  // Update edited alt text when file selection changes
+  React.useEffect(() => {
+    if (selectedFile) {
+      setEditedAltText(selectedFile.altText);
+      setHasUnsavedChanges(false);
+    }
+  }, [selectedFile]);
+
   const getFileIcon = (type: string) => {
     switch (type) {
       case 'image': return <ImageIcon className="h-8 w-8 text-blue-500" />;
@@ -83,11 +94,45 @@ const MediaManager: React.FC = () => {
   };
 
   const handleDelete = (fileId: string) => {
+    setMediaFiles(prev => prev.filter(file => file.id !== fileId));
+    if (selectedFile?.id === fileId) {
+      setSelectedFile(null);
+    }
     toast.success("File deleted successfully!");
   };
 
   const handleSaveAltText = () => {
+    if (!selectedFile) return;
+    
+    // Update the media files array with new alt text
+    setMediaFiles(prev => prev.map(file => 
+      file.id === selectedFile.id 
+        ? { ...file, altText: editedAltText }
+        : file
+    ));
+    
+    // Update selected file
+    setSelectedFile(prev => prev ? { ...prev, altText: editedAltText } : null);
+    
+    // Save to localStorage for persistence
+    try {
+      const updatedFiles = mediaFiles.map(file => 
+        file.id === selectedFile.id 
+          ? { ...file, altText: editedAltText }
+          : file
+      );
+      localStorage.setItem('stellmedia_media_files', JSON.stringify(updatedFiles));
+    } catch (error) {
+      console.error('Error saving to localStorage:', error);
+    }
+    
+    setHasUnsavedChanges(false);
     toast.success("Alt text updated successfully!");
+  };
+
+  const handleAltTextChange = (value: string) => {
+    setEditedAltText(value);
+    setHasUnsavedChanges(value !== selectedFile?.altText);
   };
 
   const filteredFiles = mediaFiles.filter(file =>
@@ -99,7 +144,7 @@ const MediaManager: React.FC = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold">Media Manager</h2>
-          <p className="text-gray-600">Upload and manage images, documents, and videos</p>
+          <p className="text-gray-600">Upload and manage images, documents, and videos with alt text</p>
         </div>
         <Button className="flex items-center gap-2" onClick={handleUpload}>
           <Upload className="h-4 w-4" />
@@ -191,11 +236,11 @@ const MediaManager: React.FC = () => {
           </CardContent>
         </Card>
 
-        {/* File Details */}
+        {/* File Details & Alt Text Editor */}
         <Card>
           <CardHeader>
-            <CardTitle>File Details</CardTitle>
-            <CardDescription>Edit file information and settings</CardDescription>
+            <CardTitle>File Details & Alt Text</CardTitle>
+            <CardDescription>Edit file information and alt text for accessibility</CardDescription>
           </CardHeader>
           <CardContent>
             {selectedFile ? (
@@ -233,13 +278,17 @@ const MediaManager: React.FC = () => {
                   </div>
 
                   <div>
-                    <Label htmlFor="altText">Alt Text</Label>
+                    <Label htmlFor="altText">Alt Text {hasUnsavedChanges && <span className="text-yellow-600">(unsaved)</span>}</Label>
                     <Textarea 
                       id="altText"
-                      value={selectedFile.altText}
-                      placeholder="Describe this file for accessibility"
+                      value={editedAltText}
+                      onChange={(e) => handleAltTextChange(e.target.value)}
+                      placeholder="Describe this file for accessibility and SEO"
                       className="h-20"
                     />
+                    <p className="text-sm text-gray-500 mt-1">
+                      Good alt text is descriptive but concise. It helps screen readers and improves SEO.
+                    </p>
                   </div>
 
                   {selectedFile.dimensions && (
@@ -262,9 +311,14 @@ const MediaManager: React.FC = () => {
 
                 {/* Actions */}
                 <div className="flex gap-2 pt-4">
-                  <Button size="sm" onClick={handleSaveAltText}>
-                    <Edit className="h-4 w-4 mr-1" />
-                    Save Changes
+                  <Button 
+                    size="sm" 
+                    onClick={handleSaveAltText}
+                    disabled={!hasUnsavedChanges}
+                    className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+                  >
+                    <Save className="h-4 w-4 mr-1" />
+                    {hasUnsavedChanges ? 'Save Alt Text' : 'Saved'}
                   </Button>
                   <Button 
                     variant="destructive" 
@@ -280,7 +334,7 @@ const MediaManager: React.FC = () => {
               <div className="text-center py-12">
                 <ImageIcon className="h-12 w-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No File Selected</h3>
-                <p className="text-gray-600">Select a file to view and edit its details</p>
+                <p className="text-gray-600">Select a file to view and edit its alt text</p>
               </div>
             )}
           </CardContent>
