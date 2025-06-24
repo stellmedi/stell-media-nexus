@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -99,15 +100,15 @@ const EnhancedTestimonials = () => {
         </div>
 
         <div className="text-center mt-12">
-          <div className="inline-flex items-center gap-6 text-sm text-gray-600 bg-white px-6 py-3 rounded-full shadow-sm">
+          <div className="inline-flex items-center gap-4 text-sm text-gray-600 bg-white px-8 py-4 rounded-full shadow-sm flex-wrap justify-center">
             <div className="flex items-center gap-2">
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Excellent client satisfaction</span>
+              <span className="font-medium">Excellent client satisfaction</span>
             </div>
-            <span>•</span>
-            <span>Comprehensive digital transformation</span>
-            <span>•</span>
-            <span>Proven industry expertise</span>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <span className="font-medium">Comprehensive digital transformation</span>
+            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <span className="font-medium">Proven industry expertise</span>
           </div>
         </div>
       </div>
