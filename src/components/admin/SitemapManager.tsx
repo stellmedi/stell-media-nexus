@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RefreshCw, Download, Upload, ExternalLink } from "lucide-react";
+import { RefreshCw, Download, ExternalLink, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 interface SitemapUrl {
@@ -132,13 +132,15 @@ ${xmlUrls}
 </urlset>`;
   };
 
-  const submitToSearchEngines = () => {
-    const googleUrl = `https://www.google.com/ping?sitemap=${encodeURIComponent('https://stellmedia.com/sitemap.xml')}`;
-    const bingUrl = `https://www.bing.com/ping?sitemap=${encodeURIComponent('https://stellmedia.com/sitemap.xml')}`;
-    
-    window.open(googleUrl, '_blank');
-    setTimeout(() => window.open(bingUrl, '_blank'), 1000);
-    toast.success('Sitemap submission URLs opened');
+  const copySitemapUrl = () => {
+    const sitemapUrl = 'https://stellmedia.com/sitemap.xml';
+    navigator.clipboard.writeText(sitemapUrl);
+    toast.success('Sitemap URL copied to clipboard');
+  };
+
+  const openSearchConsole = () => {
+    window.open('https://search.google.com/search-console', '_blank');
+    toast.success('Google Search Console opened');
   };
 
   return (
@@ -146,7 +148,7 @@ ${xmlUrls}
       <CardHeader>
         <CardTitle>XML Sitemap Management</CardTitle>
         <CardDescription>
-          Generate and manage your website's XML sitemap
+          Generate and manage your website's XML sitemap. Submit manually to Google Search Console for indexing.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -171,9 +173,28 @@ ${xmlUrls}
                 <Download className="h-4 w-4 mr-2" />
                 Download XML
               </Button>
-              <Button variant="outline" onClick={submitToSearchEngines} disabled={sitemapUrls.length === 0}>
+            </div>
+          </div>
+
+          {/* Manual submission instructions */}
+          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <h4 className="font-medium text-blue-900 mb-2">Submit to Search Engines</h4>
+            <p className="text-sm text-blue-800 mb-3">
+              Sitemap pings are deprecated. Submit your sitemap manually through search console tools:
+            </p>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <Button variant="outline" size="sm" onClick={copySitemapUrl}>
+                  <Copy className="h-4 w-4 mr-2" />
+                  Copy Sitemap URL
+                </Button>
+                <code className="text-xs bg-white px-2 py-1 rounded border">
+                  https://stellmedia.com/sitemap.xml
+                </code>
+              </div>
+              <Button variant="outline" size="sm" onClick={openSearchConsole}>
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Submit to Search Engines
+                Open Google Search Console
               </Button>
             </div>
           </div>
