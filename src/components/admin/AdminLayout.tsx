@@ -3,14 +3,10 @@ import React, { ReactNode, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
-  LayoutDashboard,
   Users,
   FileText,
-  Settings,
   Search,
-  LogOut,
-  Mail,
-  Activity
+  LogOut
 } from "lucide-react";
 import { useAdminAuth } from "@/hooks/use-supabase-admin";
 
@@ -43,13 +39,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   };
 
   const menuItems = [
-    { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
-    { icon: Users, label: "Users", path: "/admin/users", adminOnly: true },
     { icon: FileText, label: "Content", path: "/admin/content" },
-    { icon: Mail, label: "Form Submissions", path: "/admin/emails" },
-    { icon: Activity, label: "Activity Logs", path: "/admin/activity", adminOnly: true },
     { icon: Search, label: "SEO", path: "/admin/seo" },
-    { icon: Settings, label: "Settings", path: "/admin/settings" },
+    { icon: Users, label: "Users", path: "/admin/users", adminOnly: true },
   ];
 
   const filteredMenuItems = menuItems.filter(item => 

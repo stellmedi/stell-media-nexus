@@ -43,13 +43,9 @@ const LeadGeneration = lazy(() => import("./pages/services/LeadGeneration"));
 // Admin pages
 const AdminLogin = lazy(() => import("./pages/AdminLogin"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
-const ComprehensiveDashboard = lazy(() => import("./pages/admin/ComprehensiveDashboard"));
 const ContentManagement = lazy(() => import("./pages/admin/ContentManagement"));
 const SEOManagement = lazy(() => import("./components/admin/SEOManagement"));
-const EmailManagement = lazy(() => import("./pages/admin/EmailManagement"));
 const UsersManagement = lazy(() => import("./pages/admin/UsersManagement"));
-const SettingsPage = lazy(() => import("./pages/admin/SettingsPage"));
-const ActivityLogs = lazy(() => import("./pages/admin/ActivityLogs"));
 
 const queryClient = new QueryClient();
 
@@ -98,13 +94,9 @@ const App = () => (
                     <Routes>
                       <Route path="login" element={<AdminLogin />} />
                       <Route path="" element={<AdminDashboard />} />
-                      <Route path="dashboard" element={<ComprehensiveDashboard />} />
                       <Route path="content" element={<ContentManagement />} />
                       <Route path="seo" element={<SEOManagement />} />
-                      <Route path="email" element={<EmailManagement />} />
                       <Route path="users" element={<UsersManagement />} />
-                      <Route path="settings" element={<SettingsPage />} />
-                      <Route path="logs" element={<ActivityLogs />} />
                     </Routes>
                   </AdminAuthProvider>
                 } />

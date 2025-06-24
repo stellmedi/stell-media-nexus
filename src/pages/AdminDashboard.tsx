@@ -32,18 +32,18 @@ const AdminDashboard: React.FC = () => {
             <p className="text-gray-600">Manage your website's SEO and content</p>
           </header>
           
-          <Tabs defaultValue="seo" className="w-full">
+          <Tabs defaultValue="content" className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="seo">SEO Management</TabsTrigger>
               <TabsTrigger value="content">Content Management</TabsTrigger>
+              <TabsTrigger value="seo">SEO Management</TabsTrigger>
             </TabsList>
-            
-            <TabsContent value="seo" className="mt-6">
-              <SEOManagement />
-            </TabsContent>
             
             <TabsContent value="content" className="mt-6">
               <ContentManagement />
+            </TabsContent>
+            
+            <TabsContent value="seo" className="mt-6">
+              <SEOManagement />
             </TabsContent>
           </Tabs>
         </div>
