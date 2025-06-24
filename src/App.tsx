@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { HelmetProvider } from "react-helmet-async";
+import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 import ScrollToTop from "@/components/ScrollToTop";
 
 // Lazy load components
@@ -89,16 +90,22 @@ const App = () => (
               <Route path="/services/crm-lead-management" element={<CRMLeadManagement />} />
               <Route path="/services/lead-generation" element={<LeadGeneration />} />
               
-              {/* Admin routes */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminDashboard />} />
-              <Route path="/admin/dashboard" element={<ComprehensiveDashboard />} />
-              <Route path="/admin/content" element={<ContentManagement />} />
-              <Route path="/admin/seo" element={<SEOManagement />} />
-              <Route path="/admin/email" element={<EmailManagement />} />
-              <Route path="/admin/users" element={<UsersManagement />} />
-              <Route path="/admin/settings" element={<SettingsPage />} />
-              <Route path="/admin/logs" element={<ActivityLogs />} />
+              {/* Admin routes wrapped with AdminAuthProvider */}
+              <Route path="/admin/*" element={
+                <AdminAuthProvider>
+                  <Routes>
+                    <Route path="login" element={<AdminLogin />} />
+                    <Route path="" element={<AdminDashboard />} />
+                    <Route path="dashboard" element={<ComprehensiveDashboard />} />
+                    <Route path="content" element={<ContentManagement />} />
+                    <Route path="seo" element={<SEOManagement />} />
+                    <Route path="email" element={<EmailManagement />} />
+                    <Route path="users" element={<UsersManagement />} />
+                    <Route path="settings" element={<SettingsPage />} />
+                    <Route path="logs" element={<ActivityLogs />} />
+                  </Routes>
+                </AdminAuthProvider>
+              } />
               
               <Route path="*" element={<NotFound />} />
             </Routes>
