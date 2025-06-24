@@ -56,17 +56,6 @@ const HeroSection = () => {
               </Link>
             </Button>
           </div>
-          
-          {/* Trust indicators */}
-          <div className="mt-16 text-center">
-            <p className="text-sm text-gray-600 mb-4">Trusted by leading brands worldwide</p>
-            <div className="flex justify-center items-center space-x-8 opacity-60">
-              <div className="text-2xl font-bold text-gray-400">500+</div>
-              <div className="text-sm text-gray-500">Projects Delivered</div>
-              <div className="text-2xl font-bold text-gray-400">98%</div>
-              <div className="text-sm text-gray-500">Client Satisfaction</div>
-            </div>
-          </div>
         </div>
       </div>
       
