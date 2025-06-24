@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Globe, FileText, Share2, Code, BarChart3, Info, Bot, Brain, Save, RotateCcw } from "lucide-react";
+import { Search, Globe, FileText, Share2, Code, Save, RotateCcw, Trash2, AlertCircle } from "lucide-react";
 import { usePageSEO, saveSEOData, deleteSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
@@ -26,15 +27,6 @@ interface SEOData {
   robotsFollow: boolean;
   schemaType: string;
   schemaData: string;
-  // AI SEO fields
-  aiContentType: string;
-  aiExpertise: string;
-  aiServiceFocus: string;
-  aiTargetAudience: string;
-  aiContentFormat: string;
-  aiCrawlerInstructions: string;
-  enablePerplexityOptimization: boolean;
-  enableChatGPTOptimization: boolean;
 }
 
 const defaultSEOData: SEOData = {
@@ -51,16 +43,7 @@ const defaultSEOData: SEOData = {
   robotsIndex: true,
   robotsFollow: true,
   schemaType: "WebPage",
-  schemaData: "",
-  // AI SEO defaults
-  aiContentType: "",
-  aiExpertise: "",
-  aiServiceFocus: "",
-  aiTargetAudience: "",
-  aiContentFormat: "",
-  aiCrawlerInstructions: "",
-  enablePerplexityOptimization: true,
-  enableChatGPTOptimization: true
+  schemaData: ""
 };
 
 const availablePages = [
@@ -88,7 +71,6 @@ export default function SEOManager() {
   // Use the hook to get SEO data for the selected page
   const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
 
-  // Simplified state update logic
   useEffect(() => {
     if (!dataLoading) {
       console.log('🔄 SEOManager: Updating state for page:', selectedPage);
@@ -114,15 +96,7 @@ export default function SEOManager() {
           robotsIndex: true,
           robotsFollow: true,
           schemaType: "WebPage",
-          schemaData: "",
-          aiContentType: pageDefaults.aiContentType || "",
-          aiExpertise: pageDefaults.aiExpertise || "",
-          aiServiceFocus: pageDefaults.aiServiceFocus || "",
-          aiTargetAudience: pageDefaults.aiTargetAudience || "",
-          aiContentFormat: pageDefaults.aiContentFormat || "",
-          aiCrawlerInstructions: "",
-          enablePerplexityOptimization: true,
-          enableChatGPTOptimization: true
+          schemaData: ""
         });
       } else {
         console.log('⚠️ SEOManager: Using default values');
@@ -167,10 +141,15 @@ export default function SEOManager() {
       if (success) {
         setHasUnsavedChanges(false);
         toast.success("SEO settings saved successfully!", {
-          description: `SEO data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated.`,
+          description: `Meta data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated and applied to the live page.`,
           duration: 3000
         });
         console.log('✅ SEOManager: Save completed successfully');
+        
+        // Trigger page refresh to apply changes immediately
+        window.dispatchEvent(new CustomEvent('seoDataUpdated', {
+          detail: { page: selectedPage, data: seoData }
+        }));
       } else {
         throw new Error('saveSEOData returned false');
       }
@@ -206,15 +185,7 @@ export default function SEOManager() {
         robotsIndex: true,
         robotsFollow: true,
         schemaType: "WebPage",
-        schemaData: "",
-        aiContentType: pageDefaults.aiContentType || "",
-        aiExpertise: pageDefaults.aiExpertise || "",
-        aiServiceFocus: pageDefaults.aiServiceFocus || "",
-        aiTargetAudience: pageDefaults.aiTargetAudience || "",
-        aiContentFormat: pageDefaults.aiContentFormat || "",
-        aiCrawlerInstructions: "",
-        enablePerplexityOptimization: true,
-        enableChatGPTOptimization: true
+        schemaData: ""
       });
       setHasUnsavedChanges(false);
       toast.info("SEO fields reset to page defaults");
@@ -266,7 +237,7 @@ export default function SEOManager() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            SEO Management
+            SEO Page Manager
             {hasUnsavedChanges && (
               <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
                 Unsaved Changes
@@ -274,12 +245,12 @@ export default function SEOManager() {
             )}
           </CardTitle>
           <CardDescription>
-            Manage SEO metadata for all pages on your website, including AI SEO optimization
+            Edit meta titles, descriptions, and SEO settings for individual pages. Changes are applied immediately to live pages.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="mb-6">
-            <Label htmlFor="page-select">Select Page</Label>
+            <Label htmlFor="page-select">Select Page to Edit</Label>
             <Select value={selectedPage} onValueChange={handlePageChange}>
               <SelectTrigger className="w-full mt-1">
                 <SelectValue placeholder="Choose a page to edit" />
@@ -295,99 +266,109 @@ export default function SEOManager() {
             
             <div className="mt-2 flex items-center gap-2 flex-wrap">
               {dataLoading && (
-                <p className="text-sm text-gray-500">Loading SEO data...</p>
+                <Badge variant="outline" className="bg-blue-50 text-blue-700">
+                  Loading...
+                </Badge>
               )}
               {isCustomized && !dataLoading && (
-                <Badge variant="default" className="bg-blue-100 text-blue-700">
-                  <Info className="h-3 w-3 mr-1" />
-                  Custom SEO data saved
+                <Badge variant="default" className="bg-green-100 text-green-700">
+                  ✓ Custom SEO Data Saved
                 </Badge>
               )}
               {isUsingDefaults && !dataLoading && (
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                  Using page defaults
-                </Badge>
-              )}
-              {!pageDefaults && !pageSEOData && !dataLoading && (
-                <Badge variant="outline" className="bg-orange-50 text-orange-700 border-orange-200">
-                  No defaults configured
+                <Badge variant="outline" className="bg-gray-50 text-gray-700">
+                  Using Default Values
                 </Badge>
               )}
               {hasUnsavedChanges && (
                 <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                  Has unsaved changes
+                  <AlertCircle className="h-3 w-3 mr-1" />
+                  Unsaved Changes
                 </Badge>
               )}
             </div>
           </div>
 
-          <Tabs defaultValue="basic" className="w-full">
-            <TabsList className="grid w-full grid-cols-5">
-              <TabsTrigger value="basic">Basic SEO</TabsTrigger>
+          <Tabs defaultValue="meta" className="w-full">
+            <TabsList className="grid w-full grid-cols-4">
+              <TabsTrigger value="meta">Meta Tags</TabsTrigger>
               <TabsTrigger value="social">Social Media</TabsTrigger>
               <TabsTrigger value="technical">Technical</TabsTrigger>
-              <TabsTrigger value="ai-seo">AI SEO</TabsTrigger>
               <TabsTrigger value="schema">Schema</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="basic" className="space-y-4">
-              <div className="grid gap-4">
-                <div>
-                  <Label htmlFor="meta-title">Meta Title</Label>
+            <TabsContent value="meta" className="space-y-6">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-blue-900">Important: Meta Tags Editor</h4>
+                    <p className="text-sm text-blue-700 mt-1">
+                      Edit meta titles and descriptions here. Changes are automatically saved and applied to the live website when you click "Save Changes".
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid gap-6">
+                <div className="border rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Meta Title</h3>
                   <div className="relative">
                     <Input
-                      id="meta-title"
                       value={seoData.metaTitle}
                       onChange={(e) => handleInputChange('metaTitle', e.target.value)}
-                      placeholder="Enter page title for search engines"
-                      className="mt-1"
+                      placeholder="Enter the page title that appears in search results"
+                      className="pr-20"
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {getCharacterCount(seoData.metaTitle, 60)}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">Optimal length: 50-60 characters</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    This appears as the clickable headline in search results. Optimal length: 50-60 characters.
+                  </p>
                 </div>
 
-                <div>
-                  <Label htmlFor="meta-description">Meta Description</Label>
+                <div className="border rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Meta Description</h3>
                   <div className="relative">
                     <Textarea
-                      id="meta-description"
                       value={seoData.metaDescription}
                       onChange={(e) => handleInputChange('metaDescription', e.target.value)}
-                      placeholder="Enter page description for search engines"
-                      className="mt-1 min-h-[80px]"
+                      placeholder="Enter the description that appears under the title in search results"
+                      className="min-h-[100px] pr-20"
                     />
                     <div className="absolute right-3 bottom-3">
                       {getCharacterCount(seoData.metaDescription, 160)}
                     </div>
                   </div>
-                  <p className="text-sm text-gray-500 mt-1">Optimal length: 140-160 characters</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    This appears as the description snippet in search results. Optimal length: 140-160 characters.
+                  </p>
                 </div>
 
-                <div>
-                  <Label htmlFor="keywords">Keywords</Label>
+                <div className="border rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Keywords</h3>
                   <Input
-                    id="keywords"
                     value={seoData.keywords}
                     onChange={(e) => handleInputChange('keywords', e.target.value)}
-                    placeholder="keyword1, keyword2, keyword3"
-                    className="mt-1"
+                    placeholder="digital marketing, SEO services, lead generation"
                   />
-                  <p className="text-sm text-gray-500 mt-1">Comma-separated keywords</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Comma-separated keywords relevant to this page content.
+                  </p>
                 </div>
 
-                <div>
-                  <Label htmlFor="canonical-url">Canonical URL</Label>
+                <div className="border rounded-lg p-4">
+                  <h3 className="font-medium mb-4">Canonical URL</h3>
                   <Input
-                    id="canonical-url"
                     value={seoData.canonicalUrl}
                     onChange={(e) => handleInputChange('canonicalUrl', e.target.value)}
                     placeholder="https://stellmedia.com/page-url"
-                    className="mt-1"
                   />
-                  <p className="text-sm text-gray-500 mt-1">Leave blank to use default URL</p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    The preferred URL for this page content. Leave blank to use the default URL.
+                  </p>
                 </div>
               </div>
             </TabsContent>
@@ -504,132 +485,6 @@ export default function SEOManager() {
               </div>
             </TabsContent>
 
-            <TabsContent value="ai-seo" className="space-y-4">
-              <div className="grid gap-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-                    <Bot className="h-4 w-4" />
-                    AI Search Engine Optimization
-                  </h3>
-                  <p className="text-sm text-gray-600 mb-4">
-                    Optimize your content for AI-powered search engines like ChatGPT, Perplexity, and other AI crawlers.
-                  </p>
-                  
-                  <div className="grid gap-4">
-                    <div>
-                      <Label htmlFor="ai-content-type">AI Content Type</Label>
-                      <Input
-                        id="ai-content-type"
-                        value={seoData.aiContentType}
-                        onChange={(e) => handleInputChange('aiContentType', e.target.value)}
-                        placeholder="e.g., e-commerce services, educational content, product information"
-                        className="mt-1"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">Help AI understand what type of content this is</p>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ai-expertise">AI Expertise Areas</Label>
-                      <Input
-                        id="ai-expertise"
-                        value={seoData.aiExpertise}
-                        onChange={(e) => handleInputChange('aiExpertise', e.target.value)}
-                        placeholder="e.g., SEO, e-commerce optimization, product discovery"
-                        className="mt-1"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">Comma-separated list of expertise areas</p>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ai-service-focus">AI Service Focus</Label>
-                      <Input
-                        id="ai-service-focus"
-                        value={seoData.aiServiceFocus}
-                        onChange={(e) => handleInputChange('aiServiceFocus', e.target.value)}
-                        placeholder="e.g., improving conversion rates, optimizing product discovery"
-                        className="mt-1"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">What specific problems does this content solve?</p>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ai-target-audience">AI Target Audience</Label>
-                      <Input
-                        id="ai-target-audience"
-                        value={seoData.aiTargetAudience}
-                        onChange={(e) => handleInputChange('aiTargetAudience', e.target.value)}
-                        placeholder="e.g., e-commerce businesses, digital marketers, online retailers"
-                        className="mt-1"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">Who is this content intended for?</p>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ai-content-format">AI Content Format</Label>
-                      <Select value={seoData.aiContentFormat} onValueChange={(value) => handleInputChange('aiContentFormat', value)}>
-                        <SelectTrigger className="mt-1">
-                          <SelectValue placeholder="Select content format" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="service landing page">Service Landing Page</SelectItem>
-                          <SelectItem value="about page">About Page</SelectItem>
-                          <SelectItem value="service detail page">Service Detail Page</SelectItem>
-                          <SelectItem value="blog content">Blog Content</SelectItem>
-                          <SelectItem value="case study content">Case Study Content</SelectItem>
-                          <SelectItem value="FAQ page">FAQ Page</SelectItem>
-                          <SelectItem value="contact page">Contact Page</SelectItem>
-                          <SelectItem value="careers page">Careers Page</SelectItem>
-                          <SelectItem value="educational content">Educational Content</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <p className="text-sm text-gray-500 mt-1">Type of content format for AI understanding</p>
-                    </div>
-
-                    <div>
-                      <Label htmlFor="ai-crawler-instructions">AI Crawler Instructions</Label>
-                      <Textarea
-                        id="ai-crawler-instructions"
-                        value={seoData.aiCrawlerInstructions}
-                        onChange={(e) => handleInputChange('aiCrawlerInstructions', e.target.value)}
-                        placeholder="Special instructions for AI crawlers about how to interpret this content"
-                        className="mt-1 min-h-[80px]"
-                      />
-                      <p className="text-sm text-gray-500 mt-1">Specific instructions for AI search engines</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
-                    <Brain className="h-4 w-4" />
-                    AI Platform Optimization
-                  </h3>
-                  <div className="space-y-4">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="enable-perplexity"
-                        checked={seoData.enablePerplexityOptimization}
-                        onChange={(e) => handleInputChange('enablePerplexityOptimization', e.target.checked)}
-                        className="rounded"
-                      />
-                      <Label htmlFor="enable-perplexity">Enable Perplexity AI optimization</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        id="enable-chatgpt"
-                        checked={seoData.enableChatGPTOptimization}
-                        onChange={(e) => handleInputChange('enableChatGPTOptimization', e.target.checked)}
-                        className="rounded"
-                      />
-                      <Label htmlFor="enable-chatgpt">Enable ChatGPT optimization</Label>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </TabsContent>
-
             <TabsContent value="schema" className="space-y-4">
               <div className="grid gap-4">
                 <div>
@@ -641,56 +496,52 @@ export default function SEOManager() {
                     <SelectContent>
                       <SelectItem value="WebPage">WebPage</SelectItem>
                       <SelectItem value="Article">Article</SelectItem>
-                      <SelectItem value="Product">Product</SelectItem>
                       <SelectItem value="Service">Service</SelectItem>
                       <SelectItem value="LocalBusiness">LocalBusiness</SelectItem>
                       <SelectItem value="Organization">Organization</SelectItem>
                       <SelectItem value="FAQ">FAQ</SelectItem>
-                      <SelectItem value="HowTo">HowTo</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="schema-data">Schema Data (JSON)</Label>
+                  <Label htmlFor="schema-data">Schema JSON Data</Label>
                   <Textarea
                     id="schema-data"
                     value={seoData.schemaData}
                     onChange={(e) => handleInputChange('schemaData', e.target.value)}
-                    placeholder='{"name": "Page Name", "description": "Page description"}'
+                    placeholder='{"name": "Your Business", "description": "Your description"}'
                     className="mt-1 min-h-[120px] font-mono text-sm"
                   />
-                  <p className="text-sm text-gray-500 mt-1">Additional schema properties in JSON format</p>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Enter JSON data for structured markup (without @context and @type)
+                  </p>
                 </div>
               </div>
             </TabsContent>
           </Tabs>
 
-          <div className="flex justify-between items-center mt-6 pt-6 border-t">
-            <div className="space-x-2">
-              <Button variant="outline" onClick={handleReset} disabled={isLoading || dataLoading}>
-                <RotateCcw className="h-4 w-4 mr-1" />
-                {pageDefaults ? "Reset to Page Defaults" : "Reset to Empty"}
+          <div className="flex justify-between items-center pt-6 border-t">
+            <div className="flex gap-2">
+              <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Reset
               </Button>
               {isCustomized && (
-                <Button variant="outline" onClick={handleDeleteSavedData} disabled={isLoading || dataLoading}>
+                <Button variant="outline" onClick={handleDeleteSavedData} disabled={isLoading}>
+                  <Trash2 className="h-4 w-4 mr-2" />
                   Delete Saved Data
                 </Button>
               )}
             </div>
-            <div className="space-x-2">
-              <Button variant="outline" onClick={() => window.open(selectedPage, '_blank')}>
-                Preview Page
-              </Button>
-              <Button 
-                onClick={handleSave} 
-                disabled={isLoading || dataLoading || !hasUnsavedChanges}
-                className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
-              >
-                <Save className="h-4 w-4 mr-1" />
-                {isLoading ? "Saving..." : hasUnsavedChanges ? "Save Changes" : "Saved"}
-              </Button>
-            </div>
+            <Button 
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges || isLoading}
+              className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
+            </Button>
           </div>
         </CardContent>
       </Card>

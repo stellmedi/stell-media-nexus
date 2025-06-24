@@ -2,7 +2,6 @@
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { usePageSEO } from '@/hooks/use-page-seo';
-import { useGlobalSEO } from '@/hooks/use-global-seo';
 
 interface SEOHelmetProps {
   pagePath: string;
@@ -22,7 +21,20 @@ export default function SEOHelmet({
   children
 }: SEOHelmetProps) {
   const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
-  const { config: globalConfig } = useGlobalSEO();
+
+  // Load global config
+  const [globalConfig, setGlobalConfig] = React.useState<any>({});
+  
+  React.useEffect(() => {
+    try {
+      const saved = localStorage.getItem('stellmedia_global_seo_config');
+      if (saved) {
+        setGlobalConfig(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Error loading global SEO config:', error);
+    }
+  }, []);
 
   console.log('SEOHelmet: Rendering for page:', pagePath);
   console.log('SEOHelmet: Saved SEO data:', seoData);
@@ -48,18 +60,10 @@ export default function SEOHelmet({
   const canonicalUrl = seoData?.canonicalUrl || `https://stellmedia.com${pagePath === '/' ? '' : pagePath}`;
   const ogTitle = seoData?.ogTitle || metaTitle;
   const ogDescription = seoData?.ogDescription || metaDescription;
-  const ogImage = seoData?.ogImage || pageDefaults?.ogImage || defaultOgImage;
+  const ogImage = seoData?.ogImage || pageDefaults?.ogImage || globalConfig.defaultOgImage || defaultOgImage;
   const twitterTitle = seoData?.twitterTitle || ogTitle;
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;
-
-  // AI SEO fields
-  const aiContentType = seoData?.aiContentType || pageDefaults?.aiContentType;
-  const aiExpertise = seoData?.aiExpertise || pageDefaults?.aiExpertise;
-  const aiServiceFocus = seoData?.aiServiceFocus || pageDefaults?.aiServiceFocus;
-  const aiTargetAudience = seoData?.aiTargetAudience || pageDefaults?.aiTargetAudience;
-  const aiContentFormat = seoData?.aiContentFormat || pageDefaults?.aiContentFormat;
-  const aiCrawlerInstructions = seoData?.aiCrawlerInstructions || globalConfig?.aiCrawlerInstructions;
 
   console.log('SEOHelmet: Final values being used:', {
     metaTitle,
@@ -71,12 +75,7 @@ export default function SEOHelmet({
     ogImage,
     twitterTitle,
     twitterDescription,
-    twitterImage,
-    aiContentType,
-    aiExpertise,
-    aiServiceFocus,
-    aiTargetAudience,
-    aiContentFormat
+    twitterImage
   });
 
   // Generate robots content
@@ -105,30 +104,6 @@ export default function SEOHelmet({
       {twitterTitle && <meta name="twitter:title" content={twitterTitle} />}
       {twitterDescription && <meta name="twitter:description" content={twitterDescription} />}
       {twitterImage && <meta name="twitter:image" content={twitterImage} />}
-      
-      {/* AI SEO Meta Tags */}
-      {globalConfig?.enableAISEO && (
-        <>
-          {aiContentType && <meta name="ai-content-type" content={aiContentType} />}
-          {aiExpertise && <meta name="ai-expertise" content={aiExpertise} />}
-          {aiServiceFocus && <meta name="ai-service-focus" content={aiServiceFocus} />}
-          {aiTargetAudience && <meta name="ai-target-audience" content={aiTargetAudience} />}
-          {aiContentFormat && <meta name="ai-content-format" content={aiContentFormat} />}
-          {aiCrawlerInstructions && <meta name="ai-crawler-instructions" content={aiCrawlerInstructions} />}
-          
-          {/* AI Platform Specific Meta Tags */}
-          {(seoData?.enableChatGPTOptimization !== false && globalConfig?.chatgptOptimization) && (
-            <>
-              <meta name="chatgpt-crawl" content="allowed" />
-              <meta name="openai-crawl" content="allowed" />
-            </>
-          )}
-          
-          {(seoData?.enablePerplexityOptimization !== false && globalConfig?.perplexityOptimization) && (
-            <meta name="perplexity-crawl" content="allowed" />
-          )}
-        </>
-      )}
       
       {/* Additional custom meta tags from children */}
       {children}
@@ -159,9 +134,32 @@ export default function SEOHelmet({
         </>
       )}
       
+      {/* Google Tag Manager */}
+      {globalConfig?.googleTagManagerId && (
+        <script>
+          {`
+            (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','${globalConfig.googleTagManagerId}');
+          `}
+        </script>
+      )}
+      
       {/* Search Console Verification */}
       {globalConfig?.googleSearchConsoleVerification && (
         <meta name="google-site-verification" content={globalConfig.googleSearchConsoleVerification} />
+      )}
+      
+      {/* Bing Webmaster Verification */}
+      {globalConfig?.bingWebmasterVerification && (
+        <meta name="msvalidate.01" content={globalConfig.bingWebmasterVerification} />
+      )}
+      
+      {/* Facebook Domain Verification */}
+      {globalConfig?.facebookDomainVerification && (
+        <meta name="facebook-domain-verification" content={globalConfig.facebookDomainVerification} />
       )}
     </Helmet>
   );

@@ -7,11 +7,11 @@ import SEOManager from "@/components/admin/SEOManager";
 import ContentMetadataDisplay from "@/components/admin/ContentMetadataDisplay";
 import SEOVerification from "@/components/admin/SEOVerification";
 import GlobalSEOManager from "@/components/admin/GlobalSEOManager";
-import AIPoweredSEO from "@/components/admin/AIPoweredSEO";
 import RedirectManager from "@/components/admin/RedirectManager";
 import RobotsManager from "@/components/admin/RobotsManager";
 import SitemapManager from "@/components/admin/SitemapManager";
 import MetaTemplateManager from "@/components/admin/MetaTemplateManager";
+import MediaManager from "@/components/admin/MediaManager";
 import { useAdminAuth } from "@/hooks/use-supabase-admin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -37,25 +37,28 @@ const SEOManagement: React.FC = () => {
       <AdminLayout>
         <div className="p-6">
           <header className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">SEO Management</h1>
-            <p className="text-gray-600">Complete SEO management suite for your website</p>
+            <h1 className="text-2xl font-bold text-gray-900">SEO Management Suite</h1>
+            <p className="text-gray-600">Complete SEO management tools for meta tags, redirects, sitemaps, and more</p>
           </header>
           
-          <Tabs defaultValue="seo-manager" className="w-full">
-            <TabsList className="grid w-full grid-cols-9 text-xs">
-              <TabsTrigger value="seo-manager">Page SEO</TabsTrigger>
-              <TabsTrigger value="templates">Templates</TabsTrigger>
+          <Tabs defaultValue="page-seo" className="w-full">
+            <TabsList className="grid w-full grid-cols-8 text-xs">
+              <TabsTrigger value="page-seo">Page SEO</TabsTrigger>
+              <TabsTrigger value="media-alt">Media & Alt Text</TabsTrigger>
+              <TabsTrigger value="templates">Meta Templates</TabsTrigger>
               <TabsTrigger value="redirects">Redirects</TabsTrigger>
-              <TabsTrigger value="sitemap">Sitemap</TabsTrigger>
+              <TabsTrigger value="sitemap">XML Sitemap</TabsTrigger>
               <TabsTrigger value="robots">Robots.txt</TabsTrigger>
-              <TabsTrigger value="ai-seo">AI SEO</TabsTrigger>
-              <TabsTrigger value="global-settings">Global</TabsTrigger>
-              <TabsTrigger value="verification">Verify</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics & GSC</TabsTrigger>
               <TabsTrigger value="overview">Overview</TabsTrigger>
             </TabsList>
             
-            <TabsContent value="seo-manager" className="mt-6">
+            <TabsContent value="page-seo" className="mt-6">
               <SEOManager />
+            </TabsContent>
+            
+            <TabsContent value="media-alt" className="mt-6">
+              <MediaManager />
             </TabsContent>
             
             <TabsContent value="templates" className="mt-6">
@@ -74,16 +77,8 @@ const SEOManagement: React.FC = () => {
               <RobotsManager />
             </TabsContent>
             
-            <TabsContent value="ai-seo" className="mt-6">
-              <AIPoweredSEO />
-            </TabsContent>
-            
-            <TabsContent value="global-settings" className="mt-6">
+            <TabsContent value="analytics" className="mt-6">
               <GlobalSEOManager />
-            </TabsContent>
-            
-            <TabsContent value="verification" className="mt-6">
-              <SEOVerification />
             </TabsContent>
             
             <TabsContent value="overview" className="mt-6">

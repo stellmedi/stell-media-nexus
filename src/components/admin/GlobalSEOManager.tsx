@@ -1,630 +1,257 @@
-
 import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { toast } from 'sonner';
-import { useGlobalSEO } from '@/hooks/use-global-seo';
-import { Globe, BarChart3, Search, Bot, Brain, AlertCircle, CheckCircle, RefreshCw, ExternalLink, TestTube } from 'lucide-react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Badge } from "@/components/ui/badge";
+import { Save, Globe, BarChart3, Search, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
-const GlobalSEOManager: React.FC = () => {
-  const { config, isLoading, updateConfig } = useGlobalSEO();
-  const [formData, setFormData] = useState({
-    googleAnalyticsId: '',
-    googleSearchConsoleVerification: '',
-    googleTagManagerId: '',
-    enableAISEO: true,
-    aiCrawlerInstructions: '',
-    perplexityOptimization: true,
-    chatgptOptimization: true
-  });
-  const [isSaving, setIsSaving] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
-  const [testingGA, setTestingGA] = useState(false);
-  const [testingGSC, setTestingGSC] = useState(false);
-  const [testingGTM, setTestingGTM] = useState(false);
+interface GlobalSEOConfig {
+  siteName: string;
+  siteDescription: string;
+  defaultOgImage: string;
+  googleAnalyticsId: string;
+  googleSearchConsoleVerification: string;
+  googleTagManagerId: string;
+  bingWebmasterVerification: string;
+  facebookDomainVerification: string;
+}
+
+const defaultConfig: GlobalSEOConfig = {
+  siteName: "Stell Media",
+  siteDescription: "Leading e-commerce optimization agency specializing in product discovery, search optimization, and conversion enhancement services",
+  defaultOgImage: "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
+  googleAnalyticsId: "G-X430SJ0QPS",
+  googleSearchConsoleVerification: "",
+  googleTagManagerId: "",
+  bingWebmasterVerification: "",
+  facebookDomainVerification: ""
+};
+
+export default function GlobalSEOManager() {
+  const [config, setConfig] = useState<GlobalSEOConfig>(defaultConfig);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
-      console.log('GlobalSEOManager: Setting form data from config:', config);
-      setFormData(config);
-    }
-  }, [config, isLoading]);
+    loadConfig();
+  }, []);
 
-  // Validation functions
-  const validateGoogleAnalyticsId = (id: string): string | null => {
-    if (!id) return null;
-    const ga4Pattern = /^G-[A-Z0-9]{10}$/;
-    const uaPattern = /^UA-\d{4,}-\d+$/;
-    if (!ga4Pattern.test(id) && !uaPattern.test(id)) {
-      return 'Invalid format. Use G-XXXXXXXXXX for GA4 or UA-XXXXXXXX-X for Universal Analytics';
+  const loadConfig = () => {
+    try {
+      const saved = localStorage.getItem('stellmedia_global_seo_config');
+      if (saved) {
+        const data = JSON.parse(saved);
+        setConfig({ ...defaultConfig, ...data });
+      }
+    } catch (error) {
+      console.error('Error loading global SEO config:', error);
     }
-    return null;
   };
 
-  const validateGoogleTagManagerId = (id: string): string | null => {
-    if (!id) return null;
-    const gtmPattern = /^GTM-[A-Z0-9]{7}$/;
-    if (!gtmPattern.test(id)) {
-      return 'Invalid format. Use GTM-XXXXXXX format';
-    }
-    return null;
-  };
-
-  const validateGoogleSearchConsoleVerification = (code: string): string | null => {
-    if (!code) return null;
-    // Basic validation for verification code format
-    if (code.length < 40 || code.includes('<') || code.includes('>')) {
-      return 'Enter only the verification code content, not the full meta tag';
-    }
-    return null;
-  };
-
-  const validateForm = (): boolean => {
-    const errors: Record<string, string> = {};
-
-    // Validate Google Analytics ID
-    const gaError = validateGoogleAnalyticsId(formData.googleAnalyticsId);
-    if (gaError) errors.googleAnalyticsId = gaError;
-
-    // Validate Google Tag Manager ID
-    const gtmError = validateGoogleTagManagerId(formData.googleTagManagerId);
-    if (gtmError) errors.googleTagManagerId = gtmError;
-
-    // Validate Google Search Console verification
-    const gscError = validateGoogleSearchConsoleVerification(formData.googleSearchConsoleVerification);
-    if (gscError) errors.googleSearchConsoleVerification = gscError;
-
-    // Validate AI crawler instructions length
-    if (formData.aiCrawlerInstructions.length > 500) {
-      errors.aiCrawlerInstructions = 'Instructions should be under 500 characters for optimal performance';
-    }
-
-    setValidationErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
-
-  const handleInputChange = (field: string, value: string | boolean) => {
-    setFormData(prev => ({
+  const handleInputChange = (field: keyof GlobalSEOConfig, value: string) => {
+    setConfig(prev => ({
       ...prev,
       [field]: value
     }));
-
-    // Clear validation error for this field when user starts typing
-    if (validationErrors[field]) {
-      setValidationErrors(prev => {
-        const newErrors = { ...prev };
-        delete newErrors[field];
-        return newErrors;
-      });
-    }
-  };
-
-  const testAnalyticsConnection = async () => {
-    const gaId = formData.googleAnalyticsId;
-    if (!gaId) {
-      toast.error('Please enter a Google Analytics ID first');
-      return;
-    }
-
-    const gaError = validateGoogleAnalyticsId(gaId);
-    if (gaError) {
-      toast.error(gaError);
-      return;
-    }
-
-    setTestingGA(true);
-    toast.info('Testing Google Analytics connection...');
-    
-    try {
-      // Check if gtag is available (would be loaded if GA is properly configured)
-      const hasGtag = typeof window !== 'undefined' && typeof window.gtag === 'function';
-      
-      setTimeout(() => {
-        if (hasGtag) {
-          toast.success('Google Analytics is connected and tracking', {
-            description: 'GA tracking script is loaded and functional'
-          });
-        } else {
-          toast.success('Google Analytics ID format is valid', {
-            description: 'Note: Tracking will be active after page reload'
-          });
-        }
-        setTestingGA(false);
-      }, 1500);
-    } catch (error) {
-      toast.error('Error testing Google Analytics connection');
-      setTestingGA(false);
-    }
-  };
-
-  const testSearchConsoleConnection = async () => {
-    const gscCode = formData.googleSearchConsoleVerification;
-    if (!gscCode) {
-      toast.error('Please enter a Google Search Console verification code first');
-      return;
-    }
-
-    const gscError = validateGoogleSearchConsoleVerification(gscCode);
-    if (gscError) {
-      toast.error(gscError);
-      return;
-    }
-
-    setTestingGSC(true);
-    toast.info('Verifying Search Console configuration...');
-    
-    setTimeout(() => {
-      toast.success('Search Console verification code format is valid', {
-        description: 'Verification will be active after saving and page reload'
-      });
-      setTestingGSC(false);
-    }, 1000);
-  };
-
-  const testTagManagerConnection = async () => {
-    const gtmId = formData.googleTagManagerId;
-    if (!gtmId) {
-      toast.error('Please enter a Google Tag Manager ID first');
-      return;
-    }
-
-    const gtmError = validateGoogleTagManagerId(gtmId);
-    if (gtmError) {
-      toast.error(gtmError);
-      return;
-    }
-
-    setTestingGTM(true);
-    toast.info('Testing Google Tag Manager connection...');
-    
-    try {
-      // Check if GTM dataLayer exists
-      const hasDataLayer = typeof window !== 'undefined' && Array.isArray(window.dataLayer);
-      
-      setTimeout(() => {
-        if (hasDataLayer) {
-          toast.success('Google Tag Manager is connected', {
-            description: 'GTM container is loaded and dataLayer is active'
-          });
-        } else {
-          toast.success('Google Tag Manager ID format is valid', {
-            description: 'Container will be loaded after saving and page reload'
-          });
-        }
-        setTestingGTM(false);
-      }, 1500);
-    } catch (error) {
-      toast.error('Error testing Google Tag Manager connection');
-      setTestingGTM(false);
-    }
-  };
-
-  const handleReconnectGA = () => {
-    if (!formData.googleAnalyticsId) {
-      toast.error('Please enter a Google Analytics ID first');
-      return;
-    }
-    
-    toast.info('Reconnecting Google Analytics...', {
-      description: 'Save the settings and reload the page to reconnect'
-    });
-  };
-
-  const handleReconnectGSC = () => {
-    if (!formData.googleSearchConsoleVerification) {
-      toast.error('Please enter a Search Console verification code first');
-      return;
-    }
-    
-    toast.info('Reconnecting Search Console...', {
-      description: 'Save the settings and reload the page to reconnect'
-    });
-  };
-
-  const openGADashboard = () => {
-    const gaId = formData.googleAnalyticsId;
-    if (gaId && gaId.startsWith('G-')) {
-      // GA4 dashboard
-      window.open(`https://analytics.google.com/analytics/web/#/p${gaId.slice(2)}/reports/dashboard`, '_blank');
-    } else if (gaId && gaId.startsWith('UA-')) {
-      // Universal Analytics dashboard
-      window.open('https://analytics.google.com/analytics/web/', '_blank');
-    } else {
-      window.open('https://analytics.google.com/', '_blank');
-    }
-  };
-
-  const openGSCDashboard = () => {
-    window.open('https://search.google.com/search-console', '_blank');
+    setHasUnsavedChanges(true);
   };
 
   const handleSave = async () => {
-    console.log('GlobalSEOManager: Attempting to save config:', formData);
-    
-    if (!validateForm()) {
-      toast.error('Please fix validation errors before saving');
-      return;
-    }
-
-    setIsSaving(true);
+    setIsLoading(true);
     
     try {
-      const success = updateConfig(formData);
+      localStorage.setItem('stellmedia_global_seo_config', JSON.stringify(config));
       
-      if (success) {
-        toast.success('Global SEO settings saved successfully', {
-          description: 'Changes will be applied to all pages. Reload the page to see analytics changes.'
-        });
-        console.log('GlobalSEOManager: Config saved successfully');
-      } else {
-        toast.error('Failed to save global SEO settings', {
-          description: 'Please check your inputs and try again'
-        });
-        console.error('GlobalSEOManager: Save failed');
-      }
-    } catch (error) {
-      console.error('Error saving global SEO settings:', error);
-      toast.error('An error occurred while saving', {
-        description: 'Please try again or contact support'
+      // Dispatch event for other components
+      window.dispatchEvent(new CustomEvent('globalSEOUpdated', {
+        detail: { config }
+      }));
+      
+      setHasUnsavedChanges(false);
+      toast.success('Global SEO settings saved successfully!', {
+        description: 'Analytics and verification codes have been updated.',
+        duration: 3000
       });
+    } catch (error) {
+      console.error('Error saving global SEO config:', error);
+      toast.error('Failed to save global SEO settings');
     } finally {
-      setIsSaving(false);
+      setIsLoading(false);
     }
   };
 
   const handleReset = () => {
-    console.log('GlobalSEOManager: Resetting to saved values');
-    setFormData(config);
-    setValidationErrors({});
-    toast.info('Form reset to saved values');
+    if (hasUnsavedChanges && !confirm('Are you sure you want to reset? This will lose your unsaved changes.')) {
+      return;
+    }
+    
+    setConfig(defaultConfig);
+    setHasUnsavedChanges(false);
+    toast.info('Global SEO settings reset to defaults');
   };
-
-  if (isLoading) {
-    return (
-      <Card>
-        <CardContent className="p-6">
-          <div className="flex items-center justify-center">
-            <div className="text-sm text-gray-500">Loading global SEO settings...</div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const hasUnsavedChanges = JSON.stringify(formData) !== JSON.stringify(config);
-  const hasValidationErrors = Object.keys(validationErrors).length > 0;
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
-            Google Analytics
-          </CardTitle>
-          <CardDescription>
-            Configure Google Analytics tracking for your website
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="ga-id">Google Analytics Tracking ID</Label>
-            <div className="flex gap-2">
-              <Input
-                id="ga-id"
-                value={formData.googleAnalyticsId}
-                onChange={(e) => handleInputChange('googleAnalyticsId', e.target.value)}
-                placeholder="G-XXXXXXXXXX or UA-XXXXXXXXX-X"
-                className={`font-mono text-sm ${validationErrors.googleAnalyticsId ? 'border-red-500' : ''}`}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={testAnalyticsConnection}
-                disabled={testingGA}
-                className="shrink-0"
-              >
-                {testingGA ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <TestTube className="h-4 w-4" />
-                )}
-                Test
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleReconnectGA}
-                className="shrink-0"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Reconnect
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={openGADashboard}
-                className="shrink-0"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Dashboard
-              </Button>
-            </div>
-            {validationErrors.googleAnalyticsId && (
-              <div className="flex items-center gap-1 text-sm text-red-600">
-                <AlertCircle className="h-4 w-4" />
-                {validationErrors.googleAnalyticsId}
-              </div>
-            )}
-            {formData.googleAnalyticsId && !validationErrors.googleAnalyticsId && (
-              <div className="flex items-center gap-1 text-sm text-green-600">
-                <CheckCircle className="h-4 w-4" />
-                Valid format
-              </div>
-            )}
-            <p className="text-xs text-gray-500">
-              Enter your Google Analytics 4 measurement ID (starts with G-) or Universal Analytics tracking ID (starts with UA-)
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Search className="h-5 w-5" />
-            Google Search Console
-          </CardTitle>
-          <CardDescription>
-            Verify your website ownership with Google Search Console
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="gsc-verification">Google Site Verification Code</Label>
-            <div className="flex gap-2">
-              <Input
-                id="gsc-verification"
-                value={formData.googleSearchConsoleVerification}
-                onChange={(e) => handleInputChange('googleSearchConsoleVerification', e.target.value)}
-                placeholder="Enter verification code (without meta tag)"
-                className={`font-mono text-sm ${validationErrors.googleSearchConsoleVerification ? 'border-red-500' : ''}`}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={testSearchConsoleConnection}
-                disabled={testingGSC}
-                className="shrink-0"
-              >
-                {testingGSC ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <TestTube className="h-4 w-4" />
-                )}
-                Test
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleReconnectGSC}
-                className="shrink-0"
-              >
-                <RefreshCw className="h-4 w-4" />
-                Reconnect
-              </Button>
-              <Button
-                type="button"
-                variant="outline"
-                onClick={openGSCDashboard}
-                className="shrink-0"
-              >
-                <ExternalLink className="h-4 w-4" />
-                Dashboard
-              </Button>
-            </div>
-            {validationErrors.googleSearchConsoleVerification && (
-              <div className="flex items-center gap-1 text-sm text-red-600">
-                <AlertCircle className="h-4 w-4" />
-                {validationErrors.googleSearchConsoleVerification}
-              </div>
-            )}
-            {formData.googleSearchConsoleVerification && !validationErrors.googleSearchConsoleVerification && (
-              <div className="flex items-center gap-1 text-sm text-green-600">
-                <CheckCircle className="h-4 w-4" />
-                Valid format
-              </div>
-            )}
-            <p className="text-xs text-gray-500">
-              Enter only the content value from the verification meta tag, not the entire tag
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
             <Globe className="h-5 w-5" />
-            Google Tag Manager
+            Global SEO Settings
+            {hasUnsavedChanges && (
+              <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                Unsaved Changes
+              </Badge>
+            )}
           </CardTitle>
           <CardDescription>
-            Configure Google Tag Manager for advanced tracking
+            Configure site-wide SEO settings, analytics, and verification codes
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="gtm-id">Google Tag Manager Container ID</Label>
-            <div className="flex gap-2">
-              <Input
-                id="gtm-id"
-                value={formData.googleTagManagerId}
-                onChange={(e) => handleInputChange('googleTagManagerId', e.target.value)}
-                placeholder="GTM-XXXXXXX"
-                className={`font-mono text-sm ${validationErrors.googleTagManagerId ? 'border-red-500' : ''}`}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={testTagManagerConnection}
-                disabled={testingGTM}
-                className="shrink-0"
-              >
-                {testingGTM ? (
-                  <RefreshCw className="h-4 w-4 animate-spin" />
-                ) : (
-                  <TestTube className="h-4 w-4" />
-                )}
-                Test
-              </Button>
-            </div>
-            {validationErrors.googleTagManagerId && (
-              <div className="flex items-center gap-1 text-sm text-red-600">
-                <AlertCircle className="h-4 w-4" />
-                {validationErrors.googleTagManagerId}
-              </div>
-            )}
-            {formData.googleTagManagerId && !validationErrors.googleTagManagerId && (
-              <div className="flex items-center gap-1 text-sm text-green-600">
-                <CheckCircle className="h-4 w-4" />
-                Valid format
-              </div>
-            )}
-            <p className="text-xs text-gray-500">
-              Enter your Google Tag Manager container ID (starts with GTM-)
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Bot className="h-5 w-5" />
-            AI Search Engine Optimization
-          </CardTitle>
-          <CardDescription>
-            Configure global settings for AI-powered search engines like ChatGPT and Perplexity
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-6">
+          {/* Site Information */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="enable-ai-seo"
-                checked={formData.enableAISEO}
-                onChange={(e) => handleInputChange('enableAISEO', e.target.checked)}
-                className="rounded"
-              />
-              <Label htmlFor="enable-ai-seo">Enable AI SEO optimization globally</Label>
+            <h3 className="text-lg font-medium">Site Information</h3>
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="site-name">Site Name</Label>
+                <Input
+                  id="site-name"
+                  value={config.siteName}
+                  onChange={(e) => handleInputChange('siteName', e.target.value)}
+                  placeholder="Your website name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="site-description">Site Description</Label>
+                <Textarea
+                  id="site-description"
+                  value={config.siteDescription}
+                  onChange={(e) => handleInputChange('siteDescription', e.target.value)}
+                  placeholder="Brief description of your website"
+                  className="min-h-[80px]"
+                />
+              </div>
+              <div>
+                <Label htmlFor="default-og-image">Default OG Image URL</Label>
+                <Input
+                  id="default-og-image"
+                  value={config.defaultOgImage}
+                  onChange={(e) => handleInputChange('defaultOgImage', e.target.value)}
+                  placeholder="https://yourdomain.com/default-image.jpg"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Google Analytics & Search Console */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2">
+              <BarChart3 className="h-5 w-5" />
+              <h3 className="text-lg font-medium">Google Analytics & Search Console</h3>
             </div>
             
-            <div className="space-y-2">
-              <Label htmlFor="ai-crawler-instructions">Global AI Crawler Instructions</Label>
-              <Textarea
-                id="ai-crawler-instructions"
-                value={formData.aiCrawlerInstructions}
-                onChange={(e) => handleInputChange('aiCrawlerInstructions', e.target.value)}
-                placeholder="Global instructions for AI crawlers about your website content"
-                className={`min-h-[80px] ${validationErrors.aiCrawlerInstructions ? 'border-red-500' : ''}`}
-                maxLength={500}
-              />
-              <div className="flex justify-between items-center">
-                <p className="text-xs text-gray-500">
-                  These instructions will be included globally for AI search engines
-                </p>
-                <span className="text-xs text-gray-400">
-                  {formData.aiCrawlerInstructions.length}/500
-                </span>
-              </div>
-              {validationErrors.aiCrawlerInstructions && (
-                <div className="flex items-center gap-1 text-sm text-red-600">
-                  <AlertCircle className="h-4 w-4" />
-                  {validationErrors.aiCrawlerInstructions}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-blue-600 mt-0.5" />
+                <div>
+                  <h4 className="font-medium text-blue-900">Analytics Integration</h4>
+                  <p className="text-sm text-blue-700 mt-1">
+                    Enter your Google Analytics and Search Console verification codes below. These will be automatically added to all pages.
+                  </p>
                 </div>
-              )}
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="ga-id">Google Analytics ID</Label>
+                <Input
+                  id="ga-id"
+                  value={config.googleAnalyticsId}
+                  onChange={(e) => handleInputChange('googleAnalyticsId', e.target.value)}
+                  placeholder="G-XXXXXXXXXX"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Your GA4 Measurement ID (starts with G-)
+                </p>
+              </div>
+              
+              <div>
+                <Label htmlFor="gsc-verification">Google Search Console Verification</Label>
+                <Input
+                  id="gsc-verification"
+                  value={config.googleSearchConsoleVerification}
+                  onChange={(e) => handleInputChange('googleSearchConsoleVerification', e.target.value)}
+                  placeholder="verification code from Google Search Console"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  Meta tag verification code from Google Search Console
+                </p>
+              </div>
+              
+              <div>
+                <Label htmlFor="gtm-id">Google Tag Manager ID (Optional)</Label>
+                <Input
+                  id="gtm-id"
+                  value={config.googleTagManagerId}
+                  onChange={(e) => handleInputChange('googleTagManagerId', e.target.value)}
+                  placeholder="GTM-XXXXXXX"
+                />
+                <p className="text-sm text-gray-500 mt-1">
+                  If you use GTM instead of direct GA4
+                </p>
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Brain className="h-5 w-5" />
-            AI Platform Specific Settings
-          </CardTitle>
-          <CardDescription>
-            Enable or disable optimization for specific AI platforms
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
+          {/* Other Verification Codes */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="perplexity-optimization"
-                checked={formData.perplexityOptimization}
-                onChange={(e) => handleInputChange('perplexityOptimization', e.target.checked)}
-                className="rounded"
-              />
-              <Label htmlFor="perplexity-optimization">Enable Perplexity AI optimization</Label>
+            <div className="flex items-center gap-2">
+              <Search className="h-5 w-5" />
+              <h3 className="text-lg font-medium">Other Verification Codes</h3>
             </div>
             
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="chatgpt-optimization"
-                checked={formData.chatgptOptimization}
-                onChange={(e) => handleInputChange('chatgptOptimization', e.target.checked)}
-                className="rounded"
-              />
-              <Label htmlFor="chatgpt-optimization">Enable ChatGPT/OpenAI optimization</Label>
+            <div className="grid gap-4">
+              <div>
+                <Label htmlFor="bing-verification">Bing Webmaster Tools Verification</Label>
+                <Input
+                  id="bing-verification"
+                  value={config.bingWebmasterVerification}
+                  onChange={(e) => handleInputChange('bingWebmasterVerification', e.target.value)}
+                  placeholder="Bing verification code"
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="facebook-verification">Facebook Domain Verification</Label>
+                <Input
+                  id="facebook-verification"
+                  value={config.facebookDomainVerification}
+                  onChange={(e) => handleInputChange('facebookDomainVerification', e.target.value)}
+                  placeholder="Facebook domain verification code"
+                />
+              </div>
             </div>
+          </div>
+
+          <div className="flex justify-between items-center pt-6 border-t">
+            <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+              Reset to Defaults
+            </Button>
+            <Button 
+              onClick={handleSave}
+              disabled={!hasUnsavedChanges || isLoading}
+              className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+            >
+              <Save className="h-4 w-4 mr-2" />
+              {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
+            </Button>
           </div>
         </CardContent>
       </Card>
-
-      <div className="flex justify-between">
-        <div className="flex gap-2">
-          <Button
-            onClick={handleSave}
-            disabled={isSaving || (!hasUnsavedChanges && !hasValidationErrors) || hasValidationErrors}
-            className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600"
-          >
-            {isSaving ? 'Saving...' : 'Save Global Settings'}
-          </Button>
-          
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            disabled={!hasUnsavedChanges}
-          >
-            Reset
-          </Button>
-        </div>
-
-        <div className="flex items-center gap-4">
-          {hasValidationErrors && (
-            <div className="flex items-center text-sm text-red-600">
-              <AlertCircle className="mr-2 h-4 w-4" />
-              Please fix validation errors
-            </div>
-          )}
-          {hasUnsavedChanges && !hasValidationErrors && (
-            <div className="flex items-center text-sm text-amber-600">
-              <span className="mr-2">⚠️</span>
-              You have unsaved changes
-            </div>
-          )}
-        </div>
-      </div>
     </div>
   );
-};
-
-export default GlobalSEOManager;
+}
