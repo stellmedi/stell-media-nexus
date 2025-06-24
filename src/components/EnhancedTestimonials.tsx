@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -11,8 +10,8 @@ const EnhancedTestimonials = () => {
       title: "Managing Director",
       company: "Motiaz Group",
       rating: 5,
-      text: "Stell Media's comprehensive digital transformation has revolutionized our property sales process. Their virtual tours and CRM automation have significantly enhanced our customer engagement and streamlined our operations across all our luxury residential projects.",
-      results: "Enhanced customer engagement & streamlined operations"
+      text: "Stell Media's comprehensive digital transformation has delivered exceptional quality leads and dramatically increased our site visits. Their virtual tours and CRM automation have significantly enhanced our lead conversion rates and streamlined our operations across all our luxury residential projects.",
+      results: "Exceptional quality leads & increased site visits"
     },
     {
       name: "Aman Khatri",
