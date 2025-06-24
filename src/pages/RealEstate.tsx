@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
@@ -21,7 +20,9 @@ import {
   Eye,
   Search,
   Database,
-  ShoppingCart
+  ShoppingCart,
+  Palette,
+  Share2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -74,6 +75,30 @@ const RealEstate = () => {
         "ROI Tracking & Optimization"
       ],
       link: "/services/lead-generation"
+    },
+    {
+      icon: <Palette className="h-12 w-12 text-blue-500" />,
+      title: "Branding & Identity Design",
+      description: "Complete brand development and visual identity solutions tailored for real estate professionals.",
+      features: [
+        "Logo & Brand Identity Design",
+        "Marketing Collateral Creation", 
+        "Property Brochure Design",
+        "Brand Guidelines Development"
+      ],
+      link: "/contact"
+    },
+    {
+      icon: <Share2 className="h-12 w-12 text-blue-500" />,
+      title: "Social Media Management",
+      description: "Strategic social media management to build your real estate brand and engage with potential clients.",
+      features: [
+        "Social Media Strategy Development",
+        "Content Creation & Scheduling", 
+        "Community Management",
+        "Social Media Advertising"
+      ],
+      link: "/contact"
     }
   ];
 
@@ -222,7 +247,7 @@ const RealEstate = () => {
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-12 max-w-7xl mx-auto">
             {realEstateServices.map((service, index) => (
               <Link to={service.link} key={index} className="group">
                 <Card className="h-full border-0 shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden bg-white/90 backdrop-blur-sm hover:scale-[1.02] group-hover:border-blue-200">
@@ -311,7 +336,7 @@ const RealEstate = () => {
       </section>
 
       {/* Benefits Section */}
-      <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+      <section className="py-24 bg-white/80 backdrop-blur-sm">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
             <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
@@ -339,7 +364,7 @@ const RealEstate = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-24 bg-white/80 backdrop-blur-sm">
+      <section className="py-24 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-20">
             <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">

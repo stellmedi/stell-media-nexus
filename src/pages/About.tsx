@@ -19,7 +19,11 @@ import {
   Building,
   ShoppingCart,
   Clock,
-  Star
+  Star,
+  User,
+  Heart,
+  Share2,
+  Palette
 } from "lucide-react";
 
 const About = () => {
@@ -76,15 +80,99 @@ const About = () => {
               <strong className="text-purple-700"> advanced e-commerce optimization</strong> that drive exceptional growth.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mb-12">
-              <Badge variant="secondary" className="px-6 py-3 text-base bg-blue-100 text-blue-800">Founded 2018</Badge>
-              <Badge variant="secondary" className="px-6 py-3 text-base bg-indigo-100 text-indigo-800">Global Reach</Badge>
+              <Badge variant="secondary" className="px-6 py-3 text-base bg-blue-100 text-blue-800">15+ Years Global Experience</Badge>
+              <Badge variant="secondary" className="px-6 py-3 text-base bg-indigo-100 text-indigo-800">Fortune 500 Clients</Badge>
               <Badge variant="secondary" className="px-6 py-3 text-base bg-purple-100 text-purple-800">Dual Industry Focus</Badge>
             </div>
           </div>
         </section>
 
-        {/* Mission & Vision */}
+        {/* Founder Story Section */}
         <section className="py-20 bg-white/80 backdrop-blur-sm">
+          <div className="container mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-16">
+                <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
+                  Meet Our Founder
+                </h2>
+                <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                  A vision born from global experience and passion for transformative digital solutions.
+                </p>
+              </div>
+              
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-12 shadow-xl border border-gray-100">
+                <div className="grid lg:grid-cols-3 gap-12 items-center">
+                  <div className="lg:col-span-1 text-center">
+                    <div className="w-32 h-32 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <User className="w-16 h-16 text-white" />
+                    </div>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">Saurav Sharma</h3>
+                    <p className="text-blue-600 font-semibold mb-4">Founder & CEO</p>
+                    <div className="flex justify-center space-x-4">
+                      <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center">
+                        <Globe className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center">
+                        <Heart className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="lg:col-span-2">
+                    <div className="space-y-6">
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Globe className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-900 mb-2">Global Fortune 500 Experience</h4>
+                          <p className="text-gray-700 leading-relaxed">
+                            With over 15 years of global digital experience working with Fortune 500 companies, 
+                            Saurav has led digital transformation initiatives across multiple continents, 
+                            bringing enterprise-level expertise to businesses of all sizes.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-start space-x-4">
+                        <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                          <Heart className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h4 className="text-xl font-bold text-gray-900 mb-2">Passion for Real Estate Innovation</h4>
+                          <p className="text-gray-700 leading-relaxed">
+                            Saurav's deep passion for real estate technology and innovation drives Stell Media's 
+                            mission to revolutionize how properties are marketed and sold. His vision combines 
+                            cutting-edge technology with deep industry understanding to create transformative solutions.
+                          </p>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-gray-200">
+                        <p className="text-lg italic text-gray-700 leading-relaxed">
+                          "I founded Stell Media with a simple belief: every business deserves access to 
+                          enterprise-level digital solutions. By focusing deeply on real estate and e-commerce, 
+                          we can deliver the specialized expertise that drives real, measurable results."
+                        </p>
+                        <div className="flex items-center mt-4">
+                          <div className="flex text-yellow-400">
+                            {[...Array(5)].map((_, i) => (
+                              <Star key={i} className="w-4 h-4 fill-current" />
+                            ))}
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600">— Saurav Sharma, Founder & CEO</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Mission & Vision */}
+        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
           <div className="container mx-auto px-4">
             <div className="grid lg:grid-cols-2 gap-16 max-w-7xl mx-auto">
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-3xl p-10">
@@ -118,7 +206,7 @@ const About = () => {
         </section>
 
         {/* Industry Expertise */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+        <section className="py-20 bg-white/80 backdrop-blur-sm">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
               <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
@@ -149,6 +237,10 @@ const About = () => {
                   <li className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
                     <span>CRM & Lead Management Systems</span>
+                  </li>
+                  <li className="flex items-center">
+                    <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
+                    <span>Branding & Social Media Management</span>
                   </li>
                   <li className="flex items-center">
                     <CheckCircle className="h-5 w-5 text-green-500 mr-3" />
@@ -196,7 +288,7 @@ const About = () => {
         </section>
 
         {/* Values */}
-        <section className="py-20 bg-white/80 backdrop-blur-sm">
+        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
               Our Core Values
@@ -216,7 +308,7 @@ const About = () => {
         </section>
 
         {/* Achievements */}
-        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
+        <section className="py-20 bg-white/80 backdrop-blur-sm">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
               Our Impact Areas
@@ -238,7 +330,7 @@ const About = () => {
         </section>
 
         {/* Team Section - Removed image, kept text */}
-        <section className="py-20 bg-white/80 backdrop-blur-sm">
+        <section className="py-20 bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/50">
           <div className="container mx-auto px-4">
             <h2 className="text-4xl font-bold text-center mb-16 bg-gradient-to-r from-gray-900 via-blue-800 to-indigo-900 bg-clip-text text-transparent">
               Meet Our Expert Team
