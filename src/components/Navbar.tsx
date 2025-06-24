@@ -1,233 +1,234 @@
-import React, { useState, useRef, useEffect } from "react";
+
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, MessageSquare } from "lucide-react";
-import { Link } from "react-router-dom";
-import { toast } from "sonner";
-import MobileNav from "@/components/MobileNav";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Menu, X, ChevronDown, Building, ShoppingCart, Camera, Box, Users, Target, Search, Database, BarChart, Zap } from "lucide-react";
+import MobileNav from "./MobileNav";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+import { cn } from "@/lib/utils";
 
-const Navbar: React.FC = () => {
-  const [servicesOpen, setServicesOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
-  const isMobile = useIsMobile();
-  const phoneNumber = "919877100369";
-  const whatsappUrl = `https://wa.me/${phoneNumber}`;
+const Navbar = () => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
-  const handleWhatsAppClick = () => {
-    toast.success("Opening WhatsApp", { description: "Connecting you to our support team" });
-    window.open(whatsappUrl, '_blank');
-  };
-
-  const toggleServices = () => {
-    setServicesOpen(!servicesOpen);
-  };
-
-  const closeServices = () => {
-    setServicesOpen(false);
-  };
-
-  // Handle click outside to close dropdown
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setServicesOpen(false);
-      }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
     };
-
-    if (servicesOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [servicesOpen]);
-
-  // Handle keyboard navigation
-  const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      setServicesOpen(false);
-    }
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleServices();
-    }
-  };
-
-  // Desktop hover handlers with delay
-  const handleMouseEnter = () => {
-    if (!isMobile) {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-      setServicesOpen(true);
-    }
-  };
-
-  const handleMouseLeave = () => {
-    if (!isMobile) {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-      hoverTimeoutRef.current = setTimeout(() => {
-        setServicesOpen(false);
-      }, 150); // Small delay to prevent flickering
-    }
-  };
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (hoverTimeoutRef.current) {
-        clearTimeout(hoverTimeoutRef.current);
-      }
-    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const realEstateServices = [
+    {
+      title: "Virtual Tours & Photography",
+      href: "/real-estate",
+      description: "360° virtual tours and professional photography",
+      icon: <Camera className="h-4 w-4" />
+    },
+    {
+      title: "3D Visualization",
+      href: "/real-estate",
+      description: "Stunning 3D animations and architectural visualization",
+      icon: <Box className="h-4 w-4" />
+    },
+    {
+      title: "CRM & Lead Management",
+      href: "/real-estate",
+      description: "Complete customer relationship management systems",
+      icon: <Users className="h-4 w-4" />
+    },
+    {
+      title: "Lead Generation",
+      href: "/real-estate",
+      description: "Automated lead generation and marketing campaigns",
+      icon: <Target className="h-4 w-4" />
+    }
+  ];
+
+  const ecommerceServices = [
+    {
+      title: "Product Discovery",
+      href: "/ecommerce",
+      description: "Advanced product discovery and search optimization",
+      icon: <Search className="h-4 w-4" />
+    },
+    {
+      title: "Catalog SEO",
+      href: "/ecommerce",
+      description: "Large-scale catalog optimization and data enrichment",
+      icon: <Database className="h-4 w-4" />
+    },
+    {
+      title: "Performance Marketing",
+      href: "/ecommerce",
+      description: "Data-driven performance marketing campaigns",
+      icon: <BarChart className="h-4 w-4" />
+    },
+    {
+      title: "Conversion Optimization",
+      href: "/ecommerce",
+      description: "Comprehensive conversion rate optimization",
+      icon: <Zap className="h-4 w-4" />
+    }
+  ];
+
   return (
-    <nav
-      className="fixed top-0 left-0 w-full bg-indigo-50/95 backdrop-blur-sm shadow-sm"
-      style={{ zIndex: 40 }}
-      role="navigation"
-      aria-label="Main navigation"
-    >
-      <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <div className="flex items-center">
-          <Link to="/" className="flex items-center" aria-label="Stell Media home">
-            <img
-              src="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png"
-              alt="Stell Media Logo"
-              className="h-10 w-auto mr-3"
-              width="120"
-              height="40"
-            />
-            <span className="text-xl font-bold bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Stell Media
-            </span>
-          </Link>
-        </div>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
-            Home
-          </Link>
-
-          {/* Services Dropdown - Clean implementation */}
-          <div
-            ref={dropdownRef}
-            className="relative"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <button
-              onClick={toggleServices}
-              onKeyDown={handleKeyDown}
-              className="flex items-center text-gray-600 hover:text-indigo-600 transition-colors font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 rounded-md px-2 py-1"
-              aria-expanded={servicesOpen}
-              aria-haspopup="true"
-              type="button"
-            >
-              Services <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`} />
-            </button>
-
-            {servicesOpen && (
-              <div
-                className="absolute top-full left-0 mt-2 w-64 bg-white shadow-xl rounded-lg py-2 border border-gray-100"
-                style={{ zIndex: 50 }}
-                role="menu"
-              >
-                <Link
-                  to="/services/product-discovery"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">Product Discovery</div>
-                  <div className="text-xs text-gray-500">Optimize search &amp; navigation</div>
-                </Link>
-                <Link
-                  to="/services/data-enrichment"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">Data Enrichment</div>
-                  <div className="text-xs text-gray-500">Clean &amp; enhance product data</div>
-                </Link>
-                <Link
-                  to="/services/seo"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">SEO Services</div>
-                  <div className="text-xs text-gray-500">Boost organic visibility</div>
-                </Link>
-                <Link
-                  to="/services/sem"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">SEM Management</div>
-                  <div className="text-xs text-gray-500">Optimize paid campaigns</div>
-                </Link>
-                <Link
-                  to="/services/conversion-optimization"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">Conversion Optimization</div>
-                  <div className="text-xs text-gray-500">Increase conversion rates</div>
-                </Link>
-                <Link
-                  to="/services/search-migration"
-                  className="block px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
-                  role="menuitem"
-                  onClick={closeServices}
-                >
-                  <div className="font-medium">Search Platform Migration</div>
-                  <div className="text-xs text-gray-500">Seamless platform transitions</div>
-                </Link>
+    <>
+      <nav className={cn(
+        "fixed top-0 w-full z-50 transition-all duration-300",
+        isScrolled 
+          ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50" 
+          : "bg-white/90 backdrop-blur-sm"
+      )}>
+        <div className="container mx-auto px-4">
+          <div className="flex items-center justify-between h-16">
+            {/* Logo */}
+            <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">S</span>
               </div>
-            )}
-          </div>
-
-          <Link to="/about" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
-            About
-          </Link>
-          <Link to="/blog" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
-            Blog
-          </Link>
-          <Link to="/faq" className="text-gray-600 hover:text-indigo-600 transition-colors font-medium">
-            FAQ
-          </Link>
-
-          {/* Desktop CTA Buttons */}
-          <div className="flex items-center gap-3">
-            <Link to="/contact">
-              <Button variant="outline" size="sm" className="font-medium">
-                Get Quote
-              </Button>
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">
+                Stell Media
+              </span>
             </Link>
-            <Button
-              onClick={handleWhatsAppClick}
-              className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white"
-              size="sm"
+
+            {/* Desktop Navigation */}
+            <div className="hidden lg:flex items-center space-x-8">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 font-medium">
+                      Services
+                    </NavigationMenuTrigger>
+                    <NavigationMenuContent>
+                      <div className="grid gap-3 p-6 w-[800px] grid-cols-2">
+                        {/* Real Estate Services */}
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                              <Building className="h-4 w-4 text-white" />
+                            </div>
+                            <h3 className="font-semibold text-gray-900">Real Estate Services</h3>
+                          </div>
+                          {realEstateServices.map((service) => (
+                            <NavigationMenuLink key={service.title} asChild>
+                              <Link
+                                to={service.href}
+                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-blue-50 hover:text-blue-700 focus:bg-blue-50 focus:text-blue-700"
+                              >
+                                <div className="flex items-center gap-2 text-sm font-medium">
+                                  {service.icon}
+                                  {service.title}
+                                </div>
+                                <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+                                  {service.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          ))}
+                        </div>
+
+                        {/* E-commerce Services */}
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                              <ShoppingCart className="h-4 w-4 text-white" />
+                            </div>
+                            <h3 className="font-semibold text-gray-900">E-commerce Services</h3>
+                          </div>
+                          {ecommerceServices.map((service) => (
+                            <NavigationMenuLink key={service.title} asChild>
+                              <Link
+                                to={service.href}
+                                className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-purple-50 hover:text-purple-700 focus:bg-purple-50 focus:text-purple-700"
+                              >
+                                <div className="flex items-center gap-2 text-sm font-medium">
+                                  {service.icon}
+                                  {service.title}
+                                </div>
+                                <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+                                  {service.description}
+                                </p>
+                              </Link>
+                            </NavigationMenuLink>
+                          ))}
+                        </div>
+                      </div>
+                    </NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              <Link 
+                to="/about" 
+                className={cn(
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  location.pathname === "/about" && "text-blue-600"
+                )}
+              >
+                About
+              </Link>
+              <Link 
+                to="/case-studies" 
+                className={cn(
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  location.pathname === "/case-studies" && "text-blue-600"
+                )}
+              >
+                Case Studies
+              </Link>
+              <Link 
+                to="/faq" 
+                className={cn(
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  location.pathname === "/faq" && "text-blue-600"
+                )}
+              >
+                FAQ
+              </Link>
+              <Link 
+                to="/contact" 
+                className={cn(
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  location.pathname === "/contact" && "text-blue-600"
+                )}
+              >
+                Contact
+              </Link>
+            </div>
+
+            {/* CTA Button */}
+            <div className="hidden lg:block">
+              <Button asChild className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium px-6 shadow-lg hover:shadow-xl transition-all duration-300">
+                <Link to="/consultation">Get Started</Link>
+              </Button>
+            </div>
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="lg:hidden p-2 text-gray-700 hover:text-blue-600 transition-colors"
+              aria-label="Toggle mobile menu"
             >
-              <MessageSquare className="h-4 w-4" /> WhatsApp
-            </Button>
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+      </nav>
 
-        {/* Mobile Navigation */}
-        <MobileNav />
-      </div>
-    </nav>
+      {/* Mobile Navigation */}
+      <MobileNav isOpen={isMobileMenuOpen} setIsOpen={setIsMobileMenuOpen} />
+    </>
   );
 };
 
