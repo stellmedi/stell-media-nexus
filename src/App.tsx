@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Suspense, lazy } from "react";
 import { HelmetProvider } from "react-helmet-async";
 import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
+import { AuthProvider } from "@/hooks/use-auth";
 import ScrollToTop from "@/components/ScrollToTop";
 
 // Lazy load components
@@ -56,61 +57,63 @@ const App = () => (
   <HelmetProvider>
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/real-estate" element={<RealEstate />} />
-              <Route path="/ecommerce" element={<ECommerce />} />
-              <Route path="/case-studies" element={<CaseStudies />} />
-              <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/sitemap" element={<Sitemap />} />
-              
-              {/* Service pages */}
-              <Route path="/services/seo" element={<SEO />} />
-              <Route path="/services/sem" element={<SEM />} />
-              <Route path="/services/product-discovery" element={<ProductDiscovery />} />
-              <Route path="/services/data-enrichment" element={<DataEnrichment />} />
-              <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
-              <Route path="/services/virtual-tours" element={<VirtualTours />} />
-              <Route path="/services/3d-visualization" element={<ThreeDVisualization />} />
-              <Route path="/services/crm-lead-management" element={<CRMLeadManagement />} />
-              <Route path="/services/lead-generation" element={<LeadGeneration />} />
-              
-              {/* Admin routes wrapped with AdminAuthProvider */}
-              <Route path="/admin/*" element={
-                <AdminAuthProvider>
-                  <Routes>
-                    <Route path="login" element={<AdminLogin />} />
-                    <Route path="" element={<AdminDashboard />} />
-                    <Route path="dashboard" element={<ComprehensiveDashboard />} />
-                    <Route path="content" element={<ContentManagement />} />
-                    <Route path="seo" element={<SEOManagement />} />
-                    <Route path="email" element={<EmailManagement />} />
-                    <Route path="users" element={<UsersManagement />} />
-                    <Route path="settings" element={<SettingsPage />} />
-                    <Route path="logs" element={<ActivityLogs />} />
-                  </Routes>
-                </AdminAuthProvider>
-              } />
-              
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </BrowserRouter>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center">Loading...</div>}>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/real-estate" element={<RealEstate />} />
+                <Route path="/ecommerce" element={<ECommerce />} />
+                <Route path="/case-studies" element={<CaseStudies />} />
+                <Route path="/case-studies/:slug" element={<CaseStudyDetail />} />
+                <Route path="/blog" element={<Blog />} />
+                <Route path="/blog/:slug" element={<BlogPost />} />
+                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/faq" element={<FAQ />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/terms" element={<Terms />} />
+                <Route path="/sitemap" element={<Sitemap />} />
+                
+                {/* Service pages */}
+                <Route path="/services/seo" element={<SEO />} />
+                <Route path="/services/sem" element={<SEM />} />
+                <Route path="/services/product-discovery" element={<ProductDiscovery />} />
+                <Route path="/services/data-enrichment" element={<DataEnrichment />} />
+                <Route path="/services/conversion-optimization" element={<ConversionOptimization />} />
+                <Route path="/services/virtual-tours" element={<VirtualTours />} />
+                <Route path="/services/3d-visualization" element={<ThreeDVisualization />} />
+                <Route path="/services/crm-lead-management" element={<CRMLeadManagement />} />
+                <Route path="/services/lead-generation" element={<LeadGeneration />} />
+                
+                {/* Admin routes wrapped with AdminAuthProvider */}
+                <Route path="/admin/*" element={
+                  <AdminAuthProvider>
+                    <Routes>
+                      <Route path="login" element={<AdminLogin />} />
+                      <Route path="" element={<AdminDashboard />} />
+                      <Route path="dashboard" element={<ComprehensiveDashboard />} />
+                      <Route path="content" element={<ContentManagement />} />
+                      <Route path="seo" element={<SEOManagement />} />
+                      <Route path="email" element={<EmailManagement />} />
+                      <Route path="users" element={<UsersManagement />} />
+                      <Route path="settings" element={<SettingsPage />} />
+                      <Route path="logs" element={<ActivityLogs />} />
+                    </Routes>
+                  </AdminAuthProvider>
+                } />
+                
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </BrowserRouter>
+        </AuthProvider>
       </TooltipProvider>
     </QueryClientProvider>
   </HelmetProvider>
