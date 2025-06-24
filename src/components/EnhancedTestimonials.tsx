@@ -105,9 +105,9 @@ const EnhancedTestimonials = () => {
               <div className="w-2 h-2 bg-green-500 rounded-full"></div>
               <span className="font-medium">Excellent client satisfaction</span>
             </div>
-            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
             <span className="font-medium">Comprehensive digital transformation</span>
-            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
+            <div className="w-2 h-2 bg-gray-400 rounded-full"></div>
             <span className="font-medium">Proven industry expertise</span>
           </div>
         </div>
