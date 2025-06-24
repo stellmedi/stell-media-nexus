@@ -128,7 +128,9 @@ const About = () => {
                           <p className="text-gray-700 leading-relaxed">
                             With over 15 years of global digital experience working with Fortune 500 companies, 
                             Saurav has led digital transformation initiatives across multiple continents, 
-                            bringing enterprise-level expertise to businesses of all sizes.
+                            bringing enterprise-level expertise to businesses of all sizes. His experience includes 
+                            working with e-commerce global brands with specific expertise in product findability 
+                            and discovery, product data, and overall digital transformation strategies.
                           </p>
                         </div>
                       </div>
