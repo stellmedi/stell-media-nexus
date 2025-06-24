@@ -5,44 +5,83 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, Users, TrendingUp, Phone, MessageSquare, Target, Zap, BarChart, CheckCircle, ArrowRight } from "lucide-react";
+import { Home, Users, TrendingUp, Phone, MessageSquare, Target, Zap, BarChart, CheckCircle, ArrowRight, Camera, Box, Smartphone, Search, Globe, PaintBucket } from "lucide-react";
 import { Link } from "react-router-dom";
 import SchemaMarkup from "@/components/SchemaMarkup";
 
 const RealEstate = () => {
   const services = [
     {
-      icon: <Target className="h-12 w-12 text-blue-500" />,
-      title: "Lead Generation Systems",
-      description: "Automated lead capture and qualification systems designed specifically for real estate developers and projects.",
+      icon: <Camera className="h-12 w-12 text-blue-500" />,
+      title: "Virtual Tours & Photography",
+      description: "360° virtual tours and professional photography to showcase properties with stunning visual experiences.",
       features: [
-        "Multi-channel lead capture",
-        "Smart lead qualification",
-        "Automated follow-up sequences", 
-        "Lead scoring algorithms"
-      ]
+        "360° Virtual Tours", 
+        "Professional Photography", 
+        "Drone Services", 
+        "Book Photo Shoot"
+      ],
+      cta: "Book Photo Shoot"
+    },
+    {
+      icon: <Box className="h-12 w-12 text-blue-500" />,
+      title: "3D Animation & Visualization",
+      description: "Stunning 3D animations and visualizations for real estate projects and architectural walkthroughs.",
+      features: [
+        "3D Property Walkthroughs",
+        "Architectural Visualization",
+        "Project Animations",
+        "Virtual Reality Tours"
+      ],
+      cta: "Create 3D Animation"
     },
     {
       icon: <Users className="h-12 w-12 text-blue-500" />,
-      title: "CRM Integration & Management",
-      description: "Custom CRM solutions that streamline your sales process and improve lead conversion rates.",
+      title: "CRM & Lead Management",
+      description: "Comprehensive customer relationship management systems designed for real estate workflows.",
       features: [
-        "Custom CRM configuration",
-        "Sales pipeline automation",
-        "Customer journey mapping",
-        "Performance analytics"
-      ]
+        "Contact Management",
+        "Deal Pipeline",
+        "Automated Follow-ups",
+        "Performance Analytics"
+      ],
+      cta: "Setup CRM System"
     },
     {
-      icon: <TrendingUp className="h-12 w-12 text-blue-500" />,
-      title: "Marketing Automation",
-      description: "Automated marketing workflows and nurturing sequences to convert leads into sales.",
+      icon: <Target className="h-12 w-12 text-blue-500" />,
+      title: "Lead Generation & Marketing",
+      description: "Automated lead generation campaigns and digital strategies for real estate professionals.",
       features: [
-        "Email marketing automation",
-        "WhatsApp integration",
-        "Social media campaigns",
-        "ROI tracking & optimization"
-      ]
+        "Lead Generation Campaigns",
+        "Social Media Marketing",
+        "Market Analysis",
+        "ROI Tracking & Optimization"
+      ],
+      cta: "Generate More Leads"
+    },
+    {
+      icon: <Search className="h-12 w-12 text-blue-500" />,
+      title: "SEO & Digital Presence",
+      description: "Search engine optimization and digital marketing to increase your real estate business visibility.",
+      features: [
+        "Local SEO",
+        "Google My Business",
+        "Online Reputation Management",
+        "Content Marketing"
+      ],
+      cta: "Improve SEO Ranking"
+    },
+    {
+      icon: <Globe className="h-12 w-12 text-blue-500" />,
+      title: "Website Development",
+      description: "Custom real estate websites with advanced features and modern responsive design.",
+      features: [
+        "Custom Websites",
+        "Mobile Responsive",
+        "Fast Loading",
+        "Property Listings Integration"
+      ],
+      cta: "Build Website"
     }
   ];
 
@@ -85,23 +124,23 @@ const RealEstate = () => {
   const realEstateServiceSchema = {
     "@context": "https://schema.org",
     "@type": "RealEstateService",
-    "name": "Real Estate Lead Generation & CRM Solutions",
-    "description": "Comprehensive lead generation, automation, and CRM services for real estate developers in India",
+    "name": "Real Estate Digital Services & Lead Generation Solutions",
+    "description": "Comprehensive digital services for real estate professionals including lead generation, CRM automation, virtual tours, and marketing solutions",
     "provider": {
       "@type": "Organization",
       "name": "Stell Media",
       "url": "https://stellmedia.com"
     },
-    "serviceType": "Real Estate Lead Generation",
+    "serviceType": "Real Estate Digital Services",
     "areaServed": "India"
   };
 
   return (
     <div className="min-h-screen bg-white">
       <Helmet>
-        <title>Real Estate Lead Generation & CRM Solutions India | Stell Media</title>
-        <meta name="description" content="Specialized lead generation, CRM automation, and marketing solutions for real estate developers in India. Drive more qualified leads and increase sales conversions." />
-        <meta name="keywords" content="real estate lead generation India, CRM automation, real estate marketing, property developer leads, real estate CRM India" />
+        <title>Real Estate Digital Services & Lead Generation India | Stell Media</title>
+        <meta name="description" content="Specialized digital solutions for real estate professionals including lead generation, CRM automation, virtual tours, 3D visualization, and marketing services in India." />
+        <meta name="keywords" content="real estate digital services India, lead generation, CRM automation, virtual tours, 3D visualization, real estate marketing, property photography" />
         <link rel="canonical" href="https://stellmedia.com/real-estate" />
       </Helmet>
 
@@ -118,13 +157,13 @@ const RealEstate = () => {
               <div>
                 <div className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-medium mb-6">
                   <Home className="mr-2 h-4 w-4" />
-                  Real Estate Lead Generation
+                  Real Estate Digital Services
                 </div>
                 <h1 className="text-4xl lg:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent leading-tight">
                   Transform Your Real Estate Sales with Smart Lead Generation
                 </h1>
                 <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                  Drive qualified leads, automate your sales process, and maximize conversions with our specialized CRM and marketing automation solutions for real estate developers in India.
+                  Specialized digital solutions designed exclusively for real estate professionals and agencies. Drive qualified leads, showcase properties with stunning visuals, and automate your sales process.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <Button asChild size="lg" className="bg-gradient-to-r from-blue-700 to-indigo-600 text-lg px-8">
@@ -156,8 +195,8 @@ const RealEstate = () => {
               <div className="relative">
                 <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-3xl transform rotate-6 opacity-20"></div>
                 <img
-                  src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&h=400&fit=crop&auto=format&q=85"
-                  alt="Real Estate Professional"
+                  src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=600&h=400&fit=crop&auto=format&q=85"
+                  alt="Modern Real Estate Office with Digital Technology"
                   className="relative z-10 rounded-3xl shadow-2xl w-full h-96 object-cover"
                 />
               </div>
@@ -172,7 +211,7 @@ const RealEstate = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose Our Real Estate Solutions?</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Transform your real estate business with proven strategies that deliver measurable results.
+              Transform your real estate business with proven digital strategies that deliver measurable results.
             </p>
           </div>
 
@@ -194,13 +233,13 @@ const RealEstate = () => {
       <section className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Real Estate Solutions</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Professional Services</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Comprehensive digital marketing solutions designed specifically for real estate developers and sales teams.
+              Comprehensive digital solutions designed specifically for real estate professionals and agencies.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
+          <div className="grid lg:grid-cols-2 xl:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <Card key={index} className="h-full bg-white shadow-lg hover:shadow-xl transition-shadow border-0">
                 <CardHeader className="text-center pb-6">
@@ -212,8 +251,8 @@ const RealEstate = () => {
                     {service.description}
                   </CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <ul className="space-y-3">
+                <CardContent className="flex flex-col">
+                  <ul className="space-y-3 mb-6 flex-grow">
                     {service.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start">
                         <CheckCircle className="h-5 w-5 text-green-500 mr-3 mt-0.5 flex-shrink-0" />
@@ -221,6 +260,9 @@ const RealEstate = () => {
                       </li>
                     ))}
                   </ul>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-90">
+                    {service.cta}
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -234,7 +276,7 @@ const RealEstate = () => {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Our Proven Process</h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              A systematic approach to transforming your real estate lead generation and sales process.
+              A systematic approach to transforming your real estate digital presence and sales process.
             </p>
           </div>
 
@@ -270,7 +312,7 @@ const RealEstate = () => {
               </Link>
             </Button>
             <Button variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-blue-700 text-lg px-8">
-              View Success Stories
+              <span className="text-white hover:text-blue-700">View Success Stories</span>
             </Button>
           </div>
         </div>
