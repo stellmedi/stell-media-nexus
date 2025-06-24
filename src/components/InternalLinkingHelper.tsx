@@ -73,4 +73,4 @@ export const ServiceCrossLinks = () => {
   );
 };
 
-export default InternalLinkingHelper;
+export default ServiceCrossLinks;
