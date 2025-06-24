@@ -25,7 +25,7 @@ const CaseStudies = () => {
         timeframe: "6 months"
       },
       description: "A mid-sized fashion retailer struggling with high bounce rates and low conversions. Our product discovery optimization and personalized shopping experience drove remarkable results.",
-      image: "/lovable-uploads/case-study-fashion.jpg",
+      image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop&crop=center",
       tags: ["Product Discovery", "Conversion Optimization", "Personalization"]
     },
     {
@@ -42,7 +42,7 @@ const CaseStudies = () => {
         timeframe: "4 months"
       },
       description: "A luxury real estate developer needed high-quality leads for premium properties. Our targeted approach and CRM automation delivered exceptional results.",
-      image: "/lovable-uploads/case-study-luxury-real-estate.jpg",
+      image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?w=800&h=600&fit=crop&crop=center",
       tags: ["Lead Generation", "CRM Automation", "Luxury Marketing"]
     },
     {
@@ -59,7 +59,7 @@ const CaseStudies = () => {
         timeframe: "8 months"
       },
       description: "A B2B SaaS startup needed scalable user acquisition. Our performance marketing strategy delivered sustainable growth with improved unit economics.",
-      image: "/lovable-uploads/case-study-tech-startup.jpg",
+      image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=800&h=600&fit=crop&crop=center",
       tags: ["Performance Marketing", "User Acquisition", "Analytics"]
     },
     {
@@ -76,7 +76,7 @@ const CaseStudies = () => {
         timeframe: "5 months"
       },
       description: "A residential development project facing slow sales needed to accelerate their marketing efforts. Our integrated approach significantly improved sales velocity.",
-      image: "/lovable-uploads/case-study-residential-development.jpg",
+      image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=800&h=600&fit=crop&crop=center",
       tags: ["Virtual Tours", "Lead Nurturing", "Digital Marketing"]
     },
     {
@@ -93,7 +93,7 @@ const CaseStudies = () => {
         timeframe: "7 months"
       },
       description: "An emerging marketplace platform needed to attract and retain quality sellers. Our data-driven approach optimized the entire seller journey.",
-      image: "/lovable-uploads/case-study-marketplace.jpg",
+      image: "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=800&h=600&fit=crop&crop=center",
       tags: ["Data Enrichment", "Platform Optimization", "Seller Growth"]
     },
     {
@@ -110,7 +110,7 @@ const CaseStudies = () => {
         timeframe: "10 months"
       },
       description: "A health and wellness e-commerce brand needed better search visibility. Our SEO strategy dramatically improved organic performance and revenue.",
-      image: "/lovable-uploads/case-study-health-ecommerce.jpg",
+      image: "https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=800&h=600&fit=crop&crop=center",
       tags: ["SEO", "Content Marketing", "Organic Growth"]
     }
   ];
@@ -145,13 +145,12 @@ const CaseStudies = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {caseStudies.map((study) => (
               <Card key={study.id} className="group hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-indigo-300">
-                <div className="aspect-video bg-gradient-to-br from-indigo-50 to-blue-50 rounded-t-lg flex items-center justify-center">
-                  <div className="text-center p-6">
-                    <TrendingUp className="h-12 w-12 text-indigo-600 mx-auto mb-2" />
-                    <Badge variant="secondary" className="bg-indigo-100 text-indigo-800">
-                      {study.category}
-                    </Badge>
-                  </div>
+                <div className="aspect-video overflow-hidden rounded-t-lg">
+                  <img 
+                    src={study.image} 
+                    alt={study.title}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
                 
                 <CardHeader>

@@ -11,16 +11,7 @@ const HeroSection = () => {
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       
       <div className="container mx-auto px-4 py-20 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Logo */}
-          <div className="mb-8 flex justify-center">
-            <img 
-              src="/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png" 
-              alt="Stell Media Logo" 
-              className="h-16 w-auto"
-            />
-          </div>
-          
+        <div className="max-w-4xl mx-auto text-center">          
           {/* Main headline */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Your Digital Growth Partner for{" "}

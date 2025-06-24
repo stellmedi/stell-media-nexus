@@ -12,42 +12,48 @@ const ServicesSection = () => {
       title: "SEO & Content Strategy",
       description: "Drive organic traffic with strategic SEO and compelling content that converts visitors into customers.",
       link: "/services/seo",
-      gradient: "from-blue-500 to-blue-600"
+      gradient: "from-blue-500 to-blue-600",
+      borderColor: "border-blue-200 hover:border-blue-400"
     },
     {
       icon: Target,
       title: "Performance Marketing",
       description: "Data-driven SEM campaigns that maximize ROI and drive qualified leads to your business.",
       link: "/services/sem",
-      gradient: "from-purple-500 to-purple-600"
+      gradient: "from-purple-500 to-purple-600",
+      borderColor: "border-purple-200 hover:border-purple-400"
     },
     {
       icon: ShoppingCart,
       title: "E-commerce Optimization",
       description: "Boost online sales with product discovery optimization and conversion rate improvements.",
       link: "/ecommerce",
-      gradient: "from-green-500 to-green-600"
+      gradient: "from-green-500 to-green-600",
+      borderColor: "border-green-200 hover:border-green-400"
     },
     {
       icon: Building2,
       title: "Real Estate Lead Gen",
       description: "Automated lead generation and CRM solutions specifically designed for real estate developers.",
       link: "/real-estate",
-      gradient: "from-orange-500 to-orange-600"
+      gradient: "from-orange-500 to-orange-600",
+      borderColor: "border-orange-200 hover:border-orange-400"
     },
     {
       icon: TrendingUp,
       title: "Conversion Optimization",
       description: "Increase your conversion rates with A/B testing, UX improvements, and data-driven optimizations.",
       link: "/services/conversion-optimization",
-      gradient: "from-indigo-500 to-indigo-600"
+      gradient: "from-indigo-500 to-indigo-600",
+      borderColor: "border-indigo-200 hover:border-indigo-400"
     },
     {
       icon: BarChart3,
       title: "Performance Analytics",
       description: "Comprehensive analytics and reporting to track performance and make data-driven decisions.",
       link: "/services/data-enrichment",
-      gradient: "from-teal-500 to-teal-600"
+      gradient: "from-teal-500 to-teal-600",
+      borderColor: "border-teal-200 hover:border-teal-400"
     }
   ];
 
@@ -65,7 +71,7 @@ const ServicesSection = () => {
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {services.map((service, index) => (
-            <Card key={index} className="group hover:shadow-xl transition-all duration-300 border-0 bg-white/80 backdrop-blur-sm hover:bg-white">
+            <Card key={index} className={`group hover:shadow-xl transition-all duration-300 border-2 ${service.borderColor} bg-white/80 backdrop-blur-sm hover:bg-white`}>
               <CardHeader className="text-center pb-4">
                 <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${service.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                   <service.icon className="h-8 w-8 text-white" />
