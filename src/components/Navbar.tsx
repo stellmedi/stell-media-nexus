@@ -109,7 +109,7 @@ const Navbar = () => {
               <NavigationMenu>
                 <NavigationMenuList>
                   <NavigationMenuItem>
-                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 font-medium">
+                    <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 font-medium text-base">
                       Services
                     </NavigationMenuTrigger>
                     <NavigationMenuContent>
@@ -174,7 +174,7 @@ const Navbar = () => {
               <Link 
                 to="/about" 
                 className={cn(
-                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors text-base",
                   location.pathname === "/about" && "text-blue-600"
                 )}
               >
@@ -183,7 +183,7 @@ const Navbar = () => {
               <Link 
                 to="/case-studies" 
                 className={cn(
-                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors text-base",
                   location.pathname === "/case-studies" && "text-blue-600"
                 )}
               >
@@ -192,7 +192,7 @@ const Navbar = () => {
               <Link 
                 to="/faq" 
                 className={cn(
-                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors text-base",
                   location.pathname === "/faq" && "text-blue-600"
                 )}
               >
@@ -201,7 +201,7 @@ const Navbar = () => {
               <Link 
                 to="/contact" 
                 className={cn(
-                  "text-gray-700 hover:text-blue-600 font-medium transition-colors",
+                  "text-gray-700 hover:text-blue-600 font-medium transition-colors text-base",
                   location.pathname === "/contact" && "text-blue-600"
                 )}
               >
