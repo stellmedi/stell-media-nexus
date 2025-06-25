@@ -8,7 +8,7 @@ interface PageSection {
   id: string;
   title: string;
   content: string;
-  type: 'hero' | 'text' | 'list' | 'features';
+  type: 'hero' | 'text' | 'list' | 'features' | 'testimonials' | 'faq' | 'services';
 }
 
 interface SectionsManagerProps {

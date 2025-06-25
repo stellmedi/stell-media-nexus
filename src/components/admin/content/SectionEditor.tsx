@@ -11,7 +11,7 @@ interface PageSection {
   id: string;
   title: string;
   content: string;
-  type: 'hero' | 'text' | 'list' | 'features';
+  type: 'hero' | 'text' | 'list' | 'features' | 'testimonials' | 'faq' | 'services';
 }
 
 interface SectionEditorProps {
@@ -77,6 +77,9 @@ const SectionEditor: React.FC<SectionEditorProps> = ({
               <SelectItem value="text">Text</SelectItem>
               <SelectItem value="list">List</SelectItem>
               <SelectItem value="features">Features</SelectItem>
+              <SelectItem value="testimonials">Testimonials</SelectItem>
+              <SelectItem value="faq">FAQ</SelectItem>
+              <SelectItem value="services">Services</SelectItem>
             </SelectContent>
           </Select>
         </div>

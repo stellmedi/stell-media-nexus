@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 
 export interface PageContent {
@@ -65,7 +64,13 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
       return null;
     }
 
-    return { ...pageData, sections: sectionsData || [] };
+    // Type cast the sections data to ensure proper typing
+    const sections: PageSection[] = (sectionsData || []).map(section => ({
+      ...section,
+      section_type: section.section_type as PageSection['section_type']
+    }));
+
+    return { ...pageData, sections };
   } catch (error) {
     console.error('Error in getPageContent:', error);
     return null;
@@ -95,8 +100,14 @@ export const getAllPageContent = async (): Promise<PageContent[]> => {
       return pageData.map(page => ({ ...page, sections: [] }));
     }
 
+    // Type cast the sections data to ensure proper typing
+    const typedSections: PageSection[] = (sectionsData || []).map(section => ({
+      ...section,
+      section_type: section.section_type as PageSection['section_type']
+    }));
+
     // Group sections by page path
-    const sectionsByPath = sectionsData.reduce((acc, section) => {
+    const sectionsByPath = typedSections.reduce((acc, section) => {
       if (!acc[section.page_path]) {
         acc[section.page_path] = [];
       }
@@ -171,7 +182,10 @@ export const updatePageSection = async (
       throw error;
     }
 
-    return data;
+    return {
+      ...data,
+      section_type: data.section_type as PageSection['section_type']
+    };
   } catch (error) {
     console.error('Error in updatePageSection:', error);
     return null;
@@ -203,7 +217,10 @@ export const addPageSection = async (
       throw error;
     }
 
-    return data;
+    return {
+      ...data,
+      section_type: data.section_type as PageSection['section_type']
+    };
   } catch (error) {
     console.error('Error in addPageSection:', error);
     return null;
