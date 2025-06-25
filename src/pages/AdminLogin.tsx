@@ -62,7 +62,7 @@ const AdminLogin = () => {
     },
   });
 
-  // Simple redirect logic - only redirect when authenticated and not loading
+  // Redirect authenticated users to dashboard
   useEffect(() => {
     if (isAuthenticated && !isLoading) {
       console.log('AdminLogin: Redirecting authenticated user to dashboard');

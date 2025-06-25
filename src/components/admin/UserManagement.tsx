@@ -9,21 +9,17 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Plus, Edit, Trash2, User, Shield, Eye } from "lucide-react";
-
-interface AdminUser {
-  id: string;
-  name: string;
-  email: string;
-  role: 'admin' | 'editor' | 'viewer';
-  status: 'active' | 'inactive';
-  createdAt: string;
-  lastLogin?: string;
-}
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
+import { getAdminUsers, updateAdminUser, deleteAdminUser } from "@/services/adminService";
+import type { AdminUser } from "@/services/adminService";
 
 const UserManagement = () => {
+  const { adminUser, register } = useAdminAuth();
   const [users, setUsers] = useState<AdminUser[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -31,45 +27,21 @@ const UserManagement = () => {
     role: 'viewer' as 'admin' | 'editor' | 'viewer'
   });
 
-  // Load users from localStorage on component mount
+  // Load users from Supabase
   useEffect(() => {
     loadUsers();
   }, []);
 
-  const loadUsers = () => {
+  const loadUsers = async () => {
     try {
-      const savedUsers = localStorage.getItem('stellmedia_admin_users');
-      if (savedUsers) {
-        setUsers(JSON.parse(savedUsers));
-      } else {
-        // Initialize with default admin user
-        const defaultUsers: AdminUser[] = [
-          {
-            id: '1',
-            name: 'Admin User',
-            email: 'admin@stellmedia.com',
-            role: 'admin',
-            status: 'active',
-            createdAt: new Date().toISOString(),
-            lastLogin: new Date().toISOString()
-          }
-        ];
-        setUsers(defaultUsers);
-        localStorage.setItem('stellmedia_admin_users', JSON.stringify(defaultUsers));
-      }
+      setIsLoading(true);
+      const userData = await getAdminUsers();
+      setUsers(userData);
     } catch (error) {
       console.error('Error loading users:', error);
       toast.error("Error loading users");
-    }
-  };
-
-  const saveUsers = (updatedUsers: AdminUser[]) => {
-    try {
-      localStorage.setItem('stellmedia_admin_users', JSON.stringify(updatedUsers));
-      setUsers(updatedUsers);
-    } catch (error) {
-      console.error('Error saving users:', error);
-      toast.error("Error saving users");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -95,7 +67,7 @@ const UserManagement = () => {
     setIsDialogOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.name.trim() || !formData.email.trim()) {
@@ -115,72 +87,92 @@ const UserManagement = () => {
       return;
     }
 
-    try {
-      let updatedUsers: AdminUser[];
+    setIsSubmitting(true);
 
+    try {
       if (editingUser) {
         // Update existing user
-        updatedUsers = users.map(user => 
-          user.id === editingUser.id 
-            ? { ...user, name: formData.name, email: formData.email, role: formData.role }
-            : user
-        );
-        toast.success("User updated successfully");
-      } else {
-        // Create new user
-        const newUser: AdminUser = {
-          id: Date.now().toString(),
+        await updateAdminUser(editingUser.id, {
           name: formData.name,
           email: formData.email,
-          role: formData.role,
-          status: 'active',
-          createdAt: new Date().toISOString()
-        };
-        updatedUsers = [...users, newUser];
+          role: formData.role
+        });
+        toast.success("User updated successfully");
+      } else {
+        // Create new user using Supabase auth
+        const success = await register(
+          formData.name,
+          formData.email,
+          formData.password,
+          formData.role
+        );
+
+        if (!success) {
+          return; // Error already shown by register function
+        }
+
         toast.success("User created successfully");
       }
 
-      saveUsers(updatedUsers);
+      await loadUsers(); // Reload users
       setIsDialogOpen(false);
     } catch (error) {
       console.error('Error saving user:', error);
       toast.error("Error saving user");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const handleDeleteUser = (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     const user = users.find(u => u.id === userId);
     if (!user) return;
 
-    if (user.role === 'admin' && users.filter(u => u.role === 'admin' && u.status === 'active').length === 1) {
+    if (user.email === adminUser?.email) {
+      toast.error("Cannot delete your own account");
+      return;
+    }
+
+    if (user.role === 'admin' && users.filter(u => u.role === 'admin' && u.is_active).length === 1) {
       toast.error("Cannot delete the last active admin user");
       return;
     }
 
     if (confirm(`Are you sure you want to delete ${user.name}?`)) {
-      const updatedUsers = users.filter(u => u.id !== userId);
-      saveUsers(updatedUsers);
-      toast.success("User deleted successfully");
+      try {
+        await deleteAdminUser(userId);
+        await loadUsers();
+        toast.success("User deleted successfully");
+      } catch (error) {
+        console.error('Delete error:', error);
+        toast.error("Error deleting user");
+      }
     }
   };
 
-  const handleToggleStatus = (userId: string) => {
+  const handleToggleStatus = async (userId: string) => {
     const user = users.find(u => u.id === userId);
     if (!user) return;
 
-    if (user.role === 'admin' && user.status === 'active' && 
-        users.filter(u => u.role === 'admin' && u.status === 'active').length === 1) {
+    if (user.email === adminUser?.email) {
+      toast.error("Cannot deactivate your own account");
+      return;
+    }
+
+    if (user.role === 'admin' && user.is_active && 
+        users.filter(u => u.role === 'admin' && u.is_active).length === 1) {
       toast.error("Cannot deactivate the last active admin user");
       return;
     }
 
-    const updatedUsers = users.map(u => 
-      u.id === userId 
-        ? { ...u, status: u.status === 'active' ? 'inactive' as const : 'active' as const }
-        : u
-    );
-    saveUsers(updatedUsers);
-    toast.success(`User ${user.status === 'active' ? 'deactivated' : 'activated'} successfully`);
+    try {
+      await updateAdminUser(userId, { is_active: !user.is_active });
+      await loadUsers();
+      toast.success(`User ${user.is_active ? 'deactivated' : 'activated'} successfully`);
+    } catch (error) {
+      console.error('Toggle status error:', error);
+      toast.error("Error updating user status");
+    }
   };
 
   const getRoleIcon = (role: string) => {
@@ -201,6 +193,20 @@ const UserManagement = () => {
     }
   };
 
+  // Only admins can access user management
+  if (adminUser?.role !== 'admin') {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Access Denied</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p>You do not have permission to manage users.</p>
+        </CardContent>
+      </Card>
+    );
+  }
+
   return (
     <Card>
       <CardHeader>
@@ -216,7 +222,7 @@ const UserManagement = () => {
         <div className="flex justify-between items-center">
           <div className="flex gap-4 text-sm text-gray-600">
             <span>Total Users: {users.length}</span>
-            <span>Active: {users.filter(u => u.status === 'active').length}</span>
+            <span>Active: {users.filter(u => u.is_active).length}</span>
             <span>Admins: {users.filter(u => u.role === 'admin').length}</span>
           </div>
           <Button onClick={handleCreateUser}>
@@ -225,73 +231,79 @@ const UserManagement = () => {
           </Button>
         </div>
 
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Created</TableHead>
-                <TableHead>Last Login</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-medium">{user.name}</TableCell>
-                  <TableCell>{user.email}</TableCell>
-                  <TableCell>
-                    <Badge className={`${getRoleBadgeColor(user.role)} border-none`}>
-                      <span className="flex items-center gap-1">
-                        {getRoleIcon(user.role)}
-                        {user.role}
-                      </span>
-                    </Badge>
-                  </TableCell>
-                  <TableCell>
-                    <Badge variant={user.status === 'active' ? 'default' : 'secondary'}>
-                      {user.status}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-600">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-sm text-gray-600">
-                    {user.lastLogin ? new Date(user.lastLogin).toLocaleDateString() : 'Never'}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEditUser(user)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleToggleStatus(user.id)}
-                      >
-                        {user.status === 'active' ? 'Deactivate' : 'Activate'}
-                      </Button>
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDeleteUser(user.id)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
+        {isLoading ? (
+          <div className="text-center py-8">Loading users...</div>
+        ) : (
+          <div className="border rounded-lg">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Role</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead>Last Login</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
+              </TableHeader>
+              <TableBody>
+                {users.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-medium">{user.name}</TableCell>
+                    <TableCell>{user.email}</TableCell>
+                    <TableCell>
+                      <Badge className={`${getRoleBadgeColor(user.role)} border-none`}>
+                        <span className="flex items-center gap-1">
+                          {getRoleIcon(user.role)}
+                          {user.role}
+                        </span>
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={user.is_active ? 'default' : 'secondary'}>
+                        {user.is_active ? 'Active' : 'Inactive'}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">
+                      {new Date(user.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">
+                      {user.last_login ? new Date(user.last_login).toLocaleDateString() : 'Never'}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditUser(user)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleToggleStatus(user.id)}
+                          disabled={user.email === adminUser?.email}
+                        >
+                          {user.is_active ? 'Deactivate' : 'Activate'}
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleDeleteUser(user.id)}
+                          disabled={user.email === adminUser?.email}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
 
         {/* Role Descriptions */}
         <div className="bg-gray-50 p-4 rounded-lg">
@@ -407,8 +419,8 @@ const UserManagement = () => {
                 >
                   Cancel
                 </Button>
-                <Button type="submit">
-                  {editingUser ? 'Update User' : 'Create User'}
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? (editingUser ? 'Updating...' : 'Creating...') : (editingUser ? 'Update User' : 'Create User')}
                 </Button>
               </DialogFooter>
             </form>

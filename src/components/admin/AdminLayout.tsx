@@ -1,12 +1,13 @@
 
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Users,
   FileText,
   Search,
-  LogOut
+  LogOut,
+  BarChart3
 } from "lucide-react";
 import { useAdminAuth } from "@/hooks/use-supabase-admin";
 
@@ -23,7 +24,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
   }
 
-  // Simple redirect - if not authenticated, redirect to login
+  // Redirect if not authenticated
   if (!isAuthenticated) {
     console.log('AdminLayout: User not authenticated, redirecting to login');
     return <Navigate to="/admin" replace />;
@@ -39,6 +40,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   };
 
   const menuItems = [
+    { icon: BarChart3, label: "Dashboard", path: "/admin/dashboard" },
     { icon: FileText, label: "Content", path: "/admin/content" },
     { icon: Search, label: "SEO", path: "/admin/seo" },
     { icon: Users, label: "Users", path: "/admin/users", adminOnly: true },
