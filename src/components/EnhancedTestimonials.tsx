@@ -35,7 +35,7 @@ const EnhancedTestimonials = () => {
       title: "Founder",
       company: "Antell Coaching, US",
       rating: 5,
-      text: "Stell Media's e-commerce optimization transformed our online presence completely. Their product discovery management and performance marketing strategies have significantly improved our customer journey and conversion rates.",
+      text: "Stell Media's comprehensive digital optimization transformed our online presence completely. Their SEO strategies and performance marketing have significantly improved our customer journey and conversion rates.",
       results: "Improved customer journey & conversion optimization"
     },
     {
@@ -51,7 +51,7 @@ const EnhancedTestimonials = () => {
       title: "Managing Partner",
       company: "Ruhee - On Demand Salon Services, UAE",
       rating: 5,
-      text: "Stell Media's end-to-end e-commerce solutions have been game-changing for our on-demand service platform. Their performance marketing and conversion optimization strategies have significantly enhanced our customer acquisition and retention.",
+      text: "Stell Media's end-to-end digital solutions have been game-changing for our on-demand service platform. Their performance marketing and conversion optimization strategies have significantly enhanced our customer acquisition and retention.",
       results: "Enhanced customer acquisition & retention"
     }
   ];
