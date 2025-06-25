@@ -4,8 +4,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, Search, ShoppingCart, Building2, BarChart3, Target } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePageContent } from "@/hooks/usePageContent";
 
 const ServicesSection = () => {
+  const { getSection, isLoading } = usePageContent('/');
+
+  // Get services content from database
+  const servicesSection = getSection('services');
+  
+  // Fallback content
+  const sectionTitle = servicesSection?.title || "Our Digital Growth Services";
+  const sectionDescription = servicesSection?.content || "Comprehensive digital marketing solutions designed to accelerate growth for real estate developers and e-commerce businesses";
+
   const services = [
     {
       icon: Search,
@@ -62,10 +72,18 @@ const ServicesSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-            Our Digital Growth Services
+            {isLoading ? (
+              <span className="animate-pulse bg-gray-200 rounded h-8 w-1/2 mx-auto block"></span>
+            ) : (
+              sectionTitle
+            )}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Comprehensive digital marketing solutions designed to accelerate growth for real estate developers and e-commerce businesses
+            {isLoading ? (
+              <span className="animate-pulse bg-gray-200 rounded h-6 w-3/4 mx-auto block"></span>
+            ) : (
+              sectionDescription
+            )}
           </p>
         </div>
         

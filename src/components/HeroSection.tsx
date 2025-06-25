@@ -3,13 +3,23 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
+import { usePageContent } from "@/hooks/usePageContent";
 
 const HeroSection = () => {
+  const { getSection, isLoading } = usePageContent('/');
+  
   const handleWhatsAppClick = () => {
-    const phoneNumber = "919877100369"; // Format for WhatsApp: country code (91) + number without any symbols
+    const phoneNumber = "919877100369";
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
   };
+
+  // Get hero content from database
+  const heroSection = getSection('hero');
+  
+  // Fallback content if database content is not available
+  const heroTitle = heroSection?.title || "Digital Growth for Real Estate Developers and eCommerce Brands";
+  const heroContent = heroSection?.content || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
@@ -18,17 +28,27 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">          
-          {/* Main headline - Updated as requested */}
+          {/* Main headline - Now using database content */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            Digital Growth for{" "}
-            <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Real Estate Developers and eCommerce Brands
-            </span>
+            {isLoading ? (
+              <span className="animate-pulse bg-gray-200 rounded h-8 w-3/4 mx-auto block"></span>
+            ) : (
+              <>
+                {heroTitle.split('Real Estate Developers and eCommerce Brands')[0]}
+                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Real Estate Developers and eCommerce Brands
+                </span>
+              </>
+            )}
           </h1>
           
-          {/* Subheadline */}
+          {/* Subheadline - Using database content */}
           <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto">
-            Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.
+            {isLoading ? (
+              <span className="animate-pulse bg-gray-200 rounded h-6 w-full block"></span>
+            ) : (
+              heroContent
+            )}
           </p>
           
           {/* Value propositions */}
