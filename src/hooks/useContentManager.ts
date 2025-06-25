@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import {
   PageContent,
@@ -21,48 +21,75 @@ export const useContentManager = () => {
   const [originalContent, setOriginalContent] = useState<PageContent | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  
+  // Use refs to track current values and prevent stale closures
+  const currentPageRef = useRef<string>('');
+  const subscriptionRef = useRef<any>(null);
+
+  // Load specific page content with better error handling and loading state management
+  const loadPageContent = useCallback(async (pagePath: string) => {
+    console.log('useContentManager: Loading content for', pagePath);
+    currentPageRef.current = pagePath;
+    setIsLoading(true);
+    
+    try {
+      const content = await getPageContent(pagePath);
+      
+      // Only update state if this is still the current page (prevent race conditions)
+      if (currentPageRef.current === pagePath) {
+        if (content) {
+          console.log('useContentManager: Content loaded successfully:', content);
+          setSelectedPageContent(content);
+          setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy
+          setHasUnsavedChanges(false);
+        } else {
+          console.warn('useContentManager: No content found for', pagePath);
+          setSelectedPageContent(null);
+          setOriginalContent(null);
+          setHasUnsavedChanges(false);
+        }
+      }
+    } catch (error) {
+      console.error('useContentManager: Error loading page content:', error);
+      if (currentPageRef.current === pagePath) {
+        toast.error('Failed to load page content');
+        setSelectedPageContent(null);
+        setOriginalContent(null);
+      }
+    } finally {
+      if (currentPageRef.current === pagePath) {
+        setIsLoading(false);
+      }
+    }
+  }, []);
 
   // Load all page content
   const loadAllPageContent = useCallback(async () => {
-    setIsLoading(true);
     try {
       const content = await getAllPageContent();
       setAllPageContent(content);
-      console.log('Loaded all page content:', content);
+      console.log('useContentManager: Loaded all page content:', content);
     } catch (error) {
-      console.error('Error loading page content:', error);
+      console.error('useContentManager: Error loading all page content:', error);
       toast.error('Failed to load content');
-    } finally {
-      setIsLoading(false);
     }
   }, []);
 
-  // Load specific page content
-  const loadPageContent = useCallback(async (pagePath: string) => {
-    setIsLoading(true);
-    try {
-      const content = await getPageContent(pagePath);
-      if (content) {
-        setSelectedPageContent(content);
-        setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy
-        setHasUnsavedChanges(false);
-        console.log('Loaded page content for', pagePath, ':', content);
-      } else {
-        toast.error('Page content not found');
-      }
-    } catch (error) {
-      console.error('Error loading page content:', error);
-      toast.error('Failed to load page content');
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
-
-  // Update page metadata
+  // Update page metadata with optimistic updates
   const updatePageMetadata = useCallback(async (
     pagePath: string,
     updates: Partial<PageContent>
   ) => {
+    if (!selectedPageContent || selectedPageContent.page_path !== pagePath) {
+      console.warn('useContentManager: No matching page content to update');
+      return false;
+    }
+
+    // Optimistic update
+    const optimisticContent = { ...selectedPageContent, ...updates };
+    setSelectedPageContent(optimisticContent);
+    setHasUnsavedChanges(true);
+
     try {
       const updatedContent = await updatePageContent(pagePath, updates);
       if (updatedContent) {
@@ -75,25 +102,35 @@ export const useContentManager = () => {
           )
         );
         
-        toast.success('Page metadata updated successfully');
         return true;
+      } else {
+        // Revert optimistic update on failure
+        setSelectedPageContent(selectedPageContent);
+        toast.error('Failed to update page metadata');
+        return false;
       }
-      return false;
     } catch (error) {
-      console.error('Error updating page metadata:', error);
+      console.error('useContentManager: Error updating page metadata:', error);
+      // Revert optimistic update on error
+      setSelectedPageContent(selectedPageContent);
       toast.error('Failed to update page metadata');
       return false;
     }
-  }, []);
+  }, [selectedPageContent]);
 
-  // Update section
+  // Update section with better error handling
   const updateSection = useCallback(async (
     sectionId: string,
     updates: Partial<PageSection>
   ) => {
+    if (!selectedPageContent) {
+      console.warn('useContentManager: No selected page content for section update');
+      return false;
+    }
+
     try {
       const updatedSection = await updatePageSection(sectionId, updates);
-      if (updatedSection && selectedPageContent) {
+      if (updatedSection) {
         const updatedContent = {
           ...selectedPageContent,
           sections: selectedPageContent.sections.map(section =>
@@ -106,7 +143,7 @@ export const useContentManager = () => {
       }
       return false;
     } catch (error) {
-      console.error('Error updating section:', error);
+      console.error('useContentManager: Error updating section:', error);
       toast.error('Failed to update section');
       return false;
     }
@@ -117,9 +154,14 @@ export const useContentManager = () => {
     pagePath: string,
     sectionData: Omit<PageSection, 'id' | 'created_at' | 'updated_at'>
   ) => {
+    if (!selectedPageContent || selectedPageContent.page_path !== pagePath) {
+      console.warn('useContentManager: No matching page content for new section');
+      return false;
+    }
+
     try {
       const newSection = await addPageSection(pagePath, sectionData);
-      if (newSection && selectedPageContent) {
+      if (newSection) {
         const updatedContent = {
           ...selectedPageContent,
           sections: [...selectedPageContent.sections, newSection].sort(
@@ -133,7 +175,7 @@ export const useContentManager = () => {
       }
       return false;
     } catch (error) {
-      console.error('Error adding section:', error);
+      console.error('useContentManager: Error adding section:', error);
       toast.error('Failed to add section');
       return false;
     }
@@ -141,9 +183,14 @@ export const useContentManager = () => {
 
   // Remove section
   const removeSection = useCallback(async (sectionId: string) => {
+    if (!selectedPageContent) {
+      console.warn('useContentManager: No selected page content for section removal');
+      return false;
+    }
+
     try {
       const success = await deletePageSection(sectionId);
-      if (success && selectedPageContent) {
+      if (success) {
         const updatedContent = {
           ...selectedPageContent,
           sections: selectedPageContent.sections.filter(
@@ -157,7 +204,7 @@ export const useContentManager = () => {
       }
       return false;
     } catch (error) {
-      console.error('Error removing section:', error);
+      console.error('useContentManager: Error removing section:', error);
       toast.error('Failed to remove section');
       return false;
     }
@@ -165,7 +212,10 @@ export const useContentManager = () => {
 
   // Save changes and create version
   const saveChanges = useCallback(async (changeDescription?: string) => {
-    if (!selectedPageContent) return false;
+    if (!selectedPageContent) {
+      console.warn('useContentManager: No content to save');
+      return false;
+    }
 
     setIsLoading(true);
     try {
@@ -188,10 +238,9 @@ export const useContentManager = () => {
         }
       }));
 
-      toast.success('Changes saved successfully');
       return true;
     } catch (error) {
-      console.error('Error saving changes:', error);
+      console.error('useContentManager: Error saving changes:', error);
       toast.error('Failed to save changes');
       return false;
     } finally {
@@ -204,27 +253,38 @@ export const useContentManager = () => {
     if (originalContent) {
       setSelectedPageContent(JSON.parse(JSON.stringify(originalContent)));
       setHasUnsavedChanges(false);
-      toast.info('Changes undone');
     }
   }, [originalContent]);
 
-  // Real-time subscription
+  // Real-time subscription with cleanup
   useEffect(() => {
     if (selectedPageContent) {
+      // Clean up previous subscription
+      if (subscriptionRef.current) {
+        unsubscribeFromContentChanges(subscriptionRef.current);
+      }
+
       const channel = subscribeToContentChanges(
         selectedPageContent.page_path,
         (payload) => {
-          console.log('Real-time content update:', payload);
-          // Reload content if changed by another user
-          loadPageContent(selectedPageContent.page_path);
+          console.log('useContentManager: Real-time content update:', payload);
+          // Only reload if this page is still selected
+          if (currentPageRef.current === selectedPageContent.page_path) {
+            loadPageContent(selectedPageContent.page_path);
+          }
         }
       );
 
+      subscriptionRef.current = channel;
+
       return () => {
-        unsubscribeFromContentChanges(channel);
+        if (subscriptionRef.current) {
+          unsubscribeFromContentChanges(subscriptionRef.current);
+          subscriptionRef.current = null;
+        }
       };
     }
-  }, [selectedPageContent, loadPageContent]);
+  }, [selectedPageContent?.page_path, loadPageContent]);
 
   // Initial load
   useEffect(() => {

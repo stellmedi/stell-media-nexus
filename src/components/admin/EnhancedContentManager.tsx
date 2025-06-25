@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Save, Edit, Eye, RotateCcw, AlertCircle, Loader2 } from "lucide-react";
+import { Save, Edit, Eye, RotateCcw, AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { useContentManager } from "@/hooks/useContentManager";
 import PageSelector from "./content/PageSelector";
 import PageMetadataEditor from "./content/PageMetadataEditor";
@@ -25,6 +25,7 @@ const availablePages = [
 const EnhancedContentManager = () => {
   const [selectedPage, setSelectedPage] = useState("/");
   const [isEditing, setIsEditing] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   const {
     allPageContent,
@@ -40,20 +41,39 @@ const EnhancedContentManager = () => {
     undoChanges
   } = useContentManager();
 
-  // Force load content on component mount and page changes
+  // Force load content on component mount and page changes with better error handling
   useEffect(() => {
     console.log('EnhancedContentManager: Loading page content for:', selectedPage);
+    const loadContent = async () => {
+      try {
+        await loadPageContent(selectedPage);
+      } catch (error) {
+        console.error('Error loading page content:', error);
+        toast.error('Failed to load page content');
+      } finally {
+        setIsInitialLoad(false);
+      }
+    };
+    
     if (selectedPage) {
-      loadPageContent(selectedPage);
+      loadContent();
     }
   }, [selectedPage, loadPageContent]);
 
-  // Debug logging
+  // Debug logging with better state tracking
   useEffect(() => {
-    console.log('EnhancedContentManager: Selected page content:', selectedPageContent);
-    console.log('EnhancedContentManager: All page content:', allPageContent);
-    console.log('EnhancedContentManager: Is loading:', isLoading);
-  }, [selectedPageContent, allPageContent, isLoading]);
+    console.log('EnhancedContentManager State Update:', {
+      selectedPage,
+      selectedPageContent: selectedPageContent ? {
+        id: selectedPageContent.id,
+        title: selectedPageContent.title,
+        sectionsCount: selectedPageContent.sections?.length || 0
+      } : null,
+      isLoading,
+      isInitialLoad,
+      hasUnsavedChanges
+    });
+  }, [selectedPageContent, isLoading, isInitialLoad, hasUnsavedChanges, selectedPage]);
 
   const handleContentChange = async (field: string, value: string) => {
     if (!selectedPageContent) {
@@ -131,6 +151,7 @@ const EnhancedContentManager = () => {
     console.log('Changing page from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
     setIsEditing(false);
+    setIsInitialLoad(true);
   };
 
   const handleUndo = () => {
@@ -138,8 +159,22 @@ const EnhancedContentManager = () => {
     toast.info('Changes undone');
   };
 
-  // Show loading state
-  if (isLoading && !selectedPageContent) {
+  const handleRefreshContent = async () => {
+    console.log('Refreshing content for:', selectedPage);
+    setIsInitialLoad(true);
+    try {
+      await loadPageContent(selectedPage);
+      toast.success('Content refreshed');
+    } catch (error) {
+      console.error('Error refreshing content:', error);
+      toast.error('Failed to refresh content');
+    } finally {
+      setIsInitialLoad(false);
+    }
+  };
+
+  // Show loading state for initial load
+  if (isInitialLoad && isLoading) {
     return (
       <Card>
         <CardContent className="flex items-center justify-center py-12">
@@ -183,6 +218,10 @@ const EnhancedContentManager = () => {
                 Content for {selectedPageContent.title || availablePages.find(p => p.path === selectedPage)?.name || 'Selected Page'}
               </h3>
               <div className="flex gap-2">
+                <Button onClick={handleRefreshContent} variant="outline" size="sm" disabled={isLoading}>
+                  <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                  Refresh
+                </Button>
                 {!isEditing ? (
                   <Button onClick={() => setIsEditing(true)} variant="outline">
                     <Edit className="h-4 w-4 mr-2" />
@@ -271,6 +310,11 @@ const EnhancedContentManager = () => {
             
             <div className="text-sm text-gray-500">
               Last modified: {new Date(selectedPageContent.updated_at).toLocaleDateString()}
+              {selectedPageContent.sections && (
+                <span className="ml-4">
+                  Sections: {selectedPageContent.sections.length}
+                </span>
+              )}
             </div>
           </div>
         ) : (
@@ -282,7 +326,7 @@ const EnhancedContentManager = () => {
                 {isLoading ? 'Loading page content...' : 'No content found for this page. Content will be created automatically when you start editing.'}
               </p>
               {!isLoading && (
-                <Button onClick={() => loadPageContent(selectedPage)} variant="outline">
+                <Button onClick={handleRefreshContent} variant="outline">
                   <RotateCcw className="h-4 w-4 mr-2" />
                   Reload Content
                 </Button>
