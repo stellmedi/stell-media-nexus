@@ -270,6 +270,133 @@ export type Database = {
         }
         Relationships: []
       }
+      content_versions: {
+        Row: {
+          change_description: string | null
+          content_data: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          page_path: string
+          version_number: number
+        }
+        Insert: {
+          change_description?: string | null
+          content_data: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          page_path: string
+          version_number: number
+        }
+        Update: {
+          change_description?: string | null
+          content_data?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          page_path?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "content_versions_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_content: {
+        Row: {
+          created_at: string
+          id: string
+          is_published: boolean
+          keywords: string | null
+          meta_description: string | null
+          meta_title: string | null
+          page_path: string
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          keywords?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          page_path: string
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_published?: boolean
+          keywords?: string | null
+          meta_description?: string | null
+          meta_title?: string | null
+          page_path?: string
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "page_content_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "admin_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      page_sections: {
+        Row: {
+          content: string
+          created_at: string
+          display_order: number
+          id: string
+          is_active: boolean
+          metadata: Json | null
+          page_path: string
+          section_key: string
+          section_type: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          page_path: string
+          section_key: string
+          section_type: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_active?: boolean
+          metadata?: Json | null
+          page_path?: string
+          section_key?: string
+          section_type?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       test_messages: {
         Row: {
           created_at: string

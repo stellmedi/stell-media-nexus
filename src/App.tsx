@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
+import { ContentProvider } from "@/contexts/ContentContext";
 import Index from "@/pages/Index";
 import About from "@/pages/About";
 import Services from "@/pages/Services";
@@ -27,32 +28,34 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AdminAuthProvider>
-      <HelmetProvider>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <TooltipProvider>
-            <Toaster />
-            <Sonner />
-            <BrowserRouter>
-              <ScrollToTop />
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/case-studies" element={<CaseStudies />} />
-                <Route path="/admin" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                <Route path="/admin/users" element={<UsersManagement />} />
-                <Route path="/admin/content" element={<ContentManagementPage />} />
-                <Route path="/admin/email" element={<EmailManagement />} />
-                <Route path="/admin/settings" element={<SettingsPage />} />
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </BrowserRouter>
-          </TooltipProvider>
-        </ThemeProvider>
-      </HelmetProvider>
+      <ContentProvider>
+        <HelmetProvider>
+          <ThemeProvider attribute="class" defaultTheme="light">
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <BrowserRouter>
+                <ScrollToTop />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/case-studies" element={<CaseStudies />} />
+                  <Route path="/admin" element={<AdminLogin />} />
+                  <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                  <Route path="/admin/users" element={<UsersManagement />} />
+                  <Route path="/admin/content" element={<ContentManagementPage />} />
+                  <Route path="/admin/email" element={<EmailManagement />} />
+                  <Route path="/admin/settings" element={<SettingsPage />} />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </TooltipProvider>
+          </ThemeProvider>
+        </HelmetProvider>
+      </ContentProvider>
     </AdminAuthProvider>
   </QueryClientProvider>
 );

@@ -4,211 +4,83 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Save, Edit, Eye, RotateCcw, AlertCircle } from "lucide-react";
+import { Save, Edit, Eye, RotateCcw, AlertCircle, Loader2 } from "lucide-react";
+import { useContentManager } from "@/hooks/useContentManager";
 import PageSelector from "./content/PageSelector";
 import PageMetadataEditor from "./content/PageMetadataEditor";
 import SectionsManager from "./content/SectionsManager";
 import ContentPreview from "./content/ContentPreview";
 
-interface PageSection {
-  id: string;
-  title: string;
-  content: string;
-  type: 'hero' | 'text' | 'list' | 'features';
-}
-
-interface PageContent {
-  id: string;
-  pagePath: string;
-  title: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  sections: PageSection[];
-  lastModified: string;
-}
-
 const availablePages = [
-  { path: "/", name: "Home Page", defaultSections: [
-    { id: "hero", title: "Hero Section", content: "Transform Your Business with AI-Powered Digital Solutions", type: "hero" as const },
-    { id: "services", title: "Services Section", content: "Our comprehensive digital marketing services", type: "features" as const },
-    { id: "testimonials", title: "Testimonials Section", content: "What our clients say about us", type: "text" as const },
-    { id: "cta", title: "Call to Action", content: "Ready to grow your business?", type: "text" as const }
-  ]},
-  { path: "/about", name: "About Page", defaultSections: [
-    { id: "hero", title: "About Hero", content: "About Stell Media", type: "hero" as const },
-    { id: "content", title: "Main Content", content: "We are a leading digital marketing agency", type: "text" as const },
-    { id: "team", title: "Team Section", content: "Meet our expert team", type: "features" as const }
-  ]},
-  { path: "/services", name: "Services Page", defaultSections: [
-    { id: "hero", title: "Services Hero", content: "Our Digital Marketing Services", type: "hero" as const },
-    { id: "services-list", title: "Services List", content: "Real Estate Lead Generation, E-commerce Optimization", type: "list" as const },
-    { id: "pricing", title: "Pricing Section", content: "Flexible pricing plans", type: "features" as const }
-  ]},
-  { path: "/contact", name: "Contact Page", defaultSections: [
-    { id: "hero", title: "Contact Hero", content: "Get in Touch", type: "hero" as const },
-    { id: "form", title: "Contact Form", content: "Contact form section", type: "text" as const }
-  ]}
+  { path: "/", name: "Home Page" },
+  { path: "/about", name: "About Page" },
+  { path: "/services", name: "Services Page" },
+  { path: "/contact", name: "Contact Page" }
 ];
 
 const EnhancedContentManager = () => {
   const [selectedPage, setSelectedPage] = useState("/");
-  const [pageContent, setPageContent] = useState<PageContent | null>(null);
-  const [originalContent, setOriginalContent] = useState<PageContent | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  
+  const {
+    allPageContent,
+    selectedPageContent,
+    isLoading,
+    hasUnsavedChanges,
+    loadPageContent,
+    updatePageMetadata,
+    updateSection,
+    addSection,
+    removeSection,
+    saveChanges,
+    undoChanges
+  } = useContentManager();
 
   // Load page content when page selection changes
   useEffect(() => {
-    loadPageContent(selectedPage);
-  }, [selectedPage]);
-
-  const loadPageContent = (pagePath: string) => {
-    console.log('Loading content for page:', pagePath);
-    
-    try {
-      // Try to load from localStorage first
-      const savedContent = localStorage.getItem(`stellmedia_page_content_${pagePath}`);
-      
-      let content: PageContent;
-      if (savedContent) {
-        try {
-          content = JSON.parse(savedContent);
-          console.log('Loaded saved content:', content);
-        } catch (error) {
-          console.error('Error parsing saved content:', error);
-          content = getDefaultPageContent(pagePath);
-        }
-      } else {
-        content = getDefaultPageContent(pagePath);
-      }
-      
-      setPageContent(content);
-      setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy for undo
-      setHasUnsavedChanges(false);
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Error loading page content:', error);
-      toast.error("Error loading page content");
+    if (selectedPage) {
+      loadPageContent(selectedPage);
     }
+  }, [selectedPage, loadPageContent]);
+
+  const handleContentChange = async (field: string, value: string) => {
+    if (!selectedPageContent) return;
+    
+    const updates = { [field]: value } as any;
+    await updatePageMetadata(selectedPageContent.page_path, updates);
   };
 
-  const getDefaultPageContent = (pagePath: string): PageContent => {
-    const pageInfo = availablePages.find(p => p.path === pagePath);
-    
-    return {
-      id: `page_${pagePath.replace(/\//g, '_')}`,
-      pagePath,
-      title: pageInfo?.name || `Page ${pagePath}`,
-      metaTitle: `${pageInfo?.name || 'Page'} | Stell Media`,
-      metaDescription: `${pageInfo?.name || 'Page'} description for Stell Media`,
-      sections: pageInfo?.defaultSections || [],
-      lastModified: new Date().toISOString().split('T')[0]
-    };
+  const handleSectionChange = async (sectionId: string, field: string, value: string) => {
+    const updates = { [field]: value } as any;
+    await updateSection(sectionId, updates);
   };
 
-  const handleContentChange = (field: keyof PageContent, value: string) => {
-    if (!pageContent) return;
+  const handleAddSection = async () => {
+    if (!selectedPageContent) return;
     
-    setPageContent(prev => prev ? { ...prev, [field]: value } : null);
-    setHasUnsavedChanges(true);
-  };
-
-  const handleSectionChange = (sectionId: string, field: keyof PageSection, value: string) => {
-    if (!pageContent) return;
-    
-    setPageContent(prev => {
-      if (!prev) return null;
-      
-      const updatedSections = prev.sections.map(section => 
-        section.id === sectionId 
-          ? { ...section, [field]: value }
-          : section
-      );
-      
-      return { ...prev, sections: updatedSections };
-    });
-    setHasUnsavedChanges(true);
-  };
-
-  const addSection = () => {
-    if (!pageContent) return;
-    
-    const newSection: PageSection = {
-      id: `section_${Date.now()}`,
+    const newSection = {
+      page_path: selectedPageContent.page_path,
+      section_key: `section_${Date.now()}`,
       title: "New Section",
       content: "Enter content here...",
-      type: "text"
+      section_type: "text" as const,
+      display_order: selectedPageContent.sections.length + 1,
+      is_active: true,
+      metadata: {}
     };
     
-    setPageContent(prev => {
-      if (!prev) return null;
-      return { ...prev, sections: [...prev.sections, newSection] };
-    });
-    setHasUnsavedChanges(true);
+    await addSection(selectedPageContent.page_path, newSection);
   };
 
-  const removeSection = (sectionId: string) => {
-    if (!pageContent) return;
-    
-    setPageContent(prev => {
-      if (!prev) return null;
-      return { 
-        ...prev, 
-        sections: prev.sections.filter(section => section.id !== sectionId) 
-      };
-    });
-    setHasUnsavedChanges(true);
+  const handleRemoveSection = async (sectionId: string) => {
+    await removeSection(sectionId);
   };
 
   const handleSave = async () => {
-    if (!pageContent) return;
-    
-    setIsLoading(true);
-    console.log('Saving content for page:', pageContent.pagePath);
-    
-    try {
-      // Update last modified date
-      const updatedContent = {
-        ...pageContent,
-        lastModified: new Date().toISOString().split('T')[0]
-      };
-      
-      // Save to localStorage
-      localStorage.setItem(`stellmedia_page_content_${pageContent.pagePath}`, JSON.stringify(updatedContent));
-      
-      // Dispatch event to update any components listening for content changes
-      window.dispatchEvent(new CustomEvent('pageContentUpdated', {
-        detail: { pagePath: pageContent.pagePath, content: updatedContent }
-      }));
-      
-      setPageContent(updatedContent);
-      setOriginalContent(JSON.parse(JSON.stringify(updatedContent))); // Update original for undo
-      setHasUnsavedChanges(false);
-      
-      toast.success("Content saved successfully!", {
-        description: `Changes for ${availablePages.find(p => p.path === selectedPage)?.name} have been saved.`,
-        duration: 3000
-      });
-      
-      console.log('Content saved successfully:', updatedContent);
-    } catch (error) {
-      console.error('Error saving content:', error);
-      toast.error("Error saving content", {
-        description: "Please try again. Check the console for more details.",
-        duration: 5000
-      });
-    } finally {
-      setIsLoading(false);
+    const success = await saveChanges("Manual save from content manager");
+    if (success) {
+      setIsEditing(false);
     }
-  };
-
-  const handleUndo = () => {
-    if (!originalContent) return;
-    
-    setPageContent(JSON.parse(JSON.stringify(originalContent)));
-    setHasUnsavedChanges(false);
-    toast.info("Changes undone - reverted to last saved version");
   };
 
   const handlePageChange = (newPage: string) => {
@@ -219,6 +91,17 @@ const EnhancedContentManager = () => {
     }
     setSelectedPage(newPage);
   };
+
+  if (isLoading && !selectedPageContent) {
+    return (
+      <Card>
+        <CardContent className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading content...</span>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
@@ -234,7 +117,7 @@ const EnhancedContentManager = () => {
           )}
         </CardTitle>
         <CardDescription>
-          Select a page and edit all its content sections. Changes are saved to localStorage and applied to the live website.
+          Select a page and edit all its content sections. Changes are saved to the database and applied to the live website.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -244,10 +127,10 @@ const EnhancedContentManager = () => {
           onPageChange={handlePageChange}
         />
 
-        {pageContent && (
+        {selectedPageContent && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Content for {pageContent.title}</h3>
+              <h3 className="text-lg font-semibold">Content for {selectedPageContent.title}</h3>
               <div className="flex gap-2">
                 {!isEditing ? (
                   <Button onClick={() => setIsEditing(true)} variant="outline">
@@ -266,26 +149,52 @@ const EnhancedContentManager = () => {
             {isEditing ? (
               <div className="space-y-6">
                 <PageMetadataEditor
-                  pageContent={pageContent}
+                  pageContent={{
+                    id: selectedPageContent.id,
+                    pagePath: selectedPageContent.page_path,
+                    title: selectedPageContent.title,
+                    metaTitle: selectedPageContent.meta_title,
+                    metaDescription: selectedPageContent.meta_description
+                  }}
                   onContentChange={handleContentChange}
                 />
                 
                 <SectionsManager
-                  sections={pageContent.sections}
+                  sections={selectedPageContent.sections.map(section => ({
+                    id: section.id,
+                    title: section.title,
+                    content: section.content,
+                    type: section.section_type
+                  }))}
                   onSectionChange={handleSectionChange}
-                  onAddSection={addSection}
-                  onRemoveSection={removeSection}
+                  onAddSection={handleAddSection}
+                  onRemoveSection={handleRemoveSection}
                 />
               </div>
             ) : (
-              <ContentPreview pageContent={pageContent} />
+              <ContentPreview 
+                pageContent={{
+                  id: selectedPageContent.id,
+                  pagePath: selectedPageContent.page_path,
+                  title: selectedPageContent.title,
+                  metaTitle: selectedPageContent.meta_title,
+                  metaDescription: selectedPageContent.meta_description,
+                  sections: selectedPageContent.sections.map(section => ({
+                    id: section.id,
+                    title: section.title,
+                    content: section.content,
+                    type: section.section_type
+                  })),
+                  lastModified: selectedPageContent.updated_at.split('T')[0]
+                }}
+              />
             )}
 
             <div className="flex justify-between items-center pt-4 border-t">
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={handleUndo} 
+                  onClick={undoChanges} 
                   disabled={isLoading || !hasUnsavedChanges}
                 >
                   <RotateCcw className="h-4 w-4 mr-2" />
@@ -299,14 +208,18 @@ const EnhancedContentManager = () => {
                   disabled={!hasUnsavedChanges || isLoading}
                   className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
                 >
-                  <Save className="h-4 w-4 mr-2" />
+                  {isLoading ? (
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4 mr-2" />
+                  )}
                   {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
                 </Button>
               )}
             </div>
             
             <div className="text-sm text-gray-500">
-              Last modified: {pageContent.lastModified}
+              Last modified: {new Date(selectedPageContent.updated_at).toLocaleDateString()}
             </div>
           </div>
         )}
