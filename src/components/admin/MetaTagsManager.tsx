@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Save, Loader2 } from "lucide-react";
 import { usePageSEO } from "@/hooks/use-page-seo";
+import { useContentManager } from "@/hooks/useContentManager";
 
 const availablePages = [
   { path: "/", name: "Home Page" },
@@ -22,7 +23,8 @@ const availablePages = [
 export default function MetaTagsManager() {
   const [selectedPage, setSelectedPage] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
-  const { seoData, saveSEOData } = usePageSEO(selectedPage);
+  const { seoData, pageDefaults } = usePageSEO(selectedPage);
+  const { selectedPageContent, loadPageContent, updatePageMetadata } = useContentManager();
   
   const [formData, setFormData] = useState({
     metaTitle: "",
@@ -34,24 +36,47 @@ export default function MetaTagsManager() {
     twitterDescription: ""
   });
 
+  // Load page content when selected page changes
   useEffect(() => {
-    if (seoData) {
+    loadPageContent(selectedPage);
+  }, [selectedPage, loadPageContent]);
+
+  // Update form data when content loads
+  useEffect(() => {
+    if (selectedPageContent) {
       setFormData({
-        metaTitle: seoData.metaTitle || "",
-        metaDescription: seoData.metaDescription || "",
-        keywords: seoData.keywords || "",
-        ogTitle: seoData.ogTitle || "",
-        ogDescription: seoData.ogDescription || "",
-        twitterTitle: seoData.twitterTitle || "",
-        twitterDescription: seoData.twitterDescription || ""
+        metaTitle: selectedPageContent.meta_title || pageDefaults?.metaTitle || "",
+        metaDescription: selectedPageContent.meta_description || pageDefaults?.metaDescription || "",
+        keywords: selectedPageContent.keywords || pageDefaults?.keywords || "",
+        ogTitle: selectedPageContent.meta_title || pageDefaults?.ogTitle || "",
+        ogDescription: selectedPageContent.meta_description || pageDefaults?.ogDescription || "",
+        twitterTitle: selectedPageContent.meta_title || pageDefaults?.twitterTitle || "",
+        twitterDescription: selectedPageContent.meta_description || pageDefaults?.twitterDescription || ""
+      });
+    } else if (pageDefaults) {
+      // Use defaults if no content exists
+      setFormData({
+        metaTitle: pageDefaults.metaTitle || "",
+        metaDescription: pageDefaults.metaDescription || "",
+        keywords: pageDefaults.keywords || "",
+        ogTitle: pageDefaults.ogTitle || "",
+        ogDescription: pageDefaults.ogDescription || "",
+        twitterTitle: pageDefaults.twitterTitle || "",
+        twitterDescription: pageDefaults.twitterDescription || ""
       });
     }
-  }, [seoData]);
+  }, [selectedPageContent, pageDefaults]);
 
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      const success = await saveSEOData(formData);
+      // Save to the database via content manager
+      const success = await updatePageMetadata(selectedPage, {
+        meta_title: formData.metaTitle,
+        meta_description: formData.metaDescription,
+        keywords: formData.keywords
+      });
+      
       if (success) {
         toast.success("SEO data saved successfully");
       } else {

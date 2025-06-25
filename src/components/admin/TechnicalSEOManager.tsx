@@ -1,12 +1,35 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, AlertCircle, XCircle } from "lucide-react";
 import { useGlobalSEO } from "@/hooks/use-global-seo";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function TechnicalSEOManager() {
   const { config } = useGlobalSEO();
+  const [pageCount, setPageCount] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadPageStats = async () => {
+      try {
+        const { count, error } = await supabase
+          .from('page_content')
+          .select('*', { count: 'exact', head: true });
+
+        if (!error && count !== null) {
+          setPageCount(count);
+        }
+      } catch (error) {
+        console.error('Error loading page stats:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPageStats();
+  }, []);
 
   const seoChecks = [
     {
@@ -18,6 +41,11 @@ export default function TechnicalSEOManager() {
       name: "Google Search Console",
       status: config.googleSearchConsoleVerification ? "verified" : "pending",
       description: "Website verification for search insights"
+    },
+    {
+      name: "Database Content",
+      status: pageCount > 0 ? "active" : "missing",
+      description: `${pageCount} pages indexed in database`
     },
     {
       name: "Sitemap",
@@ -80,7 +108,7 @@ export default function TechnicalSEOManager() {
       <CardHeader>
         <CardTitle>Technical SEO</CardTitle>
         <CardDescription>
-          Monitor technical SEO health and performance
+          Monitor technical SEO health and performance using live database data
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -98,6 +126,12 @@ export default function TechnicalSEOManager() {
             </div>
           ))}
         </div>
+        
+        {isLoading && (
+          <div className="text-center py-4 text-gray-500">
+            Loading database statistics...
+          </div>
+        )}
       </CardContent>
     </Card>
   );
