@@ -19,6 +19,7 @@ import AdminLogin from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/AdminDashboard";
 import UsersManagement from "@/pages/admin/UsersManagement";
 import EnhancedContentPage from "@/pages/admin/EnhancedContentPage";
+import SEOManagementPage from "@/pages/admin/SEOManagementPage";
 import EmailManagement from "@/pages/admin/EmailManagement";
 import SettingsPage from "@/pages/admin/SettingsPage";
 import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
@@ -47,6 +48,7 @@ const App = () => (
                   <Route path="/admin/dashboard" element={<AdminDashboard />} />
                   <Route path="/admin/users" element={<UsersManagement />} />
                   <Route path="/admin/content" element={<EnhancedContentPage />} />
+                  <Route path="/admin/seo" element={<SEOManagementPage />} />
                   <Route path="/admin/email" element={<EmailManagement />} />
                   <Route path="/admin/settings" element={<SettingsPage />} />
                   <Route path="*" element={<NotFound />} />

@@ -40,29 +40,43 @@ const EnhancedContentManager = () => {
     undoChanges
   } = useContentManager();
 
-  // Load page content when page selection changes
+  // Force load content on component mount and page changes
   useEffect(() => {
+    console.log('EnhancedContentManager: Loading page content for:', selectedPage);
     if (selectedPage) {
-      console.log('Loading page content for:', selectedPage);
       loadPageContent(selectedPage);
     }
   }, [selectedPage, loadPageContent]);
 
+  // Debug logging
+  useEffect(() => {
+    console.log('EnhancedContentManager: Selected page content:', selectedPageContent);
+    console.log('EnhancedContentManager: All page content:', allPageContent);
+    console.log('EnhancedContentManager: Is loading:', isLoading);
+  }, [selectedPageContent, allPageContent, isLoading]);
+
   const handleContentChange = async (field: string, value: string) => {
     if (!selectedPageContent) {
       console.warn('No selected page content to update');
+      toast.error('No page selected');
       return;
     }
     
     console.log('Updating page metadata:', field, value);
     const updates = { [field]: value } as any;
-    await updatePageMetadata(selectedPageContent.page_path, updates);
+    const success = await updatePageMetadata(selectedPageContent.page_path, updates);
+    if (success) {
+      toast.success('Page metadata updated');
+    }
   };
 
   const handleSectionChange = async (sectionId: string, field: string, value: string) => {
     console.log('Updating section:', sectionId, field, value);
     const updates = { [field]: value } as any;
-    await updateSection(sectionId, updates);
+    const success = await updateSection(sectionId, updates);
+    if (success) {
+      toast.success('Section updated');
+    }
   };
 
   const handleAddSection = async () => {
@@ -83,12 +97,18 @@ const EnhancedContentManager = () => {
       metadata: {}
     };
     
-    await addSection(selectedPageContent.page_path, newSection);
+    const success = await addSection(selectedPageContent.page_path, newSection);
+    if (!success) {
+      toast.error('Failed to add section');
+    }
   };
 
   const handleRemoveSection = async (sectionId: string) => {
     console.log('Removing section:', sectionId);
-    await removeSection(sectionId);
+    const success = await removeSection(sectionId);
+    if (!success) {
+      toast.error('Failed to remove section');
+    }
   };
 
   const handleSave = async () => {
@@ -97,6 +117,8 @@ const EnhancedContentManager = () => {
     if (success) {
       setIsEditing(false);
       toast.success('Content saved successfully');
+    } else {
+      toast.error('Failed to save changes');
     }
   };
 
@@ -108,15 +130,23 @@ const EnhancedContentManager = () => {
     }
     console.log('Changing page from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
-    setIsEditing(false); // Reset editing mode when changing pages
+    setIsEditing(false);
   };
 
+  const handleUndo = () => {
+    undoChanges();
+    toast.info('Changes undone');
+  };
+
+  // Show loading state
   if (isLoading && !selectedPageContent) {
     return (
       <Card>
-        <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-8 w-8 animate-spin" />
-          <span className="ml-2">Loading content...</span>
+        <CardContent className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+            <p className="text-gray-600">Loading content from database...</p>
+          </div>
         </CardContent>
       </Card>
     );
@@ -149,7 +179,9 @@ const EnhancedContentManager = () => {
         {selectedPageContent ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Content for {selectedPageContent.title || 'Selected Page'}</h3>
+              <h3 className="text-lg font-semibold">
+                Content for {selectedPageContent.title || availablePages.find(p => p.path === selectedPage)?.name || 'Selected Page'}
+              </h3>
               <div className="flex gap-2">
                 {!isEditing ? (
                   <Button onClick={() => setIsEditing(true)} variant="outline">
@@ -213,7 +245,7 @@ const EnhancedContentManager = () => {
               <div className="flex gap-2">
                 <Button 
                   variant="outline" 
-                  onClick={undoChanges} 
+                  onClick={handleUndo} 
                   disabled={isLoading || !hasUnsavedChanges}
                 >
                   <RotateCcw className="h-4 w-4 mr-2" />
@@ -242,10 +274,20 @@ const EnhancedContentManager = () => {
             </div>
           </div>
         ) : (
-          <div className="text-center py-8">
-            <p className="text-gray-500">
-              {isLoading ? 'Loading page content...' : 'No content found for this page. Content will be created automatically when you start editing.'}
-            </p>
+          <div className="text-center py-12">
+            <div className="max-w-md mx-auto">
+              <AlertCircle className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No Content Found</h3>
+              <p className="text-gray-500 mb-4">
+                {isLoading ? 'Loading page content...' : 'No content found for this page. Content will be created automatically when you start editing.'}
+              </p>
+              {!isLoading && (
+                <Button onClick={() => loadPageContent(selectedPage)} variant="outline">
+                  <RotateCcw className="h-4 w-4 mr-2" />
+                  Reload Content
+                </Button>
+              )}
+            </div>
           </div>
         )}
       </CardContent>
