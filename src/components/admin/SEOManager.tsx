@@ -156,7 +156,7 @@ export default function SEOManager() {
         return;
       }
 
-      const result = saveSEOData(selectedPage, seoData);
+      const result = await saveSEOData(selectedPage, seoData);
       
       if (result.success) {
         setHasUnsavedChanges(false);
@@ -222,7 +222,7 @@ export default function SEOManager() {
     setLastSaveTime(null);
   };
 
-  const handleDeleteSavedData = () => {
+  const handleDeleteSavedData = async () => {
     if (!pageSEOData) {
       toast.info("No saved data to delete for this page");
       return;
@@ -233,7 +233,7 @@ export default function SEOManager() {
     }
     
     console.log('🗑️ SEOManager: Deleting saved SEO data for page:', selectedPage);
-    const result = deleteSEOData(selectedPage);
+    const result = await deleteSEOData(selectedPage);
     
     if (result.success) {
       setLastSaveTime(null);
