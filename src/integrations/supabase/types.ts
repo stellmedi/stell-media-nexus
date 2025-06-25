@@ -310,38 +310,65 @@ export type Database = {
       }
       page_content: {
         Row: {
+          canonical_url: string | null
           created_at: string
           id: string
           is_published: boolean
           keywords: string | null
           meta_description: string | null
           meta_title: string | null
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
           page_path: string
+          robots_follow: boolean | null
+          robots_index: boolean | null
           title: string
+          twitter_description: string | null
+          twitter_image: string | null
+          twitter_title: string | null
           updated_at: string
           updated_by: string | null
         }
         Insert: {
+          canonical_url?: string | null
           created_at?: string
           id?: string
           is_published?: boolean
           keywords?: string | null
           meta_description?: string | null
           meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           page_path: string
+          robots_follow?: boolean | null
+          robots_index?: boolean | null
           title: string
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           updated_at?: string
           updated_by?: string | null
         }
         Update: {
+          canonical_url?: string | null
           created_at?: string
           id?: string
           is_published?: boolean
           keywords?: string | null
           meta_description?: string | null
           meta_title?: string | null
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
           page_path?: string
+          robots_follow?: boolean | null
+          robots_index?: boolean | null
           title?: string
+          twitter_description?: string | null
+          twitter_image?: string | null
+          twitter_title?: string | null
           updated_at?: string
           updated_by?: string | null
         }

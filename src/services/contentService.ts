@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 
 export interface PageContent {
@@ -7,6 +8,15 @@ export interface PageContent {
   meta_title?: string;
   meta_description?: string;
   keywords?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
+  twitter_title?: string;
+  twitter_description?: string;
+  twitter_image?: string;
+  canonical_url?: string;
+  robots_index?: boolean;
+  robots_follow?: boolean;
   is_published: boolean;
   created_at: string;
   updated_at: string;
@@ -137,6 +147,15 @@ export const updatePageContent = async (
         meta_title: updates.meta_title,
         meta_description: updates.meta_description,
         keywords: updates.keywords,
+        og_title: updates.og_title,
+        og_description: updates.og_description,
+        og_image: updates.og_image,
+        twitter_title: updates.twitter_title,
+        twitter_description: updates.twitter_description,
+        twitter_image: updates.twitter_image,
+        canonical_url: updates.canonical_url,
+        robots_index: updates.robots_index,
+        robots_follow: updates.robots_follow,
         is_published: updates.is_published,
         updated_at: new Date().toISOString()
       })

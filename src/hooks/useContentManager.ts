@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { toast } from 'sonner';
 import {
@@ -75,7 +74,7 @@ export const useContentManager = () => {
     }
   }, []);
 
-  // Update page metadata with optimistic updates
+  // Update page metadata with optimistic updates - now handles all SEO fields
   const updatePageMetadata = useCallback(async (
     pagePath: string,
     updates: Partial<PageContent>
@@ -91,8 +90,10 @@ export const useContentManager = () => {
     setHasUnsavedChanges(true);
 
     try {
+      console.log('useContentManager: Updating page metadata with:', updates);
       const updatedContent = await updatePageContent(pagePath, updates);
       if (updatedContent) {
+        console.log('useContentManager: Page metadata updated successfully');
         setSelectedPageContent(updatedContent);
         
         // Update in allPageContent as well
@@ -101,6 +102,9 @@ export const useContentManager = () => {
             page.page_path === pagePath ? updatedContent : page
           )
         );
+        
+        // Reset unsaved changes flag since we successfully saved
+        setHasUnsavedChanges(false);
         
         return true;
       } else {
