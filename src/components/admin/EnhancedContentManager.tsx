@@ -7,32 +7,52 @@ import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Save, Edit, Eye, RotateCcw, AlertCircle } from "lucide-react";
+import { Save, Edit, Eye, RotateCcw, AlertCircle, Plus, Trash2 } from "lucide-react";
+
+interface PageSection {
+  id: string;
+  title: string;
+  content: string;
+  type: 'hero' | 'text' | 'list' | 'features';
+}
 
 interface PageContent {
   id: string;
   pagePath: string;
   title: string;
-  heroTitle?: string;
-  heroDescription?: string;
   metaTitle?: string;
   metaDescription?: string;
-  content: string;
+  sections: PageSection[];
   lastModified: string;
 }
 
 const availablePages = [
-  { path: "/", name: "Home Page", sections: ["hero", "services", "testimonials"] },
-  { path: "/about", name: "About Page", sections: ["hero", "content"] },
-  { path: "/services", name: "Services Page", sections: ["hero", "services-list"] },
-  { path: "/contact", name: "Contact Page", sections: ["hero", "form"] },
-  { path: "/case-studies", name: "Case Studies", sections: ["hero", "case-studies-list"] },
-  { path: "/blog", name: "Blog Page", sections: ["hero", "blog-list"] }
+  { path: "/", name: "Home Page", defaultSections: [
+    { id: "hero", title: "Hero Section", content: "Transform Your Business with AI-Powered Digital Solutions", type: "hero" as const },
+    { id: "services", title: "Services Section", content: "Our comprehensive digital marketing services", type: "features" as const },
+    { id: "testimonials", title: "Testimonials Section", content: "What our clients say about us", type: "text" as const },
+    { id: "cta", title: "Call to Action", content: "Ready to grow your business?", type: "text" as const }
+  ]},
+  { path: "/about", name: "About Page", defaultSections: [
+    { id: "hero", title: "About Hero", content: "About Stell Media", type: "hero" as const },
+    { id: "content", title: "Main Content", content: "We are a leading digital marketing agency", type: "text" as const },
+    { id: "team", title: "Team Section", content: "Meet our expert team", type: "features" as const }
+  ]},
+  { path: "/services", name: "Services Page", defaultSections: [
+    { id: "hero", title: "Services Hero", content: "Our Digital Marketing Services", type: "hero" as const },
+    { id: "services-list", title: "Services List", content: "Real Estate Lead Generation, E-commerce Optimization", type: "list" as const },
+    { id: "pricing", title: "Pricing Section", content: "Flexible pricing plans", type: "features" as const }
+  ]},
+  { path: "/contact", name: "Contact Page", defaultSections: [
+    { id: "hero", title: "Contact Hero", content: "Get in Touch", type: "hero" as const },
+    { id: "form", title: "Contact Form", content: "Contact form section", type: "text" as const }
+  ]}
 ];
 
 const EnhancedContentManager = () => {
   const [selectedPage, setSelectedPage] = useState("/");
   const [pageContent, setPageContent] = useState<PageContent | null>(null);
+  const [originalContent, setOriginalContent] = useState<PageContent | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -48,62 +68,35 @@ const EnhancedContentManager = () => {
     // Try to load from localStorage first
     const savedContent = localStorage.getItem(`stellmedia_page_content_${pagePath}`);
     
+    let content: PageContent;
     if (savedContent) {
       try {
-        const parsedContent = JSON.parse(savedContent);
-        setPageContent(parsedContent);
-        console.log('Loaded saved content:', parsedContent);
+        content = JSON.parse(savedContent);
+        console.log('Loaded saved content:', content);
       } catch (error) {
         console.error('Error parsing saved content:', error);
-        setPageContent(getDefaultPageContent(pagePath));
+        content = getDefaultPageContent(pagePath);
       }
     } else {
-      setPageContent(getDefaultPageContent(pagePath));
+      content = getDefaultPageContent(pagePath);
     }
     
+    setPageContent(content);
+    setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy for undo
     setHasUnsavedChanges(false);
     setIsEditing(false);
   };
 
   const getDefaultPageContent = (pagePath: string): PageContent => {
-    const pageDefaults: Record<string, Partial<PageContent>> = {
-      "/": {
-        title: "Home Page",
-        heroTitle: "Transform Your Business with AI-Powered Digital Solutions",
-        heroDescription: "Drive growth with our comprehensive digital marketing services for real estate and e-commerce brands.",
-        content: "Welcome to Stell Media - your trusted digital growth partner.",
-        metaTitle: "Stell Media | Digital Growth for Real Estate & eCommerce Brands",
-        metaDescription: "Digital growth for real estate and eCommerce brands. CRM automation, lead gen, and SEO-powered product discovery by Stell Media."
-      },
-      "/about": {
-        title: "About Us",
-        heroTitle: "About Stell Media",
-        heroDescription: "Your trusted digital growth partner with proven expertise in real estate and e-commerce optimization.",
-        content: "Stell Media is a leading digital marketing agency specializing in real estate lead generation and e-commerce optimization.",
-        metaTitle: "About Stell Media - Digital Marketing Experts",
-        metaDescription: "Learn about Stell Media's expertise in digital marketing, real estate lead generation, and e-commerce optimization services."
-      },
-      "/services": {
-        title: "Services",
-        heroTitle: "Our Digital Marketing Services",
-        heroDescription: "Comprehensive solutions for real estate developers and e-commerce brands to accelerate growth.",
-        content: "We offer a complete suite of digital marketing services tailored for real estate and e-commerce industries.",
-        metaTitle: "Digital Marketing Services | Real Estate & E-commerce",
-        metaDescription: "Comprehensive digital marketing services for real estate and e-commerce. Lead generation, CRM automation, SEO, and conversion optimization."
-      }
-    };
-
-    const defaults = pageDefaults[pagePath] || {};
+    const pageInfo = availablePages.find(p => p.path === pagePath);
     
     return {
       id: `page_${pagePath.replace(/\//g, '_')}`,
       pagePath,
-      title: defaults.title || `Page ${pagePath}`,
-      heroTitle: defaults.heroTitle || "",
-      heroDescription: defaults.heroDescription || "",
-      metaTitle: defaults.metaTitle || "",
-      metaDescription: defaults.metaDescription || "",
-      content: defaults.content || "",
+      title: pageInfo?.name || `Page ${pagePath}`,
+      metaTitle: `${pageInfo?.name || 'Page'} | Stell Media`,
+      metaDescription: `${pageInfo?.name || 'Page'} description for Stell Media`,
+      sections: pageInfo?.defaultSections || [],
       lastModified: new Date().toISOString().split('T')[0]
     };
   };
@@ -112,6 +105,53 @@ const EnhancedContentManager = () => {
     if (!pageContent) return;
     
     setPageContent(prev => prev ? { ...prev, [field]: value } : null);
+    setHasUnsavedChanges(true);
+  };
+
+  const handleSectionChange = (sectionId: string, field: keyof PageSection, value: string) => {
+    if (!pageContent) return;
+    
+    setPageContent(prev => {
+      if (!prev) return null;
+      
+      const updatedSections = prev.sections.map(section => 
+        section.id === sectionId 
+          ? { ...section, [field]: value }
+          : section
+      );
+      
+      return { ...prev, sections: updatedSections };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const addSection = () => {
+    if (!pageContent) return;
+    
+    const newSection: PageSection = {
+      id: `section_${Date.now()}`,
+      title: "New Section",
+      content: "Enter content here...",
+      type: "text"
+    };
+    
+    setPageContent(prev => {
+      if (!prev) return null;
+      return { ...prev, sections: [...prev.sections, newSection] };
+    });
+    setHasUnsavedChanges(true);
+  };
+
+  const removeSection = (sectionId: string) => {
+    if (!pageContent) return;
+    
+    setPageContent(prev => {
+      if (!prev) return null;
+      return { 
+        ...prev, 
+        sections: prev.sections.filter(section => section.id !== sectionId) 
+      };
+    });
     setHasUnsavedChanges(true);
   };
 
@@ -137,11 +177,11 @@ const EnhancedContentManager = () => {
       }));
       
       setPageContent(updatedContent);
+      setOriginalContent(JSON.parse(JSON.stringify(updatedContent))); // Update original for undo
       setHasUnsavedChanges(false);
-      setIsEditing(false);
       
       toast.success("Content saved successfully!", {
-        description: `Changes for ${availablePages.find(p => p.path === selectedPage)?.name} have been saved and applied.`,
+        description: `Changes for ${availablePages.find(p => p.path === selectedPage)?.name} have been saved.`,
         duration: 3000
       });
       
@@ -157,13 +197,12 @@ const EnhancedContentManager = () => {
     }
   };
 
-  const handleReset = () => {
-    if (hasUnsavedChanges && !confirm('Are you sure you want to reset? This will lose your unsaved changes.')) {
-      return;
-    }
+  const handleUndo = () => {
+    if (!originalContent) return;
     
-    loadPageContent(selectedPage);
-    toast.info("Content reset to last saved version");
+    setPageContent(JSON.parse(JSON.stringify(originalContent)));
+    setHasUnsavedChanges(false);
+    toast.info("Changes undone - reverted to last saved version");
   };
 
   const handlePageChange = (newPage: string) => {
@@ -191,7 +230,7 @@ const EnhancedContentManager = () => {
           )}
         </CardTitle>
         <CardDescription>
-          Select a page and edit its content. Changes are saved and applied to the live website.
+          Select a page and edit all its content sections. Changes are saved to localStorage and applied to the live website.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -212,13 +251,13 @@ const EnhancedContentManager = () => {
           </Select>
           {selectedPageInfo && (
             <p className="text-sm text-gray-500 mt-1">
-              Editing: {selectedPageInfo.name} - Sections: {selectedPageInfo.sections.join(", ")}
+              Editing: {selectedPageInfo.name}
             </p>
           )}
         </div>
 
         {pageContent && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Content for {pageContent.title}</h3>
               <div className="flex gap-2">
@@ -237,91 +276,155 @@ const EnhancedContentManager = () => {
             </div>
 
             {isEditing ? (
-              <div className="space-y-4">
-                <div>
-                  <label className="text-sm font-medium">Hero Title</label>
-                  <Input
-                    value={pageContent.heroTitle || ""}
-                    onChange={(e) => handleContentChange('heroTitle', e.target.value)}
-                    placeholder="Main headline for the page"
-                    className="mt-1"
-                  />
+              <div className="space-y-6">
+                {/* Page Metadata */}
+                <div className="border rounded-lg p-4 bg-gray-50">
+                  <h4 className="font-medium mb-3">Page Metadata</h4>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="text-sm font-medium">Page Title</label>
+                      <Input
+                        value={pageContent.title || ""}
+                        onChange={(e) => handleContentChange('title', e.target.value)}
+                        placeholder="Page title"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Meta Title (SEO)</label>
+                      <Input
+                        value={pageContent.metaTitle || ""}
+                        onChange={(e) => handleContentChange('metaTitle', e.target.value)}
+                        placeholder="Title that appears in search results"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium">Meta Description (SEO)</label>
+                      <Textarea
+                        value={pageContent.metaDescription || ""}
+                        onChange={(e) => handleContentChange('metaDescription', e.target.value)}
+                        placeholder="Description that appears in search results"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-sm font-medium">Hero Description</label>
-                  <Textarea
-                    value={pageContent.heroDescription || ""}
-                    onChange={(e) => handleContentChange('heroDescription', e.target.value)}
-                    placeholder="Subheading or description for the hero section"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">Meta Title (SEO)</label>
-                  <Input
-                    value={pageContent.metaTitle || ""}
-                    onChange={(e) => handleContentChange('metaTitle', e.target.value)}
-                    placeholder="Title that appears in search results"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">Meta Description (SEO)</label>
-                  <Textarea
-                    value={pageContent.metaDescription || ""}
-                    onChange={(e) => handleContentChange('metaDescription', e.target.value)}
-                    placeholder="Description that appears in search results"
-                    className="mt-1"
-                  />
-                </div>
-
-                <div>
-                  <label className="text-sm font-medium">Page Content</label>
-                  <Textarea
-                    value={pageContent.content}
-                    onChange={(e) => handleContentChange('content', e.target.value)}
-                    placeholder="Main content for the page"
-                    className="mt-1 min-h-[200px]"
-                  />
+                {/* Page Sections */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-medium">Page Sections</h4>
+                    <Button onClick={addSection} variant="outline" size="sm">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Section
+                    </Button>
+                  </div>
+                  
+                  {pageContent.sections.map((section, index) => (
+                    <div key={section.id} className="border rounded-lg p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium">Section {index + 1}</span>
+                          <Badge variant="outline">{section.type}</Badge>
+                        </div>
+                        <Button 
+                          onClick={() => removeSection(section.id)} 
+                          variant="ghost" 
+                          size="sm"
+                          className="text-red-600 hover:text-red-700"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div>
+                          <label className="text-sm font-medium">Section Title</label>
+                          <Input
+                            value={section.title}
+                            onChange={(e) => handleSectionChange(section.id, 'title', e.target.value)}
+                            placeholder="Section title"
+                            className="mt-1"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Section Content</label>
+                          <Textarea
+                            value={section.content}
+                            onChange={(e) => handleSectionChange(section.id, 'content', e.target.value)}
+                            placeholder="Section content"
+                            className="mt-1 min-h-[100px]"
+                          />
+                        </div>
+                        <div>
+                          <label className="text-sm font-medium">Section Type</label>
+                          <Select 
+                            value={section.type} 
+                            onValueChange={(value) => handleSectionChange(section.id, 'type', value)}
+                          >
+                            <SelectTrigger className="mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="hero">Hero</SelectItem>
+                              <SelectItem value="text">Text</SelectItem>
+                              <SelectItem value="list">List</SelectItem>
+                              <SelectItem value="features">Features</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : (
-              <div className="space-y-4 bg-gray-50 p-4 rounded-lg">
-                <div>
-                  <h4 className="font-medium text-gray-700">Hero Title:</h4>
-                  <p className="text-lg font-semibold">{pageContent.heroTitle || "Not set"}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-700">Hero Description:</h4>
-                  <p>{pageContent.heroDescription || "Not set"}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-700">Meta Title:</h4>
-                  <p className="text-sm">{pageContent.metaTitle || "Not set"}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-700">Meta Description:</h4>
-                  <p className="text-sm">{pageContent.metaDescription || "Not set"}</p>
-                </div>
-                
-                <div>
-                  <h4 className="font-medium text-gray-700">Content:</h4>
-                  <p className="whitespace-pre-wrap">{pageContent.content || "No content set"}</p>
+              <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
+                {/* Preview Mode */}
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium text-gray-700">Page Title:</h4>
+                    <p className="text-xl font-semibold">{pageContent.title || "Not set"}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-700">Meta Title:</h4>
+                    <p className="text-sm">{pageContent.metaTitle || "Not set"}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-700">Meta Description:</h4>
+                    <p className="text-sm">{pageContent.metaDescription || "Not set"}</p>
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-gray-700">Page Sections ({pageContent.sections.length}):</h4>
+                    <div className="space-y-3 mt-2">
+                      {pageContent.sections.map((section, index) => (
+                        <div key={section.id} className="bg-white p-3 rounded border">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-sm font-medium">Section {index + 1}: {section.title}</span>
+                            <Badge variant="outline" className="text-xs">{section.type}</Badge>
+                          </div>
+                          <p className="text-sm text-gray-600 whitespace-pre-wrap">{section.content}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
 
             <div className="flex justify-between items-center pt-4 border-t">
               <div className="flex gap-2">
-                <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+                <Button 
+                  variant="outline" 
+                  onClick={handleUndo} 
+                  disabled={isLoading || !hasUnsavedChanges}
+                >
                   <RotateCcw className="h-4 w-4 mr-2" />
-                  Reset
+                  Undo Changes
                 </Button>
               </div>
               
