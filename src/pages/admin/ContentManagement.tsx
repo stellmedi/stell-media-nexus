@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import AdminLayout from "@/components/admin/AdminLayout";
-import { useAuth } from "@/hooks/use-auth";
+import { useAdminAuth } from "@/hooks/use-supabase-admin";
 import { getAllPageSEO } from "@/hooks/use-page-seo";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -69,7 +68,8 @@ const mockMetadata: ContentMetadata[] = [
 ];
 
 export default function ContentManagement() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading, adminUser } = useAdminAuth();
+  
   const [contentData, setContentData] = useState<ContentMetadata[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
