@@ -1,7 +1,7 @@
 
 /* Critical CSS - loaded inline for LCP optimization */
 
-/* Essential base styles */
+/* Essential base styles for immediate rendering */
 * {
   margin: 0;
   padding: 0;
@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: #1f2937;
   background: #fefefe;
@@ -25,13 +25,14 @@ body {
   border-bottom: 1px solid #e5e7eb;
 }
 
-/* Hero section optimization */
+/* Hero section optimization for LCP */
 .hero-section {
   background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
   min-height: 90vh;
   display: flex;
   align-items: center;
   position: relative;
+  contain: layout style paint;
 }
 
 /* Essential button styles */
@@ -42,14 +43,20 @@ body {
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+  transform: translateZ(0); /* Enable hardware acceleration */
 }
 
 .btn-primary:hover {
   background: #4338ca;
 }
 
-/* Loading states */
+.btn-primary:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Loading states optimization */
 .loading-skeleton {
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 200% 100%;
@@ -61,10 +68,63 @@ body {
   100% { background-position: -200% 0; }
 }
 
+/* Typography optimization */
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
 /* Essential responsive utilities */
 @media (max-width: 768px) {
   .hero-section {
     min-height: 70vh;
     padding: 2rem 1rem;
   }
+  
+  h1 {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Focus management */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #4f46e5;
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 6px;
 }

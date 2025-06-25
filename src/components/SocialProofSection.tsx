@@ -7,10 +7,10 @@ import { Link } from 'react-router-dom';
 const SocialProofSection = () => {
   const caseStudies = [
     {
-      title: 'Real Estate CRM Automation',
+      title: 'Real Estate Lead Gen & CRM Automation',
       client: 'Top real estate brand in Tricity',
       metric: '2.4x more Site Visits',
-      description: 'Automated lead nurturing system with personalized follow-ups',
+      description: 'High quality leads with Automated lead nurturing system & personalised followups',
       category: 'real-estate'
     },
     {
@@ -21,10 +21,10 @@ const SocialProofSection = () => {
       category: 'ecommerce'
     },
     {
-      title: 'SEO Campaign Optimization',
+      title: 'Optimised Product Data & Shopping Ads',
       client: 'Hardware ecommerce store',
       metric: '2.1X revenue uplift online sales',
-      description: 'Comprehensive SEO strategy for construction industry',
+      description: 'Comprehensive product Data Optimisation & Shopping ads across shopify & marketplaces',
       category: 'ecommerce'
     }
   ];
@@ -59,9 +59,9 @@ const SocialProofSection = () => {
                 <h3 className="font-bold text-lg mb-2">{study.title}</h3>
                 <p className="text-gray-600 text-sm mb-3">{study.client}</p>
                 
-                <div className="flex items-center mb-3">
+                <div className="flex items-center mb-3" aria-label={`5 star rating for ${study.client}`}>
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" aria-hidden="true" />
                   ))}
                 </div>
                 
@@ -75,7 +75,7 @@ const SocialProofSection = () => {
             <Button asChild size="lg" variant="outline" className="border-2 border-indigo-300 hover:bg-indigo-50">
               <Link to="/case-studies">
                 View All Case Studies
-                <ArrowRight className="ml-2 h-5 w-5" />
+                <ArrowRight className="ml-2 h-5 w-5" aria-hidden="true" />
               </Link>
             </Button>
           </div>

@@ -16,12 +16,17 @@ import StickyHeader from "@/components/StickyHeader";
 import ScrollProgressIndicator from "@/components/ScrollProgressIndicator";
 import SocialProofSection from "@/components/SocialProofSection";
 
-// Lazy load below-the-fold components
+// Lazy load below-the-fold components with loading fallbacks
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
 const EnhancedTestimonials = lazy(() => import("@/components/EnhancedTestimonials"));
 const ContactSection = lazy(() => import("@/components/ContactSection"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const Footer = lazy(() => import("@/components/Footer"));
+
+// Optimized loading component
+const LoadingFallback = ({ height = "h-20" }: { height?: string }) => (
+  <div className={`${height} bg-gray-50 animate-pulse`} aria-hidden="true" />
+);
 
 const Index = () => {
   const faqItems = [
@@ -138,6 +143,22 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-white">
+      <Helmet>
+        {/* Critical CSS inlined for faster LCP */}
+        <style type="text/css">{`
+          /* Critical above-the-fold styles */
+          .hero-section { background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%); min-height: 90vh; display: flex; align-items: center; position: relative; }
+          .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e5e7eb; }
+          .btn-primary { background: #4f46e5; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; }
+          .btn-primary:hover { background: #4338ca; }
+        `}</style>
+        
+        {/* Preload critical resources */}
+        <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="preconnect" href="//fonts.googleapis.com" crossOrigin="" />
+      </Helmet>
+      
       <SEOHelmet
         pagePath="/"
         defaultTitle="Stell Media | Digital Growth for Real Estate & eCommerce Brands - Lead generation, CRM automation & product findability—done right."
@@ -155,49 +176,54 @@ const Index = () => {
       <SchemaMarkup type="service" data={eCommerceServiceData} />
       
       {/* Critical above-the-fold content */}
-      <Navbar />
-      <HeroSection />
+      <header role="banner">
+        <Navbar />
+      </header>
       
-      {/* Sticky Header with CTA */}
-      <StickyHeader />
+      <main role="main">
+        <HeroSection />
+        
+        {/* Sticky Header with CTA */}
+        <StickyHeader />
+        
+        {/* Social Proof Section */}
+        <SocialProofSection />
+        
+        {/* Social Share Buttons - Added to homepage */}
+        <section className="container mx-auto px-4 py-8" aria-label="Social sharing">
+          <div className="flex justify-center">
+            <SocialShareButtons 
+              title="Stell Media - Digital Growth Partner"
+              description="Transform your business with our proven digital solutions for real estate and e-commerce"
+              className="bg-white p-4 rounded-lg shadow-sm border"
+            />
+          </div>
+        </section>
+        
+        {/* Below-the-fold content with lazy loading and accessibility */}
+        <Suspense fallback={<LoadingFallback />}>
+          <ServicesSection />
+        </Suspense>
+        
+        <Suspense fallback={<LoadingFallback height="h-40" />}>
+          <EnhancedTestimonials />
+        </Suspense>
+        
+        <Suspense fallback={<LoadingFallback height="h-40" />}>
+          <ContactSection />
+        </Suspense>
+        
+        <Suspense fallback={<LoadingFallback height="h-40" />}>
+          <FAQSection items={faqItems} />
+        </Suspense>
+      </main>
       
-      {/* Social Proof Section */}
-      <SocialProofSection />
-      
-      {/* Social Share Buttons - Added to homepage */}
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center">
-          <SocialShareButtons 
-            title="Stell Media - Digital Growth Partner"
-            description="Transform your business with our proven digital solutions for real estate and e-commerce"
-            className="bg-white p-4 rounded-lg shadow-sm border"
-          />
-        </div>
-      </div>
+      <Suspense fallback={<LoadingFallback />}>
+        <Footer />
+      </Suspense>
       
       {/* WhatsApp Button */}
       <WhatsAppButton />
-      
-      {/* Below-the-fold content with lazy loading */}
-      <Suspense fallback={<div className="h-20 bg-gray-50 animate-pulse" />}>
-        <ServicesSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
-        <EnhancedTestimonials />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-40 bg-white animate-pulse" />}>
-        <ContactSection />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-40 bg-gray-50 animate-pulse" />}>
-        <FAQSection items={faqItems} />
-      </Suspense>
-      
-      <Suspense fallback={<div className="h-20 bg-white animate-pulse" />}>
-        <Footer />
-      </Suspense>
     </div>
   );
 };
