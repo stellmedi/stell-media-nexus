@@ -4,16 +4,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Image, Video } from "lucide-react";
 import EnhancedContentManager from "./EnhancedContentManager";
+import ContentImporter from "./ContentImporter";
 
 export default function ContentManagement() {
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="pages" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs defaultValue="sync" className="w-full">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="sync">Content Sync</TabsTrigger>
           <TabsTrigger value="pages">Pages & Content</TabsTrigger>
           <TabsTrigger value="media">Media Library</TabsTrigger>
           <TabsTrigger value="settings">Content Settings</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="sync" className="mt-6">
+          <ContentImporter />
+        </TabsContent>
         
         <TabsContent value="pages" className="mt-6">
           <EnhancedContentManager />

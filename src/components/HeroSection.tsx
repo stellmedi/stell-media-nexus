@@ -14,12 +14,12 @@ const HeroSection = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  // Get hero content from database
+  // Get hero content from database - FIXED: Now using content field for main headline
   const heroSection = getSection('hero');
   
   // Fallback content if database content is not available
-  const heroTitle = heroSection?.title || "Digital Growth for Real Estate Developers and eCommerce Brands";
-  const heroContent = heroSection?.content || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
+  const heroTitle = heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
+  const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
@@ -28,7 +28,7 @@ const HeroSection = () => {
       
       <div className="container mx-auto px-4 py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center">          
-          {/* Main headline - Now using database content */}
+          {/* Main headline - Now correctly using database content field */}
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             {isLoading ? (
               <span className="animate-pulse bg-gray-200 rounded h-8 w-3/4 mx-auto block"></span>
@@ -42,12 +42,12 @@ const HeroSection = () => {
             )}
           </h1>
           
-          {/* Subheadline - Using database content */}
+          {/* Subheadline - Using database title field as subtitle */}
           <p className="text-xl md:text-2xl text-gray-700 mb-8 leading-relaxed max-w-3xl mx-auto">
             {isLoading ? (
               <span className="animate-pulse bg-gray-200 rounded h-6 w-full block"></span>
             ) : (
-              heroContent
+              heroSubtitle
             )}
           </p>
           

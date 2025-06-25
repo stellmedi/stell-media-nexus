@@ -13,7 +13,9 @@ export const usePageContent = (pagePath: string) => {
       setError(null);
       
       try {
+        console.log(`usePageContent: Loading content for ${pagePath}`);
         const pageContent = await getPageContent(pagePath);
+        console.log(`usePageContent: Loaded content:`, pageContent);
         setContent(pageContent);
       } catch (err) {
         console.error('Error loading page content:', err);
@@ -27,20 +29,32 @@ export const usePageContent = (pagePath: string) => {
 
     // Listen for content updates from admin panel
     const handleContentUpdate = (event: CustomEvent) => {
+      console.log('usePageContent: Received content update event:', event.detail);
       if (event.detail.pagePath === pagePath) {
+        console.log('usePageContent: Updating content for matching page');
         setContent(event.detail.content);
       }
     };
 
+    // Listen for content import completion
+    const handleContentImport = () => {
+      console.log('usePageContent: Content import detected, reloading...');
+      loadContent();
+    };
+
     window.addEventListener('contentUpdated', handleContentUpdate as EventListener);
+    window.addEventListener('contentImported', handleContentImport as EventListener);
     
     return () => {
       window.removeEventListener('contentUpdated', handleContentUpdate as EventListener);
+      window.removeEventListener('contentImported', handleContentImport as EventListener);
     };
   }, [pagePath]);
 
   const getSection = (sectionKey: string) => {
-    return content?.sections.find(section => section.section_key === sectionKey);
+    const section = content?.sections.find(section => section.section_key === sectionKey);
+    console.log(`usePageContent: Getting section ${sectionKey}:`, section);
+    return section;
   };
 
   return {

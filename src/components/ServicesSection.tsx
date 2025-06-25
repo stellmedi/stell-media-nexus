@@ -12,9 +12,13 @@ const ServicesSection = () => {
   // Get services content from database
   const servicesSection = getSection('services');
   
-  // Fallback content
+  // Fallback content - Using correct field mapping
   const sectionTitle = servicesSection?.title || "Our Digital Growth Services";
   const sectionDescription = servicesSection?.content || "Comprehensive digital marketing solutions designed to accelerate growth for real estate developers and e-commerce businesses";
+
+  console.log('ServicesSection: servicesSection data:', servicesSection);
+  console.log('ServicesSection: Using title:', sectionTitle);
+  console.log('ServicesSection: Using description:', sectionDescription);
 
   const services = [
     {
