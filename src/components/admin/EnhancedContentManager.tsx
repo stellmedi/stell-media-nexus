@@ -15,7 +15,11 @@ const availablePages = [
   { path: "/", name: "Home Page" },
   { path: "/about", name: "About Page" },
   { path: "/services", name: "Services Page" },
-  { path: "/contact", name: "Contact Page" }
+  { path: "/contact", name: "Contact Page" },
+  { path: "/blog", name: "Blog Page" },
+  { path: "/case-studies", name: "Case Studies Page" },
+  { path: "/careers", name: "Careers Page" },
+  { path: "/faq", name: "FAQ Page" }
 ];
 
 const EnhancedContentManager = () => {
@@ -39,25 +43,35 @@ const EnhancedContentManager = () => {
   // Load page content when page selection changes
   useEffect(() => {
     if (selectedPage) {
+      console.log('Loading page content for:', selectedPage);
       loadPageContent(selectedPage);
     }
   }, [selectedPage, loadPageContent]);
 
   const handleContentChange = async (field: string, value: string) => {
-    if (!selectedPageContent) return;
+    if (!selectedPageContent) {
+      console.warn('No selected page content to update');
+      return;
+    }
     
+    console.log('Updating page metadata:', field, value);
     const updates = { [field]: value } as any;
     await updatePageMetadata(selectedPageContent.page_path, updates);
   };
 
   const handleSectionChange = async (sectionId: string, field: string, value: string) => {
+    console.log('Updating section:', sectionId, field, value);
     const updates = { [field]: value } as any;
     await updateSection(sectionId, updates);
   };
 
   const handleAddSection = async () => {
-    if (!selectedPageContent) return;
+    if (!selectedPageContent) {
+      toast.error('No page selected');
+      return;
+    }
     
+    console.log('Adding new section to:', selectedPageContent.page_path);
     const newSection = {
       page_path: selectedPageContent.page_path,
       section_key: `section_${Date.now()}`,
@@ -73,13 +87,16 @@ const EnhancedContentManager = () => {
   };
 
   const handleRemoveSection = async (sectionId: string) => {
+    console.log('Removing section:', sectionId);
     await removeSection(sectionId);
   };
 
   const handleSave = async () => {
-    const success = await saveChanges("Manual save from content manager");
+    console.log('Saving changes...');
+    const success = await saveChanges("Manual save from enhanced content manager");
     if (success) {
       setIsEditing(false);
+      toast.success('Content saved successfully');
     }
   };
 
@@ -89,7 +106,9 @@ const EnhancedContentManager = () => {
         return;
       }
     }
+    console.log('Changing page from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
+    setIsEditing(false); // Reset editing mode when changing pages
   };
 
   if (isLoading && !selectedPageContent) {
@@ -127,10 +146,10 @@ const EnhancedContentManager = () => {
           onPageChange={handlePageChange}
         />
 
-        {selectedPageContent && (
+        {selectedPageContent ? (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-semibold">Content for {selectedPageContent.title}</h3>
+              <h3 className="text-lg font-semibold">Content for {selectedPageContent.title || 'Selected Page'}</h3>
               <div className="flex gap-2">
                 {!isEditing ? (
                   <Button onClick={() => setIsEditing(true)} variant="outline">
@@ -221,6 +240,12 @@ const EnhancedContentManager = () => {
             <div className="text-sm text-gray-500">
               Last modified: {new Date(selectedPageContent.updated_at).toLocaleDateString()}
             </div>
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <p className="text-gray-500">
+              {isLoading ? 'Loading page content...' : 'No content found for this page. Content will be created automatically when you start editing.'}
+            </p>
           </div>
         )}
       </CardContent>
