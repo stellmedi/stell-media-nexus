@@ -2,12 +2,13 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Save, Edit, Eye, RotateCcw, AlertCircle, Plus, Trash2 } from "lucide-react";
+import { Save, Edit, Eye, RotateCcw, AlertCircle } from "lucide-react";
+import PageSelector from "./content/PageSelector";
+import PageMetadataEditor from "./content/PageMetadataEditor";
+import SectionsManager from "./content/SectionsManager";
+import ContentPreview from "./content/ContentPreview";
 
 interface PageSection {
   id: string;
@@ -219,8 +220,6 @@ const EnhancedContentManager = () => {
     setSelectedPage(newPage);
   };
 
-  const selectedPageInfo = availablePages.find(p => p.path === selectedPage);
-
   return (
     <Card>
       <CardHeader>
@@ -239,27 +238,11 @@ const EnhancedContentManager = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Page Selector */}
-        <div>
-          <label className="text-sm font-medium">Select Page to Edit</label>
-          <Select value={selectedPage} onValueChange={handlePageChange}>
-            <SelectTrigger className="w-full mt-1">
-              <SelectValue placeholder="Choose a page to edit" />
-            </SelectTrigger>
-            <SelectContent>
-              {availablePages.map((page) => (
-                <SelectItem key={page.path} value={page.path}>
-                  {page.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          {selectedPageInfo && (
-            <p className="text-sm text-gray-500 mt-1">
-              Editing: {selectedPageInfo.name}
-            </p>
-          )}
-        </div>
+        <PageSelector
+          availablePages={availablePages}
+          selectedPage={selectedPage}
+          onPageChange={handlePageChange}
+        />
 
         {pageContent && (
           <div className="space-y-6">
@@ -282,143 +265,20 @@ const EnhancedContentManager = () => {
 
             {isEditing ? (
               <div className="space-y-6">
-                {/* Page Metadata */}
-                <div className="border rounded-lg p-4 bg-gray-50">
-                  <h4 className="font-medium mb-3">Page Metadata</h4>
-                  <div className="space-y-3">
-                    <div>
-                      <label className="text-sm font-medium">Page Title</label>
-                      <Input
-                        value={pageContent.title || ""}
-                        onChange={(e) => handleContentChange('title', e.target.value)}
-                        placeholder="Page title"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Meta Title (SEO)</label>
-                      <Input
-                        value={pageContent.metaTitle || ""}
-                        onChange={(e) => handleContentChange('metaTitle', e.target.value)}
-                        placeholder="Title that appears in search results"
-                        className="mt-1"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium">Meta Description (SEO)</label>
-                      <Textarea
-                        value={pageContent.metaDescription || ""}
-                        onChange={(e) => handleContentChange('metaDescription', e.target.value)}
-                        placeholder="Description that appears in search results"
-                        className="mt-1"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Page Sections */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-medium">Page Sections</h4>
-                    <Button onClick={addSection} variant="outline" size="sm">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Section
-                    </Button>
-                  </div>
-                  
-                  {pageContent.sections.map((section, index) => (
-                    <div key={section.id} className="border rounded-lg p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium">Section {index + 1}</span>
-                          <Badge variant="outline">{section.type}</Badge>
-                        </div>
-                        <Button 
-                          onClick={() => removeSection(section.id)} 
-                          variant="ghost" 
-                          size="sm"
-                          className="text-red-600 hover:text-red-700"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      
-                      <div className="space-y-3">
-                        <div>
-                          <label className="text-sm font-medium">Section Title</label>
-                          <Input
-                            value={section.title}
-                            onChange={(e) => handleSectionChange(section.id, 'title', e.target.value)}
-                            placeholder="Section title"
-                            className="mt-1"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Section Content</label>
-                          <Textarea
-                            value={section.content}
-                            onChange={(e) => handleSectionChange(section.id, 'content', e.target.value)}
-                            placeholder="Section content"
-                            className="mt-1 min-h-[100px]"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-sm font-medium">Section Type</label>
-                          <Select 
-                            value={section.type} 
-                            onValueChange={(value) => handleSectionChange(section.id, 'type', value)}
-                          >
-                            <SelectTrigger className="mt-1">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="hero">Hero</SelectItem>
-                              <SelectItem value="text">Text</SelectItem>
-                              <SelectItem value="list">List</SelectItem>
-                              <SelectItem value="features">Features</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                <PageMetadataEditor
+                  pageContent={pageContent}
+                  onContentChange={handleContentChange}
+                />
+                
+                <SectionsManager
+                  sections={pageContent.sections}
+                  onSectionChange={handleSectionChange}
+                  onAddSection={addSection}
+                  onRemoveSection={removeSection}
+                />
               </div>
             ) : (
-              <div className="space-y-6 bg-gray-50 p-6 rounded-lg">
-                {/* Preview Mode */}
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium text-gray-700">Page Title:</h4>
-                    <p className="text-xl font-semibold">{pageContent.title || "Not set"}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium text-gray-700">Meta Title:</h4>
-                    <p className="text-sm">{pageContent.metaTitle || "Not set"}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium text-gray-700">Meta Description:</h4>
-                    <p className="text-sm">{pageContent.metaDescription || "Not set"}</p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium text-gray-700">Page Sections ({pageContent.sections.length}):</h4>
-                    <div className="space-y-3 mt-2">
-                      {pageContent.sections.map((section, index) => (
-                        <div key={section.id} className="bg-white p-3 rounded border">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-sm font-medium">Section {index + 1}: {section.title}</span>
-                            <Badge variant="outline" className="text-xs">{section.type}</Badge>
-                          </div>
-                          <p className="text-sm text-gray-600 whitespace-pre-wrap">{section.content}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ContentPreview pageContent={pageContent} />
             )}
 
             <div className="flex justify-between items-center pt-4 border-t">
