@@ -7,8 +7,7 @@ import { toast } from "sonner";
 import { Save, Edit, Eye, RotateCcw, AlertCircle, Loader2, RefreshCw } from "lucide-react";
 import { useContentManager } from "@/hooks/useContentManager";
 import PageSelector from "./content/PageSelector";
-import PageMetadataEditor from "./content/PageMetadataEditor";
-import SectionsManager from "./content/SectionsManager";
+import FullPageEditor from "./content/FullPageEditor";
 import ContentPreview from "./content/ContentPreview";
 
 const availablePages = [
@@ -75,18 +74,17 @@ const EnhancedContentManager = () => {
     });
   }, [selectedPageContent, isLoading, isInitialLoad, hasUnsavedChanges, selectedPage]);
 
-  const handleContentChange = async (field: string, value: string) => {
+  const handlePageTitleChange = async (title: string) => {
     if (!selectedPageContent) {
       console.warn('No selected page content to update');
       toast.error('No page selected');
       return;
     }
     
-    console.log('Updating page metadata:', field, value);
-    const updates = { [field]: value } as any;
-    const success = await updatePageMetadata(selectedPageContent.page_path, updates);
+    console.log('Updating page title:', title);
+    const success = await updatePageMetadata(selectedPageContent.page_path, { title });
     if (success) {
-      toast.success('Page metadata updated');
+      toast.success('Page title updated');
     }
   };
 
@@ -201,7 +199,7 @@ const EnhancedContentManager = () => {
           )}
         </CardTitle>
         <CardDescription>
-          Select a page and edit all its content sections. Changes are saved to the database and applied to the live website.
+          Select a page and edit all its content sections. SEO settings are managed separately in the SEO section.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -237,30 +235,16 @@ const EnhancedContentManager = () => {
             </div>
 
             {isEditing ? (
-              <div className="space-y-6">
-                <PageMetadataEditor
-                  pageContent={{
-                    id: selectedPageContent.id,
-                    pagePath: selectedPageContent.page_path,
-                    title: selectedPageContent.title,
-                    metaTitle: selectedPageContent.meta_title,
-                    metaDescription: selectedPageContent.meta_description
-                  }}
-                  onContentChange={handleContentChange}
-                />
-                
-                <SectionsManager
-                  sections={selectedPageContent.sections.map(section => ({
-                    id: section.id,
-                    title: section.title,
-                    content: section.content,
-                    type: section.section_type
-                  }))}
-                  onSectionChange={handleSectionChange}
-                  onAddSection={handleAddSection}
-                  onRemoveSection={handleRemoveSection}
-                />
-              </div>
+              <FullPageEditor
+                pageContent={selectedPageContent}
+                onPageTitleChange={handlePageTitleChange}
+                onSectionChange={handleSectionChange}
+                onAddSection={handleAddSection}
+                onRemoveSection={handleRemoveSection}
+                onSave={handleSave}
+                hasUnsavedChanges={hasUnsavedChanges}
+                isLoading={isLoading}
+              />
             ) : (
               <ContentPreview 
                 pageContent={{
@@ -291,21 +275,6 @@ const EnhancedContentManager = () => {
                   Undo Changes
                 </Button>
               </div>
-              
-              {isEditing && (
-                <Button 
-                  onClick={handleSave}
-                  disabled={!hasUnsavedChanges || isLoading}
-                  className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
-                >
-                  {isLoading ? (
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  ) : (
-                    <Save className="h-4 w-4 mr-2" />
-                  )}
-                  {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
-                </Button>
-              )}
             </div>
             
             <div className="text-sm text-gray-500">

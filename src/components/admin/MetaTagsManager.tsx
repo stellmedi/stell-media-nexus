@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Globe, Share2, Twitter } from "lucide-react";
 import { usePageSEO } from "@/hooks/use-page-seo";
 import { useContentManager } from "@/hooks/useContentManager";
 
@@ -93,9 +94,13 @@ export default function MetaTagsManager() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Meta Tags & Titles</CardTitle>
+        <CardTitle className="flex items-center gap-2">
+          <Globe className="h-5 w-5" />
+          SEO Meta Tags & Titles
+        </CardTitle>
         <CardDescription>
-          Manage meta titles, descriptions, and social media tags for your pages
+          Manage meta titles, descriptions, keywords, and social media tags for your pages. 
+          Content editing is handled separately in the Content Management section.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -115,26 +120,42 @@ export default function MetaTagsManager() {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 gap-4">
+        <Separator />
+
+        {/* Primary SEO Fields */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Globe className="h-4 w-4" />
+            <h3 className="text-lg font-semibold">Primary SEO Settings</h3>
+          </div>
+          
           <div>
-            <Label htmlFor="meta-title">Meta Title</Label>
+            <Label htmlFor="meta-title">Meta Title *</Label>
             <Input
               id="meta-title"
               value={formData.metaTitle}
               onChange={(e) => setFormData(prev => ({ ...prev, metaTitle: e.target.value }))}
-              placeholder="Page title for search engines"
+              placeholder="Page title for search engines (50-60 characters)"
+              maxLength={60}
             />
+            <p className="text-xs text-gray-500 mt-1">
+              {formData.metaTitle.length}/60 characters
+            </p>
           </div>
 
           <div>
-            <Label htmlFor="meta-description">Meta Description</Label>
+            <Label htmlFor="meta-description">Meta Description *</Label>
             <Textarea
               id="meta-description"
               value={formData.metaDescription}
               onChange={(e) => setFormData(prev => ({ ...prev, metaDescription: e.target.value }))}
-              placeholder="Brief description for search engines"
+              placeholder="Brief description for search engines (150-160 characters)"
               rows={3}
+              maxLength={160}
             />
+            <p className="text-xs text-gray-500 mt-1">
+              {formData.metaDescription.length}/160 characters
+            </p>
           </div>
 
           <div>
@@ -143,17 +164,30 @@ export default function MetaTagsManager() {
               id="keywords"
               value={formData.keywords}
               onChange={(e) => setFormData(prev => ({ ...prev, keywords: e.target.value }))}
-              placeholder="Comma-separated keywords"
+              placeholder="Comma-separated keywords (e.g., digital marketing, SEO, real estate)"
             />
+            <p className="text-xs text-gray-500 mt-1">
+              Separate keywords with commas
+            </p>
           </div>
+        </div>
 
+        <Separator />
+
+        {/* Open Graph (Facebook) */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Share2 className="h-4 w-4" />
+            <h3 className="text-lg font-semibold">Open Graph (Facebook, LinkedIn)</h3>
+          </div>
+          
           <div>
             <Label htmlFor="og-title">Open Graph Title</Label>
             <Input
               id="og-title"
               value={formData.ogTitle}
               onChange={(e) => setFormData(prev => ({ ...prev, ogTitle: e.target.value }))}
-              placeholder="Title for social media sharing"
+              placeholder="Title for social media sharing (defaults to meta title)"
             />
           </div>
 
@@ -163,18 +197,28 @@ export default function MetaTagsManager() {
               id="og-description"
               value={formData.ogDescription}
               onChange={(e) => setFormData(prev => ({ ...prev, ogDescription: e.target.value }))}
-              placeholder="Description for social media sharing"
+              placeholder="Description for social media sharing (defaults to meta description)"
               rows={3}
             />
           </div>
+        </div>
 
+        <Separator />
+
+        {/* Twitter Cards */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Twitter className="h-4 w-4" />
+            <h3 className="text-lg font-semibold">Twitter Cards</h3>
+          </div>
+          
           <div>
             <Label htmlFor="twitter-title">Twitter Title</Label>
             <Input
               id="twitter-title"
               value={formData.twitterTitle}
               onChange={(e) => setFormData(prev => ({ ...prev, twitterTitle: e.target.value }))}
-              placeholder="Title for Twitter cards"
+              placeholder="Title for Twitter cards (defaults to meta title)"
             />
           </div>
 
@@ -184,20 +228,27 @@ export default function MetaTagsManager() {
               id="twitter-description"
               value={formData.twitterDescription}
               onChange={(e) => setFormData(prev => ({ ...prev, twitterDescription: e.target.value }))}
-              placeholder="Description for Twitter cards"
+              placeholder="Description for Twitter cards (defaults to meta description)"
               rows={3}
             />
           </div>
         </div>
 
-        <Button onClick={handleSave} disabled={isLoading} className="w-full">
-          {isLoading ? (
-            <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-          ) : (
-            <Save className="h-4 w-4 mr-2" />
-          )}
-          Save SEO Settings
-        </Button>
+        <Separator />
+
+        <div className="flex justify-between items-center pt-4">
+          <p className="text-sm text-gray-500">
+            * Required fields for optimal SEO performance
+          </p>
+          <Button onClick={handleSave} disabled={isLoading} className="min-w-[120px]">
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="h-4 w-4 mr-2" />
+            )}
+            Save SEO Settings
+          </Button>
+        </div>
       </CardContent>
     </Card>
   );
