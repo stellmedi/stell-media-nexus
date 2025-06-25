@@ -10,7 +10,6 @@ import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import WhatsAppButton from "@/components/ChatButton";
 import SEOHelmet from "@/components/SEOHelmet";
-import SocialShareButtons from "@/components/SocialShareButtons";
 import XMLSitemap from "@/components/XMLSitemap";
 import StickyHeader from "@/components/StickyHeader";
 import ScrollProgressIndicator from "@/components/ScrollProgressIndicator";
@@ -188,17 +187,6 @@ const Index = () => {
         
         {/* Social Proof Section */}
         <SocialProofSection />
-        
-        {/* Social Share Buttons - Added to homepage */}
-        <section className="container mx-auto px-4 py-8" aria-label="Social sharing">
-          <div className="flex justify-center">
-            <SocialShareButtons 
-              title="Stell Media - Digital Growth Partner"
-              description="Transform your business with our proven digital solutions for real estate and e-commerce"
-              className="bg-white p-4 rounded-lg shadow-sm border"
-            />
-          </div>
-        </section>
         
         {/* Below-the-fold content with lazy loading and accessibility */}
         <Suspense fallback={<LoadingFallback />}>

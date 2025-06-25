@@ -23,7 +23,7 @@ const SocialProofSection = () => {
     {
       title: 'Optimised Product Data & Shopping Ads',
       client: 'Hardware ecommerce store',
-      metric: '2.1X revenue uplift online sales',
+      metric: '2.1X revenue uplift in online sales',
       description: 'Comprehensive product Data Optimisation & Shopping ads across shopify & marketplaces',
       category: 'ecommerce'
     }

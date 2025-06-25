@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
-import { Search, Globe, FileText, Share2, Code, Save, RotateCcw, Trash2, AlertCircle } from "lucide-react";
+import { Search, Globe, Share2, Save, RotateCcw, Trash2, AlertCircle, CheckCircle } from "lucide-react";
 import { usePageSEO, saveSEOData, deleteSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
@@ -67,9 +66,10 @@ export default function SEOManager() {
   const [seoData, setSeoData] = useState<SEOData>(defaultSEOData);
   const [isLoading, setIsLoading] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [lastSaveTime, setLastSaveTime] = useState<string | null>(null);
   
   // Use the hook to get SEO data for the selected page
-  const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
+  const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults, saveError } = usePageSEO(selectedPage);
 
   useEffect(() => {
     if (!dataLoading) {
@@ -127,6 +127,7 @@ export default function SEOManager() {
     console.log('🔄 SEOManager: Page changed from', selectedPage, 'to', newPage);
     setSelectedPage(newPage);
     setHasUnsavedChanges(false);
+    setLastSaveTime(null);
   };
 
   const handleSave = async () => {
@@ -136,10 +137,31 @@ export default function SEOManager() {
     setIsLoading(true);
     
     try {
-      const success = saveSEOData(selectedPage, seoData);
+      // Validate required fields before saving
+      if (!seoData.metaTitle.trim()) {
+        toast.error("Meta title is required", {
+          description: "Please enter a meta title before saving.",
+          duration: 3000
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (!seoData.metaDescription.trim()) {
+        toast.error("Meta description is required", {
+          description: "Please enter a meta description before saving.",
+          duration: 3000
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const result = saveSEOData(selectedPage, seoData);
       
-      if (success) {
+      if (result.success) {
         setHasUnsavedChanges(false);
+        setLastSaveTime(new Date().toLocaleTimeString());
+        
         toast.success("SEO settings saved successfully!", {
           description: `Meta data for ${availablePages.find(p => p.path === selectedPage)?.name} has been updated and applied to the live page.`,
           duration: 3000
@@ -151,12 +173,12 @@ export default function SEOManager() {
           detail: { page: selectedPage, data: seoData }
         }));
       } else {
-        throw new Error('saveSEOData returned false');
+        throw new Error(result.error || 'Save operation failed');
       }
     } catch (error) {
       console.error('🚨 SEOManager: Error saving SEO settings:', error);
       toast.error("Error saving SEO settings", {
-        description: "Please try again. Check the console for more details.",
+        description: error instanceof Error ? error.message : "Please try again. Check the console for more details.",
         duration: 5000
       });
     } finally {
@@ -197,6 +219,7 @@ export default function SEOManager() {
       setHasUnsavedChanges(false);
       toast.info("SEO fields reset to default values");
     }
+    setLastSaveTime(null);
   };
 
   const handleDeleteSavedData = () => {
@@ -210,12 +233,15 @@ export default function SEOManager() {
     }
     
     console.log('🗑️ SEOManager: Deleting saved SEO data for page:', selectedPage);
-    const success = deleteSEOData(selectedPage);
+    const result = deleteSEOData(selectedPage);
     
-    if (success) {
+    if (result.success) {
+      setLastSaveTime(null);
       toast.success("Saved SEO data deleted successfully");
     } else {
-      toast.error("Failed to delete saved SEO data");
+      toast.error("Failed to delete saved SEO data", {
+        description: result.error || "Unknown error occurred"
+      });
     }
   };
 
@@ -240,12 +266,24 @@ export default function SEOManager() {
             SEO Page Manager
             {hasUnsavedChanges && (
               <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                <AlertCircle className="h-3 w-3 mr-1" />
                 Unsaved Changes
+              </Badge>
+            )}
+            {lastSaveTime && !hasUnsavedChanges && (
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Saved at {lastSaveTime}
               </Badge>
             )}
           </CardTitle>
           <CardDescription>
-            Edit meta titles, descriptions, and SEO settings for individual pages. Changes are applied immediately to live pages.
+            Edit meta titles, descriptions, and SEO settings for individual pages. Changes are saved and applied to the live website.
+            {saveError && (
+              <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+                Error: {saveError}
+              </div>
+            )}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -312,13 +350,14 @@ export default function SEOManager() {
 
               <div className="grid gap-6">
                 <div className="border rounded-lg p-4">
-                  <h3 className="font-medium mb-4">Meta Title</h3>
+                  <h3 className="font-medium mb-4">Meta Title *</h3>
                   <div className="relative">
                     <Input
                       value={seoData.metaTitle}
                       onChange={(e) => handleInputChange('metaTitle', e.target.value)}
                       placeholder="Enter the page title that appears in search results"
                       className="pr-20"
+                      required
                     />
                     <div className="absolute right-3 top-1/2 -translate-y-1/2">
                       {getCharacterCount(seoData.metaTitle, 60)}
@@ -330,13 +369,14 @@ export default function SEOManager() {
                 </div>
 
                 <div className="border rounded-lg p-4">
-                  <h3 className="font-medium mb-4">Meta Description</h3>
+                  <h3 className="font-medium mb-4">Meta Description *</h3>
                   <div className="relative">
                     <Textarea
                       value={seoData.metaDescription}
                       onChange={(e) => handleInputChange('metaDescription', e.target.value)}
                       placeholder="Enter the description that appears under the title in search results"
                       className="min-h-[100px] pr-20"
+                      required
                     />
                     <div className="absolute right-3 bottom-3">
                       {getCharacterCount(seoData.metaDescription, 160)}
@@ -536,8 +576,8 @@ export default function SEOManager() {
             </div>
             <Button 
               onClick={handleSave}
-              disabled={!hasUnsavedChanges || isLoading}
-              className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+              disabled={!hasUnsavedChanges || isLoading || !seoData.metaTitle.trim() || !seoData.metaDescription.trim()}
+              className={hasUnsavedChanges && seoData.metaTitle.trim() && seoData.metaDescription.trim() ? "bg-blue-600 hover:bg-blue-700" : ""}
             >
               <Save className="h-4 w-4 mr-2" />
               {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
