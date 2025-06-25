@@ -22,7 +22,7 @@ const HeroSection = () => {
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             Digital Growth for{" "}
             <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Builders and eCommerce Giants
+              Real Estate Developers and eCommerce Brands
             </span>
           </h1>
           
@@ -51,7 +51,7 @@ const HeroSection = () => {
           <div className="grid md:grid-cols-2 gap-6 mb-10 max-w-2xl mx-auto">
             <Link to="/real-estate" className="group">
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <h3 className="text-xl font-bold mb-2">🏗️ Real Estate Solutions</h3>
+                <h3 className="text-xl font-bold mb-2">Real Estate Solutions</h3>
                 <p className="text-blue-100">CRM automation, lead generation & virtual tours</p>
                 <div className="mt-4 flex items-center text-blue-200 group-hover:text-white">
                   <span className="text-sm">Explore Services</span>
@@ -61,7 +61,7 @@ const HeroSection = () => {
             </Link>
             <Link to="/ecommerce" className="group">
               <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <h3 className="text-xl font-bold mb-2">🛒 eCommerce Solutions</h3>
+                <h3 className="text-xl font-bold mb-2">eCommerce Solutions</h3>
                 <p className="text-purple-100">Product discovery, catalog SEO & performance marketing</p>
                 <div className="mt-4 flex items-center text-purple-200 group-hover:text-white">
                   <span className="text-sm">Explore Services</span>

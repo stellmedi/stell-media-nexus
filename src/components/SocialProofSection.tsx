@@ -8,24 +8,24 @@ const SocialProofSection = () => {
   const caseStudies = [
     {
       title: 'Real Estate CRM Automation',
-      client: 'PropertyDev Inc.',
-      metric: '300% increase in qualified leads',
+      client: 'Top real estate brand in Tricity',
+      metric: '2.4x more Site Visits',
       description: 'Automated lead nurturing system with personalized follow-ups',
       category: 'real-estate'
     },
     {
       title: 'E-commerce Product Discovery',
-      client: 'MegaStore Online',
-      metric: '45% boost in conversion rate',
+      client: 'Top healthcare Supplements brand, UK',
+      metric: '9% boost in conversion rate',
       description: 'Enhanced search and product recommendation engine',
       category: 'ecommerce'
     },
     {
       title: 'SEO Campaign Optimization',
-      client: 'BuildMax Group',
-      metric: '250% organic traffic growth',
+      client: 'Hardware ecommerce store',
+      metric: '2.1X revenue uplift online sales',
       description: 'Comprehensive SEO strategy for construction industry',
-      category: 'real-estate'
+      category: 'ecommerce'
     }
   ];
 
