@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -29,6 +30,7 @@ import EnhancedContentPage from './pages/admin/EnhancedContentPage';
 import SEOManagerPage from './pages/admin/SEOManagementPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ContentProvider } from "@/contexts/ContentContext";
+import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 
 const queryClient = new QueryClient();
 
@@ -37,37 +39,39 @@ function App() {
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
-          <ContentProvider>
-            <Toaster />
-            <ScrollToTop />
-            <SiteSchemaMarkup />
-            <GoogleAnalytics />
-            <ScrollProgressIndicator />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-              <Route path="/blog" element={<BlogPage />} />
-              <Route path="/case-studies" element={<CaseStudiesPage />} />
-              <Route path="/faq" element={<FAQPage />} />
-              <Route path="/careers" element={<CareersPage />} />
-              <Route path="/services/seo" element={<ServiceSEOPage />} />
-              <Route path="/services/product-discovery" element={<ServiceProductDiscoveryPage />} />
-              <Route path="/services/data-enrichment" element={<ServiceDataEnrichmentPage />} />
-              <Route path="/services/sem" element={<ServiceSEMPage />} />
-              <Route path="/services/conversion-optimization" element={<ServiceConversionOptimizationPage />} />
-              <Route path="/real-estate" element={<RealEstatePage />} />
-              <Route path="/ecommerce" element={<ECommercePage />} />
-              <Route path="/consultation" element={<ConsultationPage />} />
-              
-              {/* Admin Routes - Secure these properly! */}
-              <Route path="/admin" element={<AdminPage />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/content" element={<EnhancedContentPage />} />
-              <Route path="/admin/seo" element={<SEOManagerPage />} />
-            </Routes>
-          </ContentProvider>
+          <AdminAuthProvider>
+            <ContentProvider>
+              <Toaster />
+              <ScrollToTop />
+              <SiteSchemaMarkup />
+              <GoogleAnalytics />
+              <ScrollProgressIndicator />
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/blog" element={<BlogPage />} />
+                <Route path="/case-studies" element={<CaseStudiesPage />} />
+                <Route path="/faq" element={<FAQPage />} />
+                <Route path="/careers" element={<CareersPage />} />
+                <Route path="/services/seo" element={<ServiceSEOPage />} />
+                <Route path="/services/product-discovery" element={<ServiceProductDiscoveryPage />} />
+                <Route path="/services/data-enrichment" element={<ServiceDataEnrichmentPage />} />
+                <Route path="/services/sem" element={<ServiceSEMPage />} />
+                <Route path="/services/conversion-optimization" element={<ServiceConversionOptimizationPage />} />
+                <Route path="/real-estate" element={<RealEstatePage />} />
+                <Route path="/ecommerce" element={<ECommercePage />} />
+                <Route path="/consultation" element={<ConsultationPage />} />
+                
+                {/* Admin Routes - Now wrapped with AdminAuthProvider */}
+                <Route path="/admin" element={<AdminPage />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin/content" element={<EnhancedContentPage />} />
+                <Route path="/admin/seo" element={<SEOManagerPage />} />
+              </Routes>
+            </ContentProvider>
+          </AdminAuthProvider>
         </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>
@@ -75,3 +79,4 @@ function App() {
 }
 
 export default App;
+
