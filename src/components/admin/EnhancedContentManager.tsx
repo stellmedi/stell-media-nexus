@@ -65,26 +65,31 @@ const EnhancedContentManager = () => {
   const loadPageContent = (pagePath: string) => {
     console.log('Loading content for page:', pagePath);
     
-    // Try to load from localStorage first
-    const savedContent = localStorage.getItem(`stellmedia_page_content_${pagePath}`);
-    
-    let content: PageContent;
-    if (savedContent) {
-      try {
-        content = JSON.parse(savedContent);
-        console.log('Loaded saved content:', content);
-      } catch (error) {
-        console.error('Error parsing saved content:', error);
+    try {
+      // Try to load from localStorage first
+      const savedContent = localStorage.getItem(`stellmedia_page_content_${pagePath}`);
+      
+      let content: PageContent;
+      if (savedContent) {
+        try {
+          content = JSON.parse(savedContent);
+          console.log('Loaded saved content:', content);
+        } catch (error) {
+          console.error('Error parsing saved content:', error);
+          content = getDefaultPageContent(pagePath);
+        }
+      } else {
         content = getDefaultPageContent(pagePath);
       }
-    } else {
-      content = getDefaultPageContent(pagePath);
+      
+      setPageContent(content);
+      setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy for undo
+      setHasUnsavedChanges(false);
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Error loading page content:', error);
+      toast.error("Error loading page content");
     }
-    
-    setPageContent(content);
-    setOriginalContent(JSON.parse(JSON.stringify(content))); // Deep copy for undo
-    setHasUnsavedChanges(false);
-    setIsEditing(false);
   };
 
   const getDefaultPageContent = (pagePath: string): PageContent => {
