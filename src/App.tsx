@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import { ThemeProvider } from "next-themes";
-import Home from "@/pages/Home";
+import Index from "@/pages/Index";
 import About from "@/pages/About";
 import Services from "@/pages/Services";
 import Contact from "@/pages/Contact";
@@ -19,7 +20,6 @@ import UsersManagement from "@/pages/admin/UsersManagement";
 import ContentManagementPage from "@/pages/admin/ContentManagement";
 import EmailManagement from "@/pages/admin/EmailManagement";
 import SettingsPage from "@/pages/admin/SettingsPage";
-import SEOManagementPage from "@/pages/admin/SEOManagement";
 import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 
 const queryClient = new QueryClient();
@@ -35,7 +35,7 @@ const App = () => (
             <BrowserRouter>
               <ScrollToTop />
               <Routes>
-                <Route path="/" element={<Home />} />
+                <Route path="/" element={<Index />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/contact" element={<Contact />} />
@@ -47,7 +47,6 @@ const App = () => (
                 <Route path="/admin/content" element={<ContentManagementPage />} />
                 <Route path="/admin/email" element={<EmailManagement />} />
                 <Route path="/admin/settings" element={<SettingsPage />} />
-                <Route path="/admin/seo" element={<SEOManagementPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

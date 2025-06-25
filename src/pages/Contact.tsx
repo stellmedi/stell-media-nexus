@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Helmet } from "react-helmet-async";
 import Navbar from "@/components/Navbar";
@@ -13,6 +14,17 @@ import InternalLinkingHelper from "@/components/InternalLinkingHelper";
 import FAQSchemaMarkup from "@/components/FAQSchemaMarkup";
 
 const Contact = () => {
+  const faqItems = [
+    {
+      question: "How can I contact Stell Media?",
+      answer: "You can contact us through our contact form, email, or phone. We respond to all inquiries within 24 hours."
+    },
+    {
+      question: "What services does Stell Media offer?",
+      answer: "We offer comprehensive digital marketing solutions including SEO, SEM, conversion optimization, and data enrichment services."
+    }
+  ];
+
   return (
     <>
       <Helmet>
@@ -28,13 +40,13 @@ const Contact = () => {
         <link rel="canonical" href="https://stellmedia.ca/contact" />
       </Helmet>
       <SEOHelmet
-        title="Contact Us | Stell Media"
-        description="Contact Stell Media for expert digital marketing solutions."
-        keywords="digital marketing, SEO, web design, social media marketing, content marketing, contact us"
-        canonical="https://stellmedia.ca/contact"
+        pagePath="/contact"
+        defaultTitle="Contact Us | Stell Media"
+        defaultDescription="Contact Stell Media for expert digital marketing solutions."
+        defaultKeywords="digital marketing, SEO, web design, social media marketing, content marketing, contact us"
       />
       <SiteSchemaMarkup />
-      <FAQSchemaMarkup />
+      <FAQSchemaMarkup items={faqItems} />
       <ScrollToTop />
       <MobileOptimization />
 
