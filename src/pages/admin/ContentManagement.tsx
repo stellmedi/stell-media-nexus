@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
@@ -68,22 +69,12 @@ const mockMetadata: ContentMetadata[] = [
 ];
 
 export default function ContentManagement() {
+  // Always call hooks at the top level - never conditionally
   const { isAuthenticated, isLoading, adminUser } = useAdminAuth();
-  
   const [contentData, setContentData] = useState<ContentMetadata[]>([]);
   const [selectedContent, setSelectedContent] = useState<ContentMetadata | null>(null);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [filterType, setFilterType] = useState<'all' | 'page' | 'blog' | 'service'>('all');
-
-  // Show loading state while checking authentication
-  if (isLoading) {
-    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
-  }
-
-  // Redirect to login if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/admin" replace />;
-  }
 
   const getMetadata = (): ContentMetadata[] => {
     console.log('ContentManagement: Loading metadata with real SEO data...');
@@ -152,6 +143,15 @@ export default function ContentManagement() {
   const filteredContent = contentData.filter(content => 
     filterType === 'all' || content.type === filterType
   );
+
+  // Handle loading and authentication states after all hooks are called
+  if (isLoading) {
+    return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/admin" replace />;
+  }
 
   return (
     <>
