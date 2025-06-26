@@ -27,12 +27,11 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
           as="style"
         />
-        <noscript>
-          <link 
-            rel="stylesheet" 
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
-          />
-        </noscript>
+        <noscript 
+          dangerouslySetInnerHTML={{
+            __html: `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />`
+          }}
+        />
         
         {/* Critical CSS for immediate rendering */}
         <style type="text/css">{`
