@@ -1,6 +1,6 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { PageContent, PageSection } from "./types";
+import { createDefaultPageContent } from "./initialContentService";
 
 export const getPageContent = async (pagePath: string): Promise<PageContent | null> => {
   try {
@@ -12,6 +12,39 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
 
     if (pageError) {
       console.error('Error fetching page content:', pageError);
+      
+      // If no content exists, try to create default content
+      if (pageError.code === 'PGRST116' && pagePath === '/') {
+        console.log('No home page content found, creating default...');
+        await createDefaultPageContent(pagePath);
+        
+        // Try to fetch again
+        const { data: retryPageData, error: retryError } = await supabase
+          .from('page_content')
+          .select('*')
+          .eq('page_path', pagePath)
+          .single();
+          
+        if (retryError || !retryPageData) {
+          return null;
+        }
+        
+        // Get sections for the newly created page
+        const { data: sectionsData } = await supabase
+          .from('page_sections')
+          .select('*')
+          .eq('page_path', pagePath)
+          .eq('is_active', true)
+          .order('display_order');
+
+        const sections: PageSection[] = (sectionsData || []).map(section => ({
+          ...section,
+          section_type: section.section_type as PageSection['section_type']
+        }));
+
+        return { ...retryPageData, sections };
+      }
+      
       return null;
     }
 

@@ -1,36 +1,27 @@
 
 import React, { useEffect } from 'react';
-import PerformanceMonitor from "@/components/PerformanceMonitor";
-import { initPerformanceOptimizations } from "@/utils/performanceOptimization";
+import { initPerformanceOptimizations, trackWebVitals } from '@/utils/performanceOptimization';
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 interface PerformanceWrapperProps {
   children: React.ReactNode;
 }
 
 const PerformanceWrapper: React.FC<PerformanceWrapperProps> = ({ children }) => {
-  // Initialize performance optimizations
   useEffect(() => {
-    initPerformanceOptimizations();
+    try {
+      // Initialize performance optimizations safely
+      initPerformanceOptimizations();
+      trackWebVitals();
+    } catch (error) {
+      console.warn('Performance optimizations failed to initialize:', error);
+    }
   }, []);
 
-  // Performance monitoring handlers
-  const handleLCP = (value: number) => {
-    if (value > 2500) {
-      console.warn(`LCP is slow: ${value}ms`);
-    }
-  };
-
-  const handleCLS = (value: number) => {
-    if (value > 0.1) {
-      console.warn(`CLS is high: ${value}`);
-    }
-  };
-
   return (
-    <>
-      <PerformanceMonitor onLCP={handleLCP} onCLS={handleCLS} />
+    <ErrorBoundary>
       {children}
-    </>
+    </ErrorBoundary>
   );
 };
 

@@ -24,3 +24,6 @@ export {
   subscribeToContentChanges, 
   unsubscribeFromContentChanges 
 } from './content/subscriptionService';
+
+// Initial content creation
+export { createDefaultPageContent } from './content/initialContentService';
