@@ -17,13 +17,6 @@ const LoadingFallback = () => (
 );
 
 const Index = () => {
-  console.log("🏠 Index: Homepage component rendering");
-  console.log("🏠 Index: Rendering SEOAndAnalytics");
-  console.log("🏠 Index: Rendering PageHeader");
-  console.log("🏠 Index: Rendering MainContent");
-  console.log("🏠 Index: Rendering Footer");
-  console.log("🏠 Index: Rendering WhatsAppButton");
-  
   return (
     <PerformanceWrapper>
       <div className="min-h-screen bg-white">

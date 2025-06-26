@@ -34,19 +34,6 @@ import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 const queryClient = new QueryClient();
 
 function App() {
-  console.log("🚀 App: Application starting up");
-  
-  // Add error boundary logging
-  window.addEventListener('error', (event) => {
-    console.error('🔥 Global Error:', event.error);
-  });
-
-  window.addEventListener('unhandledrejection', (event) => {
-    console.error('🔥 Unhandled Promise Rejection:', event.reason);
-  });
-
-  console.log("🚀 App: Rendering core components");
-
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>

@@ -6,16 +6,7 @@ import { Link } from "react-router-dom";
 import { usePageContent } from "@/hooks/usePageContent";
 
 const HeroSection = () => {
-  console.log("🎯 HeroSection: Component rendering started");
-  
-  const { getSection, isLoading, content, error } = usePageContent('/');
-  
-  console.log("🎯 HeroSection: usePageContent returned:", { 
-    isLoading, 
-    hasContent: !!content, 
-    error,
-    sectionsCount: content?.sections?.length || 0
-  });
+  const { getSection, isLoading, error } = usePageContent('/');
   
   const handleWhatsAppClick = () => {
     const phoneNumber = "919877100369";
@@ -25,19 +16,14 @@ const HeroSection = () => {
 
   // Get hero content from database
   const heroSection = getSection('hero');
-  console.log("🎯 HeroSection: Hero section data:", heroSection);
   
   // Fallback content if database content is not available
   const heroTitle = heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
   const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
 
-  console.log("🎯 HeroSection: Final content:", { heroTitle, heroSubtitle });
-
   if (error) {
-    console.error("❌ HeroSection: Error state:", error);
+    console.error("HeroSection error:", error);
   }
-
-  console.log("🎯 HeroSection: About to render JSX");
 
   return (
     <section className="relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
