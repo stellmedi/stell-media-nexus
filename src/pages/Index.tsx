@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 
 // Critical above-the-fold components (loaded immediately)
@@ -14,6 +14,10 @@ import XMLSitemap from "@/components/XMLSitemap";
 import StickyHeader from "@/components/StickyHeader";
 import ScrollProgressIndicator from "@/components/ScrollProgressIndicator";
 import SocialProofSection from "@/components/SocialProofSection";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
+
+// Performance utilities
+import { initPerformanceOptimizations } from "@/utils/performanceOptimization";
 
 // Lazy load below-the-fold components with loading fallbacks
 const ServicesSection = lazy(() => import("@/components/ServicesSection"));
@@ -22,12 +26,30 @@ const ContactSection = lazy(() => import("@/components/ContactSection"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 const Footer = lazy(() => import("@/components/Footer"));
 
-// Optimized loading component
+// Optimized loading component with reserved space
 const LoadingFallback = ({ height = "h-20" }: { height?: string }) => (
-  <div className={`${height} bg-gray-50 animate-pulse`} aria-hidden="true" />
+  <div className={`${height} bg-gray-50 animate-pulse prevent-shift`} aria-hidden="true" style={{ minHeight: '200px' }} />
 );
 
 const Index = () => {
+  // Initialize performance optimizations
+  useEffect(() => {
+    initPerformanceOptimizations();
+  }, []);
+
+  // Performance monitoring
+  const handleLCP = (value: number) => {
+    if (value > 2500) {
+      console.warn(`LCP is slow: ${value}ms`);
+    }
+  };
+
+  const handleCLS = (value: number) => {
+    if (value > 0.1) {
+      console.warn(`CLS is high: ${value}`);
+    }
+  };
+
   const faqItems = [
     {
       question: "How do you help real estate developers with lead generation?",
@@ -145,17 +167,51 @@ const Index = () => {
       <Helmet>
         {/* Critical CSS inlined for faster LCP */}
         <style type="text/css">{`
-          /* Critical above-the-fold styles */
-          .hero-section { background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%); min-height: 90vh; display: flex; align-items: center; position: relative; }
-          .navbar { position: sticky; top: 0; z-index: 50; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid #e5e7eb; }
-          .btn-primary { background: #4f46e5; color: white; padding: 0.75rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; }
+          /* Critical above-the-fold styles optimized for LCP */
+          .hero-section { 
+            background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%); 
+            min-height: 90vh; 
+            display: flex; 
+            align-items: center; 
+            position: relative; 
+            contain: layout style paint;
+            aspect-ratio: 16/9;
+          }
+          .navbar { 
+            position: sticky; 
+            top: 0; 
+            z-index: 50; 
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid #e5e7eb; 
+            height: 64px;
+            contain: layout style paint;
+          }
+          .btn-primary { 
+            background: #4f46e5; 
+            color: white; 
+            padding: 0.75rem 1.5rem; 
+            border-radius: 0.5rem; 
+            border: none; 
+            cursor: pointer; 
+            transition: background-color 0.2s; 
+            min-width: 120px;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+          }
           .btn-primary:hover { background: #4338ca; }
+          img:not([width]):not([height]) { aspect-ratio: 16/9; object-fit: cover; }
         `}</style>
         
         {/* Preload critical resources */}
         <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="preconnect" href="//fonts.googleapis.com" crossOrigin="" />
+        
+        {/* Cache control for static assets */}
+        <meta httpEquiv="Cache-Control" content="public, max-age=31536000, immutable" />
       </Helmet>
       
       <SEOHelmet
@@ -170,9 +226,8 @@ const Index = () => {
       <XMLSitemap />
       <ScrollProgressIndicator />
       
-      {/* Service Cluster Schema Markup */}
-      <SchemaMarkup type="service" data={realEstateServiceData} />
-      <SchemaMarkup type="service" data={eCommerceServiceData} />
+      {/* Performance monitoring */}
+      <PerformanceMonitor onLCP={handleLCP} onCLS={handleCLS} />
       
       {/* Critical above-the-fold content */}
       <header role="banner">
@@ -188,7 +243,7 @@ const Index = () => {
         {/* Social Proof Section */}
         <SocialProofSection />
         
-        {/* Below-the-fold content with lazy loading and accessibility */}
+        {/* Below-the-fold content with lazy loading and reserved space */}
         <Suspense fallback={<LoadingFallback />}>
           <ServicesSection />
         </Suspense>

@@ -1,63 +1,94 @@
 
-// Enhanced performance optimization utilities
+// Enhanced performance optimization utilities with better main thread management
 
-// Preload critical resources with priority
+// Preload critical resources with priority and cache optimization
 export const preloadCriticalResources = () => {
-  // Preload critical fonts with high priority
-  const fontPreload = document.createElement('link');
-  fontPreload.rel = 'preload';
-  fontPreload.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
-  fontPreload.as = 'style';
-  fontPreload.crossOrigin = 'anonymous';
-  fontPreload.onload = () => {
-    fontPreload.rel = 'stylesheet';
+  // Use requestIdleCallback to avoid blocking main thread
+  const scheduleWork = (callback: () => void) => {
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(callback, { timeout: 1000 });
+    } else {
+      setTimeout(callback, 1);
+    }
   };
-  document.head.appendChild(fontPreload);
 
-  // Preload critical images
-  const heroImage = new Image();
-  heroImage.src = '/hero-background.webp';
-  heroImage.loading = 'eager';
+  scheduleWork(() => {
+    // Preload critical fonts with optimized loading
+    const fontPreload = document.createElement('link');
+    fontPreload.rel = 'preload';
+    fontPreload.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+    fontPreload.as = 'style';
+    fontPreload.crossOrigin = 'anonymous';
+    fontPreload.onload = () => {
+      fontPreload.rel = 'stylesheet';
+    };
+    document.head.appendChild(fontPreload);
+  });
+
+  // Preload critical images with explicit dimensions
+  scheduleWork(() => {
+    const heroImage = new Image();
+    heroImage.src = '/hero-background.webp';
+    heroImage.loading = 'eager';
+    heroImage.width = 1920;
+    heroImage.height = 1080;
+  });
 };
 
-// Enhanced lazy loading with intersection observer
+// Enhanced lazy loading with reduced main thread blocking
 export const setupLazyImages = () => {
   if ('IntersectionObserver' in window) {
     const imageObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const img = entry.target as HTMLImageElement;
-          const src = img.dataset.src;
-          const srcset = img.dataset.srcset;
-          
-          if (src) {
-            img.src = src;
-            img.removeAttribute('data-src');
+      // Process entries in chunks to avoid long main thread tasks
+      const processChunk = (startIndex: number) => {
+        const endIndex = Math.min(startIndex + 5, entries.length);
+        
+        for (let i = startIndex; i < endIndex; i++) {
+          const entry = entries[i];
+          if (entry.isIntersecting) {
+            const img = entry.target as HTMLImageElement;
+            const src = img.dataset.src;
+            const srcset = img.dataset.srcset;
+            
+            if (src) {
+              img.src = src;
+              img.removeAttribute('data-src');
+            }
+            
+            if (srcset) {
+              img.srcset = srcset;
+              img.removeAttribute('data-srcset');
+            }
+            
+            img.classList.remove('lazy');
+            img.classList.add('loaded');
+            observer.unobserve(img);
           }
-          
-          if (srcset) {
-            img.srcset = srcset;
-            img.removeAttribute('data-srcset');
-          }
-          
-          img.classList.remove('lazy');
-          img.classList.add('loaded');
-          observer.unobserve(img);
         }
-      });
+        
+        // Process next chunk if there are more entries
+        if (endIndex < entries.length) {
+          requestIdleCallback(() => processChunk(endIndex), { timeout: 100 });
+        }
+      };
+      
+      processChunk(0);
     }, {
-      // Load images 100px before they enter viewport
-      rootMargin: '100px',
+      rootMargin: '50px',
       threshold: 0.01
     });
 
-    document.querySelectorAll('img[data-src]').forEach(img => {
-      imageObserver.observe(img);
-    });
+    // Observe images in chunks to avoid blocking
+    const observeImages = () => {
+      const images = document.querySelectorAll('img[data-src]');
+      images.forEach(img => imageObserver.observe(img));
+    };
+
+    requestIdleCallback(observeImages, { timeout: 1000 });
   }
 };
 
-// Defer non-critical CSS with media queries
+// Defer non-critical CSS with better caching headers
 export const loadNonCriticalCSS = () => {
   const nonCriticalCSS = [
     { href: '/assets/animations.css', media: 'all' },
@@ -65,47 +96,77 @@ export const loadNonCriticalCSS = () => {
   ];
 
   nonCriticalCSS.forEach(({ href, media }) => {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = href;
-    link.media = media === 'all' ? 'print' : media;
-    link.onload = () => {
-      if (media === 'all') link.media = 'all';
-    };
-    document.head.appendChild(link);
+    requestIdleCallback(() => {
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = href;
+      link.media = media === 'all' ? 'print' : media;
+      
+      // Add cache control attributes
+      link.setAttribute('data-cache', 'long-term');
+      
+      link.onload = () => {
+        if (media === 'all') link.media = 'all';
+      };
+      document.head.appendChild(link);
+    }, { timeout: 2000 });
   });
 };
 
-// Service Worker registration for caching
+// Enhanced service worker with better caching strategies
 export const registerServiceWorker = () => {
   if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js')
+      requestIdleCallback(() => {
+        navigator.serviceWorker.register('/sw.js', {
+          scope: '/',
+          updateViaCache: 'none'
+        })
         .then(registration => {
           console.log('SW registered: ', registration);
+          
+          // Check for updates periodically
+          setInterval(() => {
+            registration.update();
+          }, 60000);
         })
         .catch(registrationError => {
           console.log('SW registration failed: ', registrationError);
         });
+      }, { timeout: 3000 });
     });
   }
 };
 
-// Optimize Web Vitals
+// Prevent layout shifts and optimize Web Vitals
 export const optimizeWebVitals = () => {
-  // Reduce layout shifts
-  document.documentElement.style.setProperty('--scrollbar-width', 
-    (window.innerWidth - document.documentElement.clientWidth) + 'px');
+  // Reserve space for scrollbar to prevent layout shift
+  const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+  document.documentElement.style.setProperty('--scrollbar-width', scrollbarWidth + 'px');
   
-  // Optimize font loading
+  // Optimize font loading to prevent FOIT/FOUT
   if ('fonts' in document) {
     document.fonts.ready.then(() => {
       document.body.classList.add('fonts-loaded');
+      // Trigger reflow only once when fonts are ready
+      requestAnimationFrame(() => {
+        document.body.style.visibility = 'visible';
+      });
     });
   }
+
+  // Prevent cumulative layout shift from images
+  const images = document.querySelectorAll('img:not([width]):not([height])');
+  images.forEach(img => {
+    const imgElement = img as HTMLImageElement;
+    if (imgElement.naturalWidth && imgElement.naturalHeight) {
+      imgElement.width = imgElement.naturalWidth;
+      imgElement.height = imgElement.naturalHeight;
+    }
+  });
 };
 
-// Resource hints for better loading
+// Enhanced resource hints with cache policies
 export const addResourceHints = () => {
   const hints = [
     { rel: 'dns-prefetch', href: '//fonts.googleapis.com' },
@@ -114,41 +175,82 @@ export const addResourceHints = () => {
     { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: true }
   ];
 
-  hints.forEach(hint => {
-    const link = document.createElement('link');
-    link.rel = hint.rel;
-    link.href = hint.href;
-    if (hint.crossorigin) link.crossOrigin = 'anonymous';
-    document.head.appendChild(link);
-  });
+  // Add hints in batches to avoid blocking main thread
+  const addHintsBatch = (startIndex: number) => {
+    const endIndex = Math.min(startIndex + 2, hints.length);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+      const hint = hints[i];
+      const link = document.createElement('link');
+      link.rel = hint.rel;
+      link.href = hint.href;
+      if (hint.crossorigin) link.crossOrigin = 'anonymous';
+      document.head.appendChild(link);
+    }
+    
+    if (endIndex < hints.length) {
+      requestIdleCallback(() => addHintsBatch(endIndex), { timeout: 100 });
+    }
+  };
+
+  addHintsBatch(0);
 };
 
-// Initialize all performance optimizations
+// Break down initialization to prevent long main thread tasks
 export const initPerformanceOptimizations = () => {
-  // Run critical optimizations immediately
+  // Critical optimizations - run immediately
   addResourceHints();
   optimizeWebVitals();
   
-  // Run after initial render
+  // Non-critical optimizations - defer to idle time
   requestIdleCallback(() => {
     preloadCriticalResources();
+  }, { timeout: 1000 });
+  
+  requestIdleCallback(() => {
     setupLazyImages();
+  }, { timeout: 1500 });
+  
+  requestIdleCallback(() => {
     loadNonCriticalCSS();
+  }, { timeout: 2000 });
+  
+  requestIdleCallback(() => {
     registerServiceWorker();
-  });
+  }, { timeout: 3000 });
 };
 
-// Clean up unused CSS classes
-export const removeUnusedCSS = () => {
-  const unusedClasses = [
-    'unused-animation',
-    'legacy-styles',
-    'old-layout'
-  ];
-  
-  unusedClasses.forEach(className => {
-    document.querySelectorAll(`.${className}`).forEach(el => {
-      el.classList.remove(className);
+// Clean up unused resources to reduce bundle size
+export const removeUnusedResources = () => {
+  requestIdleCallback(() => {
+    // Remove unused CSS classes
+    const unusedClasses = [
+      'unused-animation',
+      'legacy-styles', 
+      'old-layout'
+    ];
+    
+    unusedClasses.forEach(className => {
+      document.querySelectorAll(`.${className}`).forEach(el => {
+        el.classList.remove(className);
+      });
     });
-  });
+    
+    // Remove unused script tags that might be blocking
+    const unusedScripts = document.querySelectorAll('script[data-unused]');
+    unusedScripts.forEach(script => script.remove());
+  }, { timeout: 5000 });
+};
+
+// Optimize cache policies for static assets
+export const optimizeCaching = () => {
+  // Set cache headers for static resources via meta tags
+  const cachePolicy = document.createElement('meta');
+  cachePolicy.httpEquiv = 'Cache-Control';
+  cachePolicy.content = 'public, max-age=31536000, immutable';
+  document.head.appendChild(cachePolicy);
+  
+  // Add versioning to prevent stale cache issues
+  const version = Date.now().toString();
+  localStorage.setItem('app-version', version);
 };

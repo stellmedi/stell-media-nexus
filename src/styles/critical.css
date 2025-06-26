@@ -1,5 +1,5 @@
 
-/* Critical CSS - loaded inline for LCP optimization */
+/* Critical CSS - loaded inline for LCP optimization and layout shift prevention */
 
 /* Essential base styles for immediate rendering */
 * {
@@ -8,14 +8,28 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+  /* Reserve space for scrollbar */
+  scrollbar-gutter: stable;
+}
+
 body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   line-height: 1.6;
   color: #1f2937;
   background: #fefefe;
+  /* Prevent FOIT/FOUT */
+  font-display: swap;
+  /* Hide until fonts load to prevent layout shift */
+  visibility: hidden;
 }
 
-/* Critical navigation styles */
+body.fonts-loaded {
+  visibility: visible;
+}
+
+/* Critical navigation styles with fixed dimensions */
 .navbar {
   position: sticky;
   top: 0;
@@ -23,9 +37,11 @@ body {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #e5e7eb;
+  height: 64px; /* Fixed height to prevent layout shift */
+  contain: layout style paint;
 }
 
-/* Hero section optimization for LCP */
+/* Hero section optimization for LCP with reserved space */
 .hero-section {
   background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
   min-height: 90vh;
@@ -33,9 +49,12 @@ body {
   align-items: center;
   position: relative;
   contain: layout style paint;
+  /* Reserve space to prevent layout shift */
+  width: 100%;
+  aspect-ratio: 16/9;
 }
 
-/* Essential button styles */
+/* Essential button styles with consistent sizing */
 .btn-primary {
   background: #4f46e5;
   color: white;
@@ -45,6 +64,12 @@ body {
   cursor: pointer;
   transition: background-color 0.2s ease;
   transform: translateZ(0); /* Enable hardware acceleration */
+  /* Fixed dimensions to prevent layout shift */
+  min-width: 120px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-primary:hover {
@@ -56,11 +81,14 @@ body {
   outline-offset: 2px;
 }
 
-/* Loading states optimization */
+/* Loading states optimization with reserved space */
 .loading-skeleton {
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 200% 100%;
   animation: loading 1.5s infinite;
+  /* Reserve space to prevent shift */
+  min-height: 20px;
+  width: 100%;
 }
 
 @keyframes loading {
@@ -68,25 +96,46 @@ body {
   100% { background-position: -200% 0; }
 }
 
-/* Typography optimization */
+/* Typography optimization with consistent spacing */
 h1, h2, h3 {
   font-weight: 700;
   line-height: 1.2;
+  /* Reserve space for text to prevent layout shift */
+  min-height: 1.2em;
 }
 
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
 }
 
-/* Essential responsive utilities */
+/* Image containers with aspect ratio preservation */
+img {
+  /* Prevent layout shift from images */
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+img:not([width]):not([height]) {
+  /* Reserve space for images without dimensions */
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+/* Essential responsive utilities with fixed breakpoints */
 @media (max-width: 768px) {
   .hero-section {
     min-height: 70vh;
     padding: 2rem 1rem;
+    aspect-ratio: 4/3;
   }
   
   h1 {
     font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+  
+  .navbar {
+    height: 56px; /* Smaller on mobile */
   }
 }
 
@@ -96,6 +145,7 @@ h1 {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
@@ -112,19 +162,46 @@ h1 {
   border: 0;
 }
 
-/* Skip link for accessibility */
+/* Skip link for accessibility with fixed positioning */
 .skip-link {
   position: absolute;
   top: -40px;
   left: 6px;
   background: #4f46e5;
   color: white;
-  padding: 8px;
+  padding: 8px 16px;
   text-decoration: none;
   border-radius: 4px;
   z-index: 100;
+  height: 40px;
+  display: flex;
+  align-items: center;
 }
 
 .skip-link:focus {
   top: 6px;
+}
+
+/* Layout shift prevention utilities */
+.prevent-shift {
+  contain: layout;
+  will-change: auto;
+}
+
+.reserve-space {
+  min-height: var(--reserved-height, 200px);
+  min-width: var(--reserved-width, 100%);
+}
+
+/* Container queries for better responsive design */
+@container (min-width: 768px) {
+  .responsive-container {
+    padding: 2rem;
+  }
+}
+
+@container (max-width: 767px) {
+  .responsive-container {
+    padding: 1rem;
+  }
 }
