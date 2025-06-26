@@ -1,6 +1,5 @@
 
 import React, { Suspense, lazy } from 'react';
-import HeroSection from "@/components/HeroSection";
 import SocialProofSection from "@/components/SocialProofSection";
 
 // Lazy load below-the-fold components
@@ -24,9 +23,6 @@ interface MainContentProps {
 const MainContent: React.FC<MainContentProps> = ({ faqItems }) => {
   return (
     <main role="main">
-      {/* Hero Section - Above the fold */}
-      <HeroSection />
-      
       {/* Social Proof Section */}
       <SocialProofSection />
       

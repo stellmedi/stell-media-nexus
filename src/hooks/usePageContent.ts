@@ -9,29 +9,16 @@ export const usePageContent = (pagePath: string) => {
 
   useEffect(() => {
     const loadContent = async () => {
-      console.log(`🔍 usePageContent: Starting to load content for ${pagePath}`);
       setIsLoading(true);
       setError(null);
       
       try {
-        console.log(`📡 usePageContent: Calling getPageContent for ${pagePath}`);
         const pageContent = await getPageContent(pagePath);
-        console.log(`✅ usePageContent: Successfully loaded content:`, pageContent);
-        
-        if (!pageContent) {
-          console.warn(`⚠️ usePageContent: No content returned for ${pagePath}`);
-        } else {
-          console.log(`📄 usePageContent: Content has ${pageContent.sections?.length || 0} sections`);
-          console.log(`🏷️ usePageContent: Content title: "${pageContent.title}"`);
-          console.log(`📝 usePageContent: Content published: ${pageContent.is_published}`);
-        }
-        
         setContent(pageContent);
       } catch (err) {
-        console.error('❌ usePageContent: Error loading page content:', err);
+        console.error('Error loading page content:', err);
         setError(err instanceof Error ? err.message : 'Failed to load content');
       } finally {
-        console.log(`🏁 usePageContent: Finished loading content for ${pagePath}`);
         setIsLoading(false);
       }
     };
@@ -40,16 +27,13 @@ export const usePageContent = (pagePath: string) => {
 
     // Listen for content updates from admin panel
     const handleContentUpdate = (event: CustomEvent) => {
-      console.log('🔄 usePageContent: Received content update event:', event.detail);
       if (event.detail.pagePath === pagePath) {
-        console.log('✨ usePageContent: Updating content for matching page');
         setContent(event.detail.content);
       }
     };
 
     // Listen for content import completion
     const handleContentImport = () => {
-      console.log('📥 usePageContent: Content import detected, reloading...');
       loadContent();
     };
 
@@ -63,12 +47,8 @@ export const usePageContent = (pagePath: string) => {
   }, [pagePath]);
 
   const getSection = (sectionKey: string) => {
-    const section = content?.sections.find(section => section.section_key === sectionKey);
-    console.log(`🔍 usePageContent: Getting section "${sectionKey}":`, section);
-    return section;
+    return content?.sections.find(section => section.section_key === sectionKey);
   };
-
-  console.log(`📊 usePageContent: Current state - loading: ${isLoading}, error: ${error}, hasContent: ${!!content}`);
 
   return {
     content,
