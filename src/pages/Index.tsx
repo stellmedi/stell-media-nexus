@@ -35,28 +35,30 @@ const Index = () => {
   }, []);
 
   console.log('🏠 Index: Rendering Index page');
+  
+  // Debug logs before JSX
+  console.log('🔧 Index: About to render SEOAndAnalytics');
+  console.log('🔧 Index: About to render PageHeader');
+  console.log('🔧 Index: About to render MainContent');
+  console.log('🔧 Index: About to render Footer (Suspense)');
+  console.log('🔧 Index: About to render WhatsAppButton');
 
   return (
     <PerformanceWrapper>
       <div className="min-h-screen bg-white">
-        {console.log('🔧 Index: Rendering SEOAndAnalytics')}
         <SEOAndAnalytics 
           realEstateServiceData={realEstateServiceData}
           eCommerceServiceData={eCommerceServiceData}
         />
         
-        {console.log('🔧 Index: Rendering PageHeader')}
         <PageHeader />
         
-        {console.log('🔧 Index: Rendering MainContent')}
         <MainContent faqItems={faqItems} />
         
-        {console.log('🔧 Index: Rendering Footer (Suspense)')}
         <Suspense fallback={<LoadingFallback />}>
           <Footer />
         </Suspense>
         
-        {console.log('🔧 Index: Rendering WhatsAppButton')}
         <WhatsAppButton />
       </div>
     </PerformanceWrapper>

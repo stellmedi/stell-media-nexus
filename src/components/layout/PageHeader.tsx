@@ -14,20 +14,22 @@ const PageHeader = () => {
   }, []);
 
   console.log('📄 PageHeader: Rendering PageHeader');
+  
+  // Debug logs before JSX
+  console.log('📄 PageHeader: About to render ScrollProgressIndicator');
+  console.log('📄 PageHeader: About to render Navbar');
+  console.log('📄 PageHeader: About to render HeroSection');
+  console.log('📄 PageHeader: About to render StickyHeader');
 
   return (
     <>
-      {console.log('📄 PageHeader: Rendering ScrollProgressIndicator')}
       <ScrollProgressIndicator />
       
       <header role="banner">
-        {console.log('📄 PageHeader: Rendering Navbar')}
         <Navbar />
       </header>
       
-      {console.log('📄 PageHeader: Rendering HeroSection')}
       <HeroSection />
-      {console.log('📄 PageHeader: Rendering StickyHeader')}
       <StickyHeader />
     </>
   );

@@ -32,29 +32,31 @@ const MainContent: React.FC<MainContentProps> = ({ faqItems }) => {
   }, [faqItems]);
 
   console.log('📰 MainContent: Rendering MainContent');
+  
+  // Debug logs before JSX
+  console.log('📰 MainContent: About to render SocialProofSection');
+  console.log('📰 MainContent: About to render ServicesSection (Suspense)');
+  console.log('📰 MainContent: About to render EnhancedTestimonials (Suspense)');
+  console.log('📰 MainContent: About to render ContactSection (Suspense)');
+  console.log('📰 MainContent: About to render FAQSection (Suspense)');
 
   return (
     <main role="main">
-      {console.log('📰 MainContent: Rendering SocialProofSection')}
       <SocialProofSection />
       
       {/* Below-the-fold content with lazy loading and reserved space */}
-      {console.log('📰 MainContent: Rendering ServicesSection (Suspense)')}
       <Suspense fallback={<LoadingFallback />}>
         <ServicesSection />
       </Suspense>
       
-      {console.log('📰 MainContent: Rendering EnhancedTestimonials (Suspense)')}
       <Suspense fallback={<LoadingFallback height="h-40" />}>
         <EnhancedTestimonials />
       </Suspense>
       
-      {console.log('📰 MainContent: Rendering ContactSection (Suspense)')}
       <Suspense fallback={<LoadingFallback height="h-40" />}>
         <ContactSection />
       </Suspense>
       
-      {console.log('📰 MainContent: Rendering FAQSection (Suspense)')}
       <Suspense fallback={<LoadingFallback height="h-40" />}>
         <FAQSection items={faqItems} />
       </Suspense>
