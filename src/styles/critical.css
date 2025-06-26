@@ -21,12 +21,7 @@ body {
   background: #fefefe;
   /* Prevent FOIT/FOUT */
   font-display: swap;
-  /* Hide until fonts load to prevent layout shift */
-  visibility: hidden;
-}
-
-body.fonts-loaded {
-  visibility: visible;
+  /* REMOVED: visibility: hidden and fonts-loaded logic that was breaking the page */
 }
 
 /* Critical navigation styles with fixed dimensions */
