@@ -45,13 +45,14 @@ function App() {
     console.error('🔥 Unhandled Promise Rejection:', event.reason);
   });
 
+  console.log("🚀 App: Rendering core components");
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AdminAuthProvider>
             <ContentProvider>
-              {console.log("🚀 App: Rendering core components")}
               <Toaster />
               <ScrollToTop />
               <SiteSchemaMarkup />
