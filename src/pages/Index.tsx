@@ -17,22 +17,29 @@ const LoadingFallback = () => (
 );
 
 const Index = () => {
+  console.log("🏠 Index: Homepage component rendering");
+  
   return (
     <PerformanceWrapper>
       <div className="min-h-screen bg-white">
+        {console.log("🏠 Index: Rendering SEOAndAnalytics")}
         <SEOAndAnalytics 
           realEstateServiceData={realEstateServiceData}
           eCommerceServiceData={eCommerceServiceData}
         />
         
+        {console.log("🏠 Index: Rendering PageHeader")}
         <PageHeader />
         
+        {console.log("🏠 Index: Rendering MainContent")}
         <MainContent faqItems={faqItems} />
         
+        {console.log("🏠 Index: Rendering Footer")}
         <Suspense fallback={<LoadingFallback />}>
           <Footer />
         </Suspense>
         
+        {console.log("🏠 Index: Rendering WhatsAppButton")}
         <WhatsAppButton />
       </div>
     </PerformanceWrapper>

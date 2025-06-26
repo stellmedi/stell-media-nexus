@@ -3,7 +3,10 @@ import { PageContent, PageSection } from "./types";
 import { createDefaultPageContent } from "./initialContentService";
 
 export const getPageContent = async (pagePath: string): Promise<PageContent | null> => {
+  console.log(`🔍 pageContentService: Starting getPageContent for ${pagePath}`);
+  
   try {
+    console.log(`📡 pageContentService: Querying page_content table for ${pagePath}`);
     const { data: pageData, error: pageError } = await supabase
       .from('page_content')
       .select('*')
@@ -11,14 +14,15 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
       .single();
 
     if (pageError) {
-      console.error('Error fetching page content:', pageError);
+      console.error('❌ pageContentService: Error fetching page content:', pageError);
       
       // If no content exists, try to create default content
       if (pageError.code === 'PGRST116' && pagePath === '/') {
-        console.log('No home page content found, creating default...');
+        console.log('🏗️ pageContentService: No home page content found, creating default...');
         await createDefaultPageContent(pagePath);
         
         // Try to fetch again
+        console.log('🔄 pageContentService: Retrying fetch after creating default content...');
         const { data: retryPageData, error: retryError } = await supabase
           .from('page_content')
           .select('*')
@@ -26,10 +30,14 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
           .single();
           
         if (retryError || !retryPageData) {
+          console.error('❌ pageContentService: Retry failed:', retryError);
           return null;
         }
         
+        console.log('✅ pageContentService: Successfully fetched after creating default:', retryPageData);
+        
         // Get sections for the newly created page
+        console.log('📡 pageContentService: Fetching sections for newly created page...');
         const { data: sectionsData } = await supabase
           .from('page_sections')
           .select('*')
@@ -37,17 +45,24 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
           .eq('is_active', true)
           .order('display_order');
 
+        console.log('📄 pageContentService: Sections data:', sectionsData);
+
         const sections: PageSection[] = (sectionsData || []).map(section => ({
           ...section,
           section_type: section.section_type as PageSection['section_type']
         }));
 
-        return { ...retryPageData, sections };
+        const result = { ...retryPageData, sections };
+        console.log('🎯 pageContentService: Final result with sections:', result);
+        return result;
       }
       
       return null;
     }
 
+    console.log('✅ pageContentService: Successfully fetched page data:', pageData);
+
+    console.log('📡 pageContentService: Fetching sections...');
     const { data: sectionsData, error: sectionsError } = await supabase
       .from('page_sections')
       .select('*')
@@ -56,9 +71,11 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
       .order('display_order');
 
     if (sectionsError) {
-      console.error('Error fetching page sections:', sectionsError);
+      console.error('❌ pageContentService: Error fetching page sections:', sectionsError);
       return null;
     }
+
+    console.log('📄 pageContentService: Sections data:', sectionsData);
 
     // Type cast the sections data to ensure proper typing
     const sections: PageSection[] = (sectionsData || []).map(section => ({
@@ -66,9 +83,11 @@ export const getPageContent = async (pagePath: string): Promise<PageContent | nu
       section_type: section.section_type as PageSection['section_type']
     }));
 
-    return { ...pageData, sections };
+    const finalResult = { ...pageData, sections };
+    console.log('🎯 pageContentService: Final complete result:', finalResult);
+    return finalResult;
   } catch (error) {
-    console.error('Error in getPageContent:', error);
+    console.error('💥 pageContentService: Unexpected error in getPageContent:', error);
     return null;
   }
 };

@@ -1,5 +1,4 @@
 
-
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
@@ -35,12 +34,24 @@ import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
 const queryClient = new QueryClient();
 
 function App() {
+  console.log("🚀 App: Application starting up");
+  
+  // Add error boundary logging
+  window.addEventListener('error', (event) => {
+    console.error('🔥 Global Error:', event.error);
+  });
+
+  window.addEventListener('unhandledrejection', (event) => {
+    console.error('🔥 Unhandled Promise Rejection:', event.reason);
+  });
+
   return (
     <HelmetProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <AdminAuthProvider>
             <ContentProvider>
+              {console.log("🚀 App: Rendering core components")}
               <Toaster />
               <ScrollToTop />
               <SiteSchemaMarkup />
@@ -64,7 +75,7 @@ function App() {
                 <Route path="/ecommerce" element={<ECommercePage />} />
                 <Route path="/consultation" element={<ConsultationPage />} />
                 
-                {/* Admin Routes - Now wrapped with AdminAuthProvider */}
+                {/* Admin Routes */}
                 <Route path="/admin" element={<AdminPage />} />
                 <Route path="/admin/dashboard" element={<AdminDashboard />} />
                 <Route path="/admin/content" element={<EnhancedContentPage />} />
@@ -79,4 +90,3 @@ function App() {
 }
 
 export default App;
-
