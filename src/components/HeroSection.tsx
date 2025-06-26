@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -7,6 +7,14 @@ import { usePageContent } from "@/hooks/usePageContent";
 
 const HeroSection = () => {
   const { getSection, isLoading, error } = usePageContent('/');
+  
+  useEffect(() => {
+    console.log('🦸 HeroSection: Component mounted');
+    console.log('🦸 HeroSection: usePageContent state:', { isLoading, error });
+    return () => {
+      console.log('🦸 HeroSection: Component unmounting');
+    };
+  }, [isLoading, error]);
   
   const handleWhatsAppClick = () => {
     const phoneNumber = "919877100369";
@@ -21,8 +29,16 @@ const HeroSection = () => {
   const heroTitle = heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
   const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
 
+  console.log('🦸 HeroSection: Rendering with data:', { 
+    heroSection: heroSection ? 'Found' : 'Not found',
+    isLoading, 
+    error: error ? error : 'No error',
+    heroTitle: heroTitle.slice(0, 50) + '...',
+    heroSubtitle: heroSubtitle.slice(0, 50) + '...'
+  });
+
   if (error) {
-    console.error("HeroSection error:", error);
+    console.error("🚨 HeroSection error:", error);
   }
 
   return (

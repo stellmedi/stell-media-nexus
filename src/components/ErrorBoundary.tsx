@@ -9,6 +9,7 @@ interface Props {
 interface State {
   hasError: boolean;
   error?: Error;
+  errorInfo?: ErrorInfo;
 }
 
 class ErrorBoundary extends Component<Props, State> {
@@ -17,15 +18,28 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
+    console.error('🚨 ErrorBoundary: Error caught in getDerivedStateFromError:', error);
     return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Error caught by boundary:', error, errorInfo);
+    console.error('🚨 ErrorBoundary: Error caught by boundary:', error);
+    console.error('🚨 ErrorBoundary: Error info:', errorInfo);
+    console.error('🚨 ErrorBoundary: Component stack:', errorInfo.componentStack);
+    
+    this.setState({ errorInfo });
+  }
+
+  public componentDidMount() {
+    console.log('🛡️ ErrorBoundary: Component mounted');
   }
 
   public render() {
+    console.log('🛡️ ErrorBoundary: Rendering, hasError:', this.state.hasError);
+    
     if (this.state.hasError) {
+      console.error('🚨 ErrorBoundary: Rendering error fallback UI');
+      
       return this.props.fallback || (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
           <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-6">
@@ -40,7 +54,16 @@ class ErrorBoundary extends Component<Props, State> {
                   Something went wrong
                 </h3>
                 <div className="mt-2 text-sm text-gray-500">
-                  <p>We're sorry, but something unexpected happened. Please try refreshing the page.</p>
+                  <p>We're sorry, but something unexpected happened. Please check the console for details.</p>
+                  {this.state.error && (
+                    <details className="mt-2">
+                      <summary className="cursor-pointer text-red-600">Error Details</summary>
+                      <pre className="mt-2 text-xs bg-gray-100 p-2 rounded overflow-auto">
+                        {this.state.error.message}
+                        {this.state.errorInfo?.componentStack}
+                      </pre>
+                    </details>
+                  )}
                 </div>
               </div>
             </div>
