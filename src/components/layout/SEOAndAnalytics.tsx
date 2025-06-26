@@ -78,8 +78,8 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
       <GoogleAnalytics />
       <SiteSchemaMarkup />
       <XMLSitemap />
-      <SchemaMarkup data={realEstateServiceData} />
-      <SchemaMarkup data={eCommerceServiceData} />
+      <SchemaMarkup type="service" data={realEstateServiceData} />
+      <SchemaMarkup type="service" data={eCommerceServiceData} />
     </>
   );
 };
