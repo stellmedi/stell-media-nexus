@@ -11,37 +11,18 @@ import { faqItems } from "@/data/faqData";
 // Lazy load footer
 const Footer = lazy(() => import("@/components/Footer"));
 
-// Loading fallback for footer
-const LoadingFallback = () => {
-  console.log('🔄 Index: Footer loading fallback rendered');
-  return (
-    <div className="h-20 bg-gray-50 animate-pulse prevent-shift" aria-hidden="true" style={{ minHeight: '200px' }} />
-  );
-};
+// Optimized loading fallback with minimal logging
+const LoadingFallback = () => (
+  <div className="h-20 bg-gray-50 animate-pulse prevent-shift" aria-hidden="true" style={{ minHeight: '200px' }} />
+);
 
 const Index = () => {
   useEffect(() => {
-    console.log('🏠 Index: Component mounted and rendered');
-    console.log('📍 Index: Current route is /', window.location.pathname);
-    
-    // Check if all required data is available
-    console.log('📊 Index: realEstateServiceData:', realEstateServiceData ? 'Available' : 'Missing');
-    console.log('📊 Index: eCommerceServiceData:', eCommerceServiceData ? 'Available' : 'Missing'); 
-    console.log('📊 Index: faqItems:', faqItems ? `${faqItems.length} items` : 'Missing');
-    
-    return () => {
-      console.log('🏠 Index: Component unmounting');
-    };
+    // Minimal logging for production debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🏠 Index: Page loaded');
+    }
   }, []);
-
-  console.log('🏠 Index: Rendering Index page');
-  
-  // Debug logs before JSX
-  console.log('🔧 Index: About to render SEOAndAnalytics');
-  console.log('🔧 Index: About to render PageHeader');
-  console.log('🔧 Index: About to render MainContent');
-  console.log('🔧 Index: About to render Footer (Suspense)');
-  console.log('🔧 Index: About to render WhatsAppButton');
 
   return (
     <PerformanceWrapper>

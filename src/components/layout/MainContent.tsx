@@ -1,5 +1,5 @@
 
-import React, { Suspense, lazy, useEffect } from 'react';
+import React, { Suspense, lazy } from 'react';
 import SocialProofSection from "@/components/SocialProofSection";
 
 // Lazy load below-the-fold components
@@ -9,12 +9,9 @@ const ContactSection = lazy(() => import("@/components/ContactSection"));
 const FAQSection = lazy(() => import("@/components/FAQSection"));
 
 // Optimized loading component with reserved space
-const LoadingFallback = ({ height = "h-20" }: { height?: string }) => {
-  console.log('⏳ MainContent: LoadingFallback rendered for height:', height);
-  return (
-    <div className={`${height} bg-gray-50 animate-pulse prevent-shift`} aria-hidden="true" style={{ minHeight: '200px' }} />
-  );
-};
+const LoadingFallback = ({ height = "h-20" }: { height?: string }) => (
+  <div className={`${height} bg-gray-50 animate-pulse prevent-shift`} aria-hidden="true" style={{ minHeight: '200px' }} />
+);
 
 interface MainContentProps {
   faqItems: Array<{
@@ -24,22 +21,6 @@ interface MainContentProps {
 }
 
 const MainContent: React.FC<MainContentProps> = ({ faqItems }) => {
-  useEffect(() => {
-    console.log('📰 MainContent: Component mounted with faqItems:', faqItems?.length || 0);
-    return () => {
-      console.log('📰 MainContent: Component unmounting');
-    };
-  }, [faqItems]);
-
-  console.log('📰 MainContent: Rendering MainContent');
-  
-  // Debug logs before JSX
-  console.log('📰 MainContent: About to render SocialProofSection');
-  console.log('📰 MainContent: About to render ServicesSection (Suspense)');
-  console.log('📰 MainContent: About to render EnhancedTestimonials (Suspense)');
-  console.log('📰 MainContent: About to render ContactSection (Suspense)');
-  console.log('📰 MainContent: About to render FAQSection (Suspense)');
-
   return (
     <main role="main">
       <SocialProofSection />

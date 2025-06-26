@@ -1,8 +1,8 @@
 
-// Performance optimization utilities with proper browser compatibility
+// Streamlined performance optimization utilities
 
-// Polyfill for requestIdleCallback
-const requestIdleCallbackPolyfill = (callback: IdleRequestCallback, options?: IdleRequestOptions) => {
+// Polyfill for requestIdleCallback with better fallback
+const requestIdleCallbackPolyfill = (callback: IdleRequestCallback) => {
   const start = Date.now();
   return setTimeout(() => {
     callback({
@@ -14,24 +14,25 @@ const requestIdleCallbackPolyfill = (callback: IdleRequestCallback, options?: Id
   }, 1);
 };
 
-// Use native requestIdleCallback if available, otherwise use polyfill
 const safeRequestIdleCallback = typeof requestIdleCallback !== 'undefined' 
   ? requestIdleCallback 
   : requestIdleCallbackPolyfill;
 
-// Critical resource hints for performance
+// Critical resource hints
 const CRITICAL_RESOURCES = [
   'https://fonts.googleapis.com',
   'https://fonts.gstatic.com'
 ];
 
-// Lazy loading observer for images
+// Optimized image lazy loading
 let imageObserver: IntersectionObserver | null = null;
 
 export const initImageLazyLoading = () => {
   if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
     return;
   }
+
+  if (imageObserver) return; // Prevent multiple observers
 
   imageObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -44,6 +45,9 @@ export const initImageLazyLoading = () => {
         }
       }
     });
+  }, {
+    rootMargin: '50px', // Start loading 50px before entering viewport
+    threshold: 0.1
   });
 
   // Observe all images with data-src attribute
@@ -64,58 +68,55 @@ export const preloadCriticalResources = () => {
   });
 };
 
-// Add resource hints in batches to avoid blocking
-const addHintsBatch = (hints: string[]) => {
+// Batch resource hints to avoid blocking
+const addResourceHints = (resources: string[]) => {
   safeRequestIdleCallback(() => {
-    hints.forEach((hint) => {
+    const fragment = document.createDocumentFragment();
+    resources.forEach((href) => {
       const link = document.createElement('link');
       link.rel = 'prefetch';
-      link.href = hint;
-      document.head.appendChild(link);
+      link.href = href;
+      fragment.appendChild(link);
     });
+    document.head.appendChild(fragment);
   });
-};
-
-export const addResourceHints = (resources: string[]) => {
-  const batchSize = 3;
-  for (let i = 0; i < resources.length; i += batchSize) {
-    const batch = resources.slice(i, i + batchSize);
-    addHintsBatch(batch);
-  }
 };
 
 // Initialize all performance optimizations
 export const initPerformanceOptimizations = () => {
   if (typeof window === 'undefined') return;
 
-  // Add critical resource hints
+  // Add critical resource hints immediately
   preloadCriticalResources();
   
-  // Initialize lazy loading
+  // Initialize lazy loading when idle
   safeRequestIdleCallback(() => {
     initImageLazyLoading();
   });
   
-  // Prefetch common routes
+  // Prefetch common routes when idle
   const commonRoutes = ['/about', '/services', '/contact'];
   addResourceHints(commonRoutes);
 };
 
-// Web Vitals tracking (simplified)
+// Simplified web vitals tracking
 export const trackWebVitals = () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return;
 
-  // Track Largest Contentful Paint
-  if ('PerformanceObserver' in window) {
-    try {
-      const observer = new PerformanceObserver((list) => {
-        const entries = list.getEntries();
-        entries.forEach((entry) => {
-          console.log('LCP:', entry.startTime);
-        });
+  try {
+    // Track only essential metrics
+    const observer = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log(`${entry.entryType}:`, entry.duration || entry.startTime);
+        }
       });
-      observer.observe({ entryTypes: ['largest-contentful-paint'] });
-    } catch (error) {
+    });
+    
+    observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+  } catch (error) {
+    // Silently fail in production
+    if (process.env.NODE_ENV === 'development') {
       console.warn('Performance observer not supported:', error);
     }
   }

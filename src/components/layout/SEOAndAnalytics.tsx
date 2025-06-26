@@ -19,17 +19,24 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
   return (
     <>
       <Helmet>
-        {/* Critical CSS inlined for faster LCP */}
+        {/* Optimized font preloading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <link 
+          rel="preload" 
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
+          as="style" 
+          onLoad="this.onload=null;this.rel='stylesheet'" 
+        />
+        
+        {/* Critical CSS for immediate rendering */}
         <style type="text/css">{`
-          /* Critical above-the-fold styles optimized for LCP */
           .hero-section { 
             background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%); 
             min-height: 90vh; 
             display: flex; 
             align-items: center; 
-            position: relative; 
             contain: layout style paint;
-            aspect-ratio: 16/9;
           }
           .navbar { 
             position: sticky; 
@@ -37,7 +44,6 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
             z-index: 50; 
             background: rgba(255, 255, 255, 0.95); 
             backdrop-filter: blur(10px); 
-            border-bottom: 1px solid #e5e7eb; 
             height: 64px;
             contain: layout style paint;
           }
@@ -46,8 +52,6 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
             color: white; 
             padding: 0.75rem 1.5rem; 
             border-radius: 0.5rem; 
-            border: none; 
-            cursor: pointer; 
             transition: background-color 0.2s; 
             min-width: 120px;
             height: 44px;
@@ -56,15 +60,14 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
             justify-content: center;
           }
           .btn-primary:hover { background: #4338ca; }
-          img:not([width]):not([height]) { aspect-ratio: 16/9; object-fit: cover; }
+          img { height: auto; max-width: 100%; }
         `}</style>
         
-        {/* Preload critical resources */}
-        <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        {/* Resource hints for performance */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="preconnect" href="//fonts.googleapis.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="//www.google-analytics.com" />
         
-        {/* Cache control for static assets */}
+        {/* Cache control */}
         <meta httpEquiv="Cache-Control" content="public, max-age=31536000, immutable" />
       </Helmet>
       

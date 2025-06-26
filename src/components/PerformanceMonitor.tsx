@@ -1,114 +1,84 @@
 
 import { useEffect } from 'react';
 
-interface PerformanceMonitor {
+interface PerformanceMonitorProps {
   onLCP?: (value: number) => void;
   onFID?: (value: number) => void;
   onCLS?: (value: number) => void;
-  onTTFB?: (value: number) => void;
 }
 
-const PerformanceMonitor: React.FC<PerformanceMonitor> = ({
+const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({
   onLCP,
   onFID,
-  onCLS,
-  onTTFB
+  onCLS
 }) => {
   useEffect(() => {
+    if (typeof PerformanceObserver === 'undefined') return;
+
+    const observers: PerformanceObserver[] = [];
+
     // Track Largest Contentful Paint
-    if (onLCP && typeof PerformanceObserver !== 'undefined') {
-      const lcpObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        const lastEntry = entries[entries.length - 1] as any;
-        if (lastEntry) {
-          onLCP(lastEntry.startTime);
-        }
-      });
-      
+    if (onLCP) {
       try {
+        const lcpObserver = new PerformanceObserver((entryList) => {
+          const entries = entryList.getEntries();
+          const lastEntry = entries[entries.length - 1] as any;
+          if (lastEntry) {
+            onLCP(lastEntry.startTime);
+          }
+        });
+        
         lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+        observers.push(lcpObserver);
       } catch (e) {
-        console.warn('LCP observation not supported');
+        // Silently fail
       }
     }
 
     // Track First Input Delay
-    if (onFID && typeof PerformanceObserver !== 'undefined') {
-      const fidObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        entries.forEach((entry: any) => {
-          if (entry.processingStart && entry.startTime) {
-            onFID(entry.processingStart - entry.startTime);
-          }
-        });
-      });
-      
+    if (onFID) {
       try {
+        const fidObserver = new PerformanceObserver((entryList) => {
+          entryList.getEntries().forEach((entry: any) => {
+            if (entry.processingStart && entry.startTime) {
+              onFID(entry.processingStart - entry.startTime);
+            }
+          });
+        });
+        
         fidObserver.observe({ entryTypes: ['first-input'] });
+        observers.push(fidObserver);
       } catch (e) {
-        console.warn('FID observation not supported');
+        // Silently fail
       }
     }
 
     // Track Cumulative Layout Shift
-    if (onCLS && typeof PerformanceObserver !== 'undefined') {
-      let clsValue = 0;
-      const clsObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        entries.forEach((entry: any) => {
-          if (!entry.hadRecentInput) {
-            clsValue += entry.value;
-            onCLS(clsValue);
-          }
-        });
-      });
-      
+    if (onCLS) {
       try {
+        let clsValue = 0;
+        const clsObserver = new PerformanceObserver((entryList) => {
+          entryList.getEntries().forEach((entry: any) => {
+            if (!entry.hadRecentInput) {
+              clsValue += entry.value;
+              onCLS(clsValue);
+            }
+          });
+        });
+        
         clsObserver.observe({ entryTypes: ['layout-shift'] });
+        observers.push(clsObserver);
       } catch (e) {
-        console.warn('CLS observation not supported');
+        // Silently fail
       }
     }
 
-    // Track Time to First Byte
-    if (onTTFB && typeof PerformanceObserver !== 'undefined') {
-      const ttfbObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        entries.forEach((entry: any) => {
-          if (entry.responseStart && entry.requestStart) {
-            onTTFB(entry.responseStart - entry.requestStart);
-          }
-        });
-      });
-      
-      try {
-        ttfbObserver.observe({ entryTypes: ['navigation'] });
-      } catch (e) {
-        console.warn('TTFB observation not supported');
-      }
-    }
+    return () => {
+      observers.forEach(observer => observer.disconnect());
+    };
+  }, [onLCP, onFID, onCLS]);
 
-    // Monitor main thread blocking
-    if (typeof PerformanceObserver !== 'undefined') {
-      const longTaskObserver = new PerformanceObserver((entryList) => {
-        const entries = entryList.getEntries();
-        entries.forEach((entry: any) => {
-          if (entry.duration > 50) {
-            console.warn(`Long task detected: ${entry.duration}ms`);
-          }
-        });
-      });
-      
-      try {
-        longTaskObserver.observe({ entryTypes: ['longtask'] });
-      } catch (e) {
-        console.warn('Long task observation not supported');
-      }
-    }
-
-  }, [onLCP, onFID, onCLS, onTTFB]);
-
-  return null; // This component doesn't render anything
+  return null;
 };
 
 export default PerformanceMonitor;
