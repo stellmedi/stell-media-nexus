@@ -25,9 +25,14 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
         <link 
           rel="preload" 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
-          as="style" 
-          onLoad="this.onload=null;this.rel='stylesheet'" 
+          as="style"
         />
+        <noscript>
+          <link 
+            rel="stylesheet" 
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
+          />
+        </noscript>
         
         {/* Critical CSS for immediate rendering */}
         <style type="text/css">{`
