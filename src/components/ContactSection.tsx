@@ -4,7 +4,7 @@ import SimpleContactForm from "@/components/contact/SimpleContactForm";
 
 const ContactSection = () => {
   return (
-    <section id="contact" className="py-12 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
+    <section id="contact" className="pt-20 md:pt-24 pb-12 bg-gradient-to-br from-blue-700 via-indigo-600 to-purple-600 text-white">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-8 items-start">
           <div className="md:col-span-2">
