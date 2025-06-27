@@ -7,10 +7,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
-import { Plus, Edit, Trash2, User, Shield, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, User, Shield, Eye, Mail, CheckCircle, XCircle, AlertCircle } from "lucide-react";
 import { useAdminAuth } from "@/hooks/use-supabase-admin";
 import { getAdminUsers, updateAdminUser, deleteAdminUser } from "@/services/adminService";
+import { supabase } from "@/integrations/supabase/client";
 import type { AdminUser } from "@/services/adminService";
 
 const UserManagement = () => {
@@ -20,6 +22,7 @@ const UserManagement = () => {
   const [editingUser, setEditingUser] = useState<AdminUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showConfirmationAlert, setShowConfirmationAlert] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -107,11 +110,12 @@ const UserManagement = () => {
           formData.role
         );
 
-        if (!success) {
+        if (success) {
+          setShowConfirmationAlert(true);
+          toast.success("User created successfully! Please check email confirmation settings.");
+        } else {
           return; // Error already shown by register function
         }
-
-        toast.success("User created successfully");
       }
 
       await loadUsers(); // Reload users
@@ -175,6 +179,24 @@ const UserManagement = () => {
     }
   };
 
+  const handleResendConfirmation = async (email: string) => {
+    try {
+      const { error } = await supabase.auth.resend({
+        type: 'signup',
+        email: email
+      });
+      
+      if (error) {
+        toast.error("Failed to resend confirmation email");
+      } else {
+        toast.success("Confirmation email resent successfully");
+      }
+    } catch (error) {
+      console.error('Resend confirmation error:', error);
+      toast.error("Error resending confirmation email");
+    }
+  };
+
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'admin': return <Shield className="h-4 w-4" />;
@@ -219,6 +241,25 @@ const UserManagement = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {showConfirmationAlert && (
+          <Alert>
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Important:</strong> New users need to confirm their email before they can login. 
+              If email confirmation is disabled in Supabase Auth settings, users can login immediately. 
+              Otherwise, they'll receive a confirmation email first.
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="ml-2"
+                onClick={() => setShowConfirmationAlert(false)}
+              >
+                Dismiss
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
         <div className="flex justify-between items-center">
           <div className="flex gap-4 text-sm text-gray-600">
             <span>Total Users: {users.length}</span>
@@ -261,9 +302,11 @@ const UserManagement = () => {
                       </Badge>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.is_active ? 'default' : 'secondary'}>
-                        {user.is_active ? 'Active' : 'Inactive'}
-                      </Badge>
+                      <div className="flex flex-col gap-1">
+                        <Badge variant={user.is_active ? 'default' : 'secondary'}>
+                          {user.is_active ? 'Active' : 'Inactive'}
+                        </Badge>
+                      </div>
                     </TableCell>
                     <TableCell className="text-sm text-gray-600">
                       {new Date(user.created_at).toLocaleDateString()}
@@ -279,6 +322,14 @@ const UserManagement = () => {
                           onClick={() => handleEditUser(user)}
                         >
                           <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleResendConfirmation(user.email)}
+                          title="Resend confirmation email"
+                        >
+                          <Mail className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="outline"
@@ -307,7 +358,7 @@ const UserManagement = () => {
 
         {/* Role Descriptions */}
         <div className="bg-gray-50 p-4 rounded-lg">
-          <h4 className="font-medium mb-3">Role Descriptions</h4>
+          <h4 className="font-medium mb-3">Role Descriptions & Email Confirmation</h4>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-red-600" />
@@ -324,6 +375,13 @@ const UserManagement = () => {
               <span className="font-medium">Viewer:</span>
               <span className="text-gray-600">Read-only access to dashboard and analytics</span>
             </div>
+            <div className="flex items-center gap-2 mt-3 p-2 bg-blue-50 rounded">
+              <Mail className="h-4 w-4 text-blue-600" />
+              <span className="text-blue-800 text-xs">
+                <strong>Note:</strong> New users may need to confirm their email before logging in. 
+                Use the mail icon to resend confirmation emails if needed.
+              </span>
+            </div>
           </div>
         </div>
 
@@ -335,7 +393,7 @@ const UserManagement = () => {
                 {editingUser ? 'Edit User' : 'Create New User'}
               </DialogTitle>
               <DialogDescription>
-                {editingUser ? 'Update user information and role.' : 'Create a new admin user with specific permissions.'}
+                {editingUser ? 'Update user information and role.' : 'Create a new admin user with specific permissions. Note: User may need to confirm their email before first login.'}
               </DialogDescription>
             </DialogHeader>
             
@@ -374,6 +432,9 @@ const UserManagement = () => {
                     required
                     className="mt-1"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    User will receive a confirmation email before they can login
+                  </p>
                 </div>
               )}
               
