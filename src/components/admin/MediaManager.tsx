@@ -43,32 +43,33 @@ const MediaManager: React.FC = () => {
   const [mediaFiles, setMediaFiles] = useState<MediaFile[]>([
     {
       id: '1',
-      name: 'hero-image.jpg',
+      name: '38799a3e-2ae4-428c-b111-c6d907dcda42.png',
       type: 'image',
-      size: '2.4 MB',
-      url: '/lovable-uploads/hero-image.jpg',
-      altText: 'Students learning with AI technology',
+      size: '245 KB',
+      url: '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png',
+      altText: 'Stell Media logo with gradient background for brand identity',
       uploadDate: '2024-01-15',
-      dimensions: '1920x1080'
+      dimensions: '800x600'
     },
     {
       id: '2',
-      name: 'course-catalog.pdf',
-      type: 'document',
-      size: '1.8 MB',
-      url: '/documents/course-catalog.pdf',
-      altText: 'Complete course catalog PDF',
-      uploadDate: '2024-01-14'
+      name: 'd1aeb466-efb1-4d25-900f-37414e5d0863.png',
+      type: 'image',
+      size: '312 KB',
+      url: '/lovable-uploads/d1aeb466-efb1-4d25-900f-37414e5d0863.png',
+      altText: 'Professional team photo showcasing Stell Media expertise in digital marketing',
+      uploadDate: '2024-01-14',
+      dimensions: '1200x800'
     },
     {
       id: '3',
-      name: 'intro-video.mp4',
-      type: 'video',
-      size: '15.2 MB',
-      url: '/videos/intro-video.mp4',
-      altText: 'Introduction to Stell Tech Academy',
+      name: 'f34fc50c-3811-4db5-bb67-307d487ce8a1.png',
+      type: 'image',
+      size: '189 KB',
+      url: '/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png',
+      altText: 'Stell Media brand logo for social media and marketing materials',
       uploadDate: '2024-01-13',
-      dimensions: '1920x1080'
+      dimensions: '600x400'
     }
   ]);
 
