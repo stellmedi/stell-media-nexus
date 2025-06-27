@@ -6,6 +6,7 @@ import SiteSchemaMarkup from "@/components/SiteSchemaMarkup";
 import SchemaMarkup from "@/components/SchemaMarkup";
 import SEOHelmet from "@/components/SEOHelmet";
 import XMLSitemap from "@/components/XMLSitemap";
+import MobileOptimization from "@/components/MobileOptimization";
 
 interface SEOAndAnalyticsProps {
   realEstateServiceData: any;
@@ -26,18 +27,14 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
           rel="preload" 
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" 
           as="style"
-        />
-        <noscript 
-          dangerouslySetInnerHTML={{
-            __html: `<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" />`
-          }}
+          onLoad="this.onload=null;this.rel='stylesheet'"
         />
         
         {/* Critical CSS for immediate rendering */}
         <style type="text/css">{`
           .hero-section { 
             background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%); 
-            min-height: 90vh; 
+            min-height: 70vh; 
             display: flex; 
             align-items: center; 
             contain: layout style paint;
@@ -65,6 +62,16 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
           }
           .btn-primary:hover { background: #4338ca; }
           img { height: auto; max-width: 100%; }
+          
+          @media (max-width: 768px) {
+            .hero-section { 
+              min-height: 60vh; 
+              padding: 2rem 1rem; 
+            }
+            .navbar { 
+              height: 56px; 
+            }
+          }
         `}</style>
         
         {/* Resource hints for performance */}
@@ -87,6 +94,7 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
       <XMLSitemap />
       <SchemaMarkup type="service" data={realEstateServiceData} />
       <SchemaMarkup type="service" data={eCommerceServiceData} />
+      <MobileOptimization />
     </>
   );
 };
