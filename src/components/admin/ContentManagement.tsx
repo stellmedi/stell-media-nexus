@@ -2,9 +2,9 @@
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Image, Video } from "lucide-react";
 import EnhancedContentManager from "./EnhancedContentManager";
 import ContentImporter from "./ContentImporter";
+import MediaManager from "./MediaManager";
 
 export default function ContentManagement() {
   return (
@@ -26,27 +26,7 @@ export default function ContentManagement() {
         </TabsContent>
         
         <TabsContent value="media" className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Image className="h-5 w-5" />
-                Media Library
-              </CardTitle>
-              <CardDescription>Manage images and videos</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="border rounded-lg p-4 text-center">
-                  <Image className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                  <p className="text-sm">Upload Image</p>
-                </div>
-                <div className="border rounded-lg p-4 text-center">
-                  <Video className="h-12 w-12 mx-auto mb-2 text-gray-400" />
-                  <p className="text-sm">Upload Video</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <MediaManager />
         </TabsContent>
         
         <TabsContent value="settings" className="mt-6">
