@@ -6,22 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { 
-  Camera, 
+  Target, 
+  TrendingUp, 
+  Search,
+  Palette,
   Box, 
   Users, 
-  Target, 
   Building, 
-  TrendingUp, 
+  Zap, 
   CheckCircle, 
   ArrowRight,
   Globe,
-  Zap,
   BarChart,
   Eye,
-  Search,
   Database,
   ShoppingCart,
-  Palette,
   Share2
 } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -29,20 +28,56 @@ import { Link } from "react-router-dom";
 const RealEstate = () => {
   const realEstateServices = [
     {
-      icon: <Camera className="h-12 w-12 text-blue-500" />,
-      title: "Virtual Tours & Photography",
-      description: "360° virtual tours and professional photography to showcase properties with stunning visual experiences.",
+      icon: <Target className="h-12 w-12 text-blue-500" />,
+      title: "Lead Generation & Marketing",
+      description: "Automated lead generation campaigns and comprehensive digital marketing strategies for real estate.",
       features: [
-        "360° Virtual Property Tours",
-        "Professional Real Estate Photography", 
-        "Drone Aerial Services",
-        "Interactive Floor Plans"
+        "Multi-Channel Lead Generation",
+        "Social Media Marketing Campaigns", 
+        "Market Analysis & Insights",
+        "ROI Tracking & Optimization"
       ],
-      link: "/services/virtual-tours"
+      link: "/services/lead-generation"
+    },
+    {
+      icon: <TrendingUp className="h-12 w-12 text-blue-500" />,
+      title: "Performance Marketing",
+      description: "Data-driven performance marketing campaigns designed to maximize ROI and drive sustainable real estate growth.",
+      features: [
+        "Multi-Channel Performance Campaigns",
+        "Advanced Attribution Modeling", 
+        "Conversion Rate Optimization",
+        "Real-Time Analytics & Reporting"
+      ],
+      link: "/services/sem"
+    },
+    {
+      icon: <Search className="h-12 w-12 text-blue-500" />,
+      title: "SEO & Content Strategy",
+      description: "Drive organic traffic with strategic SEO and compelling content that converts visitors into customers.",
+      features: [
+        "Local SEO Optimization",
+        "Content Marketing Strategy", 
+        "Technical SEO Implementation",
+        "Keyword Research & Analysis"
+      ],
+      link: "/services/seo"
+    },
+    {
+      icon: <Palette className="h-12 w-12 text-blue-500" />,
+      title: "Creative & Branding",
+      description: "Complete brand development and visual identity solutions tailored for real estate professionals.",
+      features: [
+        "Logo & Brand Identity Design",
+        "Marketing Collateral Creation", 
+        "Property Brochure Design",
+        "Brand Guidelines Development"
+      ],
+      link: "/contact"
     },
     {
       icon: <Box className="h-12 w-12 text-blue-500" />,
-      title: "3D Visualization & Animation", 
+      title: "3D Animation & Visualization", 
       description: "Stunning 3D animations and architectural visualizations that bring projects to life before construction.",
       features: [
         "3D Property Walkthroughs",
@@ -63,42 +98,6 @@ const RealEstate = () => {
         "Performance Analytics Dashboard"
       ],
       link: "/services/crm-lead-management"
-    },
-    {
-      icon: <Target className="h-12 w-12 text-blue-500" />,
-      title: "Lead Generation & Marketing",
-      description: "Automated lead generation campaigns and comprehensive digital marketing strategies for real estate.",
-      features: [
-        "Multi-Channel Lead Generation",
-        "Social Media Marketing Campaigns", 
-        "Market Analysis & Insights",
-        "ROI Tracking & Optimization"
-      ],
-      link: "/services/lead-generation"
-    },
-    {
-      icon: <Palette className="h-12 w-12 text-blue-500" />,
-      title: "Branding & Identity Design",
-      description: "Complete brand development and visual identity solutions tailored for real estate professionals.",
-      features: [
-        "Logo & Brand Identity Design",
-        "Marketing Collateral Creation", 
-        "Property Brochure Design",
-        "Brand Guidelines Development"
-      ],
-      link: "/contact"
-    },
-    {
-      icon: <Share2 className="h-12 w-12 text-blue-500" />,
-      title: "Social Media Management",
-      description: "Strategic social media management to build your real estate brand and engage with potential clients.",
-      features: [
-        "Social Media Strategy Development",
-        "Content Creation & Scheduling", 
-        "Community Management",
-        "Social Media Advertising"
-      ],
-      link: "/contact"
     }
   ];
 

@@ -12,34 +12,50 @@ const RealEstateServices = () => {
       <ul className="space-y-2">
         <li>
           <Link 
-            to="/real-estate"
-            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
-          >
-            Virtual Tours & Photography
-          </Link>
-        </li>
-        <li>
-          <Link 
-            to="/real-estate"
-            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
-          >
-            3D Visualization & Animation
-          </Link>
-        </li>
-        <li>
-          <Link 
-            to="/real-estate"
-            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
-          >
-            CRM & Lead Management
-          </Link>
-        </li>
-        <li>
-          <Link 
-            to="/real-estate"
+            to="/services/lead-generation"
             className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
           >
             Lead Generation & Marketing
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/services/sem"
+            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
+          >
+            Performance Marketing
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/services/seo"
+            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
+          >
+            SEO & Content Strategy
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/contact"
+            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
+          >
+            Creative & Branding
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/services/3d-visualization"
+            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
+          >
+            3D Animation & Visualization
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/services/crm-lead-management"
+            className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
+          >
+            CRM & Lead Management
           </Link>
         </li>
       </ul>
