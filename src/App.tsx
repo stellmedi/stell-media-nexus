@@ -23,6 +23,9 @@ import ServiceConversionOptimizationPage from './pages/services/ConversionOptimi
 import LeadGeneration from './pages/services/LeadGeneration';
 import ThreeDVisualization from './pages/services/ThreeDVisualization';
 import CRMLeadManagement from './pages/services/CRMLeadManagement';
+import Creative from './pages/services/Creative';
+import CatalogSEO from './pages/services/CatalogSEO';
+import EcommercePerformanceMarketing from './pages/services/EcommercePerformanceMarketing';
 import RealEstatePage from './pages/RealEstate';
 import ECommercePage from './pages/ECommerce';
 import ConsultationPage from './pages/Consultation';
@@ -71,6 +74,9 @@ function App() {
                   <Route path="/services/lead-generation" element={<LeadGeneration />} />
                   <Route path="/services/3d-visualization" element={<ThreeDVisualization />} />
                   <Route path="/services/crm-lead-management" element={<CRMLeadManagement />} />
+                  <Route path="/services/creative" element={<Creative />} />
+                  <Route path="/services/catalog-seo" element={<CatalogSEO />} />
+                  <Route path="/services/ecommerce-performance-marketing" element={<EcommercePerformanceMarketing />} />
                   <Route path="/real-estate" element={<RealEstatePage />} />
                   <Route path="/ecommerce" element={<ECommercePage />} />
                   <Route path="/consultation" element={<ConsultationPage />} />

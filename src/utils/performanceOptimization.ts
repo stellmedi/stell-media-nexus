@@ -1,3 +1,4 @@
+
 export const initPerformanceOptimizations = () => {
   console.log('⚡ Performance: Initializing optimizations');
   
@@ -72,12 +73,6 @@ export const initPerformanceOptimizations = () => {
         unusedElements.forEach(element => {
           element.removeEventListener('click', () => {});
         });
-        
-        // Clear unused timers
-        if (window.performanceTimers) {
-          window.performanceTimers.forEach(timer => clearTimeout(timer));
-          window.performanceTimers = [];
-        }
       };
       
       // Schedule cleanup on page unload

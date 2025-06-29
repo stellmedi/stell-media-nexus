@@ -22,7 +22,7 @@ export const realEstateServices = [
   },
   {
     title: "Creative & Branding",
-    href: "/contact",
+    href: "/services/creative",
     description: "Complete brand development and visual identity solutions",
     icon: <Palette className="h-4 w-4" />
   },
@@ -43,25 +43,25 @@ export const realEstateServices = [
 export const ecommerceServices = [
   {
     title: "Product Discovery",
-    href: "/ecommerce",
+    href: "/services/product-discovery",
     description: "Advanced product discovery and search optimization",
     icon: <Search className="h-4 w-4" />
   },
   {
     title: "Catalog SEO",
-    href: "/ecommerce",
+    href: "/services/catalog-seo",
     description: "Large-scale catalog optimization and data enrichment",
     icon: <Database className="h-4 w-4" />
   },
   {
     title: "Performance Marketing",
-    href: "/ecommerce",
+    href: "/services/ecommerce-performance-marketing",
     description: "Data-driven performance marketing campaigns",
     icon: <BarChart className="h-4 w-4" />
   },
   {
     title: "Conversion Optimization",
-    href: "/ecommerce",
+    href: "/services/conversion-optimization",
     description: "Comprehensive conversion rate optimization",
     icon: <Zap className="h-4 w-4" />
   }
