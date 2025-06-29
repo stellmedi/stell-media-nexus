@@ -1,32 +1,12 @@
 
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Linkedin, Facebook, Instagram } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const Footer = () => {
-  const navigate = useNavigate();
-
-  const handleLinkClick = (path: string, linkName: string) => {
-    // Show toast notification
-    toast({
-      title: "Navigating...",
-      description: `Going to ${linkName}`,
-      duration: 2000,
-    });
-
-    // Navigate to the path
-    navigate(path);
-    
-    // Scroll to top with smooth behavior
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
-  };
-
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     toast({
@@ -79,36 +59,36 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2">
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/virtual-tours", "Virtual Tours")}
-                  className="text-gray-600 hover:text-blue-600 transition-colors active:bg-blue-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/real-estate"
+                  className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
                 >
                   Virtual Tours & Photography
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/3d-visualization", "3D Visualization")}
-                  className="text-gray-600 hover:text-blue-600 transition-colors active:bg-blue-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/real-estate"
+                  className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
                 >
                   3D Visualization & Animation
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/crm-lead-management", "CRM & Lead Management")}
-                  className="text-gray-600 hover:text-blue-600 transition-colors active:bg-blue-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/real-estate"
+                  className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
                 >
                   CRM & Lead Management
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/lead-generation", "Lead Generation")}
-                  className="text-gray-600 hover:text-blue-600 transition-colors active:bg-blue-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/real-estate"
+                  className="text-gray-600 hover:text-blue-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-blue-50"
                 >
                   Lead Generation & Marketing
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -120,36 +100,36 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2">
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/product-discovery", "Product Discovery")}
-                  className="text-gray-600 hover:text-purple-600 transition-colors active:bg-purple-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/ecommerce"
+                  className="text-gray-600 hover:text-purple-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-purple-50"
                 >
                   Product Discovery Management
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/data-enrichment", "Data Enrichment")}
-                  className="text-gray-600 hover:text-purple-600 transition-colors active:bg-purple-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/ecommerce"
+                  className="text-gray-600 hover:text-purple-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-purple-50"
                 >
                   Catalog SEO & Data Enrichment
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/sem", "Performance Marketing")}
-                  className="text-gray-600 hover:text-purple-600 transition-colors active:bg-purple-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/ecommerce"
+                  className="text-gray-600 hover:text-purple-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-purple-50"
                 >
                   Performance Marketing
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/services/conversion-optimization", "Conversion Optimization")}
-                  className="text-gray-600 hover:text-purple-600 transition-colors active:bg-purple-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/ecommerce"
+                  className="text-gray-600 hover:text-purple-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-purple-50"
                 >
                   Conversion Optimization
-                </button>
+                </Link>
               </li>
             </ul>
           </div>
@@ -161,36 +141,36 @@ const Footer = () => {
             </h4>
             <ul className="space-y-2 mb-6">
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/about", "About Us")}
-                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/about"
+                  className="text-gray-600 hover:text-indigo-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-indigo-50"
                 >
                   About Us
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/case-studies", "Case Studies")}
-                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/case-studies"
+                  className="text-gray-600 hover:text-indigo-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-indigo-50"
                 >
                   Case Studies
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/blog", "Blog")}
-                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/blog"
+                  className="text-gray-600 hover:text-indigo-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-indigo-50"
                 >
                   Blog
-                </button>
+                </Link>
               </li>
               <li>
-                <button 
-                  onClick={() => handleLinkClick("/contact", "Contact")}
-                  className="text-gray-600 hover:text-indigo-600 transition-colors active:bg-indigo-100 rounded px-2 py-1 -ml-2 w-full text-left"
+                <Link 
+                  to="/contact"
+                  className="text-gray-600 hover:text-indigo-600 transition-colors block px-2 py-1 -ml-2 rounded hover:bg-indigo-50"
                 >
                   Contact
-                </button>
+                </Link>
               </li>
             </ul>
             

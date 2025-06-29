@@ -10,15 +10,15 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90 active:opacity-100",
+        default: "bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 text-white hover:opacity-90 active:opacity-100 shadow-sm",
         destructive:
-          "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
+          "bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-sm",
         outline:
-          "border-2 border-indigo-600 bg-white text-indigo-700 hover:bg-indigo-600 hover:text-white active:bg-indigo-700",
+          "border-2 border-indigo-600 bg-white text-indigo-700 hover:bg-indigo-600 hover:text-white active:bg-indigo-700 shadow-sm",
         secondary:
-          "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800",
-        ghost: "bg-gray-100 text-gray-900 hover:bg-gray-200 active:bg-gray-300",
-        link: "text-indigo-600 underline-offset-4 hover:underline hover:text-indigo-800",
+          "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 shadow-sm",
+        ghost: "bg-transparent text-gray-700 hover:bg-gray-100 hover:text-gray-900 active:bg-gray-200",
+        link: "text-indigo-600 underline-offset-4 hover:underline hover:text-indigo-800 font-medium",
         cta: "bg-indigo-600 text-white hover:bg-indigo-700 active:bg-indigo-800 font-semibold shadow-md hover:shadow-lg",
         white: "bg-white text-indigo-700 hover:bg-gray-50 active:bg-gray-100 font-semibold shadow-md hover:shadow-lg border-2 border-gray-200",
       },
