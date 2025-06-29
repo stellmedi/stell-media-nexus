@@ -10,7 +10,7 @@ const GoogleAnalytics: React.FC = () => {
   console.log('GoogleAnalytics: Loading state:', isLoading);
 
   // Use the new tracking ID you provided, fallback to config if available
-  const trackingId = config.googleAnalyticsId || 'G-4GG7JRZS6T';
+  const trackingId = config.googleAnalyticsId || 'G-8MK59B7JZV';
 
   return (
     <Helmet>
