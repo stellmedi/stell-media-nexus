@@ -9,6 +9,8 @@ import { Search, Database, BarChart, Zap, CheckCircle, ArrowRight } from "lucide
 import { Link } from "react-router-dom";
 
 const CatalogSEO = () => {
+  console.log('📊 CatalogSEO: Component rendering');
+
   const features = [
     {
       icon: <Search className="h-8 w-8 text-purple-500" />,

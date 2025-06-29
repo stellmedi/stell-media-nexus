@@ -9,6 +9,8 @@ import { TrendingUp, Target, BarChart, Zap, CheckCircle, ArrowRight } from "luci
 import { Link } from "react-router-dom";
 
 const EcommercePerformanceMarketing = () => {
+  console.log('📈 EcommercePerformanceMarketing: Component rendering');
+
   const services = [
     {
       icon: <Target className="h-8 w-8 text-purple-500" />,

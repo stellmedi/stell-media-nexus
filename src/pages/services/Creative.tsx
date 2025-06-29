@@ -9,6 +9,8 @@ import { Palette, PenTool, Image, Video, CheckCircle, ArrowRight } from "lucide-
 import { Link } from "react-router-dom";
 
 const Creative = () => {
+  console.log('🎨 Creative: Component rendering');
+
   const services = [
     {
       icon: <Palette className="h-8 w-8 text-blue-500" />,
