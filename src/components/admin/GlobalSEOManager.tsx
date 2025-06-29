@@ -23,7 +23,7 @@ const defaultConfig: GlobalSEOConfig = {
   siteName: "Stell Media",
   siteDescription: "Leading e-commerce optimization agency specializing in product discovery, search optimization, and conversion enhancement services",
   defaultOgImage: "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
-  googleAnalyticsId: "G-X430SJ0QPS",
+  googleAnalyticsId: "G-4GG7JRZS6T",
   googleSearchConsoleVerification: "",
   googleTagManagerId: "",
   bingWebmasterVerification: "",
