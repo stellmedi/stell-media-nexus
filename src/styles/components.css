@@ -1,0 +1,65 @@
+
+/* Component-specific styles with GPU acceleration */
+
+/* Optimized navigation with GPU acceleration */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid #e5e7eb;
+  height: 64px;
+  contain: layout style paint;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Hero section with optimized rendering */
+.hero-section {
+  background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  contain: layout style paint;
+  width: 100%;
+  transform: translateZ(0);
+}
+
+/* Optimized button with hardware acceleration */
+.btn-primary {
+  background: #4f46e5;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  transform: translateZ(0);
+  min-width: 120px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  will-change: background-color;
+}
+
+.btn-primary:hover {
+  background: #4338ca;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 2px;
+}
+
+/* Optimized loading skeleton */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: loading 1s infinite;
+  min-height: 20px;
+  width: 100%;
+  contain: strict;
+}

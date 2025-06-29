@@ -1,0 +1,42 @@
+
+/* Mobile and responsive optimizations */
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 70vh;
+    padding: 2rem 1rem;
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 8vw, 2.5rem);
+  }
+  
+  .navbar {
+    height: 56px;
+  }
+  
+  /* Optimize touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent iOS zoom on form inputs */
+  input, textarea, select {
+    font-size: 16px !important;
+  }
+}
+
+/* Container queries for better responsive design */
+@container (min-width: 768px) {
+  .responsive-container {
+    padding: 2rem;
+  }
+}
+
+@container (max-width: 767px) {
+  .responsive-container {
+    padding: 1rem;
+  }
+}

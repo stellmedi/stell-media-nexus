@@ -1,0 +1,72 @@
+
+/* Base styles and resets */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+  /* Optimize font rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #1f2937;
+  background: #fefefe;
+  font-display: swap;
+  /* Prevent flash of invisible text */
+  font-optical-sizing: auto;
+}
+
+/* Typography with optimal spacing */
+h1, h2, h3 {
+  font-weight: 700;
+  line-height: 1.2;
+  min-height: 1.2em;
+  contain: layout;
+}
+
+h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
+
+/* Optimized image handling */
+img {
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  contain: layout;
+}
+
+img:not([width]):not([height]) {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #4f46e5;
+  color: white;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 100;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.skip-link:focus {
+  top: 6px;
+}

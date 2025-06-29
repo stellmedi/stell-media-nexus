@@ -1,0 +1,13 @@
+
+/* Performance utilities and optimizations */
+
+/* Performance utilities */
+.prevent-shift {
+  contain: layout;
+  will-change: auto;
+}
+
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+}
