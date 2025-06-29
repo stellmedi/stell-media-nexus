@@ -22,12 +22,12 @@ const EnhancedTestimonials = () => {
       results: "Complete marketing transformation & modernization"
     },
     {
-      name: "Pradeep Sandal",
-      title: "Managing Partner",
-      company: "AHP Group",
+      name: "Adarsh",
+      title: "CEO",
+      company: "Testbee (Cologne, Germany)",
       rating: 5,
-      text: "Stell Media's holistic approach to real estate digital transformation exceeded our expectations. Their 3D visualization, automated marketing, and comprehensive analytics have elevated our project presentations and client interactions to new heights.",
-      results: "Elevated project presentations & client interactions"
+      text: "Their digital transformation services for customer acquisition and lead generation have been truly impactful. The team's expertise has significantly contributed to our growth and marketing efficiency.",
+      results: "Significant growth & marketing efficiency"
     },
     // E-commerce (Global) Examples
     {
