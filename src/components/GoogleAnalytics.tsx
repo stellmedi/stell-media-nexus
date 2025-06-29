@@ -9,8 +9,8 @@ const GoogleAnalytics: React.FC = () => {
   console.log('GoogleAnalytics: Config loaded:', config);
   console.log('GoogleAnalytics: Loading state:', isLoading);
 
-  // Use the specific tracking ID you provided, fallback to config if available
-  const trackingId = config.googleAnalyticsId || 'G-X430SJ0QPS';
+  // Use the new tracking ID you provided, fallback to config if available
+  const trackingId = config.googleAnalyticsId || 'G-4GG7JRZS6T';
 
   return (
     <Helmet>
