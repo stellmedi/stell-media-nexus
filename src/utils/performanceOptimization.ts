@@ -1,7 +1,7 @@
 
-// Streamlined performance optimization utilities
+// Enhanced performance optimization utilities
 
-// Polyfill for requestIdleCallback with better fallback
+// Optimized requestIdleCallback polyfill
 const requestIdleCallbackPolyfill = (callback: IdleRequestCallback) => {
   const start = Date.now();
   return setTimeout(() => {
@@ -18,13 +18,21 @@ const safeRequestIdleCallback = typeof requestIdleCallback !== 'undefined'
   ? requestIdleCallback 
   : requestIdleCallbackPolyfill;
 
-// Critical resource hints
+// Critical resource hints for faster loading
 const CRITICAL_RESOURCES = [
   'https://fonts.googleapis.com',
-  'https://fonts.gstatic.com'
+  'https://fonts.gstatic.com',
+  'https://www.google-analytics.com'
 ];
 
-// Optimized image lazy loading
+// Preconnect to critical domains
+const PRECONNECT_DOMAINS = [
+  'https://fonts.googleapis.com',
+  'https://fonts.gstatic.com',
+  'https://www.googletagmanager.com'
+];
+
+// Enhanced image lazy loading with intersection observer
 let imageObserver: IntersectionObserver | null = null;
 
 export const initImageLazyLoading = () => {
@@ -32,53 +40,109 @@ export const initImageLazyLoading = () => {
     return;
   }
 
-  if (imageObserver) return; // Prevent multiple observers
+  if (imageObserver) return;
 
   imageObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         const img = entry.target as HTMLImageElement;
         if (img.dataset.src) {
-          img.src = img.dataset.src;
-          img.removeAttribute('data-src');
+          // Use requestAnimationFrame for smoother loading
+          requestAnimationFrame(() => {
+            img.src = img.dataset.src!;
+            img.removeAttribute('data-src');
+            img.classList.add('loaded');
+          });
           imageObserver?.unobserve(img);
         }
       }
     });
   }, {
-    rootMargin: '50px', // Start loading 50px before entering viewport
+    rootMargin: '50px',
     threshold: 0.1
   });
 
-  // Observe all images with data-src attribute
+  // Observe all lazy images
   document.querySelectorAll('img[data-src]').forEach((img) => {
     imageObserver?.observe(img);
   });
 };
 
-// Preload critical resources
+// Preload critical resources with performance hints
 export const preloadCriticalResources = () => {
   if (typeof document === 'undefined') return;
 
+  const fragment = document.createDocumentFragment();
+
+  // Add preconnect links
+  PRECONNECT_DOMAINS.forEach((domain) => {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = domain;
+    link.crossOrigin = 'anonymous';
+    fragment.appendChild(link);
+  });
+
+  // Add DNS prefetch for other resources
   CRITICAL_RESOURCES.forEach((url) => {
     const link = document.createElement('link');
     link.rel = 'dns-prefetch';
     link.href = url;
-    document.head.appendChild(link);
+    fragment.appendChild(link);
   });
+
+  document.head.appendChild(fragment);
 };
 
-// Batch resource hints to avoid blocking
-const addResourceHints = (resources: string[]) => {
+// Optimized resource prefetching
+const prefetchResources = (resources: string[]) => {
   safeRequestIdleCallback(() => {
     const fragment = document.createDocumentFragment();
     resources.forEach((href) => {
       const link = document.createElement('link');
       link.rel = 'prefetch';
       link.href = href;
+      link.as = 'document';
       fragment.appendChild(link);
     });
     document.head.appendChild(fragment);
+  });
+};
+
+// Enhanced font loading optimization
+export const optimizeFontLoading = () => {
+  if (typeof document === 'undefined') return;
+
+  // Preload critical fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'preload';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+  fontLink.as = 'style';
+  fontLink.onload = () => {
+    const styleLink = document.createElement('link');
+    styleLink.rel = 'stylesheet';
+    styleLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+    document.head.appendChild(styleLink);
+  };
+  document.head.appendChild(fontLink);
+};
+
+// Service worker registration for caching
+export const registerServiceWorker = () => {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('SW registered: ', registration);
+        }
+      })
+      .catch((registrationError) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('SW registration failed: ', registrationError);
+        }
+      });
   });
 };
 
@@ -86,38 +150,63 @@ const addResourceHints = (resources: string[]) => {
 export const initPerformanceOptimizations = () => {
   if (typeof window === 'undefined') return;
 
-  // Add critical resource hints immediately
+  // Immediate optimizations
   preloadCriticalResources();
-  
-  // Initialize lazy loading when idle
+  optimizeFontLoading();
+
+  // Deferred optimizations
   safeRequestIdleCallback(() => {
     initImageLazyLoading();
+    registerServiceWorker();
   });
-  
-  // Prefetch common routes when idle
-  const commonRoutes = ['/about', '/services', '/contact'];
-  addResourceHints(commonRoutes);
+
+  // Prefetch important routes
+  const importantRoutes = ['/about', '/services', '/contact', '/real-estate', '/ecommerce'];
+  prefetchResources(importantRoutes);
 };
 
-// Simplified web vitals tracking
+// Enhanced web vitals tracking
 export const trackWebVitals = () => {
   if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return;
 
   try {
-    // Track only essential metrics
-    const observer = new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry) => {
+    // Track LCP
+    const lcpObserver = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry: any) => {
         if (process.env.NODE_ENV === 'development') {
-          console.log(`${entry.entryType}:`, entry.duration || entry.startTime);
+          console.log('LCP:', entry.startTime);
         }
       });
     });
-    
-    observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input'] });
+    lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+
+    // Track FID
+    const fidObserver = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry: any) => {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('FID:', entry.processingStart - entry.startTime);
+        }
+      });
+    });
+    fidObserver.observe({ entryTypes: ['first-input'] });
+
+    // Track CLS
+    let clsValue = 0;
+    const clsObserver = new PerformanceObserver((list) => {
+      list.getEntries().forEach((entry: any) => {
+        if (!entry.hadRecentInput) {
+          clsValue += entry.value;
+          if (process.env.NODE_ENV === 'development') {
+            console.log('CLS:', clsValue);
+          }
+        }
+      });
+    });
+    clsObserver.observe({ entryTypes: ['layout-shift'] });
+
   } catch (error) {
-    // Silently fail in production
     if (process.env.NODE_ENV === 'development') {
-      console.warn('Performance observer not supported:', error);
+      console.warn('Performance observer error:', error);
     }
   }
 };

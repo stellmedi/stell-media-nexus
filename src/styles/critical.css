@@ -1,7 +1,7 @@
 
-/* Critical CSS - loaded inline for LCP optimization and layout shift prevention */
+/* Critical CSS - optimized for LCP and layout shift prevention */
 
-/* Essential base styles for immediate rendering */
+/* Essential base styles with optimized font loading */
 * {
   margin: 0;
   padding: 0;
@@ -10,8 +10,11 @@
 
 html {
   scroll-behavior: smooth;
-  /* Reserve space for scrollbar */
   scrollbar-gutter: stable;
+  /* Optimize font rendering */
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -19,12 +22,12 @@ body {
   line-height: 1.6;
   color: #1f2937;
   background: #fefefe;
-  /* Prevent FOIT/FOUT */
   font-display: swap;
-  /* REMOVED: visibility: hidden and fonts-loaded logic that was breaking the page */
+  /* Prevent flash of invisible text */
+  font-optical-sizing: auto;
 }
 
-/* Critical navigation styles with fixed dimensions */
+/* Optimized navigation with GPU acceleration */
 .navbar {
   position: sticky;
   top: 0;
@@ -32,11 +35,13 @@ body {
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid #e5e7eb;
-  height: 64px; /* Fixed height to prevent layout shift */
+  height: 64px;
   contain: layout style paint;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
-/* Hero section optimization for LCP with reserved space */
+/* Hero section with optimized rendering */
 .hero-section {
   background: linear-gradient(135deg, #f8faff 0%, #f1f5f9 100%);
   min-height: 90vh;
@@ -44,12 +49,11 @@ body {
   align-items: center;
   position: relative;
   contain: layout style paint;
-  /* Reserve space to prevent layout shift */
   width: 100%;
-  aspect-ratio: 16/9;
+  transform: translateZ(0);
 }
 
-/* Essential button styles with consistent sizing */
+/* Optimized button with hardware acceleration */
 .btn-primary {
   background: #4f46e5;
   color: white;
@@ -57,14 +61,14 @@ body {
   border-radius: 0.5rem;
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  transform: translateZ(0); /* Enable hardware acceleration */
-  /* Fixed dimensions to prevent layout shift */
+  transition: background-color 0.15s ease;
+  transform: translateZ(0);
   min-width: 120px;
   height: 44px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  will-change: background-color;
 }
 
 .btn-primary:hover {
@@ -76,14 +80,14 @@ body {
   outline-offset: 2px;
 }
 
-/* Loading states optimization with reserved space */
+/* Optimized loading skeleton */
 .loading-skeleton {
   background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
   background-size: 200% 100%;
-  animation: loading 1.5s infinite;
-  /* Reserve space to prevent shift */
+  animation: loading 1s infinite;
   min-height: 20px;
   width: 100%;
+  contain: strict;
 }
 
 @keyframes loading {
@@ -91,38 +95,36 @@ body {
   100% { background-position: -200% 0; }
 }
 
-/* Typography optimization with consistent spacing */
+/* Typography with optimal spacing */
 h1, h2, h3 {
   font-weight: 700;
   line-height: 1.2;
-  /* Reserve space for text to prevent layout shift */
   min-height: 1.2em;
+  contain: layout;
 }
 
 h1 {
   font-size: clamp(2rem, 5vw, 4rem);
 }
 
-/* Image containers with aspect ratio preservation */
+/* Optimized image handling */
 img {
-  /* Prevent layout shift from images */
   height: auto;
   max-width: 100%;
   vertical-align: middle;
+  contain: layout;
 }
 
 img:not([width]):not([height]) {
-  /* Reserve space for images without dimensions */
   aspect-ratio: 16/9;
   object-fit: cover;
 }
 
-/* Essential responsive utilities with fixed breakpoints */
+/* Mobile optimizations */
 @media (max-width: 768px) {
   .hero-section {
     min-height: 70vh;
     padding: 2rem 1rem;
-    aspect-ratio: 4/3;
   }
   
   h1 {
@@ -130,13 +132,24 @@ img:not([width]):not([height]) {
   }
   
   .navbar {
-    height: 56px; /* Smaller on mobile */
+    height: 56px;
+  }
+  
+  /* Optimize touch targets */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Prevent iOS zoom on form inputs */
+  input, textarea, select {
+    font-size: 16px !important;
   }
 }
 
 /* Accessibility improvements */
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -144,20 +157,7 @@ img:not([width]):not([height]) {
   }
 }
 
-/* Focus management */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Skip link for accessibility with fixed positioning */
+/* Skip link for accessibility */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -177,15 +177,15 @@ img:not([width]):not([height]) {
   top: 6px;
 }
 
-/* Layout shift prevention utilities */
+/* Performance utilities */
 .prevent-shift {
   contain: layout;
   will-change: auto;
 }
 
-.reserve-space {
-  min-height: var(--reserved-height, 200px);
-  min-width: var(--reserved-width, 100%);
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 /* Container queries for better responsive design */
