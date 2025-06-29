@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
@@ -22,11 +23,11 @@ const EnhancedTestimonials = () => {
       results: "Complete marketing transformation & modernization"
     },
     {
-      name: "Adarsh",
+      name: "Adarsh Mehta",
       title: "CEO",
-      company: "Testbee (Cologne, Germany)",
+      company: "Testbee.com (Cologne, Germany)",
       rating: 5,
-      text: "Their digital transformation services for customer acquisition and lead generation have been truly impactful. The team's expertise has significantly contributed to our growth and marketing efficiency.",
+      text: "Stell Media's digital transformation services for customer acquisition and lead generation have been truly impactful. The team's expertise has significantly contributed to our growth and marketing efficiency.",
       results: "Significant growth & marketing efficiency"
     },
     // E-commerce (Global) Examples
