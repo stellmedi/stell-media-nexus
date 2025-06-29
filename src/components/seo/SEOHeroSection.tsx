@@ -57,7 +57,7 @@ const SEOHeroSection = () => {
                     </div>
                     
                     {/* Abstract chart */}
-                    <svg className="absolute bottom-0 left-0 hidden sm:block" width="100%" height="100" viewBox="0 0 300 100" preserveAspectRatio="none">
+                    <svg className="absolute bottom-0 left-0 hidden sm:block w-full h-[100px]" viewBox="0 0 300 100" preserveAspectRatio="none">
                       <path d="M0,80 C30,70 60,90 90,70 C120,50 150,70 180,50 C210,30 240,50 270,30 C285,20 300,10 300,10 L300,100 L0,100 Z" 
                         fill="url(#blue-gradient)" opacity="0.2" />
                       <defs>
@@ -71,7 +71,7 @@ const SEOHeroSection = () => {
                     {/* Growth indicator */}
                     <div className="absolute top-2 right-2 flex items-center justify-center">
                       <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" md:width="20" md:height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-indigo-600">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4 md:w-5 md:h-5 text-indigo-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                           <path d="M23 6l-9.5 9.5-5-5L1 18" />
                           <path d="M17 6h6v6" />
                         </svg>
