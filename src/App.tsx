@@ -20,6 +20,9 @@ import ServiceProductDiscoveryPage from './pages/services/ProductDiscovery';
 import ServiceDataEnrichmentPage from './pages/services/DataEnrichment';
 import ServiceSEMPage from './pages/services/SEM';
 import ServiceConversionOptimizationPage from './pages/services/ConversionOptimization';
+import LeadGeneration from './pages/services/LeadGeneration';
+import ThreeDVisualization from './pages/services/ThreeDVisualization';
+import CRMLeadManagement from './pages/services/CRMLeadManagement';
 import RealEstatePage from './pages/RealEstate';
 import ECommercePage from './pages/ECommerce';
 import ConsultationPage from './pages/Consultation';
@@ -60,6 +63,9 @@ function App() {
                 <Route path="/services/data-enrichment" element={<ServiceDataEnrichmentPage />} />
                 <Route path="/services/sem" element={<ServiceSEMPage />} />
                 <Route path="/services/conversion-optimization" element={<ServiceConversionOptimizationPage />} />
+                <Route path="/services/lead-generation" element={<LeadGeneration />} />
+                <Route path="/services/3d-visualization" element={<ThreeDVisualization />} />
+                <Route path="/services/crm-lead-management" element={<CRMLeadManagement />} />
                 <Route path="/real-estate" element={<RealEstatePage />} />
                 <Route path="/ecommerce" element={<ECommercePage />} />
                 <Route path="/consultation" element={<ConsultationPage />} />
