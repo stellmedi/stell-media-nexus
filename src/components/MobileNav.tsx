@@ -1,8 +1,7 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronRight, Building, ShoppingCart, Camera, Box, Users, Target, Search, Database, BarChart, Zap } from "lucide-react";
+import { ChevronDown, ChevronRight, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MobileNavProps {
@@ -14,10 +13,12 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   const [servicesOpen, setServicesOpen] = useState(false);
 
   const realEstateServices = [
-    { title: "Virtual Tours & Photography", href: "/real-estate", icon: <Camera className="h-4 w-4" /> },
-    { title: "3D Visualization", href: "/real-estate", icon: <Box className="h-4 w-4" /> },
-    { title: "CRM & Lead Management", href: "/real-estate", icon: <Users className="h-4 w-4" /> },
-    { title: "Lead Generation", href: "/real-estate", icon: <Target className="h-4 w-4" /> }
+    { title: "Lead Generation & Marketing", href: "/services/lead-generation", icon: <Target className="h-4 w-4" /> },
+    { title: "Performance Marketing", href: "/services/sem", icon: <TrendingUp className="h-4 w-4" /> },
+    { title: "SEO & Content Strategy", href: "/services/seo", icon: <Search className="h-4 w-4" /> },
+    { title: "Creative & Branding", href: "/contact", icon: <Palette className="h-4 w-4" /> },
+    { title: "3D Animation & Visualization", href: "/services/3d-visualization", icon: <Box className="h-4 w-4" /> },
+    { title: "CRM & Lead Management", href: "/services/crm-lead-management", icon: <Users className="h-4 w-4" /> }
   ];
 
   const ecommerceServices = [

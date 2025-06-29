@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, ChevronDown, Building, ShoppingCart, Camera, Box, Users, Target, Search, Database, BarChart, Zap } from "lucide-react";
+import { Menu, X, ChevronDown, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users, Database, BarChart, Zap } from "lucide-react";
 import MobileNav from "./MobileNav";
 import {
   NavigationMenu,
@@ -30,28 +29,40 @@ const Navbar = () => {
 
   const realEstateServices = [
     {
-      title: "Virtual Tours & Photography",
-      href: "/real-estate",
-      description: "360° virtual tours and professional photography",
-      icon: <Camera className="h-4 w-4" />
+      title: "Lead Generation & Marketing",
+      href: "/services/lead-generation",
+      description: "Automated lead generation campaigns and comprehensive digital marketing strategies",
+      icon: <Target className="h-4 w-4" />
     },
     {
-      title: "3D Visualization",
-      href: "/real-estate",
+      title: "Performance Marketing",
+      href: "/services/sem",
+      description: "Data-driven performance marketing campaigns designed to maximize ROI",
+      icon: <TrendingUp className="h-4 w-4" />
+    },
+    {
+      title: "SEO & Content Strategy",
+      href: "/services/seo",
+      description: "Drive organic traffic with strategic SEO and compelling content",
+      icon: <Search className="h-4 w-4" />
+    },
+    {
+      title: "Creative & Branding",
+      href: "/contact",
+      description: "Complete brand development and visual identity solutions",
+      icon: <Palette className="h-4 w-4" />
+    },
+    {
+      title: "3D Animation & Visualization",
+      href: "/services/3d-visualization",
       description: "Stunning 3D animations and architectural visualization",
       icon: <Box className="h-4 w-4" />
     },
     {
       title: "CRM & Lead Management",
-      href: "/real-estate",
+      href: "/services/crm-lead-management",
       description: "Complete customer relationship management systems",
       icon: <Users className="h-4 w-4" />
-    },
-    {
-      title: "Lead Generation",
-      href: "/real-estate",
-      description: "Automated lead generation and marketing campaigns",
-      icon: <Target className="h-4 w-4" />
     }
   ];
 
