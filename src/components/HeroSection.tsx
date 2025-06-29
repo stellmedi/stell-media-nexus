@@ -6,15 +6,17 @@ import { Link } from "react-router-dom";
 import { usePageContent } from "@/hooks/usePageContent";
 
 const HeroSection = () => {
+  console.log('🦸 HeroSection: Component rendering');
+  
   const { getSection, isLoading, error } = usePageContent('/');
   
   useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🦸 HeroSection: Component mounted');
-    }
-  }, []);
+    console.log('🦸 HeroSection: Component mounted');
+    console.log('🦸 HeroSection: isLoading:', isLoading, 'error:', error);
+  }, [isLoading, error]);
   
   const handleWhatsAppClick = () => {
+    console.log('📱 HeroSection: WhatsApp button clicked');
     const phoneNumber = "919877100369";
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
@@ -22,10 +24,14 @@ const HeroSection = () => {
 
   // Get hero content from database
   const heroSection = getSection('hero');
+  console.log('🦸 HeroSection: heroSection from database:', heroSection);
   
   // Fallback content if database content is not available
   const heroTitle = heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
   const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
+
+  console.log('🦸 HeroSection: Using heroTitle:', heroTitle);
+  console.log('🦸 HeroSection: Using heroSubtitle:', heroSubtitle);
 
   return (
     <section className="relative min-h-[70vh] md:min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">

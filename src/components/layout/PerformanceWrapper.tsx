@@ -8,16 +8,20 @@ interface PerformanceWrapperProps {
 }
 
 const PerformanceWrapper: React.FC<PerformanceWrapperProps> = ({ children }) => {
+  console.log('🚀 PerformanceWrapper: Component rendering');
+  
   useEffect(() => {
+    console.log('🔄 PerformanceWrapper: Initializing performance optimizations');
     try {
       initPerformanceOptimizations();
+      console.log('✅ PerformanceWrapper: Performance optimizations initialized');
     } catch (error) {
-      if (process.env.NODE_ENV === 'development') {
-        console.warn('Performance optimizations failed:', error);
-      }
+      console.warn('⚠️ PerformanceWrapper: Performance optimizations failed:', error);
     }
   }, []);
 
+  console.log('🔄 PerformanceWrapper: Rendering children with ErrorBoundary');
+  
   return (
     <ErrorBoundary>
       {children}

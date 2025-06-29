@@ -1,212 +1,140 @@
-
-// Enhanced performance optimization utilities
-
-// Optimized requestIdleCallback polyfill
-const requestIdleCallbackPolyfill = (callback: IdleRequestCallback) => {
-  const start = Date.now();
-  return setTimeout(() => {
-    callback({
-      didTimeout: false,
-      timeRemaining() {
-        return Math.max(0, 50 - (Date.now() - start));
-      },
-    });
-  }, 1);
-};
-
-const safeRequestIdleCallback = typeof requestIdleCallback !== 'undefined' 
-  ? requestIdleCallback 
-  : requestIdleCallbackPolyfill;
-
-// Critical resource hints for faster loading
-const CRITICAL_RESOURCES = [
-  'https://fonts.googleapis.com',
-  'https://fonts.gstatic.com',
-  'https://www.google-analytics.com'
-];
-
-// Preconnect to critical domains
-const PRECONNECT_DOMAINS = [
-  'https://fonts.googleapis.com',
-  'https://fonts.gstatic.com',
-  'https://www.googletagmanager.com'
-];
-
-// Enhanced image lazy loading with intersection observer
-let imageObserver: IntersectionObserver | null = null;
-
-export const initImageLazyLoading = () => {
-  if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
-    return;
-  }
-
-  if (imageObserver) return;
-
-  imageObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const img = entry.target as HTMLImageElement;
-        if (img.dataset.src) {
-          // Use requestAnimationFrame for smoother loading
-          requestAnimationFrame(() => {
-            img.src = img.dataset.src!;
-            img.removeAttribute('data-src');
-            img.classList.add('loaded');
-          });
-          imageObserver?.unobserve(img);
-        }
-      }
-    });
-  }, {
-    rootMargin: '50px',
-    threshold: 0.1
-  });
-
-  // Observe all lazy images
-  document.querySelectorAll('img[data-src]').forEach((img) => {
-    imageObserver?.observe(img);
-  });
-};
-
-// Preload critical resources with performance hints
-export const preloadCriticalResources = () => {
-  if (typeof document === 'undefined') return;
-
-  const fragment = document.createDocumentFragment();
-
-  // Add preconnect links
-  PRECONNECT_DOMAINS.forEach((domain) => {
-    const link = document.createElement('link');
-    link.rel = 'preconnect';
-    link.href = domain;
-    link.crossOrigin = 'anonymous';
-    fragment.appendChild(link);
-  });
-
-  // Add DNS prefetch for other resources
-  CRITICAL_RESOURCES.forEach((url) => {
-    const link = document.createElement('link');
-    link.rel = 'dns-prefetch';
-    link.href = url;
-    fragment.appendChild(link);
-  });
-
-  document.head.appendChild(fragment);
-};
-
-// Optimized resource prefetching
-const prefetchResources = (resources: string[]) => {
-  safeRequestIdleCallback(() => {
-    const fragment = document.createDocumentFragment();
-    resources.forEach((href) => {
-      const link = document.createElement('link');
-      link.rel = 'prefetch';
-      link.href = href;
-      link.as = 'document';
-      fragment.appendChild(link);
-    });
-    document.head.appendChild(fragment);
-  });
-};
-
-// Enhanced font loading optimization
-export const optimizeFontLoading = () => {
-  if (typeof document === 'undefined') return;
-
-  // Preload critical fonts
-  const fontLink = document.createElement('link');
-  fontLink.rel = 'preload';
-  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
-  fontLink.as = 'style';
-  fontLink.onload = () => {
-    const styleLink = document.createElement('link');
-    styleLink.rel = 'stylesheet';
-    styleLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
-    document.head.appendChild(styleLink);
-  };
-  document.head.appendChild(fontLink);
-};
-
-// Service worker registration for caching
-export const registerServiceWorker = () => {
-  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
-
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then((registration) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('SW registered: ', registration);
-        }
-      })
-      .catch((registrationError) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('SW registration failed: ', registrationError);
-        }
-      });
-  });
-};
-
-// Initialize all performance optimizations
 export const initPerformanceOptimizations = () => {
-  if (typeof window === 'undefined') return;
-
-  // Immediate optimizations
-  preloadCriticalResources();
-  optimizeFontLoading();
-
-  // Deferred optimizations
-  safeRequestIdleCallback(() => {
-    initImageLazyLoading();
-    registerServiceWorker();
-  });
-
-  // Prefetch important routes
-  const importantRoutes = ['/about', '/services', '/contact', '/real-estate', '/ecommerce'];
-  prefetchResources(importantRoutes);
+  console.log('⚡ Performance: Initializing optimizations');
+  
+  try {
+    // Preload critical resources
+    if (typeof document !== 'undefined') {
+      console.log('⚡ Performance: Document available, setting up optimizations');
+      
+      // Preload critical fonts
+      const fontLink = document.createElement('link');
+      fontLink.rel = 'preload';
+      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+      fontLink.as = 'style';
+      fontLink.crossOrigin = 'anonymous';
+      document.head.appendChild(fontLink);
+      
+      // Optimize images with lazy loading
+      const images = document.querySelectorAll('img[data-src]');
+      if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const img = entry.target as HTMLImageElement;
+              img.src = img.dataset.src || '';
+              img.classList.remove('lazy');
+              observer.unobserve(img);
+            }
+          });
+        });
+        
+        images.forEach(img => imageObserver.observe(img));
+      }
+      
+      // Prefetch critical routes
+      const criticalRoutes = ['/services', '/contact', '/about'];
+      criticalRoutes.forEach(route => {
+        const link = document.createElement('link');
+        link.rel = 'prefetch';
+        link.href = route;
+        document.head.appendChild(link);
+      });
+      
+      // Enable passive event listeners for better scroll performance
+      const passiveEvents = ['touchstart', 'touchmove', 'wheel'];
+      passiveEvents.forEach(event => {
+        document.addEventListener(event, () => {}, { passive: true });
+      });
+      
+      // Optimize third-party scripts
+      if (window.gtag) {
+        window.gtag('config', 'GA_MEASUREMENT_ID', {
+          page_title: document.title,
+          page_location: window.location.href
+        });
+      }
+      
+      // Service Worker registration for caching
+      if ('serviceWorker' in navigator && process.env.NODE_ENV === 'production') {
+        navigator.serviceWorker.register('/sw.js')
+          .then(registration => {
+            console.log('⚡ Performance: Service Worker registered:', registration);
+          })
+          .catch(error => {
+            console.warn('⚡ Performance: Service Worker registration failed:', error);
+          });
+      }
+      
+      // Memory management
+      const cleanupUnusedResources = () => {
+        // Remove unused event listeners
+        const unusedElements = document.querySelectorAll('[data-cleanup]');
+        unusedElements.forEach(element => {
+          element.removeEventListener('click', () => {});
+        });
+        
+        // Clear unused timers
+        if (window.performanceTimers) {
+          window.performanceTimers.forEach(timer => clearTimeout(timer));
+          window.performanceTimers = [];
+        }
+      };
+      
+      // Schedule cleanup on page unload
+      window.addEventListener('beforeunload', cleanupUnusedResources);
+      
+      // Performance monitoring
+      if ('performance' in window) {
+        window.addEventListener('load', () => {
+          setTimeout(() => {
+            const perfData = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming;
+            console.log('⚡ Performance: Page load metrics:', {
+              domContentLoaded: perfData.domContentLoadedEventEnd - perfData.domContentLoadedEventStart,
+              loadComplete: perfData.loadEventEnd - perfData.loadEventStart,
+              firstPaint: performance.getEntriesByName('first-paint')[0]?.startTime,
+              firstContentfulPaint: performance.getEntriesByName('first-contentful-paint')[0]?.startTime
+            });
+          }, 0);
+        });
+      }
+    }
+    
+    console.log('✅ Performance: Optimizations completed');
+  } catch (error) {
+    console.error('❌ Performance: Error during optimization:', error);
+    throw error;
+  }
 };
 
-// Enhanced web vitals tracking
-export const trackWebVitals = () => {
-  if (typeof window === 'undefined' || !('PerformanceObserver' in window)) return;
+// Utility function to measure component render time
+export const measureRenderTime = (componentName: string, renderFn: () => void) => {
+  const startTime = performance.now();
+  renderFn();
+  const endTime = performance.now();
+  console.log(`⚡ Performance: ${componentName} render time: ${endTime - startTime}ms`);
+};
 
-  try {
-    // Track LCP
-    const lcpObserver = new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry: any) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('LCP:', entry.startTime);
-        }
-      });
-    });
-    lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+// Debounce utility for performance-sensitive operations
+export const debounce = (func: Function, wait: number) => {
+  let timeout: NodeJS.Timeout;
+  return function executedFunction(...args: any[]) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+};
 
-    // Track FID
-    const fidObserver = new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry: any) => {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('FID:', entry.processingStart - entry.startTime);
-        }
-      });
-    });
-    fidObserver.observe({ entryTypes: ['first-input'] });
-
-    // Track CLS
-    let clsValue = 0;
-    const clsObserver = new PerformanceObserver((list) => {
-      list.getEntries().forEach((entry: any) => {
-        if (!entry.hadRecentInput) {
-          clsValue += entry.value;
-          if (process.env.NODE_ENV === 'development') {
-            console.log('CLS:', clsValue);
-          }
-        }
-      });
-    });
-    clsObserver.observe({ entryTypes: ['layout-shift'] });
-
-  } catch (error) {
-    if (process.env.NODE_ENV === 'development') {
-      console.warn('Performance observer error:', error);
+// Throttle utility for scroll and resize events
+export const throttle = (func: Function, limit: number) => {
+  let inThrottle: boolean;
+  return function executedFunction(...args: any[]) {
+    if (!inThrottle) {
+      func.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => inThrottle = false, limit);
     }
-  }
+  };
 };
