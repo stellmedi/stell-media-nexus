@@ -64,27 +64,29 @@ const HeroSection = () => {
           </p>
           
           {/* Value propositions */}
-          <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4 md:gap-6 mb-8 md:mb-10 px-2">
-            <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
+          <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-center gap-3 md:gap-6 mb-8 md:mb-10 px-2">
+            <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base">18+ Years of Digital Leadership</span>
+              <span className="font-medium text-sm md:text-base whitespace-nowrap">18+ Years of Digital Leadership</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
+            <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base">Growth Backed by Data & Automation</span>
+              <span className="font-medium text-sm md:text-base whitespace-nowrap">Growth Backed by Data & Automation</span>
             </div>
-            <div className="flex items-center gap-2 text-gray-700 justify-center sm:justify-start">
+            <div className="flex items-center gap-2 text-gray-700">
               <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base">Niche Experts in Real Estate & eCommerce</span>
+              <span className="font-medium text-sm md:text-base whitespace-nowrap">Niche Experts in Real Estate & eCommerce</span>
             </div>
           </div>
           
-          {/* Enhanced Services Navigation */}
+          {/* Enhanced Services Navigation - FIXED: Equal height boxes */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10 max-w-2xl mx-auto px-2">
             <Link to="/real-estate" className="group">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <h3 className="text-lg md:text-xl font-bold mb-2">Real Estate Solutions</h3>
-                <p className="text-blue-100 text-sm md:text-base">CRM automation, lead generation & virtual tours</p>
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg md:text-xl font-bold mb-2">Real Estate Solutions</h3>
+                  <p className="text-blue-100 text-sm md:text-base leading-relaxed">CRM automation, lead generation & virtual tours for property developers</p>
+                </div>
                 <div className="mt-4 flex items-center text-blue-200 group-hover:text-white">
                   <span className="text-sm">Explore Services</span>
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -92,9 +94,11 @@ const HeroSection = () => {
               </div>
             </Link>
             <Link to="/ecommerce" className="group">
-              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <h3 className="text-lg md:text-xl font-bold mb-2">eCommerce Solutions</h3>
-                <p className="text-purple-100 text-sm md:text-base">Product discovery, catalog SEO & performance marketing</p>
+              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between">
+                <div>
+                  <h3 className="text-lg md:text-xl font-bold mb-2">eCommerce Solutions</h3>
+                  <p className="text-purple-100 text-sm md:text-base leading-relaxed">Product discovery, catalog SEO & performance marketing for online stores</p>
+                </div>
                 <div className="mt-4 flex items-center text-purple-200 group-hover:text-white">
                   <span className="text-sm">Explore Services</span>
                   <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -105,7 +109,7 @@ const HeroSection = () => {
           
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-2">
-            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto min-h-[44px]">
               <Link to="/consultation">
                 Talk to Us
                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
@@ -115,7 +119,7 @@ const HeroSection = () => {
               onClick={handleWhatsAppClick}
               variant="outline" 
               size="lg" 
-              className="border-2 border-green-500 hover:border-green-600 text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg transition-all duration-300 w-full sm:w-auto"
+              className="border-2 border-green-500 hover:border-green-600 text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg transition-all duration-300 w-full sm:w-auto min-h-[44px]"
             >
               <MessageCircle className="mr-2 h-4 w-4 md:h-5 md:w-5" />
               WhatsApp Us

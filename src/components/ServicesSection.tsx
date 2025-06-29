@@ -72,17 +72,17 @@ const ServicesSection = () => {
   ];
 
   return (
-    <section className="py-16 bg-gray-50" id="services">
+    <section className="py-12 md:py-16 bg-gray-50" id="services">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+        <div className="text-center mb-8 md:mb-12">
+          <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold mb-4 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
             {isLoading ? (
               <span className="animate-pulse bg-gray-200 rounded h-8 w-1/2 mx-auto block"></span>
             ) : (
               sectionTitle
             )}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-600 max-w-3xl mx-auto px-2">
             {isLoading ? (
               <span className="animate-pulse bg-gray-200 rounded h-6 w-3/4 mx-auto block"></span>
             ) : (
@@ -91,22 +91,23 @@ const ServicesSection = () => {
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* FIXED: Better mobile grid layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {services.map((service, index) => (
-            <Card key={index} className={`group hover:shadow-xl transition-all duration-300 border-2 ${service.borderColor} bg-white/80 backdrop-blur-sm hover:bg-white`}>
-              <CardHeader className="text-center pb-4">
+            <Card key={index} className={`group hover:shadow-xl transition-all duration-300 border-2 ${service.borderColor} bg-white/80 backdrop-blur-sm hover:bg-white h-full flex flex-col`}>
+              <CardHeader className="text-center pb-4 flex-shrink-0">
                 <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${service.gradient} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
                   <service.icon className="h-8 w-8 text-white" />
                 </div>
-                <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
+                <CardTitle className="text-lg md:text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors">
                   {service.title}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-center">
-                <CardDescription className="text-gray-600 mb-6 leading-relaxed">
+              <CardContent className="text-center flex-grow flex flex-col justify-between">
+                <CardDescription className="text-gray-600 mb-6 leading-relaxed flex-grow">
                   {service.description}
                 </CardDescription>
-                <Button asChild variant="outline" className="group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-300">
+                <Button asChild variant="outline" className="group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-300 w-full min-h-[44px]">
                   <Link to={service.link}>
                     Learn More <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                   </Link>
