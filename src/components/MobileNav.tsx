@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronRight, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users } from "lucide-react";
+import { ChevronDown, ChevronRight, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users, Database, BarChart, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MobileNavProps {
