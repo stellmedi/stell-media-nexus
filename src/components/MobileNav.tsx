@@ -52,8 +52,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   return (
     <div className="fixed inset-0 z-40 lg:hidden">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-      <div className="fixed top-0 right-0 h-full w-80 bg-white/98 backdrop-blur-md shadow-xl overflow-y-auto border-l border-gray-200/50">
-        <div className="p-6 border-b border-gray-100">
+      <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
+        <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
               <span className="text-white font-bold text-sm">S</span>
@@ -69,10 +69,10 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           <div>
             <button
               onClick={handleServicesToggle}
-              className="flex items-center justify-between w-full text-left text-gray-600 hover:text-blue-600 font-medium transition-colors p-2 rounded-md hover:bg-blue-50/80"
+              className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium transition-colors"
             >
               Services
-              <ChevronDown className={cn("h-4 w-4 transition-transform text-gray-500", servicesOpen && "rotate-180")} />
+              <ChevronDown className={cn("h-4 w-4 transition-transform", servicesOpen && "rotate-180")} />
             </button>
             
             {servicesOpen && (
@@ -83,7 +83,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                     <div className="w-6 h-6 bg-gradient-to-r from-blue-500 to-indigo-600 rounded flex items-center justify-center">
                       <Building className="h-3 w-3 text-white" />
                     </div>
-                    <span className="font-semibold text-gray-700 text-sm">Real Estate</span>
+                    <span className="font-semibold text-gray-900 text-sm">Real Estate</span>
                   </div>
                   <div className="space-y-2 pl-8">
                     {realEstateServices.map((service) => (
@@ -94,13 +94,11 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         className={cn(
                           "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
                           isActiveRoute(service.href) 
-                            ? "bg-blue-100/80 text-blue-800 font-medium shadow-sm border border-blue-200/50" 
-                            : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/60"
+                            ? "bg-blue-50 text-blue-700 font-medium" 
+                            : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
                         )}
                       >
-                        <span className={cn("transition-colors", isActiveRoute(service.href) ? "text-blue-600" : "text-gray-500")}>
-                          {service.icon}
-                        </span>
+                        {service.icon}
                         {service.title}
                       </Link>
                     ))}
@@ -113,7 +111,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                     <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-indigo-600 rounded flex items-center justify-center">
                       <ShoppingCart className="h-3 w-3 text-white" />
                     </div>
-                    <span className="font-semibold text-gray-700 text-sm">E-commerce</span>
+                    <span className="font-semibold text-gray-900 text-sm">E-commerce</span>
                   </div>
                   <div className="space-y-2 pl-8">
                     {ecommerceServices.map((service) => (
@@ -124,13 +122,11 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         className={cn(
                           "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
                           isActiveRoute(service.href) 
-                            ? "bg-purple-100/80 text-purple-800 font-medium shadow-sm border border-purple-200/50" 
-                            : "text-gray-600 hover:text-purple-600 hover:bg-purple-50/60"
+                            ? "bg-purple-50 text-purple-700 font-medium" 
+                            : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
                         )}
                       >
-                        <span className={cn("transition-colors", isActiveRoute(service.href) ? "text-purple-600" : "text-gray-500")}>
-                          {service.icon}
-                        </span>
+                        {service.icon}
                         {service.title}
                       </Link>
                     ))}
@@ -146,8 +142,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/about") 
-                ? "bg-blue-100/80 text-blue-800 font-semibold shadow-sm border border-blue-200/50" 
-                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/60"
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
             )}
           >
             About
@@ -158,8 +154,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/case-studies") 
-                ? "bg-blue-100/80 text-blue-800 font-semibold shadow-sm border border-blue-200/50" 
-                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/60"
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
             )}
           >
             Case Studies
@@ -170,8 +166,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/faq") 
-                ? "bg-blue-100/80 text-blue-800 font-semibold shadow-sm border border-blue-200/50" 
-                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/60"
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
             )}
           >
             FAQ
@@ -182,14 +178,14 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/contact") 
-                ? "bg-blue-100/80 text-blue-800 font-semibold shadow-sm border border-blue-200/50" 
-                : "text-gray-600 hover:text-blue-600 hover:bg-blue-50/60"
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
             )}
           >
             Contact
           </Link>
           
-          <div className="pt-6 border-t border-gray-100">
+          <div className="pt-6 border-t border-gray-200">
             <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg btn-cta">
               <Link to="/consultation" onClick={handleLinkClick}>Get Started</Link>
             </Button>
