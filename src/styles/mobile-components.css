@@ -26,18 +26,18 @@
     width: 100% !important;
   }
 
-  /* Better card layouts with consistent heights */
+  /* Better card layouts with reasonable heights */
   .card, [class*="card"] { 
     margin-bottom: 1rem; 
     padding: 1rem !important; 
-    min-height: 120px;
+    min-height: 100px !important; /* Reduced from 120px */
     display: flex;
     flex-direction: column;
   }
   
-  /* Services section cards equal height */
+  /* Services section cards with reasonable height */
   .services-card {
-    min-height: 280px !important;
+    min-height: 200px !important; /* Reduced from 280px */
     display: flex !important;
     flex-direction: column !important;
   }

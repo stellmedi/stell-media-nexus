@@ -9,10 +9,16 @@
     max-width: 100% !important;
   }
 
-  /* Improved grid layouts - Force single column */
+  /* Improved grid layouts - More flexible responsive behavior */
   .grid { 
     grid-template-columns: 1fr !important; 
     gap: 1rem !important; 
+  }
+
+  /* Allow 2-column grids for smaller content */
+  .grid-cols-2 {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
 
   /* Footer improvements */
@@ -53,5 +59,16 @@
   .flex-center-mobile {
     justify-content: center !important;
     align-items: center !important;
+  }
+
+  /* Better spacing for content sections */
+  .py-16 {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  .py-20 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
   }
 }

@@ -45,8 +45,8 @@ const ProductDiscovery = () => {
     <div className="min-h-screen bg-white">
       <Navbar />
       <main>
-        {/* Hero Section */}
-        <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+        {/* Hero Section with proper mobile spacing */}
+        <section className="mobile-hero-spacing pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
