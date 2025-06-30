@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const RealEstateHero = () => {
   return (
-    <section className="pt-24 md:pt-32 pb-12 md:pb-20 px-4">
+    <section className="mobile-hero-spacing pt-24 md:pt-32 pb-12 md:pb-20 px-4">
       <div className="container mx-auto max-w-6xl">
         <div className="text-center mb-12 md:mb-16">
           <div className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm text-blue-700 rounded-full text-sm font-semibold mb-4 md:mb-6 shadow-sm">

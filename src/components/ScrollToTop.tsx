@@ -6,15 +6,27 @@ export default function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Always scroll to top on route change
+    // Immediate scroll to top
     window.scrollTo(0, 0);
     
-    // For mobile devices, add extra delay to ensure proper positioning
-    const timeoutId = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 100);
+    // Multiple scroll attempts for mobile reliability
+    const timeouts = [
+      setTimeout(() => window.scrollTo(0, 0), 100),
+      setTimeout(() => window.scrollTo(0, 0), 300),
+      setTimeout(() => window.scrollTo(0, 0), 500)
+    ];
 
-    return () => clearTimeout(timeoutId);
+    // iOS-specific handling for webkit scroll issues
+    if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+      setTimeout(() => {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      }, 100);
+    }
+
+    return () => {
+      timeouts.forEach(timeout => clearTimeout(timeout));
+    };
   }, [pathname]);
 
   return null;

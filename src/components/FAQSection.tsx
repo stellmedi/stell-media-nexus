@@ -26,7 +26,7 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   includeSchemaMeta = true
 }) => {
   return (
-    <div className="mb-16">
+    <div className="mobile-header-spacing mb-16">
       {includeSchemaMeta && <FAQSchemaMarkup items={items.map(item => ({
         question: item.question,
         answer: typeof item.answer === 'string' ? item.answer : 'See our detailed answer'

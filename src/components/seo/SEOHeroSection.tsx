@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const SEOHeroSection = () => {
   return (
-    <section className="pt-24 md:pt-32 pb-12 md:pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden" aria-label="E-commerce SEO Services">
+    <section className="mobile-hero-spacing pt-24 md:pt-32 pb-12 md:pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden" aria-label="E-commerce SEO Services">
       {/* Abstract background elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
