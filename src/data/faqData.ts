@@ -21,3 +21,6 @@ export const faqItems = [
     answer: "For real estate: CRM platforms, marketing automation tools, lead management systems. For e-commerce: Shopify Plus, Magento, WooCommerce, BigCommerce, Elasticsearch, Coveo, and custom solutions. Our strategies are platform-agnostic and focus on results."
   }
 ];
+
+// Export as faqData for backward compatibility
+export const faqData = faqItems;

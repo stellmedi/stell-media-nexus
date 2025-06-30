@@ -1,0 +1,74 @@
+
+/* Mobile-specific styles and spacing */
+
+@media (max-width: 767px) {
+  /* CRITICAL: Mobile header visibility - highest specificity for proper header spacing */
+  .mobile-header-spacing,
+  section.mobile-header-spacing,
+  div.mobile-header-spacing {
+    padding-top: 5rem !important; /* Account for fixed navbar height */
+  }
+  
+  .mobile-hero-spacing,
+  section.mobile-hero-spacing,
+  div.mobile-hero-spacing {
+    padding-top: 6rem !important; /* Extra space for hero sections */
+  }
+  
+  /* Page-specific mobile adjustments with higher specificity */
+  .page-content-mobile {
+    padding-top: 5rem !important;
+    min-height: calc(100vh - 5rem);
+  }
+  
+  /* Service page specific adjustments */
+  .service-page-header {
+    padding-top: 6rem !important;
+    margin-bottom: 2rem !important;
+  }
+  
+  /* Static page adjustments */
+  .static-page-content {
+    padding-top: 5rem !important;
+  }
+  
+  /* Override any conflicting padding-top values */
+  section[class*="pt-"],
+  div[class*="pt-"] {
+    padding-top: inherit !important;
+  }
+  
+  /* Ensure mobile spacing classes always win */
+  .mobile-header-spacing[class*="pt-"],
+  .mobile-hero-spacing[class*="pt-"] {
+    padding-top: 5rem !important;
+  }
+  
+  .mobile-hero-spacing[class*="pt-"] {
+    padding-top: 6rem !important;
+  }
+
+  /* Improved typography */
+  h1 { 
+    font-size: clamp(1.75rem, 6vw, 2.5rem) !important; 
+    line-height: 1.2 !important; 
+    margin-bottom: 1rem !important;
+  }
+  h2 { 
+    font-size: clamp(1.5rem, 5vw, 2rem) !important; 
+    line-height: 1.3 !important; 
+    margin-bottom: 0.875rem !important;
+  }
+  h3 { 
+    font-size: clamp(1.25rem, 4vw, 1.5rem) !important; 
+    line-height: 1.4 !important; 
+    margin-bottom: 0.75rem !important;
+  }
+
+  /* Text content improvements */
+  p, .text-content { 
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 1rem !important;
+  }
+}

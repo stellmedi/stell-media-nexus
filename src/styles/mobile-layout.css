@@ -1,0 +1,57 @@
+
+/* Mobile layout and grid styles */
+
+@media (max-width: 767px) {
+  /* Improved container spacing */
+  .container { 
+    padding-left: 1rem !important; 
+    padding-right: 1rem !important; 
+    max-width: 100% !important;
+  }
+
+  /* Improved grid layouts - Force single column */
+  .grid { 
+    grid-template-columns: 1fr !important; 
+    gap: 1rem !important; 
+  }
+
+  /* Footer improvements */
+  .footer-grid, footer .grid { 
+    grid-template-columns: 1fr !important; 
+    text-align: center !important; 
+    gap: 2rem !important;
+  }
+
+  /* Better image handling */
+  img { 
+    max-width: 100%; 
+    height: auto; 
+    object-fit: cover;
+  }
+
+  /* Table responsiveness */
+  .table-container { 
+    overflow-x: auto; 
+    -webkit-overflow-scrolling: touch;
+  }
+  table { 
+    min-width: 600px; 
+    font-size: 14px;
+  }
+
+  /* Section spacing standardization */
+  section { 
+    padding: 2rem 0 !important; 
+  }
+
+  /* Flex improvements */
+  .flex-col-mobile {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  .flex-center-mobile {
+    justify-content: center !important;
+    align-items: center !important;
+  }
+}

@@ -1,0 +1,41 @@
+
+/* Utility classes and helper styles */
+
+/* Focus improvements for accessibility */
+*:focus {
+  outline: 2px solid #4f46e5 !important;
+  outline-offset: 2px !important;
+  border-radius: 4px;
+}
+
+/* Better scroll behavior */
+html { 
+  scroll-behavior: smooth; 
+}
+
+/* Loading skeleton improvements */
+.loading-skeleton {
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Utility classes for consistent spacing */
+.mobile-px { padding-left: 1rem; padding-right: 1rem; }
+.mobile-py { padding-top: 1rem; padding-bottom: 1rem; }
+.mobile-mb { margin-bottom: 1rem; }
+.mobile-mt { margin-top: 1rem; }
+
+/* Equal height utilities */
+.equal-height { display: flex; flex-direction: column; height: 100%; }
+.equal-height-content { flex-grow: 1; }
+
+/* Touch-friendly spacing */
+.touch-spacing > * + * { margin-top: 1rem; }
+.touch-spacing-sm > * + * { margin-top: 0.5rem; }
