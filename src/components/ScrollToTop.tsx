@@ -1,27 +1,28 @@
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
   const { pathname } = useLocation();
+  const previousPathnameRef = useRef(pathname);
 
   useEffect(() => {
-    // Only scroll to top on actual route changes, not hash or query changes
-    // This prevents unwanted scrolling when interacting with accordions, tabs, etc.
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    };
+    // Only scroll to top on actual route changes, not on component interactions
+    const previousPathname = previousPathnameRef.current;
     
-    // Small delay to ensure DOM is ready, but only one attempt
-    const timeoutId = setTimeout(scrollToTop, 10);
-    
-    // Cleanup function to prevent memory leaks
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [pathname]); // Only trigger on pathname changes (actual route changes)
+    if (pathname !== previousPathname) {
+      // This is a real navigation, scroll to top
+      const scrollToTop = () => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+      };
+      
+      // Small delay to ensure DOM is ready
+      setTimeout(scrollToTop, 50);
+      
+      // Update the ref for next comparison
+      previousPathnameRef.current = pathname;
+    }
+  }, [pathname]);
 
   return null;
 }
