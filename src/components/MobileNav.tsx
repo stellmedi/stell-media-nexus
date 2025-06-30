@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -16,16 +17,16 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
     { title: "Lead Generation & Marketing", href: "/services/lead-generation", icon: <Target className="h-4 w-4" /> },
     { title: "Performance Marketing", href: "/services/sem", icon: <TrendingUp className="h-4 w-4" /> },
     { title: "SEO & Content Strategy", href: "/services/seo", icon: <Search className="h-4 w-4" /> },
-    { title: "Creative & Branding", href: "/contact", icon: <Palette className="h-4 w-4" /> },
+    { title: "Creative & Branding", href: "/services/creative", icon: <Palette className="h-4 w-4" /> },
     { title: "3D Animation & Visualization", href: "/services/3d-visualization", icon: <Box className="h-4 w-4" /> },
     { title: "CRM & Lead Management", href: "/services/crm-lead-management", icon: <Users className="h-4 w-4" /> }
   ];
 
   const ecommerceServices = [
-    { title: "Product Discovery", href: "/ecommerce", icon: <Search className="h-4 w-4" /> },
-    { title: "Catalog SEO", href: "/ecommerce", icon: <Database className="h-4 w-4" /> },
-    { title: "Performance Marketing", href: "/ecommerce", icon: <BarChart className="h-4 w-4" /> },
-    { title: "Conversion Optimization", href: "/ecommerce", icon: <Zap className="h-4 w-4" /> }
+    { title: "Product Discovery", href: "/services/product-discovery", icon: <Search className="h-4 w-4" /> },
+    { title: "Catalog SEO", href: "/services/catalog-seo", icon: <Database className="h-4 w-4" /> },
+    { title: "Performance Marketing", href: "/services/ecommerce-performance-marketing", icon: <BarChart className="h-4 w-4" /> },
+    { title: "Conversion Optimization", href: "/services/conversion-optimization", icon: <Zap className="h-4 w-4" /> }
   ];
 
   const handleLinkClick = () => {

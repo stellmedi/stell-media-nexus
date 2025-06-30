@@ -20,6 +20,16 @@
     margin-bottom: 0.75rem !important;
   }
   
+  /* FIXED: Page header visibility - ensure all page content starts below fixed navbar */
+  main, .main-content, section:first-child {
+    padding-top: 5rem !important; /* Account for fixed navbar height (64px + buffer) */
+  }
+  
+  /* Special handling for hero sections that already have pt- classes */
+  .hero-section, [class*="hero"], section[class*="pt-"] {
+    padding-top: 6rem !important; /* Extra space for hero sections */
+  }
+  
   /* Improved container spacing */
   .container { 
     padding-left: 1rem !important; 
@@ -64,13 +74,6 @@
     min-height: 120px;
     display: flex;
     flex-direction: column;
-  }
-  
-  /* Hero section optimization */
-  .hero-section, [class*="hero"] { 
-    min-height: 70vh !important; 
-    padding: 2rem 1rem !important; 
-    text-align: center !important;
   }
   
   /* Services section cards equal height */
