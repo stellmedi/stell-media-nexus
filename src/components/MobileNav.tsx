@@ -31,7 +31,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   ];
 
   const handleLinkClick = (e: React.MouseEvent) => {
-    // Prevent any unwanted scrolling behavior
+    // Prevent any scroll-related side effects
     e.stopPropagation();
     setIsOpen(false);
     setServicesOpen(false);
@@ -40,6 +40,12 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   const handleServicesToggle = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Prevent any potential navigation behavior
+    if (e.target instanceof HTMLElement) {
+      e.target.blur();
+    }
+    
     setServicesOpen(!servicesOpen);
   };
 
@@ -70,6 +76,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             <button
               onClick={handleServicesToggle}
               className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium transition-colors"
+              type="button"
             >
               Services
               <ChevronDown className={cn("h-4 w-4 transition-transform", servicesOpen && "rotate-180")} />

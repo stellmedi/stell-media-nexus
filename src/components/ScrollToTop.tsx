@@ -1,27 +1,37 @@
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, search, hash } = useLocation();
+  const previousPathnameRef = useRef<string>("");
 
   useEffect(() => {
-    // Only scroll to top on actual route changes, not hash or query changes
-    // This prevents unwanted scrolling when interacting with accordions, tabs, etc.
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    };
+    const currentFullPath = pathname + search;
+    const previousFullPath = previousPathnameRef.current;
     
-    // Small delay to ensure DOM is ready, but only one attempt
-    const timeoutId = setTimeout(scrollToTop, 10);
+    // Only scroll to top if this is a genuine page navigation
+    const isActualPageNavigation = 
+      previousFullPath !== "" && // Not initial load
+      pathname !== previousPathnameRef.current.split('?')[0] && // Different base path
+      !hash; // Not a hash-only change
     
-    // Cleanup function to prevent memory leaks
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [pathname]); // Only trigger on pathname changes (actual route changes)
+    if (isActualPageNavigation) {
+      // Use requestAnimationFrame for smooth, reliable scrolling
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+        
+        // Fallback for older browsers or edge cases
+        if (window.scrollY > 0) {
+          document.documentElement.scrollTop = 0;
+          document.body.scrollTop = 0;
+        }
+      });
+    }
+    
+    // Update the previous pathname reference
+    previousPathnameRef.current = currentFullPath;
+  }, [pathname, search, hash]);
 
   return null;
 }

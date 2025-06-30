@@ -31,11 +31,21 @@ const AccordionTrigger = React.forwardRef<
         className
       )}
       onClick={(e) => {
-        // Prevent any unwanted scrolling behavior on mobile
+        // Prevent any navigation-like behavior that could trigger scroll
+        e.preventDefault();
         e.stopPropagation();
-        if (props.onClick) {
+        
+        // Prevent default accordion behavior temporarily
+        const defaultPrevented = e.defaultPrevented;
+        
+        // Call original onClick if provided
+        if (props.onClick && !defaultPrevented) {
           props.onClick(e);
         }
+      }}
+      onPointerDown={(e) => {
+        // Prevent any pointer events that might interfere with scrolling
+        e.stopPropagation();
       }}
       {...props}
     >
