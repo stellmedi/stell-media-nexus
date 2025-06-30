@@ -32,7 +32,7 @@ const TabsTrigger = React.forwardRef<
       className
     )}
     onClick={(e) => {
-      // Prevent any unwanted navigation behavior
+      // Only prevent event bubbling, allow normal tab functionality
       e.stopPropagation();
       if (props.onClick) {
         props.onClick(e);

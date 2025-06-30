@@ -31,21 +31,13 @@ const AccordionTrigger = React.forwardRef<
         className
       )}
       onClick={(e) => {
-        // Prevent any navigation-like behavior that could trigger scroll
-        e.preventDefault();
+        // Only prevent event bubbling to avoid unwanted scroll behavior
         e.stopPropagation();
         
-        // Prevent default accordion behavior temporarily
-        const defaultPrevented = e.defaultPrevented;
-        
-        // Call original onClick if provided
-        if (props.onClick && !defaultPrevented) {
+        // Allow the original onClick to proceed normally for accordion functionality
+        if (props.onClick) {
           props.onClick(e);
         }
-      }}
-      onPointerDown={(e) => {
-        // Prevent any pointer events that might interfere with scrolling
-        e.stopPropagation();
       }}
       {...props}
     >
@@ -66,7 +58,7 @@ const AccordionContent = React.forwardRef<
     {...props}
   >
     <div className={cn("pb-4 pt-0", className)}>{children}</div>
-  </AccordionPrimitive.Content>
+  </AccordionContent>
 ))
 
 AccordionContent.displayName = AccordionPrimitive.Content.displayName

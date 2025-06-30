@@ -1,37 +1,18 @@
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
 export default function ScrollToTop() {
-  const { pathname, search, hash } = useLocation();
-  const previousPathnameRef = useRef<string>("");
+  const { pathname, search, hash, key } = useLocation();
 
   useEffect(() => {
-    const currentFullPath = pathname + search;
-    const previousFullPath = previousPathnameRef.current;
-    
-    // Only scroll to top if this is a genuine page navigation
-    const isActualPageNavigation = 
-      previousFullPath !== "" && // Not initial load
-      pathname !== previousPathnameRef.current.split('?')[0] && // Different base path
-      !hash; // Not a hash-only change
-    
-    if (isActualPageNavigation) {
-      // Use requestAnimationFrame for smooth, reliable scrolling
-      requestAnimationFrame(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-        
-        // Fallback for older browsers or edge cases
-        if (window.scrollY > 0) {
-          document.documentElement.scrollTop = 0;
-          document.body.scrollTop = 0;
-        }
-      });
+    // Only scroll to top for actual route changes (not hash changes)
+    // The location.key changes on actual navigation but stays the same for hash changes
+    if (!hash) {
+      // Use a more reliable method for smooth scrolling
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
     }
-    
-    // Update the previous pathname reference
-    previousPathnameRef.current = currentFullPath;
-  }, [pathname, search, hash]);
+  }, [pathname, search, key]); // Include key to detect actual navigation
 
   return null;
 }

@@ -25,13 +25,8 @@ const FAQSection: React.FC<FAQSectionProps> = ({
   items,
   includeSchemaMeta = true
 }) => {
-  const handleAccordionInteraction = (e: React.MouseEvent) => {
-    // Prevent any scroll behavior during accordion interactions
-    e.stopPropagation();
-  };
-
   return (
-    <div className="mobile-header-spacing mb-16" onClick={handleAccordionInteraction}>
+    <div className="mobile-header-spacing mb-16">
       {includeSchemaMeta && <FAQSchemaMarkup items={items.map(item => ({
         question: item.question,
         answer: typeof item.answer === 'string' ? item.answer : 'See our detailed answer'
