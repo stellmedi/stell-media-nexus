@@ -1,0 +1,59 @@
+
+/* Mobile scroll behavior fixes */
+
+@media (max-width: 767px) {
+  /* Prevent iOS Safari rubber band scrolling issues */
+  body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent unwanted scroll on touch interactions */
+  button, 
+  a, 
+  [role="button"], 
+  [role="tab"],
+  [data-state] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Specific fixes for interactive elements */
+  .accordion-trigger,
+  .tab-trigger,
+  .mobile-nav-link {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent scroll restoration issues */
+  html {
+    scroll-behavior: auto;
+  }
+  
+  /* Fix for iOS Safari address bar behavior */
+  .mobile-viewport-fix {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+  
+  /* Prevent focus-related scroll jumps */
+  input, 
+  textarea, 
+  select {
+    scroll-margin-top: 100px;
+  }
+  
+  /* Fix for accordion and dropdown scroll issues */
+  [data-radix-accordion-trigger],
+  [data-radix-tabs-trigger] {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent scroll on mobile menu overlay */
+  .mobile-menu-overlay {
+    position: fixed;
+    overscroll-behavior: none;
+  }
+}

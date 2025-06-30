@@ -33,8 +33,18 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   const handleLinkClick = (e: React.MouseEvent) => {
     // Prevent any scroll-related side effects
     e.stopPropagation();
+    
+    // Store current scroll position before navigation
+    const currentScrollY = window.scrollY;
+    
+    // Close mobile menu
     setIsOpen(false);
     setServicesOpen(false);
+    
+    // Prevent unwanted scroll behavior on mobile
+    if (e.target instanceof HTMLElement) {
+      e.target.blur();
+    }
   };
 
   const handleServicesToggle = (e: React.MouseEvent) => {
@@ -75,6 +85,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           <div>
             <button
               onClick={handleServicesToggle}
+              onTouchEnd={(e) => e.stopPropagation()}
               className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium transition-colors"
               type="button"
             >
@@ -98,6 +109,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         key={service.title}
                         to={service.href}
                         onClick={handleLinkClick}
+                        onTouchEnd={(e) => e.stopPropagation()}
                         className={cn(
                           "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
                           isActiveRoute(service.href) 
@@ -126,6 +138,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         key={service.title}
                         to={service.href}
                         onClick={handleLinkClick}
+                        onTouchEnd={(e) => e.stopPropagation()}
                         className={cn(
                           "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
                           isActiveRoute(service.href) 
@@ -145,7 +158,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
 
           <Link 
             to="/about" 
-            onClick={handleLinkClick} 
+            onClick={handleLinkClick}
+            onTouchEnd={(e) => e.stopPropagation()}
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/about") 
@@ -157,7 +171,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           </Link>
           <Link 
             to="/case-studies" 
-            onClick={handleLinkClick} 
+            onClick={handleLinkClick}
+            onTouchEnd={(e) => e.stopPropagation()}
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/case-studies") 
@@ -169,7 +184,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           </Link>
           <Link 
             to="/faq" 
-            onClick={handleLinkClick} 
+            onClick={handleLinkClick}
+            onTouchEnd={(e) => e.stopPropagation()}
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/faq") 
@@ -181,7 +197,8 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           </Link>
           <Link 
             to="/contact" 
-            onClick={handleLinkClick} 
+            onClick={handleLinkClick}
+            onTouchEnd={(e) => e.stopPropagation()}
             className={cn(
               "block font-medium transition-colors p-2 rounded-md",
               isActiveRoute("/contact") 
@@ -193,7 +210,11 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           </Link>
           
           <div className="pt-6 border-t border-gray-200">
-            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg btn-cta">
+            <Button 
+              asChild 
+              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg btn-cta"
+              onTouchEnd={(e) => e.stopPropagation()}
+            >
               <Link to="/consultation" onClick={handleLinkClick}>Get Started</Link>
             </Button>
           </div>

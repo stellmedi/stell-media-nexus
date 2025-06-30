@@ -31,13 +31,18 @@ const AccordionTrigger = React.forwardRef<
         className
       )}
       onClick={(e) => {
-        // Only prevent event bubbling to avoid unwanted scroll behavior
+        // Prevent any scroll behavior and event bubbling
         e.stopPropagation();
+        e.preventDefault = () => {}; // Disable preventDefault to allow accordion functionality
         
         // Allow the original onClick to proceed normally for accordion functionality
         if (props.onClick) {
           props.onClick(e);
         }
+      }}
+      onTouchEnd={(e) => {
+        // Prevent unwanted scroll on mobile touch events
+        e.stopPropagation();
       }}
       {...props}
     >

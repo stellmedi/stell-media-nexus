@@ -32,11 +32,15 @@ const TabsTrigger = React.forwardRef<
       className
     )}
     onClick={(e) => {
-      // Only prevent event bubbling, allow normal tab functionality
+      // Prevent event bubbling and unwanted scroll behavior
       e.stopPropagation();
       if (props.onClick) {
         props.onClick(e);
       }
+    }}
+    onTouchEnd={(e) => {
+      // Prevent unwanted scroll on mobile touch events
+      e.stopPropagation();
     }}
     {...props}
   />
