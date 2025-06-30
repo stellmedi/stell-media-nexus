@@ -20,16 +20,20 @@
     margin-bottom: 0.75rem !important;
   }
   
-  /* FIXED: Mobile header visibility - specific classes for proper header spacing */
-  .mobile-header-spacing {
+  /* CRITICAL: Mobile header visibility - highest specificity for proper header spacing */
+  .mobile-header-spacing,
+  section.mobile-header-spacing,
+  div.mobile-header-spacing {
     padding-top: 5rem !important; /* Account for fixed navbar height */
   }
   
-  .mobile-hero-spacing {
+  .mobile-hero-spacing,
+  section.mobile-hero-spacing,
+  div.mobile-hero-spacing {
     padding-top: 6rem !important; /* Extra space for hero sections */
   }
   
-  /* Page-specific mobile adjustments */
+  /* Page-specific mobile adjustments with higher specificity */
   .page-content-mobile {
     padding-top: 5rem !important;
     min-height: calc(100vh - 5rem);
@@ -44,6 +48,22 @@
   /* Static page adjustments */
   .static-page-content {
     padding-top: 5rem !important;
+  }
+  
+  /* Override any conflicting padding-top values */
+  section[class*="pt-"],
+  div[class*="pt-"] {
+    padding-top: inherit !important;
+  }
+  
+  /* Ensure mobile spacing classes always win */
+  .mobile-header-spacing[class*="pt-"],
+  .mobile-hero-spacing[class*="pt-"] {
+    padding-top: 5rem !important;
+  }
+  
+  .mobile-hero-spacing[class*="pt-"] {
+    padding-top: 6rem !important;
   }
   
   /* Improved container spacing */
