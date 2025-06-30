@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users, Database, BarChart, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -12,6 +12,7 @@ interface MobileNavProps {
 
 const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   const [servicesOpen, setServicesOpen] = useState(false);
+  const location = useLocation();
 
   const realEstateServices = [
     { title: "Lead Generation & Marketing", href: "/services/lead-generation", icon: <Target className="h-4 w-4" /> },
@@ -29,9 +30,21 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
     { title: "Conversion Optimization", href: "/services/conversion-optimization", icon: <Zap className="h-4 w-4" /> }
   ];
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (e: React.MouseEvent) => {
+    // Prevent any unwanted scrolling behavior
+    e.stopPropagation();
     setIsOpen(false);
     setServicesOpen(false);
+  };
+
+  const handleServicesToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setServicesOpen(!servicesOpen);
+  };
+
+  const isActiveRoute = (path: string) => {
+    return location.pathname === path;
   };
 
   if (!isOpen) return null;
@@ -55,7 +68,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
           {/* Services with Dropdown */}
           <div>
             <button
-              onClick={() => setServicesOpen(!servicesOpen)}
+              onClick={handleServicesToggle}
               className="flex items-center justify-between w-full text-left text-gray-700 hover:text-blue-600 font-medium transition-colors"
             >
               Services
@@ -78,7 +91,12 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         key={service.title}
                         to={service.href}
                         onClick={handleLinkClick}
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-blue-600 transition-colors"
+                        className={cn(
+                          "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
+                          isActiveRoute(service.href) 
+                            ? "bg-blue-50 text-blue-700 font-medium" 
+                            : "text-gray-600 hover:text-blue-600 hover:bg-blue-50"
+                        )}
                       >
                         {service.icon}
                         {service.title}
@@ -101,7 +119,12 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
                         key={service.title}
                         to={service.href}
                         onClick={handleLinkClick}
-                        className="flex items-center gap-2 text-sm text-gray-600 hover:text-purple-600 transition-colors"
+                        className={cn(
+                          "flex items-center gap-2 text-sm transition-colors p-2 rounded-md",
+                          isActiveRoute(service.href) 
+                            ? "bg-purple-50 text-purple-700 font-medium" 
+                            : "text-gray-600 hover:text-purple-600 hover:bg-purple-50"
+                        )}
                       >
                         {service.icon}
                         {service.title}
@@ -113,21 +136,57 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
             )}
           </div>
 
-          <Link to="/about" onClick={handleLinkClick} className="block text-gray-700 hover:text-blue-600 font-medium transition-colors">
+          <Link 
+            to="/about" 
+            onClick={handleLinkClick} 
+            className={cn(
+              "block font-medium transition-colors p-2 rounded-md",
+              isActiveRoute("/about") 
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+            )}
+          >
             About
           </Link>
-          <Link to="/case-studies" onClick={handleLinkClick} className="block text-gray-700 hover:text-blue-600 font-medium transition-colors">
+          <Link 
+            to="/case-studies" 
+            onClick={handleLinkClick} 
+            className={cn(
+              "block font-medium transition-colors p-2 rounded-md",
+              isActiveRoute("/case-studies") 
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+            )}
+          >
             Case Studies
           </Link>
-          <Link to="/faq" onClick={handleLinkClick} className="block text-gray-700 hover:text-blue-600 font-medium transition-colors">
+          <Link 
+            to="/faq" 
+            onClick={handleLinkClick} 
+            className={cn(
+              "block font-medium transition-colors p-2 rounded-md",
+              isActiveRoute("/faq") 
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+            )}
+          >
             FAQ
           </Link>
-          <Link to="/contact" onClick={handleLinkClick} className="block text-gray-700 hover:text-blue-600 font-medium transition-colors">
+          <Link 
+            to="/contact" 
+            onClick={handleLinkClick} 
+            className={cn(
+              "block font-medium transition-colors p-2 rounded-md",
+              isActiveRoute("/contact") 
+                ? "bg-blue-50 text-blue-700 font-semibold" 
+                : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+            )}
+          >
             Contact
           </Link>
           
           <div className="pt-6 border-t border-gray-200">
-            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg">
+            <Button asChild className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium shadow-lg btn-cta">
               <Link to="/consultation" onClick={handleLinkClick}>Get Started</Link>
             </Button>
           </div>

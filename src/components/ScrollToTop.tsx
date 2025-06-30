@@ -6,42 +6,22 @@ export default function ScrollToTop() {
   const { pathname } = useLocation();
 
   useEffect(() => {
-    // Multiple scroll attempts with increasing delays for reliability
+    // Only scroll to top on actual route changes, not hash or query changes
+    // This prevents unwanted scrolling when interacting with accordions, tabs, etc.
     const scrollToTop = () => {
       window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
     };
     
-    // Immediate scroll
-    scrollToTop();
-    
-    // Multiple fallback attempts with increasing delays
-    const timeouts: NodeJS.Timeout[] = [];
-    
-    // Quick fallback for fast devices
-    timeouts.push(setTimeout(scrollToTop, 10));
-    
-    // Medium fallback for slower devices
-    timeouts.push(setTimeout(scrollToTop, 50));
-    
-    // Final fallback for very slow devices or complex pages
-    timeouts.push(setTimeout(scrollToTop, 150));
-    
-    // Mobile-specific fallback (iOS Safari, Android Chrome issues)
-    timeouts.push(setTimeout(() => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
-      // Force scroll for mobile browsers
-      requestAnimationFrame(() => {
-        scrollToTop();
-      });
-    }, 300));
+    // Small delay to ensure DOM is ready, but only one attempt
+    const timeoutId = setTimeout(scrollToTop, 10);
     
     // Cleanup function to prevent memory leaks
     return () => {
-      timeouts.forEach(timeout => clearTimeout(timeout));
+      clearTimeout(timeoutId);
     };
-  }, [pathname]);
+  }, [pathname]); // Only trigger on pathname changes (actual route changes)
 
   return null;
 }
