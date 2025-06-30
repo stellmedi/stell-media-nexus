@@ -116,7 +116,7 @@ const CaseStudies = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Helmet>
         <title>Case Studies - Digital Marketing Success Stories | Stell Media</title>
         <meta name="description" content="Explore our case studies showcasing successful digital marketing campaigns for real estate and e-commerce clients. See measurable results and growth strategies." />
@@ -125,38 +125,40 @@ const CaseStudies = () => {
       
       <Navbar />
       
-      {/* Hero Section */}
-      <section className="pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+      {/* Hero Section with enhanced design */}
+      <section className="mobile-hero-spacing pt-32 pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Success Stories & Case Studies
-            </h1>
-            <p className="text-xl text-gray-600 mb-8">
-              Discover how we've helped real estate developers and e-commerce brands achieve remarkable growth through strategic digital marketing
-            </p>
+            <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-8 md:p-12">
+              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                Success Stories & Case Studies
+              </h1>
+              <p className="text-xl text-gray-600 mb-8">
+                Discover how we've helped real estate developers and e-commerce brands achieve remarkable growth through strategic digital marketing
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Case Studies Grid */}
-      <section className="py-16">
+      {/* Case Studies Grid with enhanced cards */}
+      <section className="py-16 bg-gradient-to-b from-white to-slate-50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {caseStudies.map((study) => (
-              <Card key={study.id} className="group hover:shadow-xl transition-all duration-300 border border-gray-200 hover:border-indigo-300">
-                <div className="aspect-video overflow-hidden rounded-t-lg">
+            {caseStudies.map((study, index) => (
+              <Card key={study.id} className="group hover:shadow-2xl transition-all duration-500 border border-gray-200 hover:border-indigo-300 bg-white/80 backdrop-blur-sm hover:bg-white overflow-hidden">
+                <div className="aspect-video overflow-hidden">
                   <img 
                     src={study.image} 
                     alt={study.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                 </div>
                 
-                <CardHeader>
+                <CardHeader className="bg-gradient-to-br from-white to-gray-50/50 border-b border-gray-100">
                   <div className="flex flex-wrap gap-2 mb-3">
                     {study.tags.map((tag, index) => (
-                      <Badge key={index} variant="outline" className="text-xs">
+                      <Badge key={index} variant="outline" className="text-xs bg-indigo-50 border-indigo-200 text-indigo-700">
                         {tag}
                       </Badge>
                     ))}
@@ -167,22 +169,22 @@ const CaseStudies = () => {
                   <p className="text-sm text-gray-500">{study.industry}</p>
                 </CardHeader>
                 
-                <CardContent>
+                <CardContent className="bg-gradient-to-b from-white to-gray-50/30">
                   <p className="text-gray-600 mb-6 leading-relaxed">
                     {study.description}
                   </p>
                   
-                  {/* Key Results */}
+                  {/* Key Results with enhanced design */}
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     {Object.entries(study.results).map(([key, value], index) => (
-                      <div key={index} className="text-center p-3 bg-gray-50 rounded-lg">
+                      <div key={index} className="text-center p-3 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-100 shadow-sm">
                         <div className="font-bold text-lg text-indigo-600">{value}</div>
                         <div className="text-xs text-gray-500 capitalize">{key.replace('_', ' ')}</div>
                       </div>
                     ))}
                   </div>
                   
-                  <Button asChild className="w-full group-hover:bg-indigo-700 transition-colors">
+                  <Button asChild className="w-full group-hover:bg-indigo-700 transition-colors shadow-md hover:shadow-lg">
                     <Link to={`/case-studies/${study.id}`}>
                       View Full Case Study <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
@@ -194,20 +196,22 @@ const CaseStudies = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600">
+      {/* CTA Section with enhanced gradient design */}
+      <section className="py-16 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 border-t border-indigo-200">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Write Your Success Story?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Let's discuss how we can help you achieve similar results for your business
-          </p>
-          <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100">
-            <Link to="/consultation">
-              Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
+              Ready to Write Your Success Story?
+            </h2>
+            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+              Let's discuss how we can help you achieve similar results for your business
+            </p>
+            <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl">
+              <Link to="/consultation">
+                Start Your Project <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </section>
       

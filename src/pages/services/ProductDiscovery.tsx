@@ -42,28 +42,30 @@ const ProductDiscovery = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Navbar />
       <main>
-        {/* Hero Section with proper mobile spacing */}
-        <section className="mobile-hero-spacing pt-32 pb-16 bg-gradient-to-r from-blue-50 to-indigo-50">
+        {/* Hero Section with enhanced design */}
+        <section className="mobile-hero-spacing pt-32 pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100">
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                Smarter Product Discovery Solutions
-              </h1>
-              <p className="text-xl text-gray-600 mb-8">
-                Enhance your customers' shopping experience with intelligent search solutions that make finding the right products intuitive and effortless.
-              </p>
+              <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-8 md:p-12">
+                <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                  Smarter Product Discovery Solutions
+                </h1>
+                <p className="text-xl text-gray-600 mb-8">
+                  Enhance your customers' shopping experience with intelligent search solutions that make finding the right products intuitive and effortless.
+                </p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Main Content */}
-        <section className="py-16 bg-white">
+        {/* Main Content with enhanced backgrounds */}
+        <section className="py-16 bg-gradient-to-b from-white to-slate-50">
           <div className="container mx-auto px-4">
             <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
-              <div>
+              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-sm border border-gray-100">
                 <h2 className="text-3xl font-bold mb-6 text-gray-900">Transform How Customers Find Your Products</h2>
                 <div className="space-y-4 text-gray-600">
                   <p>
@@ -74,7 +76,7 @@ const ProductDiscovery = () => {
                   </p>
                 </div>
               </div>
-              <div>
+              <div className="bg-white/60 backdrop-blur-sm rounded-xl p-4 shadow-sm border border-gray-100">
                 <img 
                   src="https://images.unsplash.com/photo-1531403009284-440f080d1e12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHByb2R1Y3QlMjBzZWFyY2h8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60" 
                   alt="Product Discovery" 
@@ -83,32 +85,34 @@ const ProductDiscovery = () => {
               </div>
             </div>
 
-            {/* Features */}
-            <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Key Features</h3>
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="font-bold mb-3 text-gray-900">Search Relevance Optimization</h4>
-                <p className="text-gray-600">Fine-tune your search algorithms to ensure customers find exactly what they're looking for, even with incomplete queries.</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="font-bold mb-3 text-gray-900">Behavioral Insights Integration</h4>
-                <p className="text-gray-600">Use customer behavior data to continually improve search results and product recommendations.</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="font-bold mb-3 text-gray-900">Intelligent Navigation</h4>
-                <p className="text-gray-600">Create intuitive category structures and navigation paths that match how customers think about your products.</p>
-              </div>
-              
-              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                <h4 className="font-bold mb-3 text-gray-900">Advanced Filtering</h4>
-                <p className="text-gray-600">Implement smart faceted search to help customers narrow down options quickly and efficiently.</p>
+            {/* Features with enhanced card design */}
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12 border border-indigo-100 shadow-sm mb-16">
+              <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Key Features</h3>
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                  <h4 className="font-bold mb-3 text-gray-900">Search Relevance Optimization</h4>
+                  <p className="text-gray-600">Fine-tune your search algorithms to ensure customers find exactly what they're looking for, even with incomplete queries.</p>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                  <h4 className="font-bold mb-3 text-gray-900">Behavioral Insights Integration</h4>
+                  <p className="text-gray-600">Use customer behavior data to continually improve search results and product recommendations.</p>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                  <h4 className="font-bold mb-3 text-gray-900">Intelligent Navigation</h4>
+                  <p className="text-gray-600">Create intuitive category structures and navigation paths that match how customers think about your products.</p>
+                </div>
+                
+                <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-lg transition-shadow">
+                  <h4 className="font-bold mb-3 text-gray-900">Advanced Filtering</h4>
+                  <p className="text-gray-600">Implement smart faceted search to help customers narrow down options quickly and efficiently.</p>
+                </div>
               </div>
             </div>
 
-            {/* FAQ Section */}
-            <div className="mb-16">
+            {/* FAQ Section with enhanced design */}
+            <div className="mb-16 bg-white/60 backdrop-blur-sm rounded-2xl p-8 border border-gray-100 shadow-sm">
               <h3 className="text-2xl font-bold mb-8 text-center text-gray-900">Frequently Asked Questions</h3>
               <div className="max-w-3xl mx-auto bg-white rounded-lg border border-gray-100 shadow-sm">
                 <Accordion type="single" collapsible className="w-full">
@@ -128,15 +132,15 @@ const ProductDiscovery = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="py-16 bg-gray-50">
+        {/* CTA Section with enhanced gradient design */}
+        <section className="py-16 bg-gradient-to-r from-indigo-600 to-purple-600 border-t border-indigo-200">
           <div className="container mx-auto px-4">
-            <div className="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white text-center shadow-lg">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 text-white text-center shadow-2xl border border-white/20">
               <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to enhance your product discovery?</h2>
               <p className="max-w-2xl mx-auto mb-8 text-white/90">
                 Let's discuss how our solutions can transform your customer experience and boost your conversions.
               </p>
-              <Button asChild size="lg" variant="cta" className="shadow-xl">
+              <Button asChild size="lg" variant="cta" className="bg-white text-indigo-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl">
                 <Link to="/contact">
                   Book Your Consultation <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
