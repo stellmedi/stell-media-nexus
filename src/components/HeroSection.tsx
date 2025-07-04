@@ -34,7 +34,7 @@ const HeroSection = () => {
   console.log('🦸 HeroSection: Using heroSubtitle:', heroSubtitle);
 
   return (
-    <section className="relative min-h-[70vh] md:min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
+    <section className="mobile-hero-spacing relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center overflow-hidden">
       {/* Background pattern */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       

@@ -13,6 +13,8 @@
   section.mobile-hero-spacing,
   div.mobile-hero-spacing {
     padding-top: 6rem !important; /* Extra space for hero sections */
+    min-height: 100vh !important; /* iOS safe height */
+    min-height: 100dvh !important; /* Dynamic viewport height for modern browsers */
   }
   
   /* Page-specific mobile adjustments with higher specificity */
@@ -44,9 +46,10 @@
 
   /* Enhanced typography with better mobile scaling */
   h1 { 
-    font-size: clamp(1.75rem, 4.5vw, 2.25rem) !important; 
-    line-height: 1.2 !important; 
+    font-size: clamp(1.875rem, 5vw, 2.5rem) !important; 
+    line-height: 1.1 !important; 
     margin-bottom: 1rem !important;
+    margin-top: 0 !important;
   }
   h2 { 
     font-size: clamp(1.5rem, 3.8vw, 1.875rem) !important; 
