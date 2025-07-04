@@ -12,7 +12,8 @@
   .mobile-hero-spacing,
   section.mobile-hero-spacing,
   div.mobile-hero-spacing {
-    padding-top: 6rem !important; /* Extra space for hero sections */
+    padding-top: 7rem !important; /* Extra space for hero sections: navbar (64px) + safe areas */
+    padding-top: max(7rem, calc(64px + env(safe-area-inset-top))) !important; /* iOS safe area support */
     min-height: 100vh !important; /* iOS safe height */
     min-height: 100dvh !important; /* Dynamic viewport height for modern browsers */
   }
@@ -25,7 +26,7 @@
   
   /* Service page specific adjustments */
   .service-page-header {
-    padding-top: 6rem !important;
+    padding-top: 7rem !important;
     margin-bottom: 2rem !important;
   }
   
@@ -34,14 +35,9 @@
     padding-top: 5rem !important;
   }
   
-  /* Ensure mobile spacing classes always win - higher specificity */
-  .mobile-header-spacing,
-  .mobile-hero-spacing {
+  /* Mobile header spacing - consistent with hero */
+  .mobile-header-spacing {
     padding-top: 5rem !important;
-  }
-  
-  .mobile-hero-spacing {
-    padding-top: 6rem !important;
   }
 
   /* Enhanced typography with better mobile scaling */
