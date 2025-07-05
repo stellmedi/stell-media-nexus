@@ -21,12 +21,14 @@ const RealEstate = () => {
       </Helmet>
 
       <Navbar />
-      <RealEstateHero />
+      <main className="mobile-hero-spacing">
+        <RealEstateHero />
       <RealEstateServices />
       <ECommerceServices />
       <BenefitsSection />
-      <TestimonialsSection />
-      <CTASection />
+        <TestimonialsSection />
+        <CTASection />
+      </main>
       <Footer />
     </div>
   );

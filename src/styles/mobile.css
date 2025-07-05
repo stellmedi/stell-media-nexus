@@ -1,18 +1,23 @@
 
 /* Mobile-specific styles and spacing */
 
-@media (max-width: 767px) {
-  /* CRITICAL: Mobile header visibility - highest specificity for proper header spacing */
-  .mobile-header-spacing,
-  section.mobile-header-spacing,
-  div.mobile-header-spacing {
+@media (max-width: 1024px) {
+  /* CRITICAL: Mobile header visibility - ultra-high specificity for proper header spacing */
+  body .mobile-header-spacing,
+  body section.mobile-header-spacing,
+  body div.mobile-header-spacing,
+  body main.mobile-header-spacing,
+  .mobile-header-spacing.mobile-header-spacing {
     padding-top: 5rem !important; /* Account for fixed navbar height */
+    padding-top: max(5rem, calc(64px + env(safe-area-inset-top))) !important; /* iOS safe area support */
   }
   
-  .mobile-hero-spacing,
-  section.mobile-hero-spacing,
-  div.mobile-hero-spacing,
-  main.mobile-hero-spacing {
+  /* Ultra-high specificity hero spacing - covers ALL devices including tablets */
+  body .mobile-hero-spacing,
+  body section.mobile-hero-spacing,
+  body div.mobile-hero-spacing,
+  body main.mobile-hero-spacing,
+  .mobile-hero-spacing.mobile-hero-spacing {
     padding-top: 7rem !important; /* Extra space for hero sections: navbar (64px) + safe areas */
     padding-top: max(7rem, calc(64px + env(safe-area-inset-top))) !important; /* iOS safe area support */
     min-height: 100vh !important; /* iOS safe height */
