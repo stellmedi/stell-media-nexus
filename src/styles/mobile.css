@@ -11,7 +11,8 @@
   
   .mobile-hero-spacing,
   section.mobile-hero-spacing,
-  div.mobile-hero-spacing {
+  div.mobile-hero-spacing,
+  main.mobile-hero-spacing {
     padding-top: 7rem !important; /* Extra space for hero sections: navbar (64px) + safe areas */
     padding-top: max(7rem, calc(64px + env(safe-area-inset-top))) !important; /* iOS safe area support */
     min-height: 100vh !important; /* iOS safe height */

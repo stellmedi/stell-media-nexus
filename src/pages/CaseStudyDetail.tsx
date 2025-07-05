@@ -130,7 +130,7 @@ const CaseStudyDetail = () => {
       
       <Navbar />
       
-      <main className="pt-28 pb-20">
+      <main className="mobile-hero-spacing pb-20">
         {/* Breadcrumb */}
         <div className="container mx-auto px-4 mb-8">
           <div className="flex items-center text-sm text-gray-600">
