@@ -24,8 +24,7 @@ const FAQ = () => {
       <section 
         className="mobile-hero-spacing pb-16 bg-gradient-to-br from-blue-50 to-indigo-50"
         style={{ 
-          paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))',
-          minHeight: '100dvh'
+          paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))'
         }}
       >
         <div className="container mx-auto px-4">
