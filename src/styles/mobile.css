@@ -42,10 +42,11 @@
 
   /* Enhanced typography with better mobile scaling */
   h1 { 
-    font-size: clamp(1.875rem, 5vw, 2.5rem) !important; 
-    line-height: 1.1 !important; 
-    margin-bottom: 1rem !important;
+    font-size: clamp(2rem, 6vw, 3rem) !important; 
+    line-height: 1.2 !important; 
+    margin-bottom: 1.5rem !important;
     margin-top: 0 !important;
+    text-align: center !important;
   }
   h2 { 
     font-size: clamp(1.5rem, 3.8vw, 1.875rem) !important; 
@@ -60,21 +61,34 @@
 
   /* Text content improvements */
   p, .text-content { 
-    font-size: 16px !important;
+    font-size: clamp(16px, 4vw, 18px) !important;
     line-height: 1.6 !important;
-    margin-bottom: 1rem !important;
+    margin-bottom: 1.5rem !important;
+    text-align: center !important;
   }
 
-  /* Enhanced mobile card layouts */
-  .card, [class*="card"] { 
-    margin-bottom: 1rem; 
-    padding: 1.25rem !important; 
-    min-height: auto !important;
-    display: flex;
-    flex-direction: column;
-    background: rgba(255, 255, 255, 0.9) !important;
-    backdrop-filter: blur(8px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  /* Button improvements for mobile */
+  button, .btn, [role="button"] {
+    min-height: 44px !important;
+    min-width: 44px !important;
+    font-size: 16px !important;
+    padding: 12px 24px !important;
+  }
+
+  /* Enhanced mobile text alignment for specific sections */
+  .hero-section p, .cta-section p {
+    text-align: center !important;
+  }
+
+  /* Better button spacing on mobile */
+  .flex-col button + button,
+  .flex-col a + a {
+    margin-top: 1rem !important;
+  }
+
+  /* Improved mobile container padding */
+  .container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 }
