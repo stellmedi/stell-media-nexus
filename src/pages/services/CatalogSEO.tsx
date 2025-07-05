@@ -54,9 +54,8 @@ const CatalogSEO = () => {
 
       <Navbar />
       
-      <section className="mobile-hero-spacing pb-16 bg-gradient-to-br from-purple-50 to-indigo-50 relative min-h-screen">
-        <div className="container mx-auto px-4 min-h-screen flex items-center justify-center"
-             style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
+      <section className="mobile-hero-spacing pb-16 bg-gradient-to-br from-purple-50 to-indigo-50" style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
+        <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center w-full">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-purple-700 to-indigo-600 bg-clip-text text-transparent">
               Catalog SEO & Data Enrichment
