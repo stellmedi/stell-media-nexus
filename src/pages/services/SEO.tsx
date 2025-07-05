@@ -129,7 +129,7 @@ const SEOServices = () => {
       <FAQSchemaMarkup items={faqItems} mainEntity="https://stellmedia.com/services/seo#faq" />
       
       <Navbar />
-      <main>
+      <main className="mobile-hero-spacing">
         <SEOHeroSection />
         <SEOFeaturesSection />
         <SEOProcessSection />

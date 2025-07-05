@@ -108,7 +108,7 @@ const AdminLogin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-indigo-50 flex items-center justify-center p-4 mobile-header-spacing">
       <Helmet>
         <title>{isSignupMode ? 'Admin Signup' : 'Admin Login'} | Stell Media</title>
         <meta name="robots" content="noindex, nofollow" />
