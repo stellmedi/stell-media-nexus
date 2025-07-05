@@ -20,9 +20,10 @@ const About = () => {
       <Navbar />
       
       {/* Hero Section */}
-      <section className="mobile-hero-spacing pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+      <section className="mobile-hero-spacing pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100 relative min-h-screen">
+        <div className="container mx-auto px-4 min-h-screen flex items-center justify-center"
+             style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
+          <div className="max-w-4xl mx-auto text-center w-full">
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-8 md:p-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 About Stell Media

@@ -54,7 +54,7 @@ const BlogPostPage: React.FC = () => {
         <link rel="canonical" href={canonicalUrl} />
       </Helmet>
       <Navbar />
-      <main className="pt-32 pb-16">
+      <main className="mobile-header-spacing pb-16">
         <div className="container mx-auto px-4">
           <BlogPost
             id={post.id}

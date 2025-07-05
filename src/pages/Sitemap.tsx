@@ -77,7 +77,7 @@ const Sitemap = () => {
         <link rel="canonical" href="https://www.stellmedia.com/sitemap" />
       </Helmet>
       <Navbar />
-      <main className="pt-32 pb-16">
+      <main className="mobile-header-spacing pb-16">
         <div className="container mx-auto px-4">
           <div className="max-w-6xl mx-auto">
             <div className="mb-10 text-center">

@@ -699,7 +699,7 @@ const Blog: React.FC = () => {
         <meta name="description" content="Insights and strategies on e-commerce SEO, product discovery, data enrichment, SEM, and conversion optimization." />
       </Helmet>
       <Navbar />
-      <main className="pt-32 pb-16">
+      <main className="mobile-header-spacing pb-16">
         <div className="container mx-auto px-4">
           <h1 className="text-4xl font-bold mb-8 text-gray-900">Stell Media Blog</h1>
 
