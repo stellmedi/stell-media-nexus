@@ -46,7 +46,7 @@ const Contact = () => {
 
       <Navbar />
       
-      <section className="mobile-hero-spacing pt-32 pb-16 bg-gradient-to-br from-blue-50 to-indigo-50">
+      <section className="mobile-hero-spacing pb-16 bg-gradient-to-br from-blue-50 to-indigo-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 to-indigo-600 bg-clip-text text-transparent">

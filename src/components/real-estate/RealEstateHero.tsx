@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Building } from "lucide-react";
@@ -6,9 +5,10 @@ import { Link } from "react-router-dom";
 
 const RealEstateHero = () => {
   return (
-    <section className="mobile-hero-spacing pb-12 md:pb-20 px-4">
-      <div className="container mx-auto max-w-6xl">
-        <div className="text-center mb-12 md:mb-16">
+    <section className="mobile-hero-spacing pb-12 md:pb-20 px-4 relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100">
+      <div className="container mx-auto max-w-6xl min-h-screen flex items-center justify-center"
+           style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
+        <div className="text-center mb-12 md:mb-16 w-full">
           <div className="inline-flex items-center px-4 py-2 bg-white/80 backdrop-blur-sm text-blue-700 rounded-full text-sm font-semibold mb-4 md:mb-6 shadow-sm">
             <Building className="w-4 h-4 mr-2" />
             Real Estate Digital Solutions
