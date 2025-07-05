@@ -61,12 +61,7 @@
     align-items: center !important;
   }
 
-  /* Better spacing for content sections */
-  .py-16 {
-    padding-top: 3rem !important;
-    padding-bottom: 3rem !important;
-  }
-
+  /* Better spacing for content sections - REMOVED py-16 override to prevent conflicts */
   .py-20 {
     padding-top: 4rem !important;
     padding-bottom: 4rem !important;

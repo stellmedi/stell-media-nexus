@@ -125,8 +125,14 @@ const CaseStudies = () => {
       
       <Navbar />
       
-      {/* Hero Section with enhanced design */}
-      <section className="mobile-hero-spacing pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100">
+      {/* Hero Section with enhanced design + NUCLEAR INLINE STYLES FAILSAFE */}
+      <section 
+        className="mobile-hero-spacing pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100"
+        style={{ 
+          paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))',
+          minHeight: '100dvh'
+        }}
+      >
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-8 md:p-12">
