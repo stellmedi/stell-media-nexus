@@ -6,13 +6,12 @@ import { Link } from "react-router-dom";
 
 const SEOHeroSection = () => {
   return (
-    <section className="mobile-hero-spacing pb-12 md:pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden min-h-screen" aria-label="E-commerce SEO Services">
+    <section className="mobile-hero-spacing pb-12 md:pb-16 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden" aria-label="E-commerce SEO Services" style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
       {/* Abstract background elements */}
       <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-r from-blue-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-r from-purple-500/5 to-indigo-500/5 rounded-full blur-3xl"></div>
       
-      <div className="container mx-auto px-4 min-h-screen flex items-center justify-center"
-           style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
+      <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
           <div className="order-2 md:order-1">
             <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 md:mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
