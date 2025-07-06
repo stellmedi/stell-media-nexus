@@ -36,7 +36,7 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Contact Us | Get In Touch | Stell Media</title>
         <meta name="description" content="Get in touch with Stell Media for digital marketing solutions. Contact us for real estate marketing, e-commerce optimization, and performance marketing services." />
@@ -65,7 +65,7 @@ const Contact = () => {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12">
             <div>

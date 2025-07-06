@@ -10,7 +10,7 @@ import { faqData } from "@/data/faqData";
 
 const FAQ = () => {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Frequently Asked Questions | Stell Media</title>
         <meta name="description" content="Find answers to common questions about our digital marketing services, pricing, and processes. Get the information you need to make informed decisions." />
@@ -39,7 +39,7 @@ const FAQ = () => {
         </div>
       </section>
 
-      <section className="py-20">
+      <section className="py-16">
         <div className="container mx-auto px-4">
           <FAQSection items={faqData} includeSchemaMeta={true} />
           

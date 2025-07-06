@@ -116,7 +116,7 @@ const CaseStudies = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Helmet>
         <title>Case Studies - Digital Marketing Success Stories | Stell Media</title>
         <meta name="description" content="Explore our case studies showcasing successful digital marketing campaigns for real estate and e-commerce clients. See measurable results and growth strategies." />

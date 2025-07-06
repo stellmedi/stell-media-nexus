@@ -10,7 +10,7 @@ import { ArrowRight, Users, Target, Zap, Award } from "lucide-react";
 
 const About = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Helmet>
         <title>About Stell Media - Digital Marketing Experts</title>
         <meta name="description" content="Learn about Stell Media's mission to help real estate developers and e-commerce brands grow through innovative digital marketing solutions." />
