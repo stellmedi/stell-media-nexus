@@ -44,7 +44,7 @@ const EcommercePerformanceMarketing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>E-commerce Performance Marketing | Digital Advertising | Stell Media</title>
         <meta name="description" content="Data-driven performance marketing for e-commerce brands. Google Ads, Facebook Ads, and shopping campaigns that deliver results." />
