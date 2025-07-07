@@ -33,7 +33,7 @@ const ThreeDVisualization = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>3D Visualization & Animation | Real Estate Services | Stell Media</title>
         <meta name="description" content="Professional 3D visualization and animation services for real estate. Create stunning architectural visualizations and project animations." />

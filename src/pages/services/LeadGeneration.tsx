@@ -33,7 +33,7 @@ const LeadGeneration = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Lead Generation & Marketing | Real Estate Services | Stell Media</title>
         <meta name="description" content="Comprehensive lead generation and digital marketing services for real estate professionals. Drive qualified leads and grow your property business." />

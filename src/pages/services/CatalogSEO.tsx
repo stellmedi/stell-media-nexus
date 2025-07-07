@@ -44,7 +44,7 @@ const CatalogSEO = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Catalog SEO & Data Enrichment | E-commerce Services | Stell Media</title>
         <meta name="description" content="Professional catalog SEO and data enrichment services for e-commerce. Optimize product pages and enhance search visibility." />

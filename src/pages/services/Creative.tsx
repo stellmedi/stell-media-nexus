@@ -44,7 +44,7 @@ const Creative = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Creative & Branding Services | Real Estate Marketing | Stell Media</title>
         <meta name="description" content="Professional creative and branding services for real estate developers. Logo design, marketing materials, and brand identity solutions." />

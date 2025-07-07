@@ -33,7 +33,7 @@ const VirtualTours = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>Virtual Tours & 360° Photography | Real Estate Services | Stell Media</title>
         <meta name="description" content="Professional 360° virtual tours and photography services for real estate. Showcase properties with immersive experiences that convert prospects into buyers." />

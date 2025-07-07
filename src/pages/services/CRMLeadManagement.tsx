@@ -33,7 +33,7 @@ const CRMLeadManagement = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">
       <Helmet>
         <title>CRM & Lead Management Systems | Real Estate Services | Stell Media</title>
         <meta name="description" content="Comprehensive CRM and lead management systems for real estate professionals. Automate workflows and optimize sales processes." />
