@@ -5,6 +5,7 @@ import SEOAndAnalytics from "@/components/layout/SEOAndAnalytics";
 import MainContent from "@/components/layout/MainContent";
 import PerformanceWrapper from "@/components/layout/PerformanceWrapper";
 import WhatsAppButton from "@/components/ChatButton";
+import MobileSpeedOptimizer from "@/components/MobileSpeedOptimizer";
 import { realEstateServiceData, eCommerceServiceData } from "@/data/schemaData";
 import { faqItems } from "@/data/faqData";
 
@@ -35,6 +36,7 @@ const Index = () => {
     return (
       <PerformanceWrapper>
         <div className="min-h-screen bg-white">
+          <MobileSpeedOptimizer />
           <SEOAndAnalytics 
             realEstateServiceData={realEstateServiceData}
             eCommerceServiceData={eCommerceServiceData}

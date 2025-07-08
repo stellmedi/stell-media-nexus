@@ -32,6 +32,17 @@ const ContactSection = () => {
                 <p>Quick response within 24 hours</p>
               </div>
             </div>
+            
+            <div className="mt-8 p-4 bg-white/10 rounded-lg backdrop-blur-sm">
+              <h3 className="font-semibold mb-2 flex items-center">
+                <span className="mr-2">📍</span>
+                Our Location
+              </h3>
+              <p className="text-indigo-100 text-sm">
+                Chandigarh City Center, VIP Road, Zirakpur,<br />
+                SAS Nagar (Mohali), Punjab, India
+              </p>
+            </div>
           </div>
           
           <div className="md:col-span-1">

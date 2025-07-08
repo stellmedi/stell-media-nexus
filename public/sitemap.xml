@@ -3,7 +3,7 @@
   <!-- Homepage -->
   <url>
     <loc>https://stellmedia.com/</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
@@ -11,31 +11,31 @@
   <!-- Main service pages -->
   <url>
     <loc>https://stellmedia.com/services</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/real-estate</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/ecommerce</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/about</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/contact</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -43,67 +43,67 @@
   <!-- Individual service pages -->
   <url>
     <loc>https://stellmedia.com/services/seo</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/sem</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/product-discovery</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/data-enrichment</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/conversion-optimization</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/catalog-seo</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/crm-lead-management</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/lead-generation</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/virtual-tours</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/3d-visualization</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/services/creative</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -111,13 +111,13 @@
   <!-- Blog & case studies -->
   <url>
     <loc>https://stellmedia.com/blog</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/case-studies</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -125,25 +125,25 @@
   <!-- Business pages -->
   <url>
     <loc>https://stellmedia.com/consultation</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/careers</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/faq</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/sitemap</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
   </url>
@@ -151,13 +151,13 @@
   <!-- Legal pages -->
   <url>
     <loc>https://stellmedia.com/privacy</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
     <loc>https://stellmedia.com/terms</loc>
-    <lastmod>2025-01-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>

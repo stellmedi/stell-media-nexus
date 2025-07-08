@@ -28,6 +28,17 @@ const CompanyInfo = () => {
         Your trusted digital growth partner specializing in real estate and e-commerce solutions worldwide.
       </p>
       
+      <div className="mt-4 p-3 bg-indigo-50 rounded-lg border border-indigo-100">
+        <h4 className="font-semibold text-gray-800 mb-1 flex items-center">
+          <span className="mr-2">📍</span>
+          Location
+        </h4>
+        <p className="text-gray-600 text-sm">
+          Chandigarh City Center, VIP Road, Zirakpur,<br />
+          SAS Nagar (Mohali), Punjab, India
+        </p>
+      </div>
+      
       {/* Newsletter subscription */}
       <div className="mt-6 pt-4 border-t border-indigo-200">
         <form onSubmit={handleSubscribe} className="flex flex-col space-y-2">

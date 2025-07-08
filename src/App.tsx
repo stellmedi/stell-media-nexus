@@ -34,6 +34,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import EnhancedContentPage from './pages/admin/EnhancedContentPage';
 import SEOManagerPage from './pages/admin/SEOManagementPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import NotFound from './pages/NotFound';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ContentProvider } from "@/contexts/ContentContext";
 import { AdminAuthProvider } from "@/hooks/use-supabase-admin";
@@ -87,6 +88,9 @@ function App() {
                   <Route path="/admin/content" element={<EnhancedContentPage />} />
                   <Route path="/admin/seo" element={<SEOManagerPage />} />
                   <Route path="/admin/users" element={<AdminUsersPage />} />
+                  
+                  {/* 404 Catch-all Route */}
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </ContentProvider>
             </AdminAuthProvider>
