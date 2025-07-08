@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Helmet } from "react-helmet-async";
+import SEOHelmet from "@/components/SEOHelmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,11 +11,12 @@ import { ArrowRight, Users, Target, Zap, Award } from "lucide-react";
 const About = () => {
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Helmet>
-        <title>About Stell Media - Digital Marketing Experts</title>
-        <meta name="description" content="Learn about Stell Media's mission to help real estate developers and e-commerce brands grow through innovative digital marketing solutions." />
-        <meta name="keywords" content="about stell media, digital marketing team, real estate marketing experts, ecommerce specialists" />
-      </Helmet>
+      <SEOHelmet
+        pagePath="/about"
+        defaultTitle="About Stell Media - Digital Marketing Experts"
+        defaultDescription="Learn about Stell Media's mission to help real estate developers and e-commerce brands grow through innovative digital marketing solutions."
+        defaultKeywords="about stell media, digital marketing team, real estate marketing experts, ecommerce specialists"
+      />
       
       <Navbar />
       

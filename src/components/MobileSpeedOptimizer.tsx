@@ -86,6 +86,23 @@ const MobileSpeedOptimizer: React.FC = () => {
       <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
       <meta name="format-detection" content="telephone=no" />
       <meta name="HandheldFriendly" content="true" />
+      
+      {/* Service Worker Registration */}
+      <script>
+        {`
+          if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+              navigator.serviceWorker.register('/sw.js')
+                .then(function(registration) {
+                  console.log('SW registered: ', registration);
+                })
+                .catch(function(registrationError) {
+                  console.log('SW registration failed: ', registrationError);
+                });
+            });
+          }
+        `}
+      </script>
     </Helmet>
   );
 };

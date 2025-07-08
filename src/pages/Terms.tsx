@@ -1,16 +1,17 @@
 
 import React from "react";
+import SEOHelmet from "@/components/SEOHelmet";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { Helmet } from "react-helmet-async";
 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-indigo-50">
-      <Helmet>
-        <title>Terms of Service | Stell Media</title>
-        <meta name="description" content="Terms and conditions for using Stell Media's services and website." />
-      </Helmet>
+      <SEOHelmet
+        pagePath="/terms"
+        defaultTitle="Terms of Service | Stell Media"
+        defaultDescription="Terms and conditions for using Stell Media's services and website."
+      />
       <Navbar />
       <main className="mobile-header-spacing pb-16">
         <div className="container mx-auto px-4">

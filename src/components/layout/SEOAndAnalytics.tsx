@@ -7,6 +7,7 @@ import SchemaMarkup from "@/components/SchemaMarkup";
 import SEOHelmet from "@/components/SEOHelmet";
 import XMLSitemap from "@/components/XMLSitemap";
 import MobileOptimization from "@/components/MobileOptimization";
+import LocalBusinessSchema from "@/components/LocalBusinessSchema";
 
 interface SEOAndAnalyticsProps {
   realEstateServiceData: any;
@@ -96,6 +97,7 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />
+      <LocalBusinessSchema />
       <XMLSitemap />
       <SchemaMarkup type="service" data={realEstateServiceData} />
       <SchemaMarkup type="service" data={eCommerceServiceData} />
