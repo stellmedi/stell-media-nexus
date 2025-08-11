@@ -76,9 +76,9 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[140] lg:hidden">
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
-      <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
+    <div className="fixed inset-0 z-[900] lg:hidden">
+      <div className="fixed inset-0 top-16 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
+      <div className="fixed top-16 right-0 h-[calc(100%-4rem)] w-80 bg-white shadow-xl overflow-y-auto">
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">

@@ -11,7 +11,7 @@ const MobileMenuButton = ({ isMobileMenuOpen, onToggle }: MobileMenuButtonProps)
   return (
     <button
       onClick={onToggle}
-      className="lg:hidden p-2 text-foreground hover:text-primary transition-colors mobile-menu-button relative z-[130]"
+      className="lg:hidden p-2 text-foreground hover:text-primary transition-colors mobile-menu-button relative z-[1100]"
       aria-label="Toggle mobile menu"
       aria-expanded={isMobileMenuOpen}
     >

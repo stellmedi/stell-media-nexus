@@ -53,7 +53,7 @@ function App() {
           <BrowserRouter>
             <AdminAuthProvider>
               <ContentProvider>
-                <Toaster />
+                <Toaster position="bottom-center" richColors closeButton />
                 <ScrollToTop />
                 <SiteSchemaMarkup />
                 <GoogleAnalytics />
