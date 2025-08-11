@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Building, ShoppingCart, Target, TrendingUp, Search, Palette, Box, Users, Database, BarChart, Zap } from "lucide-react";
@@ -14,6 +14,16 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   const [servicesOpen, setServicesOpen] = useState(false);
   const location = useLocation();
 
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
   const realEstateServices = [
     { title: "Lead Generation & Marketing", href: "/services/lead-generation", icon: <Target className="h-4 w-4" /> },
     { title: "Performance Marketing", href: "/services/sem", icon: <TrendingUp className="h-4 w-4" /> },
@@ -66,7 +76,7 @@ const MobileNav = ({ isOpen, setIsOpen }: MobileNavProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-40 lg:hidden">
+    <div className="fixed inset-0 z-[80] lg:hidden">
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsOpen(false)} />
       <div className="fixed top-0 right-0 h-full w-80 bg-white shadow-xl overflow-y-auto">
         <div className="p-6 border-b border-gray-200">
