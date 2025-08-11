@@ -22,20 +22,24 @@ const Navbar = () => {
   return (
     <>
       <nav className={cn(
-        "fixed top-0 w-full z-[60] transition-all duration-300",
+        "fixed top-0 w-full z-[120] transition-all duration-300",
         isScrolled 
           ? "bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200/50" 
           : "bg-white/90 backdrop-blur-sm"
       )}>
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2 sm:px-4">
           <div className="flex items-center justify-between h-16">
-            <NavbarLogo />
+            <div className="flex-1 min-w-0">
+              <NavbarLogo />
+            </div>
             <DesktopNavigation />
-            <NavbarCTA />
-            <MobileMenuButton 
-              isMobileMenuOpen={isMobileMenuOpen}
-              onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            />
+            <div className="flex items-center gap-2 lg:gap-3 shrink-0">
+              <NavbarCTA />
+              <MobileMenuButton 
+                isMobileMenuOpen={isMobileMenuOpen}
+                onToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              />
+            </div>
           </div>
         </div>
       </nav>
