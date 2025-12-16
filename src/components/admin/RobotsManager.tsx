@@ -1,19 +1,14 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Save, RotateCcw, Download, Upload } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Save, RotateCcw, Download, Copy, AlertTriangle, CheckCircle, ExternalLink } from "lucide-react";
 import { toast } from "sonner";
+import { useRobotsTxtSettings, useSaveRobotsTxtSettings } from "@/hooks/use-seo-settings";
 
 const defaultRobotsTxt = `User-agent: *
-Allow: /
-
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
 Allow: /
 
 # AI Crawlers
@@ -26,51 +21,31 @@ Allow: /
 User-agent: Claude-Web
 Allow: /
 
+# Dynamic Sitemap
+Sitemap: https://eorcqkxfqhgzmbobigcc.supabase.co/functions/v1/serve-sitemap
+
 # Disallow admin areas
 Disallow: /admin/
-Disallow: /api/
-
-# Sitemap
-Sitemap: https://stellmedia.com/sitemap.xml`;
+Disallow: /api/`;
 
 export default function RobotsManager() {
+  const { data: savedSettings, isLoading } = useRobotsTxtSettings();
+  const saveMutation = useSaveRobotsTxtSettings();
+  
   const [robotsContent, setRobotsContent] = useState(defaultRobotsTxt);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [lastSaved, setLastSaved] = useState<string>('');
 
   useEffect(() => {
-    loadRobotsContent();
-  }, []);
-
-  const loadRobotsContent = () => {
-    try {
-      const saved = localStorage.getItem('stellmedia_robots_txt');
-      if (saved) {
-        const data = JSON.parse(saved);
-        setRobotsContent(data.content);
-        setLastSaved(data.lastSaved);
-      }
-    } catch (error) {
-      console.error('Error loading robots.txt:', error);
+    if (savedSettings?.value?.content) {
+      setRobotsContent(savedSettings.value.content);
     }
-  };
+  }, [savedSettings]);
 
-  const saveRobotsContent = () => {
+  const saveRobotsContent = async () => {
     try {
-      const data = {
-        content: robotsContent,
-        lastSaved: new Date().toISOString()
-      };
-      localStorage.setItem('stellmedia_robots_txt', JSON.stringify(data));
-      setLastSaved(data.lastSaved);
+      await saveMutation.mutateAsync({ content: robotsContent });
       setHasUnsavedChanges(false);
-      
-      // Dispatch event for other components
-      window.dispatchEvent(new CustomEvent('robotsUpdated', {
-        detail: data
-      }));
-      
-      toast.success('Robots.txt saved successfully');
+      toast.success('Robots.txt saved to database');
     } catch (error) {
       console.error('Error saving robots.txt:', error);
       toast.error('Failed to save robots.txt');
@@ -102,12 +77,16 @@ export default function RobotsManager() {
     toast.success('Robots.txt downloaded');
   };
 
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(robotsContent);
+    toast.success('Content copied to clipboard');
+  };
+
   const validateRobotsTxt = () => {
     const lines = robotsContent.split('\n');
-    const issues = [];
+    const issues: string[] = [];
     
     let hasUserAgent = false;
-    let currentUserAgent = '';
     
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -115,7 +94,6 @@ export default function RobotsManager() {
       
       if (line.toLowerCase().startsWith('user-agent:')) {
         hasUserAgent = true;
-        currentUserAgent = line;
       } else if (line.toLowerCase().startsWith('allow:') || line.toLowerCase().startsWith('disallow:')) {
         if (!hasUserAgent) {
           issues.push(`Line ${i + 1}: Allow/Disallow directive without User-agent`);
@@ -123,30 +101,70 @@ export default function RobotsManager() {
       }
     }
     
+    // Check for sitemap directive
+    if (!robotsContent.toLowerCase().includes('sitemap:')) {
+      issues.push('Missing Sitemap directive');
+    }
+    
     return issues;
   };
 
   const validationIssues = validateRobotsTxt();
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-muted rounded w-1/4"></div>
+            <div className="h-64 bg-muted rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Robots.txt Management</CardTitle>
         <CardDescription>
-          Configure how search engines crawl your website
+          Configure how search engines crawl your website. Changes are saved to the database for version control.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
+          {/* Important notice */}
+          <Alert>
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              <strong>Note:</strong> This editor saves to the database for backup and version control. 
+              The live <code className="bg-muted px-1 rounded">robots.txt</code> file is static. 
+              Download and replace the static file to update crawlers.
+            </AlertDescription>
+          </Alert>
+
           {validationIssues.length > 0 && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-              <h4 className="font-medium text-yellow-800 mb-2">Validation Issues:</h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                {validationIssues.map((issue, index) => (
-                  <li key={index}>• {issue}</li>
-                ))}
-              </ul>
-            </div>
+            <Alert variant="destructive">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertDescription>
+                <strong>Validation Issues:</strong>
+                <ul className="mt-2 list-disc list-inside">
+                  {validationIssues.map((issue, index) => (
+                    <li key={index}>{issue}</li>
+                  ))}
+                </ul>
+              </AlertDescription>
+            </Alert>
+          )}
+
+          {validationIssues.length === 0 && (
+            <Alert className="border-green-200 bg-green-50 text-green-800">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <AlertDescription>
+                Robots.txt syntax is valid
+              </AlertDescription>
+            </Alert>
           )}
           
           <div className="relative">
@@ -163,17 +181,21 @@ export default function RobotsManager() {
             )}
           </div>
           
-          {lastSaved && (
-            <p className="text-sm text-gray-500">
-              Last saved: {new Date(lastSaved).toLocaleString()}
+          {savedSettings?.updatedAt && (
+            <p className="text-sm text-muted-foreground">
+              Last saved: {new Date(savedSettings.updatedAt).toLocaleString()}
             </p>
           )}
           
-          <div className="flex justify-between items-center">
-            <div className="space-x-2">
+          <div className="flex flex-wrap justify-between items-center gap-2">
+            <div className="flex flex-wrap gap-2">
               <Button variant="outline" onClick={resetToDefault}>
                 <RotateCcw className="h-4 w-4 mr-2" />
                 Reset to Default
+              </Button>
+              <Button variant="outline" onClick={copyToClipboard}>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy Content
               </Button>
               <Button variant="outline" onClick={downloadRobotsTxt}>
                 <Download className="h-4 w-4 mr-2" />
@@ -182,12 +204,31 @@ export default function RobotsManager() {
             </div>
             <Button 
               onClick={saveRobotsContent}
-              disabled={!hasUnsavedChanges}
-              className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
+              disabled={!hasUnsavedChanges || saveMutation.isPending}
             >
               <Save className="h-4 w-4 mr-2" />
-              {hasUnsavedChanges ? 'Save Changes' : 'Saved'}
+              {saveMutation.isPending ? 'Saving...' : hasUnsavedChanges ? 'Save to Database' : 'Saved'}
             </Button>
+          </div>
+
+          {/* Dynamic sitemap info */}
+          <div className="mt-4 p-4 bg-muted rounded-lg">
+            <h4 className="font-medium mb-2">Dynamic Sitemap URL</h4>
+            <p className="text-sm text-muted-foreground mb-2">
+              Your sitemap is served dynamically via Edge Function:
+            </p>
+            <div className="flex items-center gap-2">
+              <code className="text-xs bg-background px-2 py-1 rounded border flex-1 overflow-x-auto">
+                https://eorcqkxfqhgzmbobigcc.supabase.co/functions/v1/serve-sitemap
+              </code>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => window.open('https://eorcqkxfqhgzmbobigcc.supabase.co/functions/v1/serve-sitemap', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </CardContent>
