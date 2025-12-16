@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -21,7 +21,7 @@ export type Database = {
           created_at: string
           details: Json | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           resource: string
           resource_id: string | null
           user_agent: string | null
@@ -32,7 +32,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource: string
           resource_id?: string | null
           user_agent?: string | null
@@ -43,7 +43,7 @@ export type Database = {
           created_at?: string
           details?: Json | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           resource?: string
           resource_id?: string | null
           user_agent?: string | null
@@ -112,7 +112,7 @@ export type Database = {
           created_at: string
           expires_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           session_token: string
           user_agent: string | null
         }
@@ -121,7 +121,7 @@ export type Database = {
           created_at?: string
           expires_at: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           session_token: string
           user_agent?: string | null
         }
@@ -130,7 +130,7 @@ export type Database = {
           created_at?: string
           expires_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           session_token?: string
           user_agent?: string | null
         }
@@ -313,6 +313,51 @@ export type Database = {
           },
         ]
       }
+      job_applications: {
+        Row: {
+          cover_letter: string | null
+          created_at: string
+          current_company: string | null
+          email: string
+          experience_years: number | null
+          id: string
+          name: string
+          phone: string
+          portfolio_url: string | null
+          position: string
+          resume_url: string | null
+          status: string
+        }
+        Insert: {
+          cover_letter?: string | null
+          created_at?: string
+          current_company?: string | null
+          email: string
+          experience_years?: number | null
+          id?: string
+          name: string
+          phone: string
+          portfolio_url?: string | null
+          position: string
+          resume_url?: string | null
+          status?: string
+        }
+        Update: {
+          cover_letter?: string | null
+          created_at?: string
+          current_company?: string | null
+          email?: string
+          experience_years?: number | null
+          id?: string
+          name?: string
+          phone?: string
+          portfolio_url?: string | null
+          position?: string
+          resume_url?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       page_content: {
         Row: {
           canonical_url: string | null
@@ -452,16 +497,13 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      is_admin_user: { Args: never; Returns: boolean }
       log_admin_activity: {
         Args: {
           p_action: string
+          p_details?: Json
           p_resource: string
           p_resource_id?: string
-          p_details?: Json
         }
         Returns: string
       }
