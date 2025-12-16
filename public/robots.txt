@@ -1,4 +1,3 @@
-
 # Robots.txt for Stell Media
 
 User-agent: *
@@ -35,8 +34,8 @@ Allow: /
 User-agent: googlebot-news
 Allow: /blog/
 
-# Sitemaps
-Sitemap: https://stellmedia.com/sitemap.xml
+# Dynamic Sitemap (served via Edge Function)
+Sitemap: https://eorcqkxfqhgzmbobigcc.supabase.co/functions/v1/serve-sitemap
 
 # Disallow private areas
 Disallow: /admin/

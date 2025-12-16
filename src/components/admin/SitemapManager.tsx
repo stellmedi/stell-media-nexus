@@ -1,92 +1,78 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RefreshCw, Download, ExternalLink, Copy } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { RefreshCw, Download, ExternalLink, Copy, Plus, Trash2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
+import { useSitemapSettings, useSaveSitemapSettings, SitemapUrl } from "@/hooks/use-seo-settings";
 
-interface SitemapUrl {
-  loc: string;
-  lastmod: string;
-  changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never';
-  priority: string;
-}
+const EDGE_FUNCTION_URL = 'https://eorcqkxfqhgzmbobigcc.supabase.co/functions/v1/serve-sitemap';
+const BASE_URL = 'https://stellmedia.com';
+
+const defaultPages = [
+  { path: '/', priority: '1.0', changefreq: 'weekly' as const },
+  { path: '/about', priority: '0.8', changefreq: 'monthly' as const },
+  { path: '/services', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/services/seo', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/services/product-discovery', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/services/data-enrichment', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/services/sem', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/services/conversion-optimization', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/contact', priority: '0.7', changefreq: 'monthly' as const },
+  { path: '/blog', priority: '0.8', changefreq: 'daily' as const },
+  { path: '/careers', priority: '0.6', changefreq: 'monthly' as const },
+  { path: '/case-studies', priority: '0.8', changefreq: 'weekly' as const },
+  { path: '/faq', priority: '0.6', changefreq: 'monthly' as const },
+  { path: '/real-estate', priority: '0.9', changefreq: 'weekly' as const },
+  { path: '/e-commerce', priority: '0.9', changefreq: 'weekly' as const },
+];
 
 export default function SitemapManager() {
+  const { data: savedSettings, isLoading } = useSitemapSettings();
+  const saveMutation = useSaveSitemapSettings();
+  
   const [sitemapUrls, setSitemapUrls] = useState<SitemapUrl[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [lastGenerated, setLastGenerated] = useState<string>('');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [newUrlPath, setNewUrlPath] = useState('');
 
   useEffect(() => {
-    loadSitemap();
-  }, []);
-
-  const loadSitemap = () => {
-    try {
-      const saved = localStorage.getItem('stellmedia_sitemap');
-      if (saved) {
-        const data = JSON.parse(saved);
-        setSitemapUrls(data.urls || []);
-        setLastGenerated(data.lastGenerated || '');
-      }
-    } catch (error) {
-      console.error('Error loading sitemap:', error);
+    if (savedSettings?.value?.urls?.length) {
+      setSitemapUrls(savedSettings.value.urls);
+      setLastGenerated(savedSettings.value.lastGenerated || '');
     }
-  };
+  }, [savedSettings]);
 
   const generateSitemap = async () => {
-    setIsGenerating(true);
-    
+    const currentDate = new Date().toISOString();
+
+    const urls: SitemapUrl[] = defaultPages.map(page => ({
+      loc: `${BASE_URL}${page.path}`,
+      lastmod: currentDate,
+      changefreq: page.changefreq,
+      priority: page.priority
+    }));
+
+    setSitemapUrls(urls);
+    setLastGenerated(currentDate);
+    setHasUnsavedChanges(true);
+    toast.success('Sitemap generated - save to persist changes');
+  };
+
+  const saveToDatabase = async () => {
     try {
-      // Define the pages and their priorities
-      const pages = [
-        { path: '/', priority: '1.0', changefreq: 'weekly' as const },
-        { path: '/about', priority: '0.8', changefreq: 'monthly' as const },
-        { path: '/services', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/services/seo', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/services/product-discovery', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/services/data-enrichment', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/services/sem', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/services/conversion-optimization', priority: '0.9', changefreq: 'weekly' as const },
-        { path: '/contact', priority: '0.7', changefreq: 'monthly' as const },
-        { path: '/blog', priority: '0.8', changefreq: 'daily' as const },
-        { path: '/careers', priority: '0.6', changefreq: 'monthly' as const },
-        { path: '/case-studies', priority: '0.8', changefreq: 'weekly' as const },
-        { path: '/faq', priority: '0.6', changefreq: 'monthly' as const }
-      ];
-
-      const currentDate = new Date().toISOString();
-      const baseUrl = 'https://stellmedia.com';
-
-      const urls: SitemapUrl[] = pages.map(page => ({
-        loc: `${baseUrl}${page.path}`,
-        lastmod: currentDate,
-        changefreq: page.changefreq,
-        priority: page.priority
-      }));
-
-      const sitemapData = {
-        urls,
-        lastGenerated: currentDate
-      };
-
-      localStorage.setItem('stellmedia_sitemap', JSON.stringify(sitemapData));
-      setSitemapUrls(urls);
-      setLastGenerated(currentDate);
-
-      // Dispatch event
-      window.dispatchEvent(new CustomEvent('sitemapUpdated', {
-        detail: sitemapData
-      }));
-
-      toast.success('Sitemap generated successfully');
+      await saveMutation.mutateAsync({
+        urls: sitemapUrls,
+        lastGenerated
+      });
+      setHasUnsavedChanges(false);
+      toast.success('Sitemap saved to database - Edge Function will serve updated sitemap');
     } catch (error) {
-      console.error('Error generating sitemap:', error);
-      toast.error('Failed to generate sitemap');
-    } finally {
-      setIsGenerating(false);
+      console.error('Error saving sitemap:', error);
+      toast.error('Failed to save sitemap');
     }
   };
 
@@ -94,13 +80,42 @@ export default function SitemapManager() {
     const updated = [...sitemapUrls];
     updated[index] = { ...updated[index], [field]: value };
     setSitemapUrls(updated);
+    setHasUnsavedChanges(true);
+  };
 
-    // Save changes
-    const sitemapData = {
-      urls: updated,
-      lastGenerated
+  const addNewUrl = () => {
+    if (!newUrlPath.trim()) {
+      toast.error('Please enter a URL path');
+      return;
+    }
+
+    const path = newUrlPath.startsWith('/') ? newUrlPath : `/${newUrlPath}`;
+    const fullUrl = `${BASE_URL}${path}`;
+
+    // Check for duplicates
+    if (sitemapUrls.some(url => url.loc === fullUrl)) {
+      toast.error('This URL already exists in the sitemap');
+      return;
+    }
+
+    const newUrl: SitemapUrl = {
+      loc: fullUrl,
+      lastmod: new Date().toISOString(),
+      changefreq: 'monthly',
+      priority: '0.5'
     };
-    localStorage.setItem('stellmedia_sitemap', JSON.stringify(sitemapData));
+
+    setSitemapUrls([...sitemapUrls, newUrl]);
+    setNewUrlPath('');
+    setHasUnsavedChanges(true);
+    toast.success('URL added to sitemap');
+  };
+
+  const removeUrl = (index: number) => {
+    const updated = sitemapUrls.filter((_, i) => i !== index);
+    setSitemapUrls(updated);
+    setHasUnsavedChanges(true);
+    toast.success('URL removed from sitemap');
   };
 
   const downloadSitemap = () => {
@@ -118,13 +133,12 @@ export default function SitemapManager() {
   };
 
   const generateSitemapXML = () => {
-    const xmlUrls = sitemapUrls.map(url => `
-  <url>
+    const xmlUrls = sitemapUrls.map(url => `  <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
     <priority>${url.priority}</priority>
-  </url>`).join('');
+  </url>`).join('\n');
 
     return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
@@ -133,68 +147,114 @@ ${xmlUrls}
   };
 
   const copySitemapUrl = () => {
-    const sitemapUrl = 'https://stellmedia.com/sitemap.xml';
-    navigator.clipboard.writeText(sitemapUrl);
+    navigator.clipboard.writeText(EDGE_FUNCTION_URL);
     toast.success('Sitemap URL copied to clipboard');
   };
 
-  const openSearchConsole = () => {
-    window.open('https://search.google.com/search-console', '_blank');
-    toast.success('Google Search Console opened');
+  const testSitemap = () => {
+    window.open(EDGE_FUNCTION_URL, '_blank');
+    toast.success('Opening live sitemap in new tab');
   };
+
+  if (isLoading) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="animate-pulse space-y-4">
+            <div className="h-4 bg-muted rounded w-1/4"></div>
+            <div className="h-64 bg-muted rounded"></div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>XML Sitemap Management</CardTitle>
         <CardDescription>
-          Generate and manage your website's XML sitemap. Submit manually to Google Search Console for indexing.
+          Manage your website's XML sitemap. Changes are saved to the database and served dynamically via Edge Function.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          <div className="flex justify-between items-center">
+          {/* Status info */}
+          <Alert className="border-green-200 bg-green-50 text-green-800">
+            <CheckCircle className="h-4 w-4 text-green-600" />
+            <AlertDescription>
+              <strong>Dynamic Sitemap Active:</strong> Your sitemap is served dynamically at{' '}
+              <code className="bg-green-100 px-1 rounded text-xs">{EDGE_FUNCTION_URL}</code>
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex flex-wrap justify-between items-center gap-4">
             <div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 {sitemapUrls.length} URLs in sitemap
               </p>
               {lastGenerated && (
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   Last generated: {new Date(lastGenerated).toLocaleString()}
                 </p>
               )}
+              {hasUnsavedChanges && (
+                <Badge variant="outline" className="mt-1 text-yellow-700 border-yellow-300">
+                  Unsaved Changes
+                </Badge>
+              )}
             </div>
-            <div className="space-x-2">
-              <Button variant="outline" onClick={generateSitemap} disabled={isGenerating}>
-                <RefreshCw className={`h-4 w-4 mr-2 ${isGenerating ? 'animate-spin' : ''}`} />
-                {isGenerating ? 'Generating...' : 'Generate Sitemap'}
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={generateSitemap}>
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Regenerate
               </Button>
               <Button variant="outline" onClick={downloadSitemap} disabled={sitemapUrls.length === 0}>
                 <Download className="h-4 w-4 mr-2" />
                 Download XML
               </Button>
+              <Button 
+                onClick={saveToDatabase} 
+                disabled={!hasUnsavedChanges || saveMutation.isPending}
+              >
+                {saveMutation.isPending ? 'Saving...' : 'Save to Database'}
+              </Button>
             </div>
           </div>
 
-          {/* Manual submission instructions */}
-          <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-            <h4 className="font-medium text-blue-900 mb-2">Submit to Search Engines</h4>
-            <p className="text-sm text-blue-800 mb-3">
-              Sitemap pings are deprecated. Submit your sitemap manually through search console tools:
-            </p>
-            <div className="space-y-2">
-              <div className="flex items-center gap-2">
-                <Button variant="outline" size="sm" onClick={copySitemapUrl}>
-                  <Copy className="h-4 w-4 mr-2" />
-                  Copy Sitemap URL
-                </Button>
-                <code className="text-xs bg-white px-2 py-1 rounded border">
-                  https://stellmedia.com/sitemap.xml
-                </code>
-              </div>
-              <Button variant="outline" size="sm" onClick={openSearchConsole}>
+          {/* Add new URL */}
+          <div className="flex gap-2">
+            <Input
+              placeholder="Enter path (e.g., /new-page)"
+              value={newUrlPath}
+              onChange={(e) => setNewUrlPath(e.target.value)}
+              className="flex-1"
+            />
+            <Button onClick={addNewUrl} variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add URL
+            </Button>
+          </div>
+
+          {/* Live sitemap links */}
+          <div className="bg-muted p-4 rounded-lg">
+            <h4 className="font-medium mb-2">Live Sitemap</h4>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button variant="outline" size="sm" onClick={copySitemapUrl}>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy URL
+              </Button>
+              <Button variant="outline" size="sm" onClick={testSitemap}>
                 <ExternalLink className="h-4 w-4 mr-2" />
-                Open Google Search Console
+                Test Sitemap
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => window.open('https://search.google.com/search-console', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Google Search Console
               </Button>
             </div>
           </div>
@@ -203,20 +263,21 @@ ${xmlUrls}
             <div className="border rounded-lg overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-muted">
                     <tr>
                       <th className="text-left py-3 px-4 font-medium">URL</th>
-                      <th className="text-left py-3 px-4 font-medium">Change Frequency</th>
+                      <th className="text-left py-3 px-4 font-medium">Frequency</th>
                       <th className="text-left py-3 px-4 font-medium">Priority</th>
                       <th className="text-left py-3 px-4 font-medium">Last Modified</th>
+                      <th className="py-3 px-4"></th>
                     </tr>
                   </thead>
                   <tbody>
                     {sitemapUrls.map((url, index) => (
                       <tr key={index} className="border-t">
                         <td className="py-3 px-4">
-                          <code className="text-xs bg-gray-100 px-2 py-1 rounded">
-                            {url.loc}
+                          <code className="text-xs bg-muted px-2 py-1 rounded">
+                            {url.loc.replace(BASE_URL, '')}
                           </code>
                         </td>
                         <td className="py-3 px-4">
@@ -224,7 +285,7 @@ ${xmlUrls}
                             value={url.changefreq} 
                             onValueChange={(value) => updateUrlSettings(index, 'changefreq', value)}
                           >
-                            <SelectTrigger className="w-32">
+                            <SelectTrigger className="w-28">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -253,17 +314,35 @@ ${xmlUrls}
                               <SelectItem value="0.7">0.7</SelectItem>
                               <SelectItem value="0.6">0.6</SelectItem>
                               <SelectItem value="0.5">0.5</SelectItem>
+                              <SelectItem value="0.4">0.4</SelectItem>
+                              <SelectItem value="0.3">0.3</SelectItem>
                             </SelectContent>
                           </Select>
                         </td>
-                        <td className="py-3 px-4 text-gray-500">
+                        <td className="py-3 px-4 text-muted-foreground">
                           {new Date(url.lastmod).toLocaleDateString()}
+                        </td>
+                        <td className="py-3 px-4">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => removeUrl(index)}
+                            className="text-destructive hover:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
                         </td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+            </div>
+          )}
+
+          {sitemapUrls.length === 0 && (
+            <div className="text-center py-8 text-muted-foreground">
+              <p>No URLs in sitemap. Click "Regenerate" to create default sitemap.</p>
             </div>
           )}
         </div>

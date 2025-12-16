@@ -1,7 +1,7 @@
-
 import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { usePageSEO } from '@/hooks/use-page-seo';
+import { useGlobalMetaSettings } from '@/hooks/use-seo-settings';
 
 interface SEOHelmetProps {
   pagePath: string;
@@ -21,26 +21,29 @@ export default function SEOHelmet({
   children
 }: SEOHelmetProps) {
   const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
+  const { data: globalMetaSettings } = useGlobalMetaSettings();
 
-  // Load global config
-  const [globalConfig, setGlobalConfig] = React.useState<any>({});
+  // Global config from database (with localStorage fallback)
+  const [localGlobalConfig, setLocalGlobalConfig] = React.useState<any>({});
   
   React.useEffect(() => {
     try {
       const saved = localStorage.getItem('stellmedia_global_seo_config');
       if (saved) {
-        setGlobalConfig(JSON.parse(saved));
+        setLocalGlobalConfig(JSON.parse(saved));
       }
     } catch (error) {
       console.error('Error loading global SEO config:', error);
     }
   }, []);
 
-  console.log('SEOHelmet: Rendering for page:', pagePath);
-  console.log('SEOHelmet: Saved SEO data:', seoData);
-  console.log('SEOHelmet: Page defaults:', pageDefaults);
-  console.log('SEOHelmet: Loading state:', isLoading);
-  console.log('SEOHelmet: Global config:', globalConfig);
+  // Merge database settings with localStorage fallback
+  const globalConfig = React.useMemo(() => {
+    return {
+      ...localGlobalConfig,
+      ...(globalMetaSettings?.value || {})
+    };
+  }, [globalMetaSettings, localGlobalConfig]);
 
   // Show loading state briefly to prevent hydration issues
   if (isLoading) {
@@ -64,19 +67,6 @@ export default function SEOHelmet({
   const twitterTitle = seoData?.twitterTitle || ogTitle;
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;
-
-  console.log('SEOHelmet: Final values being used:', {
-    metaTitle,
-    metaDescription,
-    keywords,
-    canonicalUrl,
-    ogTitle,
-    ogDescription,
-    ogImage,
-    twitterTitle,
-    twitterDescription,
-    twitterImage
-  });
 
   // Generate robots content
   const robotsContent = [];
@@ -102,7 +92,7 @@ export default function SEOHelmet({
       <meta property="og:image" content={absoluteOgImage} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:site_name" content="Stell Media" />
+      <meta property="og:site_name" content={globalConfig.siteName || "Stell Media"} />
       <meta property="og:locale" content="en_US" />
       
       {/* Twitter Card - Always include these */}
