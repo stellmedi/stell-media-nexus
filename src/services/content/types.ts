@@ -3,6 +3,7 @@ export interface PageContent {
   id: string;
   page_path: string;
   title: string;
+  h1_tag?: string;
   meta_title?: string;
   meta_description?: string;
   keywords?: string;

@@ -86,11 +86,17 @@ export function useSaveSEOSetting() {
         .select()
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error(`SEO save error for ${settingKey}:`, error);
+        throw error;
+      }
       return data;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['seo-settings', variables.settingKey] });
+    },
+    onError: (error: any, variables) => {
+      console.error(`Failed to save SEO setting ${variables.settingKey}:`, error);
     }
   });
 }
