@@ -3,9 +3,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { RefreshCw, Download, ExternalLink, Copy, Plus, Trash2, CheckCircle } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { RefreshCw, Download, ExternalLink, Copy, Plus, Trash2, CheckCircle, Code, Table } from "lucide-react";
 import { toast } from "sonner";
 import { useSitemapSettings, useSaveSitemapSettings, SitemapUrl } from "@/hooks/use-seo-settings";
 
@@ -38,6 +40,9 @@ export default function SitemapManager() {
   const [lastGenerated, setLastGenerated] = useState<string>('');
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [newUrlPath, setNewUrlPath] = useState('');
+  const [activeTab, setActiveTab] = useState<string>('visual');
+  const [xmlContent, setXmlContent] = useState<string>('');
+  const [xmlError, setXmlError] = useState<string>('');
 
   useEffect(() => {
     if (savedSettings?.value?.urls?.length) {
@@ -45,6 +50,90 @@ export default function SitemapManager() {
       setLastGenerated(savedSettings.value.lastGenerated || '');
     }
   }, [savedSettings]);
+
+  // Sync XML content when URLs change or tab switches to XML
+  useEffect(() => {
+    if (activeTab === 'xml') {
+      setXmlContent(generateSitemapXML());
+      setXmlError('');
+    }
+  }, [activeTab, sitemapUrls]);
+
+  const generateSitemapXML = () => {
+    if (sitemapUrls.length === 0) {
+      return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+</urlset>`;
+    }
+
+    const xmlUrls = sitemapUrls.map(url => `  <url>
+    <loc>${url.loc}</loc>
+    <lastmod>${url.lastmod}</lastmod>
+    <changefreq>${url.changefreq}</changefreq>
+    <priority>${url.priority}</priority>
+  </url>`).join('\n');
+
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${xmlUrls}
+</urlset>`;
+  };
+
+  const parseXMLToUrls = (xml: string): SitemapUrl[] | null => {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(xml, 'application/xml');
+      
+      // Check for parsing errors
+      const parseError = doc.querySelector('parsererror');
+      if (parseError) {
+        throw new Error('Invalid XML syntax');
+      }
+
+      const urlElements = doc.querySelectorAll('url');
+      const urls: SitemapUrl[] = [];
+
+      urlElements.forEach((urlEl) => {
+        const loc = urlEl.querySelector('loc')?.textContent || '';
+        const lastmod = urlEl.querySelector('lastmod')?.textContent || new Date().toISOString();
+        const changefreq = urlEl.querySelector('changefreq')?.textContent as SitemapUrl['changefreq'] || 'monthly';
+        const priority = urlEl.querySelector('priority')?.textContent || '0.5';
+
+        if (loc) {
+          urls.push({ loc, lastmod, changefreq, priority });
+        }
+      });
+
+      return urls;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const handleXmlChange = (value: string) => {
+    setXmlContent(value);
+    setHasUnsavedChanges(true);
+    
+    // Validate XML
+    const parsed = parseXMLToUrls(value);
+    if (parsed === null) {
+      setXmlError('Invalid XML format. Please check your syntax.');
+    } else {
+      setXmlError('');
+    }
+  };
+
+  const applyXmlChanges = () => {
+    const parsed = parseXMLToUrls(xmlContent);
+    if (parsed === null) {
+      toast.error('Cannot apply changes - invalid XML format');
+      return;
+    }
+    
+    setSitemapUrls(parsed);
+    setLastGenerated(new Date().toISOString());
+    toast.success(`Applied ${parsed.length} URLs from XML`);
+  };
 
   const generateSitemap = async () => {
     const currentDate = new Date().toISOString();
@@ -63,10 +152,21 @@ export default function SitemapManager() {
   };
 
   const saveToDatabase = async () => {
+    // If on XML tab, apply XML changes first
+    if (activeTab === 'xml') {
+      const parsed = parseXMLToUrls(xmlContent);
+      if (parsed === null) {
+        toast.error('Cannot save - invalid XML format');
+        return;
+      }
+      setSitemapUrls(parsed);
+    }
+
     try {
+      const urlsToSave = activeTab === 'xml' ? parseXMLToUrls(xmlContent) || sitemapUrls : sitemapUrls;
       await saveMutation.mutateAsync({
-        urls: sitemapUrls,
-        lastGenerated
+        urls: urlsToSave,
+        lastGenerated: lastGenerated || new Date().toISOString()
       });
       setHasUnsavedChanges(false);
       toast.success('Sitemap saved to database - Edge Function will serve updated sitemap');
@@ -92,7 +192,6 @@ export default function SitemapManager() {
     const path = newUrlPath.startsWith('/') ? newUrlPath : `/${newUrlPath}`;
     const fullUrl = `${BASE_URL}${path}`;
 
-    // Check for duplicates
     if (sitemapUrls.some(url => url.loc === fullUrl)) {
       toast.error('This URL already exists in the sitemap');
       return;
@@ -119,7 +218,7 @@ export default function SitemapManager() {
   };
 
   const downloadSitemap = () => {
-    const xml = generateSitemapXML();
+    const xml = activeTab === 'xml' ? xmlContent : generateSitemapXML();
     const blob = new Blob([xml], { type: 'application/xml' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -132,18 +231,9 @@ export default function SitemapManager() {
     toast.success('Sitemap downloaded');
   };
 
-  const generateSitemapXML = () => {
-    const xmlUrls = sitemapUrls.map(url => `  <url>
-    <loc>${url.loc}</loc>
-    <lastmod>${url.lastmod}</lastmod>
-    <changefreq>${url.changefreq}</changefreq>
-    <priority>${url.priority}</priority>
-  </url>`).join('\n');
-
-    return `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${xmlUrls}
-</urlset>`;
+  const copyXml = () => {
+    navigator.clipboard.writeText(activeTab === 'xml' ? xmlContent : generateSitemapXML());
+    toast.success('XML copied to clipboard');
   };
 
   const copySitemapUrl = () => {
@@ -209,31 +299,21 @@ ${xmlUrls}
                 <RefreshCw className="h-4 w-4 mr-2" />
                 Regenerate
               </Button>
-              <Button variant="outline" onClick={downloadSitemap} disabled={sitemapUrls.length === 0}>
+              <Button variant="outline" onClick={downloadSitemap}>
                 <Download className="h-4 w-4 mr-2" />
                 Download XML
               </Button>
+              <Button variant="outline" onClick={copyXml}>
+                <Copy className="h-4 w-4 mr-2" />
+                Copy XML
+              </Button>
               <Button 
                 onClick={saveToDatabase} 
-                disabled={!hasUnsavedChanges || saveMutation.isPending}
+                disabled={!hasUnsavedChanges || saveMutation.isPending || (activeTab === 'xml' && !!xmlError)}
               >
                 {saveMutation.isPending ? 'Saving...' : 'Save to Database'}
               </Button>
             </div>
-          </div>
-
-          {/* Add new URL */}
-          <div className="flex gap-2">
-            <Input
-              placeholder="Enter path (e.g., /new-page)"
-              value={newUrlPath}
-              onChange={(e) => setNewUrlPath(e.target.value)}
-              className="flex-1"
-            />
-            <Button onClick={addNewUrl} variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add URL
-            </Button>
           </div>
 
           {/* Live sitemap links */}
@@ -259,92 +339,155 @@ ${xmlUrls}
             </div>
           </div>
 
-          {sitemapUrls.length > 0 && (
-            <div className="border rounded-lg overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="bg-muted">
-                    <tr>
-                      <th className="text-left py-3 px-4 font-medium">URL</th>
-                      <th className="text-left py-3 px-4 font-medium">Frequency</th>
-                      <th className="text-left py-3 px-4 font-medium">Priority</th>
-                      <th className="text-left py-3 px-4 font-medium">Last Modified</th>
-                      <th className="py-3 px-4"></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {sitemapUrls.map((url, index) => (
-                      <tr key={index} className="border-t">
-                        <td className="py-3 px-4">
-                          <code className="text-xs bg-muted px-2 py-1 rounded">
-                            {url.loc.replace(BASE_URL, '')}
-                          </code>
-                        </td>
-                        <td className="py-3 px-4">
-                          <Select 
-                            value={url.changefreq} 
-                            onValueChange={(value) => updateUrlSettings(index, 'changefreq', value)}
-                          >
-                            <SelectTrigger className="w-28">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="always">Always</SelectItem>
-                              <SelectItem value="hourly">Hourly</SelectItem>
-                              <SelectItem value="daily">Daily</SelectItem>
-                              <SelectItem value="weekly">Weekly</SelectItem>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="yearly">Yearly</SelectItem>
-                              <SelectItem value="never">Never</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </td>
-                        <td className="py-3 px-4">
-                          <Select 
-                            value={url.priority} 
-                            onValueChange={(value) => updateUrlSettings(index, 'priority', value)}
-                          >
-                            <SelectTrigger className="w-20">
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="1.0">1.0</SelectItem>
-                              <SelectItem value="0.9">0.9</SelectItem>
-                              <SelectItem value="0.8">0.8</SelectItem>
-                              <SelectItem value="0.7">0.7</SelectItem>
-                              <SelectItem value="0.6">0.6</SelectItem>
-                              <SelectItem value="0.5">0.5</SelectItem>
-                              <SelectItem value="0.4">0.4</SelectItem>
-                              <SelectItem value="0.3">0.3</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </td>
-                        <td className="py-3 px-4 text-muted-foreground">
-                          {new Date(url.lastmod).toLocaleDateString()}
-                        </td>
-                        <td className="py-3 px-4">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => removeUrl(index)}
-                            className="text-destructive hover:text-destructive"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+          {/* Dual-mode editor */}
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 max-w-md">
+              <TabsTrigger value="visual" className="flex items-center gap-2">
+                <Table className="h-4 w-4" />
+                Visual Editor
+              </TabsTrigger>
+              <TabsTrigger value="xml" className="flex items-center gap-2">
+                <Code className="h-4 w-4" />
+                XML Editor
+              </TabsTrigger>
+            </TabsList>
 
-          {sitemapUrls.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
-              <p>No URLs in sitemap. Click "Regenerate" to create default sitemap.</p>
-            </div>
-          )}
+            <TabsContent value="visual" className="space-y-4 mt-4">
+              {/* Add new URL */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter path (e.g., /new-page)"
+                  value={newUrlPath}
+                  onChange={(e) => setNewUrlPath(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={addNewUrl} variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add URL
+                </Button>
+              </div>
+
+              {sitemapUrls.length > 0 && (
+                <div className="border rounded-lg overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead className="bg-muted">
+                        <tr>
+                          <th className="text-left py-3 px-4 font-medium">URL</th>
+                          <th className="text-left py-3 px-4 font-medium">Frequency</th>
+                          <th className="text-left py-3 px-4 font-medium">Priority</th>
+                          <th className="text-left py-3 px-4 font-medium">Last Modified</th>
+                          <th className="py-3 px-4"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {sitemapUrls.map((url, index) => (
+                          <tr key={index} className="border-t">
+                            <td className="py-3 px-4">
+                              <code className="text-xs bg-muted px-2 py-1 rounded">
+                                {url.loc.replace(BASE_URL, '')}
+                              </code>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Select 
+                                value={url.changefreq} 
+                                onValueChange={(value) => updateUrlSettings(index, 'changefreq', value)}
+                              >
+                                <SelectTrigger className="w-28">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="always">Always</SelectItem>
+                                  <SelectItem value="hourly">Hourly</SelectItem>
+                                  <SelectItem value="daily">Daily</SelectItem>
+                                  <SelectItem value="weekly">Weekly</SelectItem>
+                                  <SelectItem value="monthly">Monthly</SelectItem>
+                                  <SelectItem value="yearly">Yearly</SelectItem>
+                                  <SelectItem value="never">Never</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="py-3 px-4">
+                              <Select 
+                                value={url.priority} 
+                                onValueChange={(value) => updateUrlSettings(index, 'priority', value)}
+                              >
+                                <SelectTrigger className="w-20">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem value="1.0">1.0</SelectItem>
+                                  <SelectItem value="0.9">0.9</SelectItem>
+                                  <SelectItem value="0.8">0.8</SelectItem>
+                                  <SelectItem value="0.7">0.7</SelectItem>
+                                  <SelectItem value="0.6">0.6</SelectItem>
+                                  <SelectItem value="0.5">0.5</SelectItem>
+                                  <SelectItem value="0.4">0.4</SelectItem>
+                                  <SelectItem value="0.3">0.3</SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </td>
+                            <td className="py-3 px-4 text-muted-foreground">
+                              {new Date(url.lastmod).toLocaleDateString()}
+                            </td>
+                            <td className="py-3 px-4">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => removeUrl(index)}
+                                className="text-destructive hover:text-destructive"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              {sitemapUrls.length === 0 && (
+                <div className="text-center py-8 text-muted-foreground">
+                  <p>No URLs in sitemap. Click "Regenerate" to create default sitemap.</p>
+                </div>
+              )}
+            </TabsContent>
+
+            <TabsContent value="xml" className="space-y-4 mt-4">
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-muted-foreground">
+                    Edit the raw XML directly. Changes will be validated automatically.
+                  </p>
+                  {activeTab === 'xml' && xmlContent !== generateSitemapXML() && !xmlError && (
+                    <Button variant="outline" size="sm" onClick={applyXmlChanges}>
+                      Apply XML Changes
+                    </Button>
+                  )}
+                </div>
+                
+                {xmlError && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{xmlError}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Textarea
+                  value={xmlContent}
+                  onChange={(e) => handleXmlChange(e.target.value)}
+                  className="min-h-[500px] font-mono text-sm"
+                  placeholder="<?xml version='1.0' encoding='UTF-8'?>..."
+                />
+                
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>{xmlContent.length} characters</span>
+                  <span>{(xmlContent.match(/<url>/g) || []).length} URLs detected</span>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       </CardContent>
     </Card>
