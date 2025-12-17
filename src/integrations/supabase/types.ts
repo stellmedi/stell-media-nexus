@@ -362,6 +362,7 @@ export type Database = {
         Row: {
           canonical_url: string | null
           created_at: string
+          h1_tag: string | null
           id: string
           is_published: boolean
           keywords: string | null
@@ -383,6 +384,7 @@ export type Database = {
         Insert: {
           canonical_url?: string | null
           created_at?: string
+          h1_tag?: string | null
           id?: string
           is_published?: boolean
           keywords?: string | null
@@ -404,6 +406,7 @@ export type Database = {
         Update: {
           canonical_url?: string | null
           created_at?: string
+          h1_tag?: string | null
           id?: string
           is_published?: boolean
           keywords?: string | null

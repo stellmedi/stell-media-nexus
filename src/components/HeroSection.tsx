@@ -1,22 +1,36 @@
-
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { usePageContent } from "@/hooks/usePageContent";
+import { supabase } from "@/integrations/supabase/client";
 
 const HeroSection = () => {
-  console.log('🦸 HeroSection: Component rendering');
-  
   const { getSection, isLoading, error } = usePageContent('/');
+  const [h1Tag, setH1Tag] = useState<string | null>(null);
   
+  // Fetch H1 tag from page_content table
   useEffect(() => {
-    console.log('🦸 HeroSection: Component mounted');
-    console.log('🦸 HeroSection: isLoading:', isLoading, 'error:', error);
-  }, [isLoading, error]);
+    const fetchH1Tag = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('page_content')
+          .select('h1_tag')
+          .eq('page_path', '/')
+          .single();
+        
+        if (data && !error) {
+          setH1Tag((data as any).h1_tag);
+        }
+      } catch (err) {
+        console.error('Error fetching H1 tag:', err);
+      }
+    };
+    
+    fetchH1Tag();
+  }, []);
   
   const handleWhatsAppClick = () => {
-    console.log('📱 HeroSection: WhatsApp button clicked');
     const phoneNumber = "919877100369";
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
@@ -24,14 +38,10 @@ const HeroSection = () => {
 
   // Get hero content from database
   const heroSection = getSection('hero');
-  console.log('🦸 HeroSection: heroSection from database:', heroSection);
   
-  // Fallback content if database content is not available
-  const heroTitle = heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
+  // Use H1 from page_content table, fallback to section content, then hardcoded
+  const heroTitle = h1Tag || heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
   const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
-
-  console.log('🦸 HeroSection: Using heroTitle:', heroTitle);
-  console.log('🦸 HeroSection: Using heroSubtitle:', heroSubtitle);
 
   return (
     <section className="mobile-hero-spacing relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
@@ -41,16 +51,22 @@ const HeroSection = () => {
       <div className="container mx-auto px-4 py-12 md:py-20 relative z-10 flex items-center justify-center min-h-screen"
            style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}>
         <div className="max-w-4xl mx-auto text-center">          
-          {/* Main headline */}
+          {/* Main headline - H1 tag */}
           <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight px-2">
             {isLoading ? (
               <span className="animate-pulse bg-gray-200 rounded h-8 w-3/4 mx-auto block"></span>
             ) : (
               <>
-                {heroTitle.split('Real Estate Developers and eCommerce Brands')[0]}
-                <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                  Real Estate Developers and eCommerce Brands
-                </span>
+                {heroTitle.includes('Real Estate Developers and eCommerce Brands') ? (
+                  <>
+                    {heroTitle.split('Real Estate Developers and eCommerce Brands')[0]}
+                    <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
+                      Real Estate Developers and eCommerce Brands
+                    </span>
+                  </>
+                ) : (
+                  heroTitle
+                )}
               </>
             )}
           </h1>
@@ -80,7 +96,7 @@ const HeroSection = () => {
             </div>
           </div>
           
-          {/* Enhanced Services Navigation - FIXED: Equal height boxes */}
+          {/* Enhanced Services Navigation */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10 max-w-2xl mx-auto px-2">
             <Link to="/real-estate" className="group">
               <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between">
