@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Save, Globe, BarChart3, Search, AlertCircle } from "lucide-react";
+import { Save, Globe, BarChart3, Search, AlertCircle, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { useGlobalMetaSettings, useSaveGlobalMetaSettings, GlobalMetaSettings } from "@/hooks/use-seo-settings";
 
 interface GlobalSEOConfig {
   siteName: string;
@@ -31,25 +32,28 @@ const defaultConfig: GlobalSEOConfig = {
 };
 
 export default function GlobalSEOManager() {
+  const { data: savedSettings, isLoading: isLoadingSettings } = useGlobalMetaSettings();
+  const saveMutation = useSaveGlobalMetaSettings();
+  
   const [config, setConfig] = useState<GlobalSEOConfig>(defaultConfig);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
+  // Load settings from database when available
   useEffect(() => {
-    loadConfig();
-  }, []);
-
-  const loadConfig = () => {
-    try {
-      const saved = localStorage.getItem('stellmedia_global_seo_config');
-      if (saved) {
-        const data = JSON.parse(saved);
-        setConfig({ ...defaultConfig, ...data });
-      }
-    } catch (error) {
-      console.error('Error loading global SEO config:', error);
+    if (savedSettings?.value) {
+      const dbSettings = savedSettings.value;
+      setConfig({
+        siteName: dbSettings.siteName || defaultConfig.siteName,
+        siteDescription: defaultConfig.siteDescription, // Not stored in GlobalMetaSettings
+        defaultOgImage: dbSettings.defaultOgImage || defaultConfig.defaultOgImage,
+        googleAnalyticsId: dbSettings.googleAnalyticsId || defaultConfig.googleAnalyticsId,
+        googleSearchConsoleVerification: dbSettings.googleSearchConsoleVerification || '',
+        googleTagManagerId: dbSettings.googleTagManagerId || '',
+        bingWebmasterVerification: dbSettings.bingWebmasterVerification || '',
+        facebookDomainVerification: dbSettings.facebookDomainVerification || ''
+      });
     }
-  };
+  }, [savedSettings]);
 
   const handleInputChange = (field: keyof GlobalSEOConfig, value: string) => {
     setConfig(prev => ({
@@ -60,9 +64,21 @@ export default function GlobalSEOManager() {
   };
 
   const handleSave = async () => {
-    setIsLoading(true);
-    
     try {
+      // Save to database
+      const dbSettings: GlobalMetaSettings = {
+        siteName: config.siteName,
+        defaultOgImage: config.defaultOgImage,
+        googleAnalyticsId: config.googleAnalyticsId,
+        googleSearchConsoleVerification: config.googleSearchConsoleVerification,
+        googleTagManagerId: config.googleTagManagerId,
+        bingWebmasterVerification: config.bingWebmasterVerification,
+        facebookDomainVerification: config.facebookDomainVerification
+      };
+      
+      await saveMutation.mutateAsync(dbSettings);
+      
+      // Also update localStorage for backward compatibility
       localStorage.setItem('stellmedia_global_seo_config', JSON.stringify(config));
       
       // Dispatch event for other components
@@ -71,15 +87,13 @@ export default function GlobalSEOManager() {
       }));
       
       setHasUnsavedChanges(false);
-      toast.success('Global SEO settings saved successfully!', {
+      toast.success('Global SEO settings saved to database!', {
         description: 'Analytics and verification codes have been updated.',
         duration: 3000
       });
     } catch (error) {
       console.error('Error saving global SEO config:', error);
       toast.error('Failed to save global SEO settings');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -89,9 +103,22 @@ export default function GlobalSEOManager() {
     }
     
     setConfig(defaultConfig);
-    setHasUnsavedChanges(false);
-    toast.info('Global SEO settings reset to defaults');
+    setHasUnsavedChanges(true);
+    toast.info('Global SEO settings reset to defaults - save to apply');
   };
+
+  if (isLoadingSettings) {
+    return (
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center gap-2">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <span>Loading global SEO settings...</span>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -107,7 +134,7 @@ export default function GlobalSEOManager() {
             )}
           </CardTitle>
           <CardDescription>
-            Configure site-wide SEO settings, analytics, and verification codes
+            Configure site-wide SEO settings, analytics, and verification codes. Changes are saved to the database.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -174,7 +201,7 @@ export default function GlobalSEOManager() {
                   onChange={(e) => handleInputChange('googleAnalyticsId', e.target.value)}
                   placeholder="G-XXXXXXXXXX"
                 />
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Your GA4 Measurement ID (starts with G-)
                 </p>
               </div>
@@ -187,7 +214,7 @@ export default function GlobalSEOManager() {
                   onChange={(e) => handleInputChange('googleSearchConsoleVerification', e.target.value)}
                   placeholder="verification code from Google Search Console"
                 />
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Meta tag verification code from Google Search Console
                 </p>
               </div>
@@ -200,7 +227,7 @@ export default function GlobalSEOManager() {
                   onChange={(e) => handleInputChange('googleTagManagerId', e.target.value)}
                   placeholder="GTM-XXXXXXX"
                 />
-                <p className="text-sm text-gray-500 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   If you use GTM instead of direct GA4
                 </p>
               </div>
@@ -238,16 +265,20 @@ export default function GlobalSEOManager() {
           </div>
 
           <div className="flex justify-between items-center pt-6 border-t">
-            <Button variant="outline" onClick={handleReset} disabled={isLoading}>
+            <Button variant="outline" onClick={handleReset} disabled={saveMutation.isPending}>
               Reset to Defaults
             </Button>
             <Button 
               onClick={handleSave}
-              disabled={!hasUnsavedChanges || isLoading}
+              disabled={!hasUnsavedChanges || saveMutation.isPending}
               className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
             >
-              <Save className="h-4 w-4 mr-2" />
-              {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
+              {saveMutation.isPending ? (
+                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              ) : (
+                <Save className="h-4 w-4 mr-2" />
+              )}
+              {saveMutation.isPending ? 'Saving...' : hasUnsavedChanges ? 'Save to Database' : 'Saved'}
             </Button>
           </div>
         </CardContent>

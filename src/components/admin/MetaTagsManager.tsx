@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -9,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Save, Loader2, Globe, Share2, Twitter, RefreshCw } from "lucide-react";
+import { Save, Loader2, Globe, Share2, Twitter, RefreshCw, Type } from "lucide-react";
 import { usePageSEO } from "@/hooks/use-page-seo";
 import { useContentManager } from "@/hooks/useContentManager";
 
@@ -21,7 +20,9 @@ const availablePages = [
   { path: "/blog", name: "Blog Page" },
   { path: "/case-studies", name: "Case Studies Page" },
   { path: "/faq", name: "FAQ Page" },
-  { path: "/careers", name: "Careers Page" }
+  { path: "/careers", name: "Careers Page" },
+  { path: "/real-estate", name: "Real Estate Page" },
+  { path: "/e-commerce", name: "E-Commerce Page" }
 ];
 
 export default function MetaTagsManager() {
@@ -32,6 +33,7 @@ export default function MetaTagsManager() {
   const { selectedPageContent, loadPageContent, updatePageMetadata } = useContentManager();
   
   const [formData, setFormData] = useState({
+    h1Tag: "",
     metaTitle: "",
     metaDescription: "",
     keywords: "",
@@ -63,6 +65,7 @@ export default function MetaTagsManager() {
   useEffect(() => {
     if (selectedPageContent) {
       setFormData({
+        h1Tag: (selectedPageContent as any).h1_tag || "",
         metaTitle: selectedPageContent.meta_title || "",
         metaDescription: selectedPageContent.meta_description || "",
         keywords: selectedPageContent.keywords || "",
@@ -79,6 +82,7 @@ export default function MetaTagsManager() {
     } else if (pageDefaults) {
       // Use defaults if no content exists
       setFormData({
+        h1Tag: pageDefaults.h1Tag || "",
         metaTitle: pageDefaults.metaTitle || "",
         metaDescription: pageDefaults.metaDescription || "",
         keywords: pageDefaults.keywords || "",
@@ -98,8 +102,9 @@ export default function MetaTagsManager() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      // Save all SEO fields to the database
+      // Save all SEO fields to the database including h1_tag
       const success = await updatePageMetadata(selectedPage, {
+        h1_tag: formData.h1Tag,
         meta_title: formData.metaTitle,
         meta_description: formData.metaDescription,
         keywords: formData.keywords,
@@ -112,7 +117,7 @@ export default function MetaTagsManager() {
         canonical_url: formData.canonicalUrl,
         robots_index: formData.robotsIndex,
         robots_follow: formData.robotsFollow
-      });
+      } as any);
       
       if (success) {
         toast.success("All SEO settings saved successfully!");
@@ -149,7 +154,7 @@ export default function MetaTagsManager() {
               SEO Meta Tags & Titles
             </CardTitle>
             <CardDescription>
-              Manage all SEO settings including meta tags, Open Graph, Twitter Cards, and technical SEO. 
+              Manage all SEO settings including H1 tags, meta tags, Open Graph, Twitter Cards, and technical SEO. 
               Changes are saved immediately to the database.
             </CardDescription>
           </div>
@@ -178,6 +183,37 @@ export default function MetaTagsManager() {
 
         <Separator />
 
+        {/* H1 Tag - Most Important SEO Element */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Type className="h-4 w-4" />
+            <h3 className="text-lg font-semibold">H1 Tag (Most Important)</h3>
+          </div>
+          
+          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4">
+            <p className="text-sm text-amber-800">
+              <strong>SEO Best Practice:</strong> Each page should have exactly one H1 tag containing your primary keyword. 
+              Keep it under 60 characters and make it descriptive of the page content.
+            </p>
+          </div>
+          
+          <div>
+            <Label htmlFor="h1-tag">H1 Heading Tag *</Label>
+            <Input
+              id="h1-tag"
+              value={formData.h1Tag}
+              onChange={(e) => setFormData(prev => ({ ...prev, h1Tag: e.target.value }))}
+              placeholder="Main heading for this page (e.g., Digital Growth for Real Estate)"
+              maxLength={70}
+            />
+            <p className="text-xs text-muted-foreground mt-1">
+              {formData.h1Tag.length}/70 characters - This will be the main &lt;h1&gt; tag on the page
+            </p>
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Primary SEO Fields */}
         <div className="space-y-4">
           <div className="flex items-center gap-2 mb-3">
@@ -194,7 +230,7 @@ export default function MetaTagsManager() {
               placeholder="Page title for search engines (50-60 characters)"
               maxLength={60}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formData.metaTitle.length}/60 characters
             </p>
           </div>
@@ -209,7 +245,7 @@ export default function MetaTagsManager() {
               rows={3}
               maxLength={160}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {formData.metaDescription.length}/160 characters
             </p>
           </div>
@@ -339,7 +375,7 @@ export default function MetaTagsManager() {
         <Separator />
 
         <div className="flex justify-between items-center pt-4">
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-muted-foreground">
             * Required fields for optimal SEO performance. All changes are saved to the database.
           </p>
           <Button onClick={handleSave} disabled={isLoading || isRefreshing} className="min-w-[120px]">
