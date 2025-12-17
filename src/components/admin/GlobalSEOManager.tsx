@@ -91,9 +91,17 @@ export default function GlobalSEOManager() {
         description: 'Analytics and verification codes have been updated.',
         duration: 3000
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving global SEO config:', error);
-      toast.error('Failed to save global SEO settings');
+      
+      // Provide specific error messages
+      if (error?.code === '42501' || error?.message?.includes('RLS') || error?.message?.includes('policy')) {
+        toast.error('Permission denied - please ensure you are logged in as admin');
+      } else if (error?.code === 'PGRST301') {
+        toast.error('Session expired - please refresh and log in again');
+      } else {
+        toast.error(`Failed to save: ${error?.message || 'Unknown error'}`);
+      }
     }
   };
 

@@ -130,6 +130,7 @@ export const updatePageContent = async (
       .from('page_content')
       .update({
         title: updates.title,
+        h1_tag: updates.h1_tag,
         meta_title: updates.meta_title,
         meta_description: updates.meta_description,
         keywords: updates.keywords,

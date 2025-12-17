@@ -44,29 +44,40 @@ export default function SitemapManager() {
   const [xmlContent, setXmlContent] = useState<string>('');
   const [xmlError, setXmlError] = useState<string>('');
 
+  // Initialize with defaults if database is empty, or load from database
   useEffect(() => {
+    if (isLoading) return;
+    
     if (savedSettings?.value?.urls?.length) {
+      // Load from database
       setSitemapUrls(savedSettings.value.urls);
       setLastGenerated(savedSettings.value.lastGenerated || '');
+      setXmlContent(generateXmlFromUrls(savedSettings.value.urls));
+    } else {
+      // Initialize with defaults if database is empty
+      const currentDate = new Date().toISOString();
+      const defaultUrls: SitemapUrl[] = defaultPages.map(page => ({
+        loc: `${BASE_URL}${page.path}`,
+        lastmod: currentDate,
+        changefreq: page.changefreq,
+        priority: page.priority
+      }));
+      setSitemapUrls(defaultUrls);
+      setLastGenerated(currentDate);
+      setXmlContent(generateXmlFromUrls(defaultUrls));
+      setHasUnsavedChanges(true); // Mark as needing save
     }
-  }, [savedSettings]);
+  }, [savedSettings, isLoading]);
 
-  // Sync XML content when URLs change or tab switches to XML
-  useEffect(() => {
-    if (activeTab === 'xml') {
-      setXmlContent(generateSitemapXML());
-      setXmlError('');
-    }
-  }, [activeTab, sitemapUrls]);
-
-  const generateSitemapXML = () => {
-    if (sitemapUrls.length === 0) {
+  // Helper to generate XML from URLs array
+  const generateXmlFromUrls = (urls: SitemapUrl[]) => {
+    if (urls.length === 0) {
       return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 </urlset>`;
     }
 
-    const xmlUrls = sitemapUrls.map(url => `  <url>
+    const xmlUrls = urls.map(url => `  <url>
     <loc>${url.loc}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
@@ -78,6 +89,25 @@ export default function SitemapManager() {
 ${xmlUrls}
 </urlset>`;
   };
+
+  // Handle tab changes with sync
+  const handleTabChange = (newTab: string) => {
+    if (newTab === 'xml' && activeTab === 'visual') {
+      // Switching to XML: regenerate XML from URLs
+      setXmlContent(generateXmlFromUrls(sitemapUrls));
+      setXmlError('');
+    } else if (newTab === 'visual' && activeTab === 'xml') {
+      // Switching to Visual: parse XML to URLs (if valid)
+      const parsed = parseXMLToUrls(xmlContent);
+      if (parsed) {
+        setSitemapUrls(parsed);
+      }
+    }
+    setActiveTab(newTab);
+  };
+
+  // generateSitemapXML now uses the helper
+  const generateSitemapXML = () => generateXmlFromUrls(sitemapUrls);
 
   const parseXMLToUrls = (xml: string): SitemapUrl[] | null => {
     try {
@@ -152,27 +182,39 @@ ${xmlUrls}
   };
 
   const saveToDatabase = async () => {
-    // If on XML tab, apply XML changes first
+    let urlsToSave: SitemapUrl[];
+    
+    // If on XML tab, parse and validate XML first
     if (activeTab === 'xml') {
       const parsed = parseXMLToUrls(xmlContent);
       if (parsed === null) {
-        toast.error('Cannot save - invalid XML format');
+        toast.error('Cannot save - invalid XML format. Please fix errors before saving.');
         return;
       }
-      setSitemapUrls(parsed);
+      urlsToSave = parsed;
+      setSitemapUrls(parsed); // Sync state
+    } else {
+      urlsToSave = sitemapUrls;
     }
 
     try {
-      const urlsToSave = activeTab === 'xml' ? parseXMLToUrls(xmlContent) || sitemapUrls : sitemapUrls;
       await saveMutation.mutateAsync({
         urls: urlsToSave,
         lastGenerated: lastGenerated || new Date().toISOString()
       });
       setHasUnsavedChanges(false);
       toast.success('Sitemap saved to database - Edge Function will serve updated sitemap');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving sitemap:', error);
-      toast.error('Failed to save sitemap');
+      
+      // Provide specific error messages
+      if (error?.code === '42501' || error?.message?.includes('RLS') || error?.message?.includes('policy')) {
+        toast.error('Permission denied - please ensure you are logged in as admin');
+      } else if (error?.code === 'PGRST301') {
+        toast.error('Session expired - please refresh and log in again');
+      } else {
+        toast.error(`Failed to save sitemap: ${error?.message || 'Unknown error'}`);
+      }
     }
   };
 
@@ -340,7 +382,7 @@ ${xmlUrls}
           </div>
 
           {/* Dual-mode editor */}
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
             <TabsList className="grid w-full grid-cols-2 max-w-md">
               <TabsTrigger value="visual" className="flex items-center gap-2">
                 <Table className="h-4 w-4" />
@@ -457,16 +499,9 @@ ${xmlUrls}
 
             <TabsContent value="xml" className="space-y-4 mt-4">
               <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm text-muted-foreground">
-                    Edit the raw XML directly. Changes will be validated automatically.
-                  </p>
-                  {activeTab === 'xml' && xmlContent !== generateSitemapXML() && !xmlError && (
-                    <Button variant="outline" size="sm" onClick={applyXmlChanges}>
-                      Apply XML Changes
-                    </Button>
-                  )}
-                </div>
+                <p className="text-sm text-muted-foreground">
+                  Edit the raw XML directly. Changes are validated in real-time and saved when you click "Save to Database".
+                </p>
                 
                 {xmlError && (
                   <Alert variant="destructive">
