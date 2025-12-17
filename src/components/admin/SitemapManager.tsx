@@ -153,17 +153,6 @@ ${xmlUrls}
     }
   };
 
-  const applyXmlChanges = () => {
-    const parsed = parseXMLToUrls(xmlContent);
-    if (parsed === null) {
-      toast.error('Cannot apply changes - invalid XML format');
-      return;
-    }
-    
-    setSitemapUrls(parsed);
-    setLastGenerated(new Date().toISOString());
-    toast.success(`Applied ${parsed.length} URLs from XML`);
-  };
 
   const generateSitemap = async () => {
     const currentDate = new Date().toISOString();
