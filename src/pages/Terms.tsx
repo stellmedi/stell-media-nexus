@@ -1,4 +1,3 @@
-
 import React from "react";
 import SEOHelmet from "@/components/SEOHelmet";
 import Navbar from "@/components/Navbar";
@@ -7,11 +6,7 @@ import Footer from "@/components/Footer";
 const Terms = () => {
   return (
     <div className="min-h-screen bg-indigo-50">
-      <SEOHelmet
-        pagePath="/terms"
-        defaultTitle="Terms of Service | Stell Media"
-        defaultDescription="Terms and conditions for using Stell Media's services and website."
-      />
+      <SEOHelmet pagePath="/terms" />
       <Navbar />
       <main className="mobile-header-spacing pb-16">
         <div className="container mx-auto px-4">

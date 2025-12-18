@@ -29,7 +29,7 @@ export default function MetaTagsManager() {
   const [selectedPage, setSelectedPage] = useState("/");
   const [isLoading, setIsLoading] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { seoData, pageDefaults } = usePageSEO(selectedPage);
+  const { seoData } = usePageSEO(selectedPage);
   const { selectedPageContent, loadPageContent, updatePageMetadata } = useContentManager();
   
   const [formData, setFormData] = useState({
@@ -79,25 +79,25 @@ export default function MetaTagsManager() {
         robotsIndex: selectedPageContent.robots_index ?? true,
         robotsFollow: selectedPageContent.robots_follow ?? true
       });
-    } else if (pageDefaults) {
-      // Use defaults if no content exists
+    } else if (seoData) {
+      // Use SEO data from hook if no content exists
       setFormData({
-        h1Tag: pageDefaults.h1Tag || "",
-        metaTitle: pageDefaults.metaTitle || "",
-        metaDescription: pageDefaults.metaDescription || "",
-        keywords: pageDefaults.keywords || "",
-        ogTitle: pageDefaults.ogTitle || "",
-        ogDescription: pageDefaults.ogDescription || "",
-        ogImage: "",
-        twitterTitle: pageDefaults.twitterTitle || "",
-        twitterDescription: pageDefaults.twitterDescription || "",
-        twitterImage: "",
-        canonicalUrl: "",
-        robotsIndex: true,
-        robotsFollow: true
+        h1Tag: seoData.h1Tag || "",
+        metaTitle: seoData.metaTitle || "",
+        metaDescription: seoData.metaDescription || "",
+        keywords: seoData.keywords || "",
+        ogTitle: seoData.ogTitle || "",
+        ogDescription: seoData.ogDescription || "",
+        ogImage: seoData.ogImage || "",
+        twitterTitle: seoData.twitterTitle || "",
+        twitterDescription: seoData.twitterDescription || "",
+        twitterImage: seoData.twitterImage || "",
+        canonicalUrl: seoData.canonicalUrl || "",
+        robotsIndex: seoData.robotsIndex ?? true,
+        robotsFollow: seoData.robotsFollow ?? true
       });
     }
-  }, [selectedPageContent, pageDefaults]);
+  }, [selectedPageContent, seoData]);
 
   const handleSave = async () => {
     setIsLoading(true);

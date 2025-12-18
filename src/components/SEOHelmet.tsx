@@ -3,6 +3,16 @@ import { Helmet } from 'react-helmet-async';
 import { usePageSEO } from '@/hooks/use-page-seo';
 import { useGlobalMetaSettings } from '@/hooks/use-seo-settings';
 
+interface GlobalConfig {
+  siteName?: string;
+  defaultOgImage?: string;
+  googleAnalyticsId?: string;
+  googleTagManagerId?: string;
+  googleSearchConsoleVerification?: string;
+  bingWebmasterVerification?: string;
+  facebookDomainVerification?: string;
+}
+
 interface SEOHelmetProps {
   pagePath: string;
   children?: React.ReactNode;
@@ -12,12 +22,12 @@ export default function SEOHelmet({ pagePath, children }: SEOHelmetProps) {
   const { seoData, isLoading } = usePageSEO(pagePath);
   const { data: globalMetaSettings } = useGlobalMetaSettings();
 
-  // Global config from database only (no localStorage fallback)
-  const globalConfig = React.useMemo(() => {
-    return globalMetaSettings?.value || {};
+  // Global config from database with type safety
+  const globalConfig: GlobalConfig = React.useMemo(() => {
+    return (globalMetaSettings?.value as GlobalConfig) || {};
   }, [globalMetaSettings]);
 
-  // Minimal fallback - site name only
+  // Minimal fallbacks
   const siteName = globalConfig.siteName || 'Stell Media';
   const defaultOgImage = '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png';
 
@@ -91,7 +101,7 @@ export default function SEOHelmet({ pagePath, children }: SEOHelmetProps) {
       )}
       
       {/* Global Analytics Tags */}
-      {globalConfig?.googleAnalyticsId && (
+      {globalConfig.googleAnalyticsId && (
         <>
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${globalConfig.googleAnalyticsId}`} />
           <script>
@@ -106,7 +116,7 @@ export default function SEOHelmet({ pagePath, children }: SEOHelmetProps) {
       )}
       
       {/* Google Tag Manager */}
-      {globalConfig?.googleTagManagerId && (
+      {globalConfig.googleTagManagerId && (
         <script>
           {`
             (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -119,13 +129,13 @@ export default function SEOHelmet({ pagePath, children }: SEOHelmetProps) {
       )}
       
       {/* Verification Tags */}
-      {globalConfig?.googleSearchConsoleVerification && (
+      {globalConfig.googleSearchConsoleVerification && (
         <meta name="google-site-verification" content={globalConfig.googleSearchConsoleVerification} />
       )}
-      {globalConfig?.bingWebmasterVerification && (
+      {globalConfig.bingWebmasterVerification && (
         <meta name="msvalidate.01" content={globalConfig.bingWebmasterVerification} />
       )}
-      {globalConfig?.facebookDomainVerification && (
+      {globalConfig.facebookDomainVerification && (
         <meta name="facebook-domain-verification" content={globalConfig.facebookDomainVerification} />
       )}
     </Helmet>

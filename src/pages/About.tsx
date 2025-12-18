@@ -1,4 +1,3 @@
-
 import React from "react";
 import SEOHelmet from "@/components/SEOHelmet";
 import Navbar from "@/components/Navbar";
@@ -11,12 +10,7 @@ import { ArrowRight, Users, Target, Zap, Award } from "lucide-react";
 const About = () => {
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <SEOHelmet
-        pagePath="/about"
-        defaultTitle="About Stell Media - Digital Marketing Experts"
-        defaultDescription="Learn about Stell Media's mission to help real estate developers and e-commerce brands grow through innovative digital marketing solutions."
-        defaultKeywords="about stell media, digital marketing team, real estate marketing experts, ecommerce specialists"
-      />
+      <SEOHelmet pagePath="/about" />
       
       <Navbar />
       
