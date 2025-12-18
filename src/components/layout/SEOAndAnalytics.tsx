@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Helmet } from "react-helmet-async";
 import GoogleAnalytics from "@/components/GoogleAnalytics";
@@ -88,12 +87,8 @@ const SEOAndAnalytics: React.FC<SEOAndAnalyticsProps> = ({
         <meta httpEquiv="Cache-Control" content="public, max-age=31536000, immutable" />
       </Helmet>
       
-      <SEOHelmet
-        pagePath="/"
-        defaultTitle="Stell Media | Digital Growth for Real Estate & eCommerce Brands - Lead generation, CRM automation & product findability—done right."
-        defaultDescription="Digital growth for real estate and eCommerce brands. CRM automation, lead gen, and SEO-powered product discovery by Stell Media."
-        defaultKeywords="digital growth partner, real estate lead generation, ecommerce optimization, CRM automation, product discovery, performance marketing, catalog SEO"
-      />
+      {/* Database-driven SEO - no hardcoded defaults */}
+      <SEOHelmet pagePath="/" />
       
       <GoogleAnalytics />
       <SiteSchemaMarkup />

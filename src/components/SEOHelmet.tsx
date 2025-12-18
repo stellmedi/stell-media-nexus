@@ -5,65 +5,40 @@ import { useGlobalMetaSettings } from '@/hooks/use-seo-settings';
 
 interface SEOHelmetProps {
   pagePath: string;
-  defaultTitle?: string;
-  defaultDescription?: string;
-  defaultKeywords?: string;
-  defaultOgImage?: string;
   children?: React.ReactNode;
 }
 
-export default function SEOHelmet({
-  pagePath,
-  defaultTitle = '',
-  defaultDescription = '',
-  defaultKeywords = '',
-  defaultOgImage = '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png',
-  children
-}: SEOHelmetProps) {
-  const { seoData, isLoading, pageDefaults } = usePageSEO(pagePath);
+export default function SEOHelmet({ pagePath, children }: SEOHelmetProps) {
+  const { seoData, isLoading } = usePageSEO(pagePath);
   const { data: globalMetaSettings } = useGlobalMetaSettings();
 
-  // Global config from database (with localStorage fallback)
-  const [localGlobalConfig, setLocalGlobalConfig] = React.useState<any>({});
-  
-  React.useEffect(() => {
-    try {
-      const saved = localStorage.getItem('stellmedia_global_seo_config');
-      if (saved) {
-        setLocalGlobalConfig(JSON.parse(saved));
-      }
-    } catch (error) {
-      console.error('Error loading global SEO config:', error);
-    }
-  }, []);
-
-  // Merge database settings with localStorage fallback
+  // Global config from database only (no localStorage fallback)
   const globalConfig = React.useMemo(() => {
-    return {
-      ...localGlobalConfig,
-      ...(globalMetaSettings?.value || {})
-    };
-  }, [globalMetaSettings, localGlobalConfig]);
+    return globalMetaSettings?.value || {};
+  }, [globalMetaSettings]);
 
-  // Show loading state briefly to prevent hydration issues
+  // Minimal fallback - site name only
+  const siteName = globalConfig.siteName || 'Stell Media';
+  const defaultOgImage = '/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png';
+
+  // Show minimal loading state
   if (isLoading) {
     return (
       <Helmet>
-        {(defaultTitle || pageDefaults?.metaTitle) && <title>{defaultTitle || pageDefaults?.metaTitle}</title>}
-        {(defaultDescription || pageDefaults?.metaDescription) && <meta name="description" content={defaultDescription || pageDefaults?.metaDescription} />}
+        <title>{siteName}</title>
         {children}
       </Helmet>
     );
   }
 
-  // Priority: saved data > page defaults > component props
-  const metaTitle = seoData?.metaTitle || pageDefaults?.metaTitle || defaultTitle || 'Stell Media - Digital Growth Partner';
-  const metaDescription = seoData?.metaDescription || pageDefaults?.metaDescription || defaultDescription || 'Your trusted digital growth partner specializing in lead generation & CRM for real estate developers, and product discovery & performance marketing for e-commerce brands.';
-  const keywords = seoData?.keywords || pageDefaults?.keywords || defaultKeywords;
+  // Priority: Database values first, minimal fallbacks only
+  const metaTitle = seoData?.metaTitle || siteName;
+  const metaDescription = seoData?.metaDescription || '';
+  const keywords = seoData?.keywords || '';
   const canonicalUrl = seoData?.canonicalUrl || `https://stellmedia.com${pagePath === '/' ? '' : pagePath}`;
   const ogTitle = seoData?.ogTitle || metaTitle;
   const ogDescription = seoData?.ogDescription || metaDescription;
-  const ogImage = seoData?.ogImage || pageDefaults?.ogImage || globalConfig.defaultOgImage || defaultOgImage;
+  const ogImage = seoData?.ogImage || globalConfig.defaultOgImage || defaultOgImage;
   const twitterTitle = seoData?.twitterTitle || ogTitle;
   const twitterDescription = seoData?.twitterDescription || ogDescription;
   const twitterImage = seoData?.twitterImage || ogImage;
@@ -86,23 +61,22 @@ export default function SEOHelmet({
       {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
       {robots && <meta name="robots" content={robots} />}
       
-      {/* Open Graph - Always include these for social sharing */}
+      {/* Open Graph */}
       <meta property="og:title" content={ogTitle} />
-      <meta property="og:description" content={ogDescription} />
+      {ogDescription && <meta property="og:description" content={ogDescription} />}
       <meta property="og:image" content={absoluteOgImage} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:site_name" content={globalConfig.siteName || "Stell Media"} />
+      <meta property="og:site_name" content={siteName} />
       <meta property="og:locale" content="en_US" />
       
-      {/* Twitter Card - Always include these */}
+      {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:site" content="@StellMedia" />
       <meta name="twitter:title" content={twitterTitle} />
-      <meta name="twitter:description" content={twitterDescription} />
+      {twitterDescription && <meta name="twitter:description" content={twitterDescription} />}
       <meta name="twitter:image" content={absoluteTwitterImage} />
       
-      {/* Additional custom meta tags from children */}
       {children}
       
       {/* Schema markup if provided */}
@@ -144,17 +118,13 @@ export default function SEOHelmet({
         </script>
       )}
       
-      {/* Search Console Verification */}
+      {/* Verification Tags */}
       {globalConfig?.googleSearchConsoleVerification && (
         <meta name="google-site-verification" content={globalConfig.googleSearchConsoleVerification} />
       )}
-      
-      {/* Bing Webmaster Verification */}
       {globalConfig?.bingWebmasterVerification && (
         <meta name="msvalidate.01" content={globalConfig.bingWebmasterVerification} />
       )}
-      
-      {/* Facebook Domain Verification */}
       {globalConfig?.facebookDomainVerification && (
         <meta name="facebook-domain-verification" content={globalConfig.facebookDomainVerification} />
       )}
