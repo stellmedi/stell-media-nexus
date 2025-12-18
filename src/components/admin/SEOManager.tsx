@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Search, Globe, Share2, Save, RotateCcw, Trash2, AlertCircle, CheckCircle } from "lucide-react";
-import { usePageSEO, saveSEOData, deleteSEOData } from "@/hooks/use-page-seo";
+import { usePageSEO, useSavePageSEO, deleteSEOData, SEOData as HookSEOData } from "@/hooks/use-page-seo";
 
 interface SEOData {
   metaTitle: string;
@@ -67,36 +67,34 @@ export default function SEOManager() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSaveTime, setLastSaveTime] = useState<string | null>(null);
+  const [saveError, setSaveError] = useState<string | null>(null);
   
   // Use the hook to get SEO data for the selected page
-  const { seoData: pageSEOData, isLoading: dataLoading, pageDefaults, saveError } = usePageSEO(selectedPage);
+  const { seoData: pageSEOData, isLoading: dataLoading } = usePageSEO(selectedPage);
+  const savePageSEO = useSavePageSEO();
 
   useEffect(() => {
     if (!dataLoading) {
       console.log('🔄 SEOManager: Updating state for page:', selectedPage);
       console.log('📊 SEOManager: Page SEO data:', pageSEOData);
-      console.log('📋 SEOManager: Page defaults:', pageDefaults);
       
       if (pageSEOData) {
         console.log('✅ SEOManager: Using saved SEO data');
-        setSeoData(pageSEOData);
-      } else if (pageDefaults) {
-        console.log('📋 SEOManager: Using page defaults');
         setSeoData({
-          metaTitle: pageDefaults.metaTitle || "",
-          metaDescription: pageDefaults.metaDescription || "",
-          canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
-          keywords: pageDefaults.keywords || "",
-          ogTitle: pageDefaults.metaTitle || "",
-          ogDescription: pageDefaults.metaDescription || "",
-          ogImage: pageDefaults.ogImage || "",
-          twitterTitle: pageDefaults.metaTitle || "",
-          twitterDescription: pageDefaults.metaDescription || "",
-          twitterImage: pageDefaults.ogImage || "",
-          robotsIndex: true,
-          robotsFollow: true,
-          schemaType: "WebPage",
-          schemaData: ""
+          metaTitle: pageSEOData.metaTitle || "",
+          metaDescription: pageSEOData.metaDescription || "",
+          canonicalUrl: pageSEOData.canonicalUrl || `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
+          keywords: pageSEOData.keywords || "",
+          ogTitle: pageSEOData.ogTitle || "",
+          ogDescription: pageSEOData.ogDescription || "",
+          ogImage: pageSEOData.ogImage || "",
+          twitterTitle: pageSEOData.twitterTitle || "",
+          twitterDescription: pageSEOData.twitterDescription || "",
+          twitterImage: pageSEOData.twitterImage || "",
+          robotsIndex: pageSEOData.robotsIndex ?? true,
+          robotsFollow: pageSEOData.robotsFollow ?? true,
+          schemaType: pageSEOData.schemaType || "WebPage",
+          schemaData: pageSEOData.schemaData || ""
         });
       } else {
         console.log('⚠️ SEOManager: Using default values');
@@ -107,7 +105,7 @@ export default function SEOManager() {
       }
       setHasUnsavedChanges(false);
     }
-  }, [selectedPage, pageSEOData, pageDefaults, dataLoading]);
+  }, [selectedPage, pageSEOData, dataLoading]);
 
   const handleInputChange = (field: keyof SEOData, value: string | boolean) => {
     console.log('📝 SEOManager: Field changed:', field, 'new value:', value);
@@ -156,7 +154,7 @@ export default function SEOManager() {
         return;
       }
 
-      const result = await saveSEOData(selectedPage, seoData);
+      const result = await savePageSEO.mutateAsync({ pagePath: selectedPage, seoData });
       
       if (result.success) {
         setHasUnsavedChanges(false);
@@ -192,33 +190,12 @@ export default function SEOManager() {
     }
     
     console.log('🔄 SEOManager: Resetting SEO data for page:', selectedPage);
-    if (pageDefaults) {
-      setSeoData({
-        metaTitle: pageDefaults.metaTitle || "",
-        metaDescription: pageDefaults.metaDescription || "",
-        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
-        keywords: pageDefaults.keywords || "",
-        ogTitle: pageDefaults.metaTitle || "",
-        ogDescription: pageDefaults.metaDescription || "",
-        ogImage: pageDefaults.ogImage || "",
-        twitterTitle: pageDefaults.metaTitle || "",
-        twitterDescription: pageDefaults.metaDescription || "",
-        twitterImage: pageDefaults.ogImage || "",
-        robotsIndex: true,
-        robotsFollow: true,
-        schemaType: "WebPage",
-        schemaData: ""
-      });
-      setHasUnsavedChanges(false);
-      toast.info("SEO fields reset to page defaults");
-    } else {
-      setSeoData({
-        ...defaultSEOData,
-        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
-      });
-      setHasUnsavedChanges(false);
-      toast.info("SEO fields reset to default values");
-    }
+    setSeoData({
+      ...defaultSEOData,
+      canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`
+    });
+    setHasUnsavedChanges(false);
+    toast.info("SEO fields reset to default values");
     setLastSaveTime(null);
   };
 
@@ -254,7 +231,7 @@ export default function SEOManager() {
     );
   };
 
-  const isUsingDefaults = !pageSEOData && pageDefaults;
+  const isUsingDefaults = !pageSEOData;
   const isCustomized = !!pageSEOData;
 
   return (

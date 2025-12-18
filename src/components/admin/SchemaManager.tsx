@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,7 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { Save, Code } from "lucide-react";
-import { usePageSEO, saveSEOData } from "@/hooks/use-page-seo";
+import { usePageSEO, useSavePageSEO } from "@/hooks/use-page-seo";
 
 const availablePages = [
   { path: "/", name: "Home Page" },
@@ -31,9 +30,9 @@ export default function SchemaManager() {
   const [schemaType, setSchemaType] = useState("WebPage");
   const [schemaData, setSchemaData] = useState("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   
-  const { seoData, isLoading: dataLoading, pageDefaults } = usePageSEO(selectedPage);
+  const { seoData, isLoading: dataLoading } = usePageSEO(selectedPage);
+  const savePageSEO = useSavePageSEO();
 
   useEffect(() => {
     if (!dataLoading) {
@@ -54,43 +53,27 @@ export default function SchemaManager() {
   };
 
   const handleSave = async () => {
-    setIsLoading(true);
-    
     try {
-      const currentData = seoData || {
-        metaTitle: pageDefaults?.metaTitle || "",
-        metaDescription: pageDefaults?.metaDescription || "",
-        canonicalUrl: `https://stellmedia.com${selectedPage === '/' ? '' : selectedPage}`,
-        keywords: pageDefaults?.keywords || "",
-        ogTitle: pageDefaults?.metaTitle || "",
-        ogDescription: pageDefaults?.metaDescription || "",
-        ogImage: pageDefaults?.ogImage || "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
-        twitterTitle: pageDefaults?.metaTitle || "",
-        twitterDescription: pageDefaults?.metaDescription || "",
-        twitterImage: pageDefaults?.ogImage || "/lovable-uploads/38799a3e-2ae4-428c-b111-c6d907dcda42.png",
-        robotsIndex: true,
-        robotsFollow: true
-      };
-      
       const updatedData = {
-        ...currentData,
+        ...seoData,
         schemaType,
         schemaData
       };
       
-      const success = saveSEOData(selectedPage, updatedData);
+      const result = await savePageSEO.mutateAsync({
+        pagePath: selectedPage,
+        seoData: updatedData
+      });
       
-      if (success) {
+      if (result.success) {
         setHasUnsavedChanges(false);
         toast.success("Schema markup saved successfully!");
       } else {
-        throw new Error('Failed to save');
+        throw new Error(result.error || 'Failed to save');
       }
     } catch (error) {
       console.error('Error saving schema markup:', error);
       toast.error("Error saving schema markup");
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -209,11 +192,11 @@ export default function SchemaManager() {
         <div className="flex justify-end pt-4 border-t">
           <Button 
             onClick={handleSave}
-            disabled={!hasUnsavedChanges || isLoading}
+            disabled={!hasUnsavedChanges || savePageSEO.isPending}
             className={hasUnsavedChanges ? "bg-blue-600 hover:bg-blue-700" : ""}
           >
             <Save className="h-4 w-4 mr-2" />
-            {isLoading ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
+            {savePageSEO.isPending ? 'Saving...' : hasUnsavedChanges ? 'Save Changes' : 'Saved'}
           </Button>
         </div>
       </CardContent>

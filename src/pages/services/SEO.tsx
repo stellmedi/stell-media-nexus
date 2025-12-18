@@ -112,13 +112,7 @@ const SEOServices = () => {
 
   return (
     <div className="min-h-screen bg-indigo-50">
-      <SEOHelmet 
-        pagePath="/services/seo"
-        defaultTitle="Expert E-commerce SEO Services | Data-Driven Results | Stell Media"
-        defaultDescription="Boost your e-commerce visibility with Stell Media's data-driven SEO strategies. Our technical expertise improves rankings, increases organic traffic, and maximizes ROI for large product catalogs."
-        defaultKeywords="e-commerce SEO, product catalog optimization, technical SEO, organic traffic, search ranking improvement, structured data, schema markup, e-commerce visibility"
-        defaultOgImage="/lovable-uploads/f34fc50c-3811-4db5-bb67-307d487ce8a1.png"
-      >
+      <SEOHelmet pagePath="/services/seo">
         <meta name="author" content="Stell Media" />
         <meta property="og:type" content="website" />
       </SEOHelmet>
