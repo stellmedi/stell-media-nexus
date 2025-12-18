@@ -1,34 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { usePageContent } from "@/hooks/usePageContent";
-import { supabase } from "@/integrations/supabase/client";
+import { usePageSEO } from "@/hooks/use-page-seo";
 
 const HeroSection = () => {
-  const { getSection, isLoading, error } = usePageContent('/');
-  const [h1Tag, setH1Tag] = useState<string | null>(null);
-  
-  // Fetch H1 tag from page_content table
-  useEffect(() => {
-    const fetchH1Tag = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('page_content')
-          .select('h1_tag')
-          .eq('page_path', '/')
-          .single();
-        
-        if (data && !error) {
-          setH1Tag((data as any).h1_tag);
-        }
-      } catch (err) {
-        console.error('Error fetching H1 tag:', err);
-      }
-    };
-    
-    fetchH1Tag();
-  }, []);
+  // Use unified SEO hook - includes h1_tag, eliminates duplicate fetch
+  const { seoData, isLoading } = usePageSEO('/');
   
   const handleWhatsAppClick = () => {
     const phoneNumber = "919877100369";
@@ -36,12 +14,9 @@ const HeroSection = () => {
     window.open(whatsappUrl, '_blank');
   };
 
-  // Get hero content from database
-  const heroSection = getSection('hero');
-  
-  // Use H1 from page_content table, fallback to section content, then hardcoded
-  const heroTitle = h1Tag || heroSection?.content || "Digital Growth for Real Estate Developers and eCommerce Brands";
-  const heroSubtitle = heroSection?.title || "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
+  // Use H1 from database with minimal fallback
+  const heroTitle = seoData?.h1Tag || "Digital Growth for Real Estate Developers and eCommerce Brands";
+  const heroSubtitle = "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
 
   return (
     <section className="mobile-hero-spacing relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
@@ -73,11 +48,7 @@ const HeroSection = () => {
           
           {/* Subheadline */}
           <p className="text-lg md:text-xl lg:text-2xl text-gray-700 mb-6 md:mb-8 leading-relaxed max-w-3xl mx-auto px-2">
-            {isLoading ? (
-              <span className="animate-pulse bg-gray-200 rounded h-6 w-full block"></span>
-            ) : (
-              heroSubtitle
-            )}
+            {heroSubtitle}
           </p>
           
           {/* Value propositions */}
