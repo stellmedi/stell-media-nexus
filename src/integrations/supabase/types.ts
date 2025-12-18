@@ -224,6 +224,51 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_posts: {
+        Row: {
+          author: string | null
+          category: string | null
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          id: string
+          image_url: string | null
+          is_published: boolean | null
+          published_at: string | null
+          slug: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          published_at?: string | null
+          slug: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          id?: string
+          image_url?: string | null
+          is_published?: boolean | null
+          published_at?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       consultation_submissions: {
         Row: {
           company: string
@@ -312,6 +357,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      faq_items: {
+        Row: {
+          answer: string
+          created_at: string | null
+          display_order: number | null
+          id: string
+          is_active: boolean | null
+          page_path: string
+          question: string
+        }
+        Insert: {
+          answer: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page_path?: string
+          question: string
+        }
+        Update: {
+          answer?: string
+          created_at?: string | null
+          display_order?: number | null
+          id?: string
+          is_active?: boolean | null
+          page_path?: string
+          question?: string
+        }
+        Relationships: []
       }
       job_applications: {
         Row: {
@@ -514,6 +589,51 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      services: {
+        Row: {
+          border_color: string | null
+          created_at: string | null
+          description: string
+          display_order: number | null
+          gradient_from: string | null
+          gradient_to: string | null
+          icon_name: string | null
+          id: string
+          is_active: boolean | null
+          link: string | null
+          slug: string
+          title: string
+        }
+        Insert: {
+          border_color?: string | null
+          created_at?: string | null
+          description: string
+          display_order?: number | null
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean | null
+          link?: string | null
+          slug: string
+          title: string
+        }
+        Update: {
+          border_color?: string | null
+          created_at?: string | null
+          description?: string
+          display_order?: number | null
+          gradient_from?: string | null
+          gradient_to?: string | null
+          icon_name?: string | null
+          id?: string
+          is_active?: boolean | null
+          link?: string | null
+          slug?: string
+          title?: string
+        }
+        Relationships: []
       }
       test_messages: {
         Row: {

@@ -1,4 +1,3 @@
-
 import React, { Suspense, lazy } from 'react';
 import SocialProofSection from "@/components/SocialProofSection";
 
@@ -10,17 +9,10 @@ const FAQSection = lazy(() => import("@/components/FAQSection"));
 
 // Optimized loading component with reserved space
 const LoadingFallback = ({ height = "h-20" }: { height?: string }) => (
-  <div className={`${height} bg-gray-50 animate-pulse prevent-shift`} aria-hidden="true" style={{ minHeight: '200px' }} />
+  <div className={`${height} bg-secondary/50 animate-pulse prevent-shift`} aria-hidden="true" style={{ minHeight: '200px' }} />
 );
 
-interface MainContentProps {
-  faqItems: Array<{
-    question: string;
-    answer: string;
-  }>;
-}
-
-const MainContent: React.FC<MainContentProps> = ({ faqItems }) => {
+const MainContent: React.FC = () => {
   return (
     <main role="main">
       <SocialProofSection />
@@ -39,7 +31,7 @@ const MainContent: React.FC<MainContentProps> = ({ faqItems }) => {
       </Suspense>
       
       <Suspense fallback={<LoadingFallback height="h-40" />}>
-        <FAQSection items={faqItems} />
+        <FAQSection pagePath="/" />
       </Suspense>
     </main>
   );
