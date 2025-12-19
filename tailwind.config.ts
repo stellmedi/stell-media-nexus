@@ -10,6 +10,13 @@ export default {
 		"./src/**/*.{ts,tsx}",
 	],
 	prefix: "",
+	safelist: [
+		// Gradient colors used dynamically by services
+		{ pattern: /from-(blue|purple|green|orange|indigo|teal|cyan|pink|red|yellow|emerald|violet|rose|sky|amber|lime|fuchsia)-[3-7]00/ },
+		{ pattern: /to-(blue|purple|green|orange|indigo|teal|cyan|pink|red|yellow|emerald|violet|rose|sky|amber|lime|fuchsia)-[3-7]00/ },
+		{ pattern: /border-(blue|purple|green|orange|indigo|teal|cyan|pink|red|yellow|emerald|violet|rose|sky|amber|lime|fuchsia)-[1-4]00/ },
+		{ pattern: /hover:border-(blue|purple|green|orange|indigo|teal|cyan|pink|red|yellow|emerald|violet|rose|sky|amber|lime|fuchsia)-[3-5]00/ },
+	],
 	theme: {
 		container: {
 			center: true,
