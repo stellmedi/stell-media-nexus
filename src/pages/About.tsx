@@ -6,8 +6,55 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { ArrowRight, Users, Target, Zap, Award } from "lucide-react";
+import { usePageContent } from "@/hooks/usePageContent";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const About = () => {
+  const { content, isLoading, getSection } = usePageContent('/about');
+
+  // Get sections from database or use fallback
+  const heroSection = getSection('hero');
+  const missionSection = getSection('mission');
+  const visionSection = getSection('vision');
+  const storySection = getSection('story');
+  const ctaSection = getSection('cta');
+
+  // Fallback content for when database content isn't available
+  const fallback = {
+    heroTitle: "About Stell Media",
+    heroDescription: "We're a specialized digital marketing agency focused on helping real estate developers and e-commerce brands achieve measurable growth through innovative strategies and cutting-edge technology.",
+    missionTitle: "Our Mission",
+    missionContent: "To empower real estate developers and e-commerce brands with data-driven digital marketing solutions that deliver measurable results and sustainable growth.",
+    visionTitle: "Our Vision",
+    visionContent: "To be the leading digital marketing partner for real estate and e-commerce businesses, known for innovative strategies and exceptional results.",
+    storyTitle: "Our Story",
+    storyContent: `Stell Media was founded with a simple yet powerful vision: to bridge the gap between traditional marketing approaches and the digital-first world we live in today. We recognized that real estate developers and e-commerce brands needed specialized expertise to navigate the complex digital landscape effectively.
+
+Our team combines years of experience in digital marketing with deep industry knowledge, allowing us to create strategies that not only drive traffic but convert visitors into customers and customers into advocates.
+
+Today, we're proud to partner with forward-thinking businesses that understand the importance of digital transformation and are committed to achieving sustainable growth through innovative marketing strategies.`,
+    ctaTitle: "Ready to Transform Your Business?",
+    ctaDescription: "Let's discuss how our expertise can help you achieve your growth goals"
+  };
+
+  if (isLoading) {
+    return (
+      <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <Navbar />
+        <section className="pt-28 pb-16">
+          <div className="container mx-auto px-4">
+            <div className="max-w-4xl mx-auto text-center">
+              <Skeleton className="h-12 w-3/4 mx-auto mb-6" />
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-6 w-2/3 mx-auto" />
+            </div>
+          </div>
+        </section>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <SEOHelmet pagePath="/about" />
@@ -25,10 +72,10 @@ const About = () => {
           <div className="max-w-4xl mx-auto text-center w-full">
             <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/20 p-8 md:p-12">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                About Stell Media
+                {heroSection?.title || fallback.heroTitle}
               </h1>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-                We're a specialized digital marketing agency focused on helping real estate developers and e-commerce brands achieve measurable growth through innovative strategies and cutting-edge technology.
+                {heroSection?.content || fallback.heroDescription}
               </p>
             </div>
           </div>
@@ -45,10 +92,12 @@ const About = () => {
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-4">
                     <Target className="h-6 w-6 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Our Mission</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {missionSection?.title || fallback.missionTitle}
+                  </h2>
                 </div>
                 <p className="text-gray-600 leading-relaxed">
-                  To empower real estate developers and e-commerce brands with data-driven digital marketing solutions that deliver measurable results and sustainable growth.
+                  {missionSection?.content || fallback.missionContent}
                 </p>
               </CardContent>
             </Card>
@@ -59,10 +108,12 @@ const About = () => {
                   <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center mr-4">
                     <Zap className="h-6 w-6 text-white" />
                   </div>
-                  <h2 className="text-2xl font-bold text-gray-900">Our Vision</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    {visionSection?.title || fallback.visionTitle}
+                  </h2>
                 </div>
                 <p className="text-gray-600 leading-relaxed">
-                  To be the leading digital marketing partner for real estate and e-commerce businesses, known for innovative strategies and exceptional results.
+                  {visionSection?.content || fallback.visionContent}
                 </p>
               </CardContent>
             </Card>
@@ -106,17 +157,15 @@ const About = () => {
 
           {/* Our Story */}
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-gray-200 shadow-sm">
-            <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">Our Story</h2>
+            <h2 className="text-3xl font-bold text-center mb-8 text-gray-900">
+              {storySection?.title || fallback.storyTitle}
+            </h2>
             <div className="max-w-4xl mx-auto">
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Stell Media was founded with a simple yet powerful vision: to bridge the gap between traditional marketing approaches and the digital-first world we live in today. We recognized that real estate developers and e-commerce brands needed specialized expertise to navigate the complex digital landscape effectively.
-              </p>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed">
-                Our team combines years of experience in digital marketing with deep industry knowledge, allowing us to create strategies that not only drive traffic but convert visitors into customers and customers into advocates.
-              </p>
-              <p className="text-lg text-gray-600 leading-relaxed">
-                Today, we're proud to partner with forward-thinking businesses that understand the importance of digital transformation and are committed to achieving sustainable growth through innovative marketing strategies.
-              </p>
+              {(storySection?.content || fallback.storyContent).split('\n\n').map((paragraph, index) => (
+                <p key={index} className="text-lg text-gray-600 mb-6 leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
             </div>
           </div>
         </div>
@@ -127,10 +176,10 @@ const About = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-              Ready to Transform Your Business?
+              {ctaSection?.title || fallback.ctaTitle}
             </h2>
             <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Let's discuss how our expertise can help you achieve your growth goals
+              {ctaSection?.content || fallback.ctaDescription}
             </p>
             <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl btn-cta">
               <Link to="/contact">
