@@ -5,37 +5,70 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { ArrowRight, Users, Target, Zap, Award } from "lucide-react";
+import { ArrowRight, Target, Zap } from "lucide-react";
 import { usePageContent } from "@/hooks/usePageContent";
 import { Skeleton } from "@/components/ui/skeleton";
+import DynamicIcon from "@/components/ui/DynamicIcon";
+
+interface DifferentiatorItem {
+  id: string;
+  title: string;
+  description: string;
+  icon_name?: string;
+  gradient_from?: string;
+  gradient_to?: string;
+}
 
 const About = () => {
   const { content, isLoading, getSection } = usePageContent('/about');
 
-  // Get sections from database or use fallback
+  // Get sections from database
   const heroSection = getSection('hero');
   const missionSection = getSection('mission');
   const visionSection = getSection('vision');
+  const differentiatorSection = getSection('differentiators');
   const storySection = getSection('story');
   const ctaSection = getSection('cta');
 
-  // Fallback content for when database content isn't available
+  // Extract metadata with safe defaults
+  const missionMeta = missionSection?.metadata as Record<string, any> || {};
+  const visionMeta = visionSection?.metadata as Record<string, any> || {};
+  const differentiatorMeta = differentiatorSection?.metadata as Record<string, any> || {};
+  const ctaMeta = ctaSection?.metadata as Record<string, any> || {};
+  const heroMeta = heroSection?.metadata as Record<string, any> || {};
+
+  // Fallback content
   const fallback = {
     heroTitle: "About Stell Media",
-    heroDescription: "We're a specialized digital marketing agency focused on helping real estate developers and e-commerce brands achieve measurable growth through innovative strategies and cutting-edge technology.",
+    heroDescription: "We're a specialized digital marketing agency focused on helping real estate developers and e-commerce brands achieve measurable growth.",
     missionTitle: "Our Mission",
-    missionContent: "To empower real estate developers and e-commerce brands with data-driven digital marketing solutions that deliver measurable results and sustainable growth.",
+    missionContent: "To empower businesses with data-driven digital marketing solutions that deliver measurable results and sustainable growth.",
+    missionIcon: "Target",
+    missionGradientFrom: "#3b82f6",
+    missionGradientTo: "#8b5cf6",
     visionTitle: "Our Vision",
-    visionContent: "To be the leading digital marketing partner for real estate and e-commerce businesses, known for innovative strategies and exceptional results.",
+    visionContent: "To be the leading digital marketing partner for real estate and e-commerce businesses.",
+    visionIcon: "Zap",
+    visionGradientFrom: "#f59e0b",
+    visionGradientTo: "#ef4444",
+    differentiatorTitle: "What Sets Us Apart",
+    differentiatorContent: "Discover the unique advantages of partnering with Stell Media.",
+    differentiators: [
+      { id: "1", title: "Industry Expertise", description: "Deep understanding of real estate and e-commerce markets.", icon_name: "Award", gradient_from: "#3b82f6", gradient_to: "#8b5cf6" },
+      { id: "2", title: "Data-Driven Approach", description: "Every strategy is backed by comprehensive data analysis.", icon_name: "BarChart", gradient_from: "#10b981", gradient_to: "#06b6d4" },
+      { id: "3", title: "Proven Results", description: "Track record of delivering exceptional results.", icon_name: "TrendingUp", gradient_from: "#f59e0b", gradient_to: "#ef4444" }
+    ],
     storyTitle: "Our Story",
-    storyContent: `Stell Media was founded with a simple yet powerful vision: to bridge the gap between traditional marketing approaches and the digital-first world we live in today. We recognized that real estate developers and e-commerce brands needed specialized expertise to navigate the complex digital landscape effectively.
-
-Our team combines years of experience in digital marketing with deep industry knowledge, allowing us to create strategies that not only drive traffic but convert visitors into customers and customers into advocates.
-
-Today, we're proud to partner with forward-thinking businesses that understand the importance of digital transformation and are committed to achieving sustainable growth through innovative marketing strategies.`,
+    storyContent: "Stell Media was founded with a vision to bridge the gap between traditional marketing and the digital-first world.\n\nOur team combines years of experience with deep industry knowledge, creating strategies that convert visitors into customers.\n\nToday, we partner with forward-thinking businesses committed to achieving sustainable growth.",
     ctaTitle: "Ready to Transform Your Business?",
-    ctaDescription: "Let's discuss how our expertise can help you achieve your growth goals"
+    ctaDescription: "Let's discuss how our expertise can help you achieve your growth goals.",
+    ctaButtonText: "Get In Touch",
+    ctaButtonLink: "/contact"
   };
+
+  const differentiators: DifferentiatorItem[] = differentiatorMeta.items?.length > 0 
+    ? differentiatorMeta.items 
+    : fallback.differentiators;
 
   if (isLoading) {
     return (
@@ -64,9 +97,7 @@ Today, we're proud to partner with forward-thinking businesses that understand t
       {/* Hero Section */}
       <section 
         className="mobile-hero-spacing pb-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 border-b border-indigo-100"
-        style={{ 
-          paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))'
-        }}
+        style={{ paddingTop: 'max(7rem, calc(64px + env(safe-area-inset-top, 0px)))' }}
       >
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center w-full">
@@ -86,11 +117,21 @@ Today, we're proud to partner with forward-thinking businesses that understand t
       <section className="py-16 bg-gradient-to-b from-white to-slate-50">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-8 mb-16">
+            {/* Mission Card */}
             <Card className="bg-white/80 backdrop-blur-sm border border-indigo-200 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mr-4">
-                    <Target className="h-6 w-6 text-white" />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center mr-4"
+                    style={{
+                      background: `linear-gradient(135deg, ${missionMeta.gradient_from || fallback.missionGradientFrom}, ${missionMeta.gradient_to || fallback.missionGradientTo})`
+                    }}
+                  >
+                    <DynamicIcon 
+                      name={missionMeta.icon_name || fallback.missionIcon} 
+                      className="h-6 w-6 text-white"
+                      fallback={<Target className="h-6 w-6 text-white" />}
+                    />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900">
                     {missionSection?.title || fallback.missionTitle}
@@ -102,11 +143,21 @@ Today, we're proud to partner with forward-thinking businesses that understand t
               </CardContent>
             </Card>
 
+            {/* Vision Card */}
             <Card className="bg-white/80 backdrop-blur-sm border border-indigo-200 shadow-lg hover:shadow-xl transition-shadow">
               <CardContent className="p-8">
                 <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-lg flex items-center justify-center mr-4">
-                    <Zap className="h-6 w-6 text-white" />
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center mr-4"
+                    style={{
+                      background: `linear-gradient(135deg, ${visionMeta.gradient_from || fallback.visionGradientFrom}, ${visionMeta.gradient_to || fallback.visionGradientTo})`
+                    }}
+                  >
+                    <DynamicIcon 
+                      name={visionMeta.icon_name || fallback.visionIcon} 
+                      className="h-6 w-6 text-white"
+                      fallback={<Zap className="h-6 w-6 text-white" />}
+                    />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900">
                     {visionSection?.title || fallback.visionTitle}
@@ -119,39 +170,32 @@ Today, we're proud to partner with forward-thinking businesses that understand t
             </Card>
           </div>
 
-          {/* What Sets Us Apart */}
+          {/* What Sets Us Apart - Now from DB */}
           <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-8 md:p-12 border border-indigo-100 shadow-sm mb-16">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">What Sets Us Apart</h2>
+            <h2 className="text-3xl font-bold text-center mb-4 text-gray-900">
+              {differentiatorSection?.title || fallback.differentiatorTitle}
+            </h2>
+            <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">
+              {differentiatorSection?.content || fallback.differentiatorContent}
+            </p>
             <div className="grid md:grid-cols-3 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Users className="h-8 w-8 text-white" />
+              {differentiators.map((item) => (
+                <div key={item.id} className="text-center">
+                  <div 
+                    className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6"
+                    style={{
+                      background: `linear-gradient(135deg, ${item.gradient_from || '#3b82f6'}, ${item.gradient_to || '#8b5cf6'})`
+                    }}
+                  >
+                    <DynamicIcon 
+                      name={item.icon_name} 
+                      className="h-8 w-8 text-white"
+                    />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-4 text-gray-900">{item.title}</h3>
+                  <p className="text-gray-600">{item.description}</p>
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">Industry Expertise</h3>
-                <p className="text-gray-600">
-                  Deep understanding of real estate and e-commerce markets, allowing us to create highly targeted and effective campaigns.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-purple-500 to-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Target className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">Data-Driven Approach</h3>
-                <p className="text-gray-600">
-                  Every strategy is backed by comprehensive data analysis and continuous optimization to ensure maximum ROI.
-                </p>
-              </div>
-
-              <div className="text-center">
-                <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Award className="h-8 w-8 text-white" />
-                </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900">Proven Results</h3>
-                <p className="text-gray-600">
-                  Track record of delivering exceptional results with 300%+ revenue growth and 450%+ lead increases for our clients.
-                </p>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -172,7 +216,14 @@ Today, we're proud to partner with forward-thinking businesses that understand t
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 border-t border-indigo-200">
+      <section 
+        className="py-16 border-t border-indigo-200"
+        style={{
+          background: ctaMeta.gradient_from && ctaMeta.gradient_to 
+            ? `linear-gradient(to right, ${ctaMeta.gradient_from}, ${ctaMeta.gradient_to})`
+            : 'linear-gradient(to right, #1d4ed8, #7c3aed, #9333ea)'
+        }}
+      >
         <div className="container mx-auto px-4 text-center">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 md:p-12 border border-white/20 shadow-2xl">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
@@ -182,8 +233,8 @@ Today, we're proud to partner with forward-thinking businesses that understand t
               {ctaSection?.content || fallback.ctaDescription}
             </p>
             <Button asChild size="lg" className="bg-white text-indigo-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl btn-cta">
-              <Link to="/contact">
-                Get In Touch <ArrowRight className="ml-2 h-4 w-4" />
+              <Link to={ctaMeta.cta_link || fallback.ctaButtonLink}>
+                {ctaMeta.cta_text || fallback.ctaButtonText} <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
             </Button>
           </div>

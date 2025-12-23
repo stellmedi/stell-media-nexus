@@ -2,21 +2,72 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, CheckCircle, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { usePageSEO } from "@/hooks/use-page-seo";
+import { usePageContent } from "@/hooks/usePageContent";
+import DynamicIcon from "@/components/ui/DynamicIcon";
+
+interface ValueProp {
+  id: string;
+  title: string;
+  icon_name?: string;
+}
+
+interface ServiceCard {
+  id: string;
+  title: string;
+  description: string;
+  link: string;
+  gradient_from?: string;
+  gradient_to?: string;
+}
 
 const HeroSection = () => {
-  // Use unified SEO hook - includes h1_tag, eliminates duplicate fetch
-  const { seoData, isLoading } = usePageSEO('/');
+  const { content, isLoading, getSection } = usePageContent('/');
   
+  const heroSection = getSection('hero');
+  const heroMeta = heroSection?.metadata as Record<string, any> || {};
+
   const handleWhatsAppClick = () => {
     const phoneNumber = "919877100369";
     const whatsappUrl = `https://wa.me/${phoneNumber}`;
     window.open(whatsappUrl, '_blank');
   };
 
-  // Use H1 from database with minimal fallback
-  const heroTitle = seoData?.h1Tag || "Digital Growth for Real Estate Developers and eCommerce Brands";
-  const heroSubtitle = "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.";
+  // Fallback content
+  const fallback = {
+    title: "Digital Growth for Real Estate Developers and eCommerce Brands",
+    subtitle: "Helping real estate developers close faster and e-commerce brands sell smarter with powerful automation, product discovery, and digital performance strategies.",
+    valueProps: [
+      { id: "1", title: "18+ Years of Digital Leadership", icon_name: "CheckCircle" },
+      { id: "2", title: "Growth Backed by Data & Automation", icon_name: "CheckCircle" },
+      { id: "3", title: "Niche Experts in Real Estate & eCommerce", icon_name: "CheckCircle" }
+    ],
+    serviceCards: [
+      { 
+        id: "1", 
+        title: "Real Estate Solutions", 
+        description: "CRM automation, lead generation & virtual tours for property developers",
+        link: "/real-estate",
+        gradient_from: "#2563eb",
+        gradient_to: "#4338ca"
+      },
+      { 
+        id: "2", 
+        title: "eCommerce Solutions", 
+        description: "Product discovery, catalog SEO & performance marketing for online stores",
+        link: "/ecommerce",
+        gradient_from: "#7c3aed",
+        gradient_to: "#4338ca"
+      }
+    ],
+    ctaText: "Talk to Us",
+    ctaLink: "/consultation",
+    ctaSecondaryText: "WhatsApp Us"
+  };
+
+  const heroTitle = heroSection?.title || fallback.title;
+  const heroSubtitle = heroSection?.content || fallback.subtitle;
+  const valueProps: ValueProp[] = heroMeta.value_props?.length > 0 ? heroMeta.value_props : fallback.valueProps;
+  const serviceCards: ServiceCard[] = heroMeta.service_cards?.length > 0 ? heroMeta.service_cards : fallback.serviceCards;
 
   return (
     <section className="mobile-hero-spacing relative min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 overflow-hidden">
@@ -53,53 +104,42 @@ const HeroSection = () => {
           
           {/* Value propositions */}
           <div className="flex flex-col sm:flex-row sm:flex-wrap justify-center items-center gap-3 md:gap-6 mb-8 md:mb-10 px-2">
-            <div className="flex items-center gap-2 text-gray-700">
-              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base whitespace-nowrap">18+ Years of Digital Leadership</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base whitespace-nowrap">Growth Backed by Data & Automation</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
-              <span className="font-medium text-sm md:text-base whitespace-nowrap">Niche Experts in Real Estate & eCommerce</span>
-            </div>
+            {valueProps.map((prop) => (
+              <div key={prop.id} className="flex items-center gap-2 text-gray-700">
+                <CheckCircle className="h-4 w-4 md:h-5 md:w-5 text-green-500 flex-shrink-0" />
+                <span className="font-medium text-sm md:text-base whitespace-nowrap">{prop.title}</span>
+              </div>
+            ))}
           </div>
           
           {/* Enhanced Services Navigation */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10 max-w-2xl mx-auto px-2">
-            <Link to="/real-estate" className="group">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg md:text-xl font-bold mb-2">Real Estate Solutions</h3>
-                  <p className="text-blue-100 text-sm md:text-base leading-relaxed">CRM automation, lead generation & virtual tours for property developers</p>
+            {serviceCards.map((card) => (
+              <Link key={card.id} to={card.link} className="group">
+                <div 
+                  className="p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between"
+                  style={{
+                    background: `linear-gradient(135deg, ${card.gradient_from || '#2563eb'}, ${card.gradient_to || '#4338ca'})`
+                  }}
+                >
+                  <div>
+                    <h3 className="text-lg md:text-xl font-bold mb-2">{card.title}</h3>
+                    <p className="text-white/80 text-sm md:text-base leading-relaxed">{card.description}</p>
+                  </div>
+                  <div className="mt-4 flex items-center text-white/70 group-hover:text-white">
+                    <span className="text-sm">Explore Services</span>
+                    <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  </div>
                 </div>
-                <div className="mt-4 flex items-center text-blue-200 group-hover:text-white">
-                  <span className="text-sm">Explore Services</span>
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </Link>
-            <Link to="/ecommerce" className="group">
-              <div className="bg-gradient-to-br from-purple-600 to-indigo-700 p-4 md:p-6 rounded-xl text-white hover:shadow-xl transition-all duration-300 hover:scale-105 h-full min-h-[160px] flex flex-col justify-between">
-                <div>
-                  <h3 className="text-lg md:text-xl font-bold mb-2">eCommerce Solutions</h3>
-                  <p className="text-purple-100 text-sm md:text-base leading-relaxed">Product discovery, catalog SEO & performance marketing for online stores</p>
-                </div>
-                <div className="mt-4 flex items-center text-purple-200 group-hover:text-white">
-                  <span className="text-sm">Explore Services</span>
-                  <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </div>
-            </Link>
+              </Link>
+            ))}
           </div>
           
           {/* CTA buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-2">
             <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 w-full sm:w-auto min-h-[44px]">
-              <Link to="/consultation">
-                Talk to Us
+              <Link to={heroMeta.cta_link || fallback.ctaLink}>
+                {heroMeta.cta_text || fallback.ctaText}
                 <ArrowRight className="ml-2 h-4 w-4 md:h-5 md:w-5" />
               </Link>
             </Button>
@@ -110,7 +150,7 @@ const HeroSection = () => {
               className="border-2 border-green-500 hover:border-green-600 text-green-600 hover:text-green-700 hover:bg-green-50 font-semibold px-6 md:px-8 py-3 md:py-4 text-base md:text-lg transition-all duration-300 w-full sm:w-auto min-h-[44px]"
             >
               <MessageCircle className="mr-2 h-4 w-4 md:h-5 md:w-5" />
-              WhatsApp Us
+              {heroMeta.cta_secondary_text || fallback.ctaSecondaryText}
             </Button>
           </div>
         </div>
