@@ -7,15 +7,17 @@ import MediaManager from "./MediaManager";
 import BlogPostManager from "./BlogPostManager";
 import FAQManager from "./FAQManager";
 import ServicesManager from "./ServicesManager";
+import CaseStudiesManager from "./CaseStudiesManager";
 
 export default function ContentManagement() {
   return (
     <div className="space-y-6">
       <Tabs defaultValue="sync" className="w-full">
-        <TabsList className="grid w-full grid-cols-7">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="sync">Content Sync</TabsTrigger>
           <TabsTrigger value="pages">Pages</TabsTrigger>
           <TabsTrigger value="blog">Blog</TabsTrigger>
+          <TabsTrigger value="case-studies">Case Studies</TabsTrigger>
           <TabsTrigger value="faq">FAQ</TabsTrigger>
           <TabsTrigger value="services">Services</TabsTrigger>
           <TabsTrigger value="media">Media</TabsTrigger>
@@ -32,6 +34,10 @@ export default function ContentManagement() {
 
         <TabsContent value="blog" className="mt-6">
           <BlogPostManager />
+        </TabsContent>
+
+        <TabsContent value="case-studies" className="mt-6">
+          <CaseStudiesManager />
         </TabsContent>
 
         <TabsContent value="faq" className="mt-6">
