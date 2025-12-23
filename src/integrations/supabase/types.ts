@@ -269,6 +269,63 @@ export type Database = {
         }
         Relationships: []
       }
+      case_studies: {
+        Row: {
+          category: string | null
+          challenge: string | null
+          client: string | null
+          created_at: string
+          description: string
+          display_order: number | null
+          id: string
+          image: string | null
+          implementation: Json | null
+          is_published: boolean | null
+          results: Json | null
+          slug: string
+          solution: string | null
+          testimonial: Json | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          challenge?: string | null
+          client?: string | null
+          created_at?: string
+          description: string
+          display_order?: number | null
+          id?: string
+          image?: string | null
+          implementation?: Json | null
+          is_published?: boolean | null
+          results?: Json | null
+          slug: string
+          solution?: string | null
+          testimonial?: Json | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          challenge?: string | null
+          client?: string | null
+          created_at?: string
+          description?: string
+          display_order?: number | null
+          id?: string
+          image?: string | null
+          implementation?: Json | null
+          is_published?: boolean | null
+          results?: Json | null
+          slug?: string
+          solution?: string | null
+          testimonial?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       consultation_submissions: {
         Row: {
           company: string
