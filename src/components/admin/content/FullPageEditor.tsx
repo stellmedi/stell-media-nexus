@@ -1,12 +1,14 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Save, Plus, Trash2, Edit3 } from "lucide-react";
+import { Save, Plus, Trash2, Edit3, RefreshCw } from "lucide-react";
+import SectionMetadataEditor, { SectionMetadata } from "./SectionMetadataEditor";
+import { ensurePageInitialized } from "@/services/content/pageInitializationService";
 import { toast } from "sonner";
 
 interface PageSection {
@@ -14,9 +16,10 @@ interface PageSection {
   section_key: string;
   title: string;
   content: string;
-  section_type: 'hero' | 'text' | 'list' | 'features' | 'testimonials' | 'faq' | 'services';
+  section_type: 'hero' | 'text' | 'list' | 'features' | 'testimonials' | 'faq' | 'services' | 'cta' | 'benefits' | 'differentiators' | 'contact_info' | 'expectations';
   display_order: number;
   is_active: boolean;
+  metadata?: SectionMetadata;
 }
 
 interface PageContent {
@@ -30,10 +33,11 @@ interface PageContent {
 interface FullPageEditorProps {
   pageContent: PageContent;
   onPageTitleChange: (title: string) => void;
-  onSectionChange: (sectionId: string, field: keyof PageSection, value: any) => void;
+  onSectionChange: (sectionId: string, field: keyof PageSection | 'metadata', value: any) => void;
   onAddSection: () => void;
   onRemoveSection: (sectionId: string) => void;
   onSave: () => void;
+  onRefresh?: () => void;
   hasUnsavedChanges: boolean;
   isLoading: boolean;
 }
@@ -45,9 +49,28 @@ const FullPageEditor: React.FC<FullPageEditorProps> = ({
   onAddSection,
   onRemoveSection,
   onSave,
+  onRefresh,
   hasUnsavedChanges,
   isLoading
 }) => {
+  const [isInitializing, setIsInitializing] = useState(false);
+
+  const handleInitializePage = async () => {
+    setIsInitializing(true);
+    try {
+      const success = await ensurePageInitialized(pageContent.page_path);
+      if (success) {
+        toast.success("Page initialized with template sections");
+        onRefresh?.();
+      } else {
+        toast.error("Failed to initialize page");
+      }
+    } catch (error) {
+      toast.error("Error initializing page");
+    } finally {
+      setIsInitializing(false);
+    }
+  };
   const [editingSection, setEditingSection] = useState<string | null>(null);
 
   const sectionTypes = [
@@ -55,9 +78,14 @@ const FullPageEditor: React.FC<FullPageEditorProps> = ({
     { value: 'text', label: 'Text Content' },
     { value: 'services', label: 'Services' },
     { value: 'features', label: 'Features' },
+    { value: 'benefits', label: 'Benefits' },
+    { value: 'differentiators', label: 'Differentiators' },
     { value: 'testimonials', label: 'Testimonials' },
     { value: 'faq', label: 'FAQ' },
-    { value: 'list', label: 'List' }
+    { value: 'list', label: 'List' },
+    { value: 'cta', label: 'Call to Action' },
+    { value: 'contact_info', label: 'Contact Info' },
+    { value: 'expectations', label: 'Expectations' }
   ];
 
   const getSectionTypeColor = (type: string) => {
@@ -118,10 +146,21 @@ const FullPageEditor: React.FC<FullPageEditorProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Page Sections</span>
-            <Button onClick={onAddSection} variant="outline" size="sm">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Section
-            </Button>
+            <div className="flex gap-2">
+              <Button 
+                onClick={handleInitializePage} 
+                variant="outline" 
+                size="sm"
+                disabled={isInitializing}
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isInitializing ? 'animate-spin' : ''}`} />
+                Initialize from Template
+              </Button>
+              <Button onClick={onAddSection} variant="outline" size="sm">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Section
+              </Button>
+            </div>
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -167,8 +206,9 @@ const FullPageEditor: React.FC<FullPageEditorProps> = ({
                   {editingSection === section.id && (
                     <CardContent className="pt-0">
                       <Tabs defaultValue="content" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3">
+                        <TabsList className="grid w-full grid-cols-4">
                           <TabsTrigger value="content">Content</TabsTrigger>
+                          <TabsTrigger value="metadata">Media & Items</TabsTrigger>
                           <TabsTrigger value="settings">Settings</TabsTrigger>
                           <TabsTrigger value="preview">Preview</TabsTrigger>
                         </TabsList>
@@ -196,6 +236,14 @@ const FullPageEditor: React.FC<FullPageEditorProps> = ({
                               Rich text editor would be integrated here for advanced formatting
                             </p>
                           </div>
+                        </TabsContent>
+                        
+                        <TabsContent value="metadata" className="mt-4">
+                          <SectionMetadataEditor
+                            metadata={section.metadata || {}}
+                            onChange={(metadata) => onSectionChange(section.id, 'metadata', metadata)}
+                            sectionType={section.section_type}
+                          />
                         </TabsContent>
                         
                         <TabsContent value="settings" className="space-y-4 mt-4">
