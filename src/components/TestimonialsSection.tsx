@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,9 +9,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { useTestimonials } from "@/hooks/useTestimonials";
+import { useClientLogos } from "@/hooks/useClientLogos";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Abstract client logos/representations
-const clients = [
+// Fallback client data
+const fallbackClients = [
   { name: "Tech Retailer", industry: "Electronics", gradient: "from-blue-400 to-indigo-500" },
   { name: "Fashion Market", industry: "Apparel", gradient: "from-indigo-400 to-purple-500" },
   { name: "Home Goods", industry: "Home & Garden", gradient: "from-purple-400 to-pink-500" },
@@ -21,34 +23,47 @@ const clients = [
   { name: "Auto Parts", industry: "Automotive", gradient: "from-blue-400 to-cyan-500" },
 ];
 
-const testimonials = [
+// Fallback testimonials
+const fallbackTestimonials = [
   {
     quote: "Stell Media completely transformed our product discovery experience. Our conversion rate increased by 34% within the first month of implementation.",
-    author: "Sarah Johnson",
-    title: "Marketing Director",
+    name: "Sarah Johnson",
+    role: "Marketing Director",
     company: "Fashion E-commerce"
   },
   {
     quote: "The search optimization was a game changer. Customers are finding what they need faster, and our average order value has increased by 27% since working with Stell Media.",
-    author: "Michael Chen",
-    title: "E-commerce Manager",
+    name: "Michael Chen",
+    role: "E-commerce Manager",
     company: "Electronics Retailer"
   },
   {
     quote: "The team at Stell Media fixed our complex product data issues that we'd been struggling with for years. Professional, efficient, and results-driven approach to every challenge.",
-    author: "Jennifer Williams",
-    title: "CEO",
+    name: "Jennifer Williams",
+    role: "CEO",
     company: "Home Goods Store"
   },
   {
     quote: "Implementing Stell Media's AI-driven product discovery solution has reduced our customer support tickets by 40% as shoppers can now easily find what they're looking for.",
-    author: "David Rodriguez",
-    title: "CTO",
+    name: "David Rodriguez",
+    role: "CTO",
     company: "Outdoor Equipment"
   }
 ];
 
 const TestimonialsSection = () => {
+  const { data: testimonials, isLoading: testimonialsLoading } = useTestimonials('/');
+  const { data: clientLogos, isLoading: clientsLoading } = useClientLogos();
+
+  // Use database data if available, otherwise fallback
+  const displayTestimonials = testimonials && testimonials.length > 0 
+    ? testimonials 
+    : fallbackTestimonials;
+  
+  const displayClients = clientLogos && clientLogos.length > 0 
+    ? clientLogos 
+    : fallbackClients;
+
   return (
     <section id="testimonials" className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50 relative overflow-hidden">
       {/* Abstract background elements */}
@@ -63,61 +78,107 @@ const TestimonialsSection = () => {
           </p>
         </div>
 
-        {/* Client Abstract Logos/Representations */}
+        {/* Client Logos */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 mb-16">
-          {clients.map((client, index) => (
-            <div key={index} className="flex flex-col items-center justify-center p-4 hover:opacity-80 transition-all duration-300">
-              <div className={`w-16 h-16 bg-gradient-to-r ${client.gradient} rounded-full mb-3 flex items-center justify-center text-white relative overflow-hidden`}>
-                <div className="absolute inset-0 opacity-20">
-                  <div className="absolute top-1/3 left-0 w-full h-px bg-white/30"></div>
-                  <div className="absolute top-2/3 left-0 w-full h-px bg-white/20"></div>
-                  <div className="absolute top-0 left-1/3 h-full w-px bg-white/30"></div>
-                  <div className="absolute top-0 left-2/3 h-full w-px bg-white/20"></div>
-                </div>
-                <span className="relative z-10 text-2xl font-bold">{client.name.charAt(0)}</span>
+          {clientsLoading ? (
+            Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="flex flex-col items-center justify-center p-4">
+                <Skeleton className="w-16 h-16 rounded-full mb-3" />
+                <Skeleton className="h-4 w-20 mb-2" />
+                <Skeleton className="h-3 w-16" />
               </div>
-              <p className="font-medium text-gray-700">{client.name}</p>
-              <p className="text-sm text-gray-500">{client.industry}</p>
-            </div>
-          ))}
+            ))
+          ) : (
+            displayClients.map((client, index) => (
+              <div key={index} className="flex flex-col items-center justify-center p-4 hover:opacity-80 transition-all duration-300">
+                {'logo_url' in client && client.logo_url ? (
+                  <img 
+                    src={client.logo_url} 
+                    alt={'alt_text' in client ? (client.alt_text || client.name) : client.name} 
+                    className="w-16 h-16 object-contain mb-3"
+                  />
+                ) : (
+                  <div className={`w-16 h-16 bg-gradient-to-r ${'gradient' in client ? client.gradient : 'from-blue-400 to-indigo-500'} rounded-full mb-3 flex items-center justify-center text-white relative overflow-hidden`}>
+                    <div className="absolute inset-0 opacity-20">
+                      <div className="absolute top-1/3 left-0 w-full h-px bg-white/30"></div>
+                      <div className="absolute top-2/3 left-0 w-full h-px bg-white/20"></div>
+                      <div className="absolute top-0 left-1/3 h-full w-px bg-white/30"></div>
+                      <div className="absolute top-0 left-2/3 h-full w-px bg-white/20"></div>
+                    </div>
+                    <span className="relative z-10 text-2xl font-bold">{client.name.charAt(0)}</span>
+                  </div>
+                )}
+                <p className="font-medium text-gray-700">{client.name}</p>
+                {'industry' in client && <p className="text-sm text-gray-500">{client.industry}</p>}
+              </div>
+            ))
+          )}
         </div>
 
-        {/* Testimonials Carousel - Fixed to remove autoplay props */}
+        {/* Testimonials Carousel */}
         <div className="relative px-12 max-w-5xl mx-auto mb-10">
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-              dragFree: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent>
-              {testimonials.map((testimonial, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2 transition-all duration-500">
-                  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full hover:shadow-lg transition-all duration-300">
-                    <div className="text-indigo-500 mb-4 text-4xl font-serif">"</div>
-                    <p className="text-gray-700 mb-6 italic">{testimonial.quote}</p>
-                    <div className="flex items-center">
-                      <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3 relative overflow-hidden">
-                        <div className="absolute inset-0 opacity-20">
-                          <div className="absolute top-1/2 left-0 w-full h-px bg-white/30"></div>
-                          <div className="absolute top-0 left-1/2 h-full w-px bg-white/30"></div>
-                        </div>
-                        <span className="font-bold relative z-10">{testimonial.author.charAt(0)}</span>
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{testimonial.author}</p>
-                        <p className="text-sm text-gray-500">{testimonial.title}, {testimonial.company}</p>
-                      </div>
+          {testimonialsLoading ? (
+            <div className="flex gap-4">
+              {Array.from({ length: 2 }).map((_, index) => (
+                <div key={index} className="flex-1 bg-white p-6 rounded-lg shadow-md border border-gray-100">
+                  <Skeleton className="h-8 w-8 mb-4" />
+                  <Skeleton className="h-20 w-full mb-6" />
+                  <div className="flex items-center">
+                    <Skeleton className="w-10 h-10 rounded-full mr-3" />
+                    <div>
+                      <Skeleton className="h-4 w-24 mb-2" />
+                      <Skeleton className="h-3 w-32" />
                     </div>
                   </div>
-                </CarouselItem>
+                </div>
               ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-0 bg-white" />
-            <CarouselNext className="right-0 bg-white" />
-          </Carousel>
+            </div>
+          ) : (
+            <Carousel
+              opts={{
+                align: "start",
+                loop: true,
+                dragFree: true,
+              }}
+              className="w-full"
+            >
+              <CarouselContent>
+                {displayTestimonials.map((testimonial, index) => (
+                  <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/2 transition-all duration-500">
+                    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-100 h-full hover:shadow-lg transition-all duration-300">
+                      <div className="text-indigo-500 mb-4 text-4xl font-serif">"</div>
+                      <p className="text-gray-700 mb-6 italic">{testimonial.quote}</p>
+                      <div className="flex items-center">
+                        {'image_url' in testimonial && testimonial.image_url ? (
+                          <img 
+                            src={String(testimonial.image_url)} 
+                            alt={testimonial.name} 
+                            className="w-10 h-10 rounded-full object-cover mr-3"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white mr-3 relative overflow-hidden">
+                            <div className="absolute inset-0 opacity-20">
+                              <div className="absolute top-1/2 left-0 w-full h-px bg-white/30"></div>
+                              <div className="absolute top-0 left-1/2 h-full w-px bg-white/30"></div>
+                            </div>
+                            <span className="font-bold relative z-10">{testimonial.name.charAt(0)}</span>
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium text-gray-900">{testimonial.name}</p>
+                          <p className="text-sm text-gray-500">
+                            {testimonial.role}{testimonial.company ? `, ${String(testimonial.company)}` : ''}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-0 bg-white" />
+              <CarouselNext className="right-0 bg-white" />
+            </Carousel>
+          )}
         </div>
 
         {/* CTA for Case Studies */}
