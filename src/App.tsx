@@ -14,6 +14,7 @@ import ContactPage from './pages/Contact';
 import BlogPage from './pages/Blog';
 import BlogPostPage from './pages/BlogPost';
 import CaseStudiesPage from './pages/CaseStudies';
+import CaseStudyDetailPage from './pages/CaseStudyDetail';
 import FAQPage from './pages/FAQ';
 import CareersPage from './pages/Careers';
 import ServiceSEOPage from './pages/services/SEO';
@@ -67,6 +68,7 @@ function App() {
                   <Route path="/blog" element={<BlogPage />} />
                   <Route path="/blog/:postId" element={<BlogPostPage />} />
                   <Route path="/case-studies" element={<CaseStudiesPage />} />
+                  <Route path="/case-studies/:studyId" element={<CaseStudyDetailPage />} />
                   <Route path="/faq" element={<FAQPage />} />
                   <Route path="/careers" element={<CareersPage />} />
                   <Route path="/services/seo" element={<ServiceSEOPage />} />
