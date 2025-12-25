@@ -829,6 +829,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      is_admin_or_editor: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       log_admin_activity: {
         Args: {
